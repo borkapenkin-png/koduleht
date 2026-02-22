@@ -107,6 +107,101 @@ class JBMaalausAPITester:
         """Test retrieving references"""
         return self.run_test("Get References", "GET", "references", 200)
 
+    def test_get_services(self):
+        """Test retrieving services"""
+        return self.run_test("Get Services", "GET", "services", 200)
+    
+    # ========== ADMIN TESTS ==========
+    
+    def test_admin_auth(self):
+        """Test admin authentication"""
+        return self.run_test("Admin Auth Verify", "GET", "admin/verify", 200, auth=self.admin_auth)
+    
+    def test_admin_auth_invalid(self):
+        """Test invalid admin credentials"""
+        invalid_auth = ("wrong", "credentials")
+        success, _ = self.run_test("Admin Auth Invalid", "GET", "admin/verify", 401, auth=invalid_auth)
+        return success
+    
+    def test_admin_seed_data(self):
+        """Test seeding initial data"""
+        return self.run_test("Admin Seed Data", "POST", "admin/seed", 200, auth=self.admin_auth)
+    
+    def test_admin_get_contacts(self):
+        """Test getting contact messages via admin"""
+        return self.run_test("Admin Get Contacts", "GET", "admin/contacts", 200, auth=self.admin_auth)
+    
+    def test_admin_services_crud(self):
+        """Test full CRUD operations for services"""
+        print("\n🔧 Testing Services CRUD...")
+        
+        # Create service
+        test_service = {
+            "title": "Test Service",
+            "description": "Test service description",
+            "icon": "Building2",
+            "image_url": "https://example.com/test.jpg",
+            "order": 99
+        }
+        
+        success, create_response = self.run_test("Admin Create Service", "POST", "admin/services", 200, test_service, auth=self.admin_auth)
+        if not success:
+            return False
+            
+        service_id = create_response.get('id')
+        if not service_id:
+            print("❌ No service ID returned from create")
+            return False
+        
+        # Update service
+        update_data = {
+            "title": "Updated Test Service",
+            "description": "Updated description"
+        }
+        
+        success, _ = self.run_test("Admin Update Service", "PUT", f"admin/services/{service_id}", 200, update_data, auth=self.admin_auth)
+        if not success:
+            return False
+        
+        # Delete service
+        success, _ = self.run_test("Admin Delete Service", "DELETE", f"admin/services/{service_id}", 200, auth=self.admin_auth)
+        return success
+    
+    def test_admin_references_crud(self):
+        """Test full CRUD operations for references"""
+        print("\n🔧 Testing References CRUD...")
+        
+        # Create reference
+        test_reference = {
+            "name": "Test Reference",
+            "type": "Test Project Type", 
+            "description": "Test reference description",
+            "order": 99
+        }
+        
+        success, create_response = self.run_test("Admin Create Reference", "POST", "admin/references", 200, test_reference, auth=self.admin_auth)
+        if not success:
+            return False
+            
+        reference_id = create_response.get('id')
+        if not reference_id:
+            print("❌ No reference ID returned from create")
+            return False
+        
+        # Update reference
+        update_data = {
+            "name": "Updated Test Reference",
+            "description": "Updated description"
+        }
+        
+        success, _ = self.run_test("Admin Update Reference", "PUT", f"admin/references/{reference_id}", 200, update_data, auth=self.admin_auth)
+        if not success:
+            return False
+        
+        # Delete reference
+        success, _ = self.run_test("Admin Delete Reference", "DELETE", f"admin/references/{reference_id}", 200, auth=self.admin_auth)
+        return success
+
     def test_create_reference(self):
         """Test creating a reference"""
         test_data = {
