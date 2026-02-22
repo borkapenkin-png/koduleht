@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "@/App.css";
 import { motion, AnimatePresence } from "framer-motion";
-import { BrowserRouter, Routes, Route, useNavigate, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { 
   Phone, 
   Mail, 
@@ -23,14 +23,16 @@ import {
   Save,
   MessageSquare,
   Briefcase,
-  Image
+  Upload,
+  Award,
+  Image as ImageIcon
 } from "lucide-react";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-// Logo URL
+// Logo URL - korjattu versio
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png";
 
 // Icon mapping
@@ -38,6 +40,98 @@ const iconMap = {
   Building2: Building2,
   Layers: Layers,
   Paintbrush: Paintbrush,
+};
+
+// ========== IMAGE UPLOAD COMPONENT ==========
+const ImageUpload = ({ currentImage, onImageChange, credentials }) => {
+  const fileInputRef = useRef(null);
+  const [uploading, setUploading] = useState(false);
+  const [preview, setPreview] = useState(currentImage || "");
+
+  useEffect(() => {
+    setPreview(currentImage || "");
+  }, [currentImage]);
+
+  const handleFileSelect = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      alert("Sallitut tiedostotyypit: JPEG, PNG, GIF, WEBP");
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Tiedosto liian suuri. Max koko: 5MB");
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await axios.post(`${API}/admin/upload`, formData, {
+        auth: credentials,
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+
+      const imageUrl = `${BACKEND_URL}${response.data.url}`;
+      setPreview(imageUrl);
+      onImageChange(imageUrl);
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert("Kuvan lataus epäonnistui");
+    }
+
+    setUploading(false);
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-4">
+        {preview ? (
+          <img src={preview} alt="Preview" className="w-20 h-14 object-cover border border-[#E2E8F0]" />
+        ) : (
+          <div className="w-20 h-14 bg-[#FAFAFA] border border-[#E2E8F0] flex items-center justify-center">
+            <ImageIcon size={20} className="text-[#94A3B8]" />
+          </div>
+        )}
+        <div className="flex-1">
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileSelect}
+            accept="image/jpeg,image/png,image/gif,image/webp"
+            className="hidden"
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="btn-secondary text-sm flex items-center gap-2"
+          >
+            <Upload size={16} />
+            {uploading ? "Ladataan..." : "Lataa kuva"}
+          </button>
+        </div>
+      </div>
+      <input
+        type="url"
+        value={preview}
+        onChange={(e) => {
+          setPreview(e.target.value);
+          onImageChange(e.target.value);
+        }}
+        placeholder="Tai syötä kuvan URL"
+        className="form-input text-sm"
+      />
+    </div>
+  );
 };
 
 // ========== NAVIGATION ==========
@@ -64,8 +158,7 @@ const Navbar = ({ isScrolled, activeSection }) => {
             <img 
               src={LOGO_URL} 
               alt="J&B Tasoitus & Maalaus" 
-              className="h-14 md:h-16 w-auto"
-              style={{ objectFit: 'contain' }}
+              className="h-12 md:h-14 w-auto"
             />
           </a>
 
@@ -232,7 +325,7 @@ const HeroSection = () => {
   );
 };
 
-// ========== SERVICES SECTION (Dynamic) ==========
+// ========== SERVICES SECTION ==========
 const ServicesSection = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -247,30 +340,6 @@ const ServicesSection = () => {
       setServices(response.data);
     } catch (error) {
       console.error("Error fetching services:", error);
-      // Fallback to default services
-      setServices([
-        {
-          id: "1",
-          title: "Julkisivurappaus",
-          description: "Julkisivun rappaus antaa tasalaatuisen sadetta ja muita sään rasituksia suojaavan pinnan rakenteille.",
-          icon: "Building2",
-          image_url: "https://images.pexels.com/photos/5691622/pexels-photo-5691622.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-        },
-        {
-          id: "2",
-          title: "Tasoitustyöt",
-          description: "Tasoitetyöt tulee tehdä huolella ennen uutta pintamateriaalia.",
-          icon: "Layers",
-          image_url: "https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-        },
-        {
-          id: "3",
-          title: "Maalaustyöt",
-          description: "Maalaustyöt sisätiloihin ja ulkopinnoille huolellisesti toiveidenne mukaan.",
-          icon: "Paintbrush",
-          image_url: "https://images.pexels.com/photos/5691629/pexels-photo-5691629.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-        }
-      ]);
     }
     setLoading(false);
   };
@@ -405,7 +474,7 @@ const AboutSection = () => {
   );
 };
 
-// ========== REFERENCES SECTION (Dynamic) ==========
+// ========== REFERENCES SECTION ==========
 const ReferencesSection = () => {
   const [references, setReferences] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -420,12 +489,6 @@ const ReferencesSection = () => {
       setReferences(response.data);
     } catch (error) {
       console.error("Error fetching references:", error);
-      // Fallback
-      setReferences([
-        { id: "1", name: "Mehiläinen Ympyrätalo", type: "Tasoitus- ja maalaustyöt", description: "Laaja sisätilojen pintakäsittely." },
-        { id: "2", name: "Crowne Plaza Hotel", type: "Tasoitus- ja maalaustyöt", description: "Hotellin maalaustyöt." },
-        { id: "3", name: "Ressun lukio", type: "Tasoitus- ja maalaustyöt", description: "Koulun sisätilojen kunnostus." },
-      ]);
     }
     setLoading(false);
   };
@@ -486,14 +549,31 @@ const ReferencesSection = () => {
   );
 };
 
-// ========== QUALITY SECTION ==========
+// ========== QUALITY/PARTNERS SECTION ==========
 const QualitySection = () => {
-  const features = [
-    "Tyytyväisyystakuu",
-    "Avaimet käteen -palvelu",
-    "Kotitalousvähennys",
-    "Ilmainen arviokäynti"
-  ];
+  const [partners, setPartners] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPartners();
+  }, []);
+
+  const fetchPartners = async () => {
+    try {
+      const response = await axios.get(`${API}/partners`);
+      setPartners(response.data);
+    } catch (error) {
+      console.error("Error fetching partners:", error);
+      // Fallback
+      setPartners([
+        { id: "1", name: "Tyytyväisyystakuu", image_url: null },
+        { id: "2", name: "Avaimet käteen -palvelu", image_url: null },
+        { id: "3", name: "Kotitalousvähennys", image_url: null },
+        { id: "4", name: "Ilmainen arviokäynti", image_url: null }
+      ]);
+    }
+    setLoading(false);
+  };
 
   return (
     <section data-testid="quality-section" className="section-padding bg-[#0056D2]">
@@ -508,23 +588,39 @@ const QualitySection = () => {
           <p className="font-slogan text-white/60 text-sm mb-3">MIKSI VALITA MEIDÄT</p>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-12">Laatutakuu</h2>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={feature}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="flex flex-col items-center"
-              >
-                <div className="w-16 h-16 bg-white/10 flex items-center justify-center mb-4">
-                  <CheckCircle size={28} className="text-white" />
-                </div>
-                <p className="text-white font-medium text-center">{feature}</p>
-              </motion.div>
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+              {partners.map((partner, index) => (
+                <motion.div
+                  key={partner.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="flex flex-col items-center"
+                >
+                  {partner.image_url ? (
+                    <div className="w-20 h-20 mb-4 flex items-center justify-center">
+                      <img 
+                        src={partner.image_url} 
+                        alt={partner.name}
+                        className="max-w-full max-h-full object-contain"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-16 h-16 bg-white/10 flex items-center justify-center mb-4">
+                      <CheckCircle size={28} className="text-white" />
+                    </div>
+                  )}
+                  <p className="text-white font-medium text-center">{partner.name}</p>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </motion.div>
       </div>
     </section>
@@ -701,7 +797,7 @@ const Footer = () => {
       <div className="container-custom">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-4">
-            <img src={LOGO_URL} alt="J&B Tasoitus & Maalaus" className="h-8 w-auto brightness-0 invert" />
+            <img src={LOGO_URL} alt="J&B Tasoitus & Maalaus" className="h-10 w-auto" />
             <p className="text-white/60 text-sm">Laatujohtajat vuodesta 2018</p>
           </div>
           
@@ -733,20 +829,19 @@ const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("services");
   const [services, setServices] = useState([]);
   const [references, setReferences] = useState([]);
+  const [partners, setPartners] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [newItem, setNewItem] = useState(null);
 
-  const getAuthHeader = () => {
-    return { auth: { username: credentials.username, password: credentials.password } };
-  };
+  const getAuthHeader = () => ({ username: credentials.username, password: credentials.password });
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setAuthError("");
     try {
-      await axios.get(`${API}/admin/verify`, getAuthHeader());
+      await axios.get(`${API}/admin/verify`, { auth: getAuthHeader() });
       setIsAuthenticated(true);
       loadData();
     } catch (error) {
@@ -757,13 +852,15 @@ const AdminPanel = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [servicesRes, refsRes, contactsRes] = await Promise.all([
+      const [servicesRes, refsRes, partnersRes, contactsRes] = await Promise.all([
         axios.get(`${API}/services`),
         axios.get(`${API}/references`),
-        axios.get(`${API}/admin/contacts`, getAuthHeader())
+        axios.get(`${API}/partners`),
+        axios.get(`${API}/admin/contacts`, { auth: getAuthHeader() })
       ]);
       setServices(servicesRes.data);
       setReferences(refsRes.data);
+      setPartners(partnersRes.data);
       setContacts(contactsRes.data);
     } catch (error) {
       console.error("Error loading data:", error);
@@ -773,7 +870,7 @@ const AdminPanel = () => {
 
   const seedData = async () => {
     try {
-      await axios.post(`${API}/admin/seed`, {}, getAuthHeader());
+      await axios.post(`${API}/admin/seed`, {}, { auth: getAuthHeader() });
       loadData();
     } catch (error) {
       console.error("Error seeding data:", error);
@@ -783,10 +880,11 @@ const AdminPanel = () => {
   // Service CRUD
   const saveService = async (service) => {
     try {
-      if (service.id) {
-        await axios.put(`${API}/admin/services/${service.id}`, service, getAuthHeader());
+      if (service.id && !service.isNew) {
+        await axios.put(`${API}/admin/services/${service.id}`, service, { auth: getAuthHeader() });
       } else {
-        await axios.post(`${API}/admin/services`, service, getAuthHeader());
+        const { isNew, ...data } = service;
+        await axios.post(`${API}/admin/services`, data, { auth: getAuthHeader() });
       }
       loadData();
       setEditingItem(null);
@@ -799,7 +897,7 @@ const AdminPanel = () => {
   const deleteService = async (id) => {
     if (!window.confirm("Haluatko varmasti poistaa tämän palvelun?")) return;
     try {
-      await axios.delete(`${API}/admin/services/${id}`, getAuthHeader());
+      await axios.delete(`${API}/admin/services/${id}`, { auth: getAuthHeader() });
       loadData();
     } catch (error) {
       console.error("Error deleting service:", error);
@@ -809,10 +907,11 @@ const AdminPanel = () => {
   // Reference CRUD
   const saveReference = async (ref) => {
     try {
-      if (ref.id) {
-        await axios.put(`${API}/admin/references/${ref.id}`, ref, getAuthHeader());
+      if (ref.id && !ref.isNew) {
+        await axios.put(`${API}/admin/references/${ref.id}`, ref, { auth: getAuthHeader() });
       } else {
-        await axios.post(`${API}/admin/references`, ref, getAuthHeader());
+        const { isNew, ...data } = ref;
+        await axios.post(`${API}/admin/references`, data, { auth: getAuthHeader() });
       }
       loadData();
       setEditingItem(null);
@@ -825,17 +924,44 @@ const AdminPanel = () => {
   const deleteReference = async (id) => {
     if (!window.confirm("Haluatko varmasti poistaa tämän referenssin?")) return;
     try {
-      await axios.delete(`${API}/admin/references/${id}`, getAuthHeader());
+      await axios.delete(`${API}/admin/references/${id}`, { auth: getAuthHeader() });
       loadData();
     } catch (error) {
       console.error("Error deleting reference:", error);
     }
   };
 
+  // Partner CRUD
+  const savePartner = async (partner) => {
+    try {
+      if (partner.id && !partner.isNew) {
+        await axios.put(`${API}/admin/partners/${partner.id}`, partner, { auth: getAuthHeader() });
+      } else {
+        const { isNew, ...data } = partner;
+        await axios.post(`${API}/admin/partners`, data, { auth: getAuthHeader() });
+      }
+      loadData();
+      setEditingItem(null);
+      setNewItem(null);
+    } catch (error) {
+      console.error("Error saving partner:", error);
+    }
+  };
+
+  const deletePartner = async (id) => {
+    if (!window.confirm("Haluatko varmasti poistaa tämän kumppanin?")) return;
+    try {
+      await axios.delete(`${API}/admin/partners/${id}`, { auth: getAuthHeader() });
+      loadData();
+    } catch (error) {
+      console.error("Error deleting partner:", error);
+    }
+  };
+
   const deleteContact = async (id) => {
     if (!window.confirm("Haluatko varmasti poistaa tämän viestin?")) return;
     try {
-      await axios.delete(`${API}/admin/contacts/${id}`, getAuthHeader());
+      await axios.delete(`${API}/admin/contacts/${id}`, { auth: getAuthHeader() });
       loadData();
     } catch (error) {
       console.error("Error deleting contact:", error);
@@ -847,7 +973,7 @@ const AdminPanel = () => {
       <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center p-4">
         <div className="bg-white p-8 border border-[#E2E8F0] w-full max-w-md">
           <div className="flex justify-center mb-6">
-            <img src={LOGO_URL} alt="J&B" className="h-12" />
+            <img src={LOGO_URL} alt="J&B" className="h-14" />
           </div>
           <h1 className="text-2xl font-bold text-center text-[#0F172A] mb-6">Admin-paneeli</h1>
           
@@ -886,11 +1012,10 @@ const AdminPanel = () => {
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      {/* Admin Header */}
       <header className="bg-white border-b border-[#E2E8F0] sticky top-0 z-50">
         <div className="container-custom flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
-            <img src={LOGO_URL} alt="J&B" className="h-8" />
+            <img src={LOGO_URL} alt="J&B" className="h-10" />
             <span className="font-bold text-[#0F172A]">Admin</span>
           </div>
           <div className="flex items-center gap-4">
@@ -907,17 +1032,17 @@ const AdminPanel = () => {
       </header>
 
       <div className="container-custom py-8">
-        {/* Tabs */}
-        <div className="flex gap-2 mb-8 border-b border-[#E2E8F0]">
+        <div className="flex gap-2 mb-8 border-b border-[#E2E8F0] overflow-x-auto">
           {[
             { id: "services", label: "Palvelut", icon: Briefcase },
             { id: "references", label: "Referenssit", icon: Building2 },
+            { id: "partners", label: "Laatutakuu", icon: Award },
             { id: "contacts", label: "Viestit", icon: MessageSquare },
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${
+              onClick={() => { setActiveTab(tab.id); setEditingItem(null); setNewItem(null); }}
+              className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 -mb-px transition-colors whitespace-nowrap ${
                 activeTab === tab.id
                   ? "border-[#0056D2] text-[#0056D2]"
                   : "border-transparent text-[#64748B] hover:text-[#0F172A]"
@@ -948,7 +1073,7 @@ const AdminPanel = () => {
                       <button onClick={seedData} className="btn-secondary text-sm">Lisää oletusdata</button>
                     )}
                     <button
-                      onClick={() => setNewItem({ title: "", description: "", icon: "Building2", image_url: "", order: services.length + 1 })}
+                      onClick={() => setNewItem({ title: "", description: "", icon: "Building2", image_url: "", order: services.length + 1, isNew: true })}
                       className="btn-primary text-sm flex items-center gap-2"
                     >
                       <Plus size={16} />
@@ -965,6 +1090,7 @@ const AdminPanel = () => {
                       onChange={setNewItem}
                       onSave={() => saveService(newItem)}
                       onCancel={() => setNewItem(null)}
+                      credentials={getAuthHeader()}
                     />
                   </div>
                 )}
@@ -978,6 +1104,7 @@ const AdminPanel = () => {
                           onChange={setEditingItem}
                           onSave={() => saveService(editingItem)}
                           onCancel={() => setEditingItem(null)}
+                          credentials={getAuthHeader()}
                         />
                       ) : (
                         <div className="flex items-start justify-between gap-4">
@@ -1013,7 +1140,7 @@ const AdminPanel = () => {
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-bold text-[#0F172A]">Referenssit ({references.length})</h2>
                   <button
-                    onClick={() => setNewItem({ name: "", type: "Tasoitus- ja maalaustyöt", description: "", order: references.length + 1 })}
+                    onClick={() => setNewItem({ name: "", type: "Tasoitus- ja maalaustyöt", description: "", order: references.length + 1, isNew: true })}
                     className="btn-primary text-sm flex items-center gap-2"
                   >
                     <Plus size={16} />
@@ -1066,6 +1193,78 @@ const AdminPanel = () => {
               </div>
             )}
 
+            {/* Partners/Quality Tab */}
+            {activeTab === "partners" && (
+              <div>
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <h2 className="text-xl font-bold text-[#0F172A]">Laatutakuu / Kumppanit ({partners.length})</h2>
+                    <p className="text-sm text-[#64748B] mt-1">Lisää luotettava kumppani -logot ja sertifikaatit tähän</p>
+                  </div>
+                  <button
+                    onClick={() => setNewItem({ name: "", image_url: "", order: partners.length + 1, isNew: true })}
+                    className="btn-primary text-sm flex items-center gap-2"
+                  >
+                    <Plus size={16} />
+                    Lisää kumppani
+                  </button>
+                </div>
+
+                {newItem && (
+                  <div className="bg-white border border-[#0056D2] p-6 mb-6">
+                    <h3 className="font-bold text-[#0F172A] mb-4">Uusi kumppani/sertifikaatti</h3>
+                    <PartnerForm
+                      partner={newItem}
+                      onChange={setNewItem}
+                      onSave={() => savePartner(newItem)}
+                      onCancel={() => setNewItem(null)}
+                      credentials={getAuthHeader()}
+                    />
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {partners.map((partner) => (
+                    <div key={partner.id} className="bg-white border border-[#E2E8F0] p-6">
+                      {editingItem?.id === partner.id ? (
+                        <PartnerForm
+                          partner={editingItem}
+                          onChange={setEditingItem}
+                          onSave={() => savePartner(editingItem)}
+                          onCancel={() => setEditingItem(null)}
+                          credentials={getAuthHeader()}
+                        />
+                      ) : (
+                        <div className="flex justify-between items-start">
+                          <div className="flex items-center gap-4">
+                            {partner.image_url ? (
+                              <img src={partner.image_url} alt={partner.name} className="w-16 h-16 object-contain" />
+                            ) : (
+                              <div className="w-16 h-16 bg-[#EBF3FF] flex items-center justify-center">
+                                <Award size={24} className="text-[#0056D2]" />
+                              </div>
+                            )}
+                            <div>
+                              <h3 className="font-bold text-[#0F172A]">{partner.name}</h3>
+                              <p className="text-xs text-[#94A3B8]">Järjestys: {partner.order}</p>
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <button onClick={() => setEditingItem(partner)} className="p-2 text-[#64748B] hover:text-[#0056D2]">
+                              <Edit2 size={18} />
+                            </button>
+                            <button onClick={() => deletePartner(partner.id)} className="p-2 text-[#64748B] hover:text-red-600">
+                              <Trash2 size={18} />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Contacts Tab */}
             {activeTab === "contacts" && (
               <div>
@@ -1104,7 +1303,7 @@ const AdminPanel = () => {
 };
 
 // Service Form Component
-const ServiceForm = ({ service, onChange, onSave, onCancel }) => (
+const ServiceForm = ({ service, onChange, onSave, onCancel, credentials }) => (
   <div className="space-y-4">
     <div>
       <label className="block text-sm font-medium text-[#0F172A] mb-1">Otsikko</label>
@@ -1150,13 +1349,11 @@ const ServiceForm = ({ service, onChange, onSave, onCancel }) => (
       </div>
     </div>
     <div>
-      <label className="block text-sm font-medium text-[#0F172A] mb-1">Kuvan URL</label>
-      <input
-        type="url"
-        value={service.image_url || ""}
-        onChange={(e) => onChange({ ...service, image_url: e.target.value })}
-        className="form-input"
-        placeholder="https://..."
+      <label className="block text-sm font-medium text-[#0F172A] mb-1">Kuva</label>
+      <ImageUpload
+        currentImage={service.image_url}
+        onImageChange={(url) => onChange({ ...service, image_url: url })}
+        credentials={credentials}
       />
     </div>
     <div className="flex gap-2 pt-2">
@@ -1208,6 +1405,46 @@ const ReferenceForm = ({ reference, onChange, onSave, onCancel }) => (
         type="number"
         value={reference.order}
         onChange={(e) => onChange({ ...reference, order: parseInt(e.target.value) || 0 })}
+        className="form-input"
+      />
+    </div>
+    <div className="flex gap-2 pt-2">
+      <button onClick={onSave} className="btn-primary text-sm flex items-center gap-2">
+        <Save size={16} />
+        Tallenna
+      </button>
+      <button onClick={onCancel} className="btn-secondary text-sm">Peruuta</button>
+    </div>
+  </div>
+);
+
+// Partner Form Component
+const PartnerForm = ({ partner, onChange, onSave, onCancel, credentials }) => (
+  <div className="space-y-4">
+    <div>
+      <label className="block text-sm font-medium text-[#0F172A] mb-1">Nimi</label>
+      <input
+        type="text"
+        value={partner.name}
+        onChange={(e) => onChange({ ...partner, name: e.target.value })}
+        className="form-input"
+        placeholder="Esim. Luotettava Kumppani, Kasvuyritys"
+      />
+    </div>
+    <div>
+      <label className="block text-sm font-medium text-[#0F172A] mb-1">Logo/Kuva</label>
+      <ImageUpload
+        currentImage={partner.image_url}
+        onImageChange={(url) => onChange({ ...partner, image_url: url })}
+        credentials={credentials}
+      />
+    </div>
+    <div>
+      <label className="block text-sm font-medium text-[#0F172A] mb-1">Järjestys</label>
+      <input
+        type="number"
+        value={partner.order}
+        onChange={(e) => onChange({ ...partner, order: parseInt(e.target.value) || 0 })}
         className="form-input"
       />
     </div>
