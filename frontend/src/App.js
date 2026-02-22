@@ -588,6 +588,7 @@ const AdminPanel = () => {
     { id: "references", label: "Referenssit", icon: Building2 },
     { id: "partners", label: "Laatutakuu", icon: Award },
     { id: "contacts", label: "Viestit", icon: MessageSquare },
+    { id: "security", label: "Turvallisuus", icon: Shield },
   ];
 
   return (
@@ -597,7 +598,7 @@ const AdminPanel = () => {
           <div className="flex items-center gap-3"><img src={LOGO_URL} alt="J&B" className="h-8 md:h-10" /><span className="font-bold text-[#0F172A] text-sm md:text-base">Admin</span></div>
           <div className="flex items-center gap-3 md:gap-4">
             <Link to="/" className="text-xs md:text-sm text-[#64748B] hover:text-[#0056D2]">Sivusto</Link>
-            <button onClick={() => setIsAuthenticated(false)} className="flex items-center gap-1 text-xs md:text-sm text-[#64748B] hover:text-red-600"><LogOut size={14} />Ulos</button>
+            <button onClick={handleLogout} className="flex items-center gap-1 text-xs md:text-sm text-[#64748B] hover:text-red-600"><LogOut size={14} />Ulos</button>
           </div>
         </div>
       </header>
