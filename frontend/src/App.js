@@ -234,9 +234,9 @@ const HeroSection = ({ settings }) => {
       </div>
       <div className="container-custom relative z-10 py-12 md:py-20">
         <div className="max-w-2xl">
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="font-slogan text-[#0056D2] text-base md:text-xl mb-3 md:mb-4">{s.hero_slogan}</motion.p>
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="font-slogan text-primary text-base md:text-xl mb-3 md:mb-4">{s.hero_slogan}</motion.p>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-[#0F172A] mb-4 md:mb-6 leading-tight">
-            {s.hero_title_1}<br /><span className="text-[#0056D2]">{s.hero_title_2}</span> {s.hero_title_3}
+            {s.hero_title_1}<br /><span className="text-primary">{s.hero_title_2}</span> {s.hero_title_3}
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-base md:text-lg text-[#64748B] mb-6 md:mb-8 max-w-xl leading-relaxed">{s.hero_description}</motion.p>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-col sm:flex-row gap-3 md:gap-4">
@@ -244,13 +244,13 @@ const HeroSection = ({ settings }) => {
             <a href="#palvelut" className="btn-secondary inline-flex items-center justify-center gap-2 text-sm md:text-base">Tutustu palveluihin<ChevronDown size={18} /></a>
           </motion.div>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-8 md:mt-12 flex flex-wrap items-center gap-4 md:gap-8">
-            <div className="flex items-center gap-2 text-xs md:text-sm text-[#64748B]"><CheckCircle size={16} className="text-[#0056D2]" /><span>{s.hero_badge_1}</span></div>
-            <div className="flex items-center gap-2 text-xs md:text-sm text-[#64748B]"><CheckCircle size={16} className="text-[#0056D2]" /><span>{s.hero_badge_2}</span></div>
+            <div className="flex items-center gap-2 text-xs md:text-sm text-[#64748B]"><CheckCircle size={16} className="text-primary" /><span>{s.hero_badge_1}</span></div>
+            <div className="flex items-center gap-2 text-xs md:text-sm text-[#64748B]"><CheckCircle size={16} className="text-primary" /><span>{s.hero_badge_2}</span></div>
           </motion.div>
         </div>
       </div>
       <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute bottom-6 left-1/2 -translate-x-1/2 hidden md:block">
-        <ChevronDown size={32} className="text-[#0056D2] opacity-60" />
+        <ChevronDown size={32} className="text-primary opacity-60" />
       </motion.div>
     </section>
   );
