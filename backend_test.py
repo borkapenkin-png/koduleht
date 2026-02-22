@@ -236,13 +236,24 @@ class JBMaalausAPITester:
         
         # Test contact form (main functionality)
         self.test_contact_form_submission()
-        self.test_get_contact_forms()
         
-        # Test references
+        # Test public data endpoints
+        self.test_get_services()
         self.test_get_references()
-        success, ref_id = self.test_create_reference()
-        if success and ref_id:
-            self.test_delete_reference(ref_id)
+        
+        # Test admin authentication
+        print("\n🔐 Testing Admin Authentication...")
+        self.test_admin_auth()
+        self.test_admin_auth_invalid()
+        
+        # Test admin data operations
+        print("\n👨‍💼 Testing Admin Operations...")
+        self.test_admin_seed_data()
+        self.test_admin_get_contacts()
+        
+        # Test admin CRUD operations
+        self.test_admin_services_crud()
+        self.test_admin_references_crud()
         
         # Print results
         print("\n" + "=" * 60)
