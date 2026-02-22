@@ -1099,7 +1099,50 @@ const ServiceForm = ({ service, onChange, onSave, onCancel, token }) => (
     <div><label className="block text-sm font-medium mb-1">Otsikko</label><input value={service.title} onChange={(e) => onChange({ ...service, title: e.target.value })} className="form-input text-sm" placeholder="Nimi" /></div>
     <div><label className="block text-sm font-medium mb-1">Kuvaus</label><textarea value={service.description} onChange={(e) => onChange({ ...service, description: e.target.value })} className="form-input text-sm" rows={3} /></div>
     <div className="grid grid-cols-2 gap-3">
-      <div><label className="block text-sm font-medium mb-1">Ikoni</label><select value={service.icon} onChange={(e) => onChange({ ...service, icon: e.target.value })} className="form-input text-sm"><option value="Building2">Rakennus</option><option value="Layers">Kerrokset</option><option value="Paintbrush">Sivellin</option></select></div>
+      <div><label className="block text-sm font-medium mb-1">Ikoni</label>
+        <select value={service.icon} onChange={(e) => onChange({ ...service, icon: e.target.value })} className="form-input text-sm">
+          <optgroup label="Perus">
+            <option value="Building2">🏢 Rakennus</option>
+            <option value="Layers">📚 Kerrokset</option>
+            <option value="Paintbrush">🖌️ Sivellin</option>
+          </optgroup>
+          <optgroup label="Katto ja ulkopinnat">
+            <option value="PanelTop">🏠 Katto</option>
+            <option value="Sun">☀️ Aurinko/Ulko</option>
+            <option value="Scaling">📐 Julkisivu</option>
+            <option value="Fence">🚧 Aita</option>
+            <option value="TreeDeciduous">🌳 Piha</option>
+            <option value="Droplets">💧 Vesieristys</option>
+            <option value="Wind">💨 Ilmastointi</option>
+          </optgroup>
+          <optgroup label="Sisustus">
+            <option value="Sofa">🛋️ Sisustus</option>
+            <option value="Armchair">🪑 Nojatuoli</option>
+            <option value="Lamp">💡 Lamppu</option>
+            <option value="LampCeiling">💡 Kattovalaisin</option>
+            <option value="Wallpaper">🎨 Tapetti</option>
+            <option value="Frame">🖼️ Kehys/Taulu</option>
+            <option value="DoorOpen">🚪 Ovi (auki)</option>
+            <option value="DoorClosed">🚪 Ovi (kiinni)</option>
+            <option value="Sparkles">✨ Koristelu</option>
+          </optgroup>
+          <optgroup label="Työkalut">
+            <option value="Hammer">🔨 Vasara</option>
+            <option value="Wrench">🔧 Jakoavain</option>
+            <option value="PaintBucket">🪣 Maaliämpäri</option>
+            <option value="Brush">🖌️ Harja</option>
+            <option value="Ruler">📏 Viivoitin</option>
+            <option value="HardHat">⛑️ Kypärä</option>
+            <option value="Construction">🚧 Rakennustyö</option>
+            <option value="Warehouse">🏭 Varasto</option>
+          </optgroup>
+          <optgroup label="Muut">
+            <option value="Square">◻️ Neliö</option>
+            <option value="CircleDot">⭕ Ympyrä</option>
+            <option value="LayoutGrid">📊 Ruudukko</option>
+          </optgroup>
+        </select>
+      </div>
       <div><label className="block text-sm font-medium mb-1">Järjestys</label><input type="number" value={service.order} onChange={(e) => onChange({ ...service, order: parseInt(e.target.value) || 0 })} className="form-input text-sm" /></div>
     </div>
     <div><label className="block text-sm font-medium mb-1">Kuva</label><ImageUpload currentImage={service.image_url} onImageChange={(url) => onChange({ ...service, image_url: url })} token={token} /></div>
