@@ -44,7 +44,85 @@ const defaultSettings = {
   contact_phone_2_name: "Joosep Rohusaar",
   contact_phone_2: "+358 40 029 8247",
   contact_jobs_title: "Työpaikkahaku",
-  contact_jobs_text: "Haluatko töihin? Lähetä CV ja saatekirje: info@jbtasoitusmaalaus.fi"
+  contact_jobs_text: "Haluatko töihin? Lähetä CV ja saatekirje: info@jbtasoitusmaalaus.fi",
+  // Theme defaults
+  theme_font: "Inter",
+  theme_color: "#0056D2",
+  theme_size: "medium",
+  logo_url: null,
+  favicon_url: null
+};
+
+// Available fonts
+const FONT_OPTIONS = [
+  { value: "Inter", label: "Inter (Moderni)" },
+  { value: "Poppins", label: "Poppins (Pyöreä)" },
+  { value: "Roboto", label: "Roboto (Selkeä)" },
+  { value: "Open Sans", label: "Open Sans (Luettava)" },
+  { value: "Montserrat", label: "Montserrat (Tyylikäs)" },
+  { value: "Lato", label: "Lato (Ystävällinen)" },
+  { value: "Playfair Display", label: "Playfair (Klassinen)" },
+  { value: "Raleway", label: "Raleway (Elegantti)" }
+];
+
+// Color presets
+const COLOR_OPTIONS = [
+  { value: "#0056D2", label: "Sininen", bg: "#0056D2" },
+  { value: "#059669", label: "Vihreä", bg: "#059669" },
+  { value: "#DC2626", label: "Punainen", bg: "#DC2626" },
+  { value: "#7C3AED", label: "Violetti", bg: "#7C3AED" },
+  { value: "#EA580C", label: "Oranssi", bg: "#EA580C" },
+  { value: "#0891B2", label: "Turkoosi", bg: "#0891B2" },
+  { value: "#4F46E5", label: "Indigo", bg: "#4F46E5" },
+  { value: "#BE185D", label: "Pinkki", bg: "#BE185D" }
+];
+
+// Size presets
+const SIZE_OPTIONS = [
+  { value: "small", label: "Pieni" },
+  { value: "medium", label: "Keskikokoinen" },
+  { value: "large", label: "Suuri" }
+];
+
+// Helper to generate lighter shade
+const lightenColor = (hex, percent) => {
+  const num = parseInt(hex.replace('#', ''), 16);
+  const amt = Math.round(2.55 * percent);
+  const R = Math.min(255, (num >> 16) + amt);
+  const G = Math.min(255, ((num >> 8) & 0x00FF) + amt);
+  const B = Math.min(255, (num & 0x0000FF) + amt);
+  return `#${(0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1)}`;
+};
+
+// Apply theme to document
+const applyTheme = (settings) => {
+  const root = document.documentElement;
+  const color = settings.theme_color || defaultSettings.theme_color;
+  const font = settings.theme_font || defaultSettings.theme_font;
+  const size = settings.theme_size || defaultSettings.theme_size;
+  
+  // Apply colors
+  root.style.setProperty('--color-primary', color);
+  root.style.setProperty('--color-primary-light', lightenColor(color, 90));
+  root.style.setProperty('--color-primary-hover', lightenColor(color, -10));
+  
+  // Apply font
+  root.style.setProperty('--font-main', `"${font}", sans-serif`);
+  
+  // Apply size multiplier
+  const sizeMultiplier = size === 'small' ? 0.9 : size === 'large' ? 1.1 : 1;
+  root.style.setProperty('--size-multiplier', sizeMultiplier);
+  
+  // Update favicon if set
+  if (settings.favicon_url) {
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    link.href = settings.favicon_url;
+  }
 };
 
 // ========== IMAGE UPLOAD ==========
