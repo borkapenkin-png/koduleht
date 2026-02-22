@@ -42,11 +42,17 @@
 /* Service card */
 .service-card {
   background: white;
-  padding: 2rem;
+  padding: 1.5rem;
   border: 1px solid var(--border);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .service-card {
+    padding: 2rem;
+  }
 }
 
 .service-card::before {
