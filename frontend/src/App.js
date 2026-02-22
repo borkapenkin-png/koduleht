@@ -211,12 +211,13 @@ const ServicesSection = ({ services }) => (
 // ========== ABOUT ==========
 const AboutSection = ({ settings }) => {
   const s = { ...defaultSettings, ...settings };
+  const aboutImage = s.about_image_url || defaultSettings.about_image_url;
   return (
     <section id="meista" data-testid="about-section" className="section-padding">
       <div className="container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="relative order-2 lg:order-1">
-            <img src={s.about_image_url} alt="Työ" className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover" />
+            <img src={aboutImage} alt="Työ" className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover" />
             <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-[#0056D2] text-white p-4 md:p-6 hidden sm:block">
               <p className="font-slogan text-2xl md:text-3xl">{s.about_year}</p>
               <p className="text-xs md:text-sm opacity-80">vuodesta alkaen</p>
