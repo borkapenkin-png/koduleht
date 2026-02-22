@@ -277,15 +277,15 @@ html {
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1.5rem;
-  background-color: var(--color-primary);
-  color: white;
+  background-color: var(--color-primary) !important;
+  color: white !important;
   font-weight: 600;
   font-size: calc(0.875rem * var(--size-multiplier));
   transition: all 0.2s;
 }
 
 .btn-primary:hover {
-  background-color: var(--color-primary-hover);
+  background-color: var(--color-primary-hover) !important;
   transform: translateY(-1px);
 }
 
