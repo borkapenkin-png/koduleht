@@ -783,6 +783,86 @@ const AdminPanel = () => {
                 )}
               </div>
             )}
+
+            {/* SECURITY TAB */}
+            {activeTab === "security" && (
+              <div className="max-w-md">
+                <h2 className="text-lg md:text-xl font-bold mb-4 md:mb-6 flex items-center gap-2"><Shield size={20} className="text-[#0056D2]" />Turvallisuusasetukset</h2>
+                
+                <div className="bg-white border p-4 md:p-6 mb-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-green-100 flex items-center justify-center rounded-full">
+                      <CheckCircle size={20} className="text-green-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-sm md:text-base">JWT-autentikointi</h3>
+                      <p className="text-xs text-[#64748B]">Aktiivinen - Turvallinen token-pohjainen kirjautuminen</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-green-100 flex items-center justify-center rounded-full">
+                      <CheckCircle size={20} className="text-green-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-sm md:text-base">Rate Limiting</h3>
+                      <p className="text-xs text-[#64748B]">Aktiivinen - Max 5 yritystä / 5 min</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-green-100 flex items-center justify-center rounded-full">
+                      <CheckCircle size={20} className="text-green-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-sm md:text-base">Salasanan hashaus</h3>
+                      <p className="text-xs text-[#64748B]">Aktiivinen - Bcrypt-salaus</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white border p-4 md:p-6">
+                  <h3 className="font-bold text-[#0F172A] mb-4 flex items-center gap-2"><Lock size={16} />Vaihda salasana</h3>
+                  <form onSubmit={handlePasswordChange} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Nykyinen salasana</label>
+                      <input 
+                        type="password" 
+                        value={passwordData.current} 
+                        onChange={(e) => setPasswordData({...passwordData, current: e.target.value})} 
+                        className="form-input text-sm" 
+                        required 
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Uusi salasana</label>
+                      <input 
+                        type="password" 
+                        value={passwordData.new} 
+                        onChange={(e) => setPasswordData({...passwordData, new: e.target.value})} 
+                        className="form-input text-sm" 
+                        required 
+                        minLength={8}
+                      />
+                      <p className="text-xs text-[#64748B] mt-1">Vähintään 8 merkkiä</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Vahvista uusi salasana</label>
+                      <input 
+                        type="password" 
+                        value={passwordData.confirm} 
+                        onChange={(e) => setPasswordData({...passwordData, confirm: e.target.value})} 
+                        className="form-input text-sm" 
+                        required 
+                      />
+                    </div>
+                    {passwordError && <div className="p-3 bg-red-50 border border-red-200 text-red-800 text-sm">{passwordError}</div>}
+                    {passwordSuccess && <div className="p-3 bg-green-50 border border-green-200 text-green-800 text-sm">{passwordSuccess}</div>}
+                    <button type="submit" className="btn-primary w-full flex items-center justify-center gap-2">
+                      <Lock size={16} />Vaihda salasana
+                    </button>
+                  </form>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>
