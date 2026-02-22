@@ -225,17 +225,20 @@ const ServicesSection = () => {
     {
       icon: Building2,
       title: "Julkisivurappaus",
-      description: "Julkisivun rappaus antaa tasalaatuisen sadetta ja muita sään rasituksia suojaavan pinnan rakenteille. Teemme kokonaisvaltaisia julkisivurappauksia sekä osarappauksia."
+      description: "Julkisivun rappaus antaa tasalaatuisen sadetta ja muita sään rasituksia suojaavan pinnan rakenteille. Teemme kokonaisvaltaisia julkisivurappauksia sekä osarappauksia.",
+      image: "https://images.pexels.com/photos/5691622/pexels-photo-5691622.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
     },
     {
       icon: Layers,
       title: "Tasoitustyöt",
-      description: "Tasoitetyöt tulee tehdä huolella ennen uutta pintamateriaalia. Kokenut ammattilainen takaa tasaisen ja siistin lopputuloksen oikeilla välineillä."
+      description: "Tasoitetyöt tulee tehdä huolella ennen uutta pintamateriaalia. Kokenut ammattilainen takaa tasaisen ja siistin lopputuloksen oikeilla välineillä.",
+      image: "https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
     },
     {
       icon: Paintbrush,
       title: "Maalaustyöt",
-      description: "Maalaustyöt sisätiloihin ja ulkopinnoille huolellisesti toiveidenne mukaan. Palvelemme yrityksiä, yksityisasiakkaita ja taloyhtiöitä."
+      description: "Maalaustyöt sisätiloihin ja ulkopinnoille huolellisesti toiveidenne mukaan. Palvelemme yrityksiä, yksityisasiakkaita ja taloyhtiöitä.",
+      image: "https://images.pexels.com/photos/5691629/pexels-photo-5691629.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
     }
   ];
 
@@ -262,12 +265,22 @@ const ServicesSection = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               data-testid={`service-card-${index}`}
-              className="service-card"
+              className="service-card group overflow-hidden"
             >
-              <div className="w-12 h-12 bg-[#EBF3FF] flex items-center justify-center mb-6">
-                <service.icon size={24} className="text-[#0056D2]" />
+              {/* Service Image */}
+              <div className="aspect-[16/10] overflow-hidden -mx-8 -mt-8 mb-6">
+                <img
+                  src={service.image}
+                  alt={service.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
               </div>
-              <h3 className="text-xl font-bold text-[#0F172A] mb-4">{service.title}</h3>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-[#EBF3FF] flex items-center justify-center">
+                  <service.icon size={20} className="text-[#0056D2]" />
+                </div>
+                <h3 className="text-xl font-bold text-[#0F172A]">{service.title}</h3>
+              </div>
               <p className="text-[#64748B] leading-relaxed">{service.description}</p>
             </motion.div>
           ))}
