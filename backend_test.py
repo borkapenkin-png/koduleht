@@ -202,6 +202,88 @@ class JBMaalausAPITester:
         success, _ = self.run_test("Admin Delete Reference", "DELETE", f"admin/references/{reference_id}", 200, auth=self.admin_auth)
         return success
 
+    def test_admin_partners_crud(self):
+        """Test full CRUD operations for partners"""
+        print("\n🔧 Testing Partners CRUD...")
+        
+        # Create partner
+        test_partner = {
+            "name": "Test Partner Company",
+            "image_url": "https://example.com/test-logo.jpg",
+            "order": 99
+        }
+        
+        success, create_response = self.run_test("Admin Create Partner", "POST", "admin/partners", 200, test_partner, auth=self.admin_auth)
+        if not success:
+            return False
+            
+        partner_id = create_response.get('id')
+        if not partner_id:
+            print("❌ No partner ID returned from create")
+            return False
+        
+        # Update partner
+        update_data = {
+            "name": "Updated Test Partner",
+            "image_url": "https://example.com/updated-logo.jpg"
+        }
+        
+        success, _ = self.run_test("Admin Update Partner", "PUT", f"admin/partners/{partner_id}", 200, update_data, auth=self.admin_auth)
+        if not success:
+            return False
+        
+        # Delete partner
+        success, _ = self.run_test("Admin Delete Partner", "DELETE", f"admin/partners/{partner_id}", 200, auth=self.admin_auth)
+        return success
+
+    def test_admin_image_upload(self):
+        """Test image upload endpoint"""
+        print("\n📷 Testing Image Upload...")
+        
+        # Create a simple test image (1x1 pixel PNG)
+        # Base64 encoded minimal PNG image
+        test_image_data = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\x0bIDATx\x9cc```\x00\x00\x00\x04\x00\x01\xdd\x8d\xb4\x1c\x00\x00\x00\x00IEND\xaeB`\x82'
+        
+        # Use requests files parameter for multipart/form-data
+        files = {'file': ('test.png', test_image_data, 'image/png')}
+        
+        url = f"{self.api_url}/admin/upload"
+        self.tests_run += 1
+        print(f"🔍 Testing Admin Image Upload...")
+        print(f"   URL: {url}")
+        
+        try:
+            response = requests.post(url, files=files, auth=self.admin_auth, timeout=10)
+            
+            success = response.status_code == 200
+            if success:
+                self.tests_passed += 1
+                self.passed_tests.append("Admin Image Upload")
+                print(f"✅ Passed - Status: {response.status_code}")
+                resp_json = response.json()
+                print(f"   Response: {str(resp_json)[:200]}...")
+                return True, resp_json
+            else:
+                self.failed_tests.append({
+                    "test": "Admin Image Upload",
+                    "expected": 200,
+                    "actual": response.status_code,
+                    "response": response.text[:200] if response.text else "No response"
+                })
+                print(f"❌ Failed - Expected 200, got {response.status_code}")
+                print(f"   Response: {response.text[:200]}")
+                return False, {}
+        
+        except Exception as e:
+            self.failed_tests.append({
+                "test": "Admin Image Upload",
+                "expected": 200,
+                "actual": "Exception",
+                "response": str(e)
+            })
+            print(f"❌ Failed - Error: {str(e)}")
+            return False, {}
+
     def test_create_reference(self):
         """Test creating a reference"""
         test_data = {
