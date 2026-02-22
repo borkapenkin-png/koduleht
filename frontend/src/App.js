@@ -693,11 +693,11 @@ const AdminPanel = () => {
                     <button onClick={() => setNewItem({ title: "", description: "", icon: "Building2", image_url: "", order: services.length + 1, isNew: true })} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Plus size={14} />Lisää</button>
                   </div>
                 </div>
-                {newItem && <div className="bg-white border border-[#0056D2] p-4 md:p-6 mb-4"><h3 className="font-bold mb-4">Uusi palvelu</h3><ServiceForm service={newItem} onChange={setNewItem} onSave={() => saveService(newItem)} onCancel={() => setNewItem(null)} credentials={getAuth()} /></div>}
+                {newItem && <div className="bg-white border border-[#0056D2] p-4 md:p-6 mb-4"><h3 className="font-bold mb-4">Uusi palvelu</h3><ServiceForm service={newItem} onChange={setNewItem} onSave={() => saveService(newItem)} onCancel={() => setNewItem(null)} token={token} /></div>}
                 <div className="space-y-3 md:space-y-4">
                   {services.map((s) => (
                     <div key={s.id} className="bg-white border p-4 md:p-6">
-                      {editingItem?.id === s.id ? <ServiceForm service={editingItem} onChange={setEditingItem} onSave={() => saveService(editingItem)} onCancel={() => setEditingItem(null)} credentials={getAuth()} /> : (
+                      {editingItem?.id === s.id ? <ServiceForm service={editingItem} onChange={setEditingItem} onSave={() => saveService(editingItem)} onCancel={() => setEditingItem(null)} token={token} /> : (
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex items-start gap-3">
                             {s.image_url && <img src={s.image_url} alt={s.title} className="w-16 md:w-24 h-12 md:h-16 object-cover" />}
