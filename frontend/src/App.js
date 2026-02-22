@@ -762,9 +762,10 @@ const Footer = () => {
       <div className="container-custom">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div>
-            <p className="text-xl font-bold">
-              J&B <span className="text-[#0056D2]">Tasoitus & Maalaus</span>
-            </p>
+            <div className="flex items-center">
+              <span className="text-2xl font-bold text-[#0056D2]">JB</span>
+              <span className="text-lg text-white/60 ml-2">tasoitusmaalaus</span>
+            </div>
             <p className="text-white/60 text-sm mt-1">Laatujohtajat vuodesta 2018</p>
           </div>
           
