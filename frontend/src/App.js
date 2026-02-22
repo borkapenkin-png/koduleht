@@ -456,28 +456,31 @@ const ContactSection = ({ settings }) => {
 };
 
 // ========== FOOTER ==========
-const Footer = () => (
-  <footer data-testid="footer" className="bg-[#0F172A] text-white py-8 md:py-12">
-    <div className="container-custom">
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6">
-        <div className="flex items-center gap-3 md:gap-4">
-          <img src={LOGO_URL} alt="J&B" className="h-8 md:h-10 w-auto" />
-          <p className="text-white/60 text-xs md:text-sm">Laatujohtajat vuodesta 2018</p>
+const Footer = ({ logoUrl }) => {
+  const logo = logoUrl || LOGO_URL;
+  return (
+    <footer data-testid="footer" className="footer-bg text-white py-8 md:py-12">
+      <div className="container-custom">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6">
+          <div className="flex items-center gap-3 md:gap-4">
+            <img src={logo} alt="J&B" className="h-8 md:h-10 w-auto max-w-[150px] object-contain" />
+            <p className="text-white/60 text-xs md:text-sm">Laatujohtajat vuodesta 2018</p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-xs md:text-sm text-white/60">
+            <a href="#palvelut" className="hover:text-white">Palvelut</a>
+            <a href="#meista" className="hover:text-white">Meistä</a>
+            <a href="#referenssit" className="hover:text-white">Referenssit</a>
+            <a href="#yhteystiedot" className="hover:text-white">Yhteystiedot</a>
+            <Link to="/admin" className="hover:text-white flex items-center gap-1"><Settings size={12} />Admin</Link>
+          </div>
         </div>
-        <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-xs md:text-sm text-white/60">
-          <a href="#palvelut" className="hover:text-white">Palvelut</a>
-          <a href="#meista" className="hover:text-white">Meistä</a>
-          <a href="#referenssit" className="hover:text-white">Referenssit</a>
-          <a href="#yhteystiedot" className="hover:text-white">Yhteystiedot</a>
-          <Link to="/admin" className="hover:text-white flex items-center gap-1"><Settings size={12} />Admin</Link>
+        <div className="border-t border-white/10 mt-6 md:mt-8 pt-6 md:pt-8 text-center text-xs md:text-sm text-white/40">
+          <p>© {new Date().getFullYear()} J&B Tasoitus ja Maalaus Oy</p>
         </div>
       </div>
-      <div className="border-t border-white/10 mt-6 md:mt-8 pt-6 md:pt-8 text-center text-xs md:text-sm text-white/40">
-        <p>© {new Date().getFullYear()} J&B Tasoitus ja Maalaus Oy</p>
-      </div>
-    </div>
-  </footer>
-);
+    </footer>
+  );
+};
 
 // ========== ADMIN PANEL ==========
 const AdminPanel = () => {
