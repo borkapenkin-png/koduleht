@@ -910,10 +910,11 @@ const PartnerForm = ({ partner, onChange, onSave, onCancel, token }) => (
 const HomePage = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
-  const [settings, setSettings] = useState(defaultSettings);
+  const [settings, setSettings] = useState(null);
   const [services, setServices] = useState([]);
   const [references, setReferences] = useState([]);
   const [partners, setPartners] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -928,7 +929,10 @@ const HomePage = () => {
         setServices(servicesRes.data);
         setReferences(refsRes.data);
         setPartners(partnersRes.data);
-      } catch {}
+      } catch {
+        setSettings(defaultSettings);
+      }
+      setIsLoading(false);
     };
     fetchData();
   }, []);
