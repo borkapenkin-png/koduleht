@@ -351,15 +351,98 @@ async def get_image(image_id: str):
     return Response(content=image_data, media_type=image['content_type'])
 
 
+# ========== AUTH MODELS ==========
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+class LoginResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    username: str
+    expires_in: int = JWT_EXPIRATION_HOURS * 3600
+
+class PasswordChangeRequest(BaseModel):
+    current_password: str
+    new_password: str
+
 # ========== ADMIN ROUTES ==========
 
+@api_router.post("/admin/login", response_model=LoginResponse)
+async def admin_login(request: Request, login_data: LoginRequest):
+    """Login endpoint with rate limiting."""
+    client_ip = request.client.host if request.client else "unknown"
+    
+    # Check rate limit
+    if not check_rate_limit(client_ip):
+        remaining = get_remaining_lockout(client_ip)
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"Liian monta kirjautumisyritystä. Yritä uudelleen {remaining} sekunnin kuluttua."
+        )
+    
+    # Find user in database
+    user = await db.admin_users.find_one({"username": login_data.username}, {"_id": 0})
+    
+    if not user or not verify_password(login_data.password, user["password_hash"]):
+        record_login_attempt(client_ip)
+        attempts_left = MAX_LOGIN_ATTEMPTS - len(login_attempts[client_ip])
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Väärä käyttäjätunnus tai salasana. {attempts_left} yritystä jäljellä."
+        )
+    
+    # Clear login attempts on success
+    login_attempts[client_ip] = []
+    
+    # Create token
+    token = create_access_token(login_data.username)
+    
+    return LoginResponse(
+        access_token=token,
+        username=login_data.username
+    )
+
 @api_router.get("/admin/verify")
-async def verify_admin_access(username: str = Depends(verify_admin)):
+async def verify_admin_access(username: str = Depends(get_current_admin)):
+    """Verify token validity."""
     return {"authenticated": True, "username": username}
+
+@api_router.post("/admin/change-password")
+async def change_password(
+    password_data: PasswordChangeRequest,
+    username: str = Depends(get_current_admin)
+):
+    """Change admin password."""
+    # Get current user
+    user = await db.admin_users.find_one({"username": username}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="Käyttäjää ei löydy")
+    
+    # Verify current password
+    if not verify_password(password_data.current_password, user["password_hash"]):
+        raise HTTPException(status_code=400, detail="Nykyinen salasana on väärin")
+    
+    # Validate new password
+    if len(password_data.new_password) < 8:
+        raise HTTPException(status_code=400, detail="Uusi salasana on liian lyhyt (min. 8 merkkiä)")
+    
+    # Update password
+    new_hash = hash_password(password_data.new_password)
+    await db.admin_users.update_one(
+        {"username": username},
+        {"$set": {
+            "password_hash": new_hash,
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }}
+    )
+    
+    return {"message": "Salasana vaihdettu onnistuneesti"}
 
 # Admin - Image Upload
 @api_router.post("/admin/upload")
-async def upload_image(file: UploadFile = File(...), username: str = Depends(verify_admin)):
+async def upload_image(file: UploadFile = File(...), username: str = Depends(get_current_admin)):
     allowed_types = ["image/jpeg", "image/png", "image/gif", "image/webp"]
     if file.content_type not in allowed_types:
         raise HTTPException(status_code=400, detail="Invalid file type")
