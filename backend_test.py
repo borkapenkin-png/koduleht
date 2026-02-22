@@ -236,6 +236,87 @@ class JBMaalausAPITester:
         success, _ = self.run_test("Admin Delete Partner", "DELETE", f"admin/partners/{partner_id}", 200, auth=self.admin_auth)
         return success
 
+    # ========== SITE SETTINGS TESTS ==========
+    
+    def test_get_site_settings(self):
+        """Test getting site settings (public endpoint)"""
+        return self.run_test("Get Site Settings", "GET", "settings", 200)
+    
+    def test_admin_update_site_settings(self):
+        """Test updating site settings via admin"""
+        print("\n🏠 Testing Site Settings Update...")
+        
+        # Test updating hero section settings
+        hero_update = {
+            "hero_slogan": "TEST SLOGAN",
+            "hero_title_1": "Test Title 1",
+            "hero_title_2": "Test Title 2", 
+            "hero_title_3": "Test Title 3",
+            "hero_description": "Test hero description for settings update",
+            "hero_badge_1": "Test Badge 1",
+            "hero_badge_2": "Test Badge 2"
+        }
+        
+        success, response = self.run_test("Admin Update Hero Settings", "PUT", "admin/settings", 200, hero_update, auth=self.admin_auth)
+        if not success:
+            return False
+            
+        # Verify the settings were updated by fetching them
+        success, get_response = self.test_get_site_settings()
+        if not success:
+            return False
+        
+        # Check if our test values are in the response
+        if get_response.get('hero_slogan') != "TEST SLOGAN":
+            print("❌ Hero slogan not updated correctly")
+            return False
+            
+        print("✅ Hero settings updated successfully")
+        
+        # Test updating about section settings
+        about_update = {
+            "about_title": "Test About Title", 
+            "about_subtitle": "TEST ABOUT SUBTITLE",
+            "about_text_1": "Test about text 1",
+            "about_year": "2024"
+        }
+        
+        success, _ = self.run_test("Admin Update About Settings", "PUT", "admin/settings", 200, about_update, auth=self.admin_auth)
+        if not success:
+            return False
+        
+        print("✅ About settings updated successfully")
+        
+        # Test updating contact section settings
+        contact_update = {
+            "contact_title": "Test Contact Title",
+            "contact_subtitle": "TEST CONTACT SUBTITLE", 
+            "contact_description": "Test contact description",
+            "contact_address": "Test Address 123, Test City",
+            "contact_email": "test@testmaalaus.fi",
+            "contact_phone_1": "+358 40 111 1111",
+            "contact_phone_2": "+358 40 222 2222"
+        }
+        
+        success, _ = self.run_test("Admin Update Contact Settings", "PUT", "admin/settings", 200, contact_update, auth=self.admin_auth)
+        if not success:
+            return False
+        
+        print("✅ Contact settings updated successfully")
+        
+        # Verify all settings were updated
+        success, final_response = self.test_get_site_settings()
+        if success:
+            if (final_response.get('about_title') == "Test About Title" and 
+                final_response.get('contact_title') == "Test Contact Title"):
+                print("✅ All site settings updated and verified")
+                return True
+            else:
+                print("❌ Settings verification failed")
+                return False
+        
+        return success
+
     def test_admin_image_upload(self):
         """Test image upload endpoint"""
         print("\n📷 Testing Image Upload...")
