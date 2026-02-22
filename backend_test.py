@@ -17,7 +17,7 @@ class JBMaalausAPITester:
         self.admin_password = "jbadmin2024"
         self.admin_auth = (self.admin_username, self.admin_password)
 
-    def run_test(self, name, method, endpoint, expected_status, data=None, headers=None):
+    def run_test(self, name, method, endpoint, expected_status, data=None, headers=None, auth=None):
         """Run a single API test"""
         url = f"{self.api_url}/{endpoint}" if endpoint else self.api_url
         if not headers:
@@ -29,11 +29,13 @@ class JBMaalausAPITester:
         
         try:
             if method == 'GET':
-                response = requests.get(url, headers=headers, timeout=10)
+                response = requests.get(url, headers=headers, auth=auth, timeout=10)
             elif method == 'POST':
-                response = requests.post(url, json=data, headers=headers, timeout=10)
+                response = requests.post(url, json=data, headers=headers, auth=auth, timeout=10)
+            elif method == 'PUT':
+                response = requests.put(url, json=data, headers=headers, auth=auth, timeout=10)
             elif method == 'DELETE':
-                response = requests.delete(url, headers=headers, timeout=10)
+                response = requests.delete(url, headers=headers, auth=auth, timeout=10)
 
             success = response.status_code == expected_status
             if success:
