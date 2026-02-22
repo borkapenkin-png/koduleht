@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { 
   Phone, Mail, MapPin, Menu, X, ChevronDown, Paintbrush, Building2, Layers,
   CheckCircle, ArrowRight, Send, Settings, LogOut, Plus, Trash2, Edit2, Save,
-  MessageSquare, Briefcase, Upload, Award, Image as ImageIcon, Home, FileText, Users, Lock, Shield
+  MessageSquare, Briefcase, Upload, Award, Image as ImageIcon, Home, FileText, Users, Lock, Shield, Palette
 } from "lucide-react";
 import axios from "axios";
 
