@@ -170,6 +170,12 @@ class SiteSettings(BaseModel):
     contact_phone_2: str = "+358 40 029 8247"
     contact_jobs_title: str = "Työpaikkahaku"
     contact_jobs_text: str = "Haluatko töihin? Lähetä CV ja saatekirje: info@jbtasoitusmaalaus.fi"
+    # Theme Settings
+    theme_font: str = "Inter"
+    theme_color: str = "#0056D2"
+    theme_size: str = "medium"  # small, medium, large
+    logo_url: Optional[str] = None
+    favicon_url: Optional[str] = None
 
 class SiteSettingsUpdate(BaseModel):
     hero_slogan: Optional[str] = None
