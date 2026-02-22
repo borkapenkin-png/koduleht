@@ -179,7 +179,7 @@ const ImageUpload = ({ currentImage, onImageChange, token }) => {
 };
 
 // ========== NAVBAR ==========
-const Navbar = ({ isScrolled, activeSection }) => {
+const Navbar = ({ isScrolled, activeSection, logoUrl }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navLinks = [
     { href: "#palvelut", label: "Palvelut" },
@@ -187,15 +187,16 @@ const Navbar = ({ isScrolled, activeSection }) => {
     { href: "#referenssit", label: "Referenssit" },
     { href: "#yhteystiedot", label: "Yhteystiedot" },
   ];
+  const logo = logoUrl || LOGO_URL;
 
   return (
     <nav data-testid="navbar" className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "navbar-glass shadow-sm" : "bg-transparent"}`}>
       <div className="container-custom">
         <div className="flex items-center justify-between h-16 md:h-20">
-          <a href="#" data-testid="logo-link"><img src={LOGO_URL} alt="J&B" className="h-10 md:h-12 w-auto" /></a>
+          <a href="#" data-testid="logo-link"><img src={logo} alt="J&B" className="h-10 md:h-12 w-auto max-w-[180px] object-contain" /></a>
           <div className="hidden md:flex items-center gap-6 lg:gap-8">
             {navLinks.map((link) => (
-              <a key={link.href} href={link.href} className={`text-sm font-medium transition-colors hover:text-[#0056D2] ${activeSection === link.href.substring(1) ? "text-[#0056D2]" : "text-[#64748B]"}`}>{link.label}</a>
+              <a key={link.href} href={link.href} className={`nav-link text-sm font-medium transition-colors ${activeSection === link.href.substring(1) ? "nav-link-active" : ""}`}>{link.label}</a>
             ))}
             <a href="#yhteystiedot" className="btn-primary text-sm py-2 px-4">Pyydä tarjous</a>
           </div>
@@ -208,7 +209,7 @@ const Navbar = ({ isScrolled, activeSection }) => {
             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="md:hidden bg-white border-t">
               <div className="py-4 space-y-1">
                 {navLinks.map((link) => (
-                  <a key={link.href} href={link.href} className="block px-4 py-3 text-[#64748B] hover:text-[#0056D2] hover:bg-[#EBF3FF]" onClick={() => setIsMobileMenuOpen(false)}>{link.label}</a>
+                  <a key={link.href} href={link.href} className="block px-4 py-3 nav-link-mobile" onClick={() => setIsMobileMenuOpen(false)}>{link.label}</a>
                 ))}
                 <div className="px-4 pt-2"><a href="#yhteystiedot" className="btn-primary block text-center text-sm" onClick={() => setIsMobileMenuOpen(false)}>Pyydä tarjous</a></div>
               </div>
