@@ -645,6 +645,10 @@ app.add_middleware(
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
+@app.on_event("startup")
+async def startup_event():
+    await init_admin_user()
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
