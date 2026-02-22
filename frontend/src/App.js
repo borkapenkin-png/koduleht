@@ -742,11 +742,11 @@ const AdminPanel = () => {
                   <div><h2 className="text-lg md:text-xl font-bold">Laatutakuu ({partners.length})</h2><p className="text-xs md:text-sm text-[#64748B] mt-1">Kumppanit ja sertifikaatit</p></div>
                   <button onClick={() => setNewItem({ name: "", image_url: "", order: partners.length + 1, isNew: true })} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Plus size={14} />Lisää</button>
                 </div>
-                {newItem && <div className="bg-white border border-[#0056D2] p-4 md:p-6 mb-4"><h3 className="font-bold mb-4">Uusi</h3><PartnerForm partner={newItem} onChange={setNewItem} onSave={() => savePartner(newItem)} onCancel={() => setNewItem(null)} credentials={getAuth()} /></div>}
+                {newItem && <div className="bg-white border border-[#0056D2] p-4 md:p-6 mb-4"><h3 className="font-bold mb-4">Uusi</h3><PartnerForm partner={newItem} onChange={setNewItem} onSave={() => savePartner(newItem)} onCancel={() => setNewItem(null)} token={token} /></div>}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                   {partners.map((p) => (
                     <div key={p.id} className="bg-white border p-4 md:p-6">
-                      {editingItem?.id === p.id ? <PartnerForm partner={editingItem} onChange={setEditingItem} onSave={() => savePartner(editingItem)} onCancel={() => setEditingItem(null)} credentials={getAuth()} /> : (
+                      {editingItem?.id === p.id ? <PartnerForm partner={editingItem} onChange={setEditingItem} onSave={() => savePartner(editingItem)} onCancel={() => setEditingItem(null)} token={token} /> : (
                         <div className="flex justify-between items-start">
                           <div className="flex items-center gap-3">
                             {p.image_url ? <img src={p.image_url} alt={p.name} className="w-12 h-12 object-contain" /> : <div className="w-12 h-12 bg-[#EBF3FF] flex items-center justify-center"><Award size={20} className="text-[#0056D2]" /></div>}
