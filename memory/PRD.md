@@ -5,55 +5,62 @@ Asiakas halusi uudistaa nykyisen verkkosivuston (jbtasoitusmaalaus.fi) modernimm
 
 ## Käyttäjävalinnat
 - Moderni & minimalistinen design
-- Sininen värimaailma säilytetään
-- Referenssiprojektit kortteina teksteineen (ei kuvia)
+- Sininen värimaailma
+- Referenssiprojektit teksti-kortteina
 - Palvelut-osio kuvilla
-- Admin-paneeli sisällön hallintaan
-- PNG-logo
+- Admin-paneeli kaikelle sisällölle
+- Kuvien lataus suoraan administa
+- Laatutakuu-osio kumppanilogoille
 
 ## Arkkitehtuuri
-- **Frontend**: React.js + Tailwind CSS + Framer Motion
-- **Backend**: FastAPI + MongoDB
+- **Frontend**: React.js + Tailwind CSS + Framer Motion + React Router
+- **Backend**: FastAPI + MongoDB + python-multipart (kuvien lataus)
 - **Tyyli**: Nordic Minimalist
 
 ## Toteutetut ominaisuudet
 
-### v1.0 (22.2.2026)
+### v1.0 (22.2.2026) - Perusversio
 - ✅ Moderni single-page sivusto
 - ✅ Hero-osio LAATUJOHTAJAT-sloganilla
-- ✅ Navigaatiopalkki glassmorphism-efektillä
-- ✅ Palvelut-osio (dynaamiset kortit kuvilla tietokannasta)
-- ✅ Meistä-osio
-- ✅ Referenssit-osio (teksti-kortit tietokannasta)
-- ✅ Laatutakuu-osio
+- ✅ Palvelut-osio (dynaamiset kortit tietokannasta)
+- ✅ Referenssit-osio
 - ✅ Yhteystiedot ja yhteydenottolomake
 
 ### v1.1 (22.2.2026) - Admin-paneeli
-- ✅ PNG-logo lisätty
 - ✅ Admin-paneeli (/admin)
-- ✅ Kirjautuminen (admin / jbadmin2024)
-- ✅ Palveluiden CRUD (lisää, muokkaa, poista)
+- ✅ Palveluiden CRUD
 - ✅ Referenssien CRUD
 - ✅ Yhteydenottojen hallinta
-- ✅ Dynaamiset palvelut ja referenssit API:sta
-- ✅ Kuva-URL tuki palveluille
+
+### v1.2 (22.2.2026) - Kuvat ja Laatutakuu
+- ✅ **Uusi korjattu logo** (vaakasuuntainen, sininen)
+- ✅ **Kuvien lataus** administa (base64 MongoDB-tallennuksella)
+- ✅ **Laatutakuu/Kumppanit-osio** admin-hallinnalla
+- ✅ Voit lisätä kumppani-logoja (Luotettava kumppani, Kasvuyritys jne.)
+- ✅ ImageUpload-komponentti palveluille ja kumppaneille
 
 ## API-reitit
-- GET /api/services - Julkiset palvelut
-- GET /api/references - Julkiset referenssit
+
+### Julkiset
+- GET /api/services - Palvelut
+- GET /api/references - Referenssit
+- GET /api/partners - Kumppanit/Laatutakuu
+- GET /api/images/{id} - Ladatut kuvat
 - POST /api/contact - Yhteydenottolomake
-- GET /api/admin/verify - Kirjautumisen tarkistus
-- POST/PUT/DELETE /api/admin/services - Palveluiden hallinta
-- POST/PUT/DELETE /api/admin/references - Referenssien hallinta
-- GET/DELETE /api/admin/contacts - Viestien hallinta
-- POST /api/admin/seed - Alkudatan lisäys
+
+### Admin (vaatii kirjautumisen)
+- POST /api/admin/upload - Kuvan lataus
+- CRUD /api/admin/services
+- CRUD /api/admin/references
+- CRUD /api/admin/partners
+- GET/DELETE /api/admin/contacts
+- POST /api/admin/seed - Alkudata
 
 ## Admin-tunnukset
 - Käyttäjätunnus: admin
 - Salasana: jbadmin2024
 
 ## Backlog
-- P1: Kuvien lataus suoraan admin-paneelista
 - P1: Sähköpostivahvistukset lomakkeelle
 - P2: SEO-optimointi
 - P2: Google Analytics
