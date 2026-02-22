@@ -297,23 +297,23 @@ const AboutSection = ({ settings }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="relative order-2 lg:order-1">
             <img src={aboutImage} alt="Työ" className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover" />
-            <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-[#0056D2] text-white p-4 md:p-6 hidden sm:block">
+            <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-primary text-white p-4 md:p-6 hidden sm:block">
               <p className="font-slogan text-2xl md:text-3xl">{s.about_year}</p>
               <p className="text-xs md:text-sm opacity-80">vuodesta alkaen</p>
             </div>
           </motion.div>
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="order-1 lg:order-2">
-            <p className="font-slogan text-[#0056D2] text-sm mb-2 md:mb-3">{s.about_subtitle}</p>
-            <h2 className="text-2xl md:text-4xl font-bold text-[#0F172A] mb-4 md:mb-6">{s.about_title}</h2>
+            <p className="font-slogan text-primary text-sm mb-2 md:mb-3">{s.about_subtitle}</p>
+            <h2 className="section-title mb-4 md:mb-6">{s.about_title}</h2>
             <div className="space-y-3 md:space-y-4 text-sm md:text-base text-[#64748B] leading-relaxed">
               <p>{s.about_text_1}</p>
               <p>{s.about_text_2}</p>
               <p>{s.about_text_3}</p>
             </div>
-            <div className="mt-6 md:mt-8 p-4 md:p-6 bg-[#EBF3FF] border-l-4 border-[#0056D2]">
+            <div className="mt-6 md:mt-8 p-4 md:p-6 bg-primary-light border-l-4 border-primary">
               <p className="font-medium text-[#0F172A] mb-2 text-sm md:text-base">{s.about_info_title}</p>
               <p className="text-xs md:text-sm text-[#64748B]">{s.about_info_text}</p>
-              <a href="https://www.vero.fi/henkiloasiakkaat/verokortti-ja-veroilmoitus/tulot-ja-vahennykset/kotitalousvahennys/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[#0056D2] text-xs md:text-sm font-medium mt-2 hover:underline">Lue lisää<ArrowRight size={12} /></a>
+              <a href="https://www.vero.fi/henkiloasiakkaat/verokortti-ja-veroilmoitus/tulot-ja-vahennykset/kotitalousvahennys/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-primary text-xs md:text-sm font-medium mt-2 hover:underline">Lue lisää<ArrowRight size={12} /></a>
             </div>
           </motion.div>
         </div>
@@ -323,20 +323,20 @@ const AboutSection = ({ settings }) => {
 };
 
 // ========== REFERENCES ==========
-const ReferencesSection = ({ references }) => (
+const ReferencesSection = ({ settings, references }) => (
   <section id="referenssit" data-testid="references-section" className="section-padding bg-white">
     <div className="container-custom">
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10 md:mb-16">
-        <p className="font-slogan text-[#0056D2] text-sm mb-2 md:mb-3">TYÖNÄYTTEITÄ</p>
-        <h2 className="text-2xl md:text-4xl font-bold text-[#0F172A]">Referenssit</h2>
+        <p className="font-slogan text-primary text-sm mb-2 md:mb-3">TYÖNÄYTTEITÄ</p>
+        <h2 className="section-title">Referenssit</h2>
         <p className="text-sm md:text-base text-[#64748B] mt-3 md:mt-4 max-w-2xl mx-auto">Olemme toteuttaneet lukuisia projekteja yrityksille, taloyhtiöille ja yksityisille asiakkaille.</p>
       </motion.div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {references.map((ref, index) => (
-          <motion.div key={ref.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="bg-[#FAFAFA] border border-[#E2E8F0] p-4 md:p-6 hover:border-[#0056D2]/30 hover:shadow-md transition-all group">
+          <motion.div key={ref.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="bg-[#FAFAFA] border border-[#E2E8F0] p-4 md:p-6 hover:border-primary/30 hover:shadow-md transition-all group">
             <div className="flex items-start gap-3 md:gap-4">
-              <div className="w-10 h-10 md:w-12 md:h-12 bg-[#EBF3FF] flex items-center justify-center flex-shrink-0 group-hover:bg-[#0056D2] transition-colors">
-                <Building2 size={18} className="text-[#0056D2] group-hover:text-white transition-colors" />
+              <div className="icon-box flex-shrink-0 group-hover:bg-primary transition-colors">
+                <Building2 size={18} className="text-primary group-hover:text-white transition-colors" />
               </div>
               <div>
                 <h3 className="text-base md:text-lg font-bold text-[#0F172A] group-hover:text-[#0056D2] transition-colors">{ref.name}</h3>
