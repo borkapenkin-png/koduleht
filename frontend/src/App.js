@@ -1006,17 +1006,28 @@ const HomePage = () => {
           axios.get(`${API}/references`),
           axios.get(`${API}/partners`)
         ]);
-        setSettings({ ...defaultSettings, ...settingsRes.data });
+        const mergedSettings = { ...defaultSettings, ...settingsRes.data };
+        setSettings(mergedSettings);
         setServices(servicesRes.data);
         setReferences(refsRes.data);
         setPartners(partnersRes.data);
+        // Apply theme
+        applyTheme(mergedSettings);
       } catch {
         setSettings(defaultSettings);
+        applyTheme(defaultSettings);
       }
       setIsLoading(false);
     };
     fetchData();
   }, []);
+
+  // Apply theme when settings change
+  useEffect(() => {
+    if (settings) {
+      applyTheme(settings);
+    }
+  }, [settings?.theme_color, settings?.theme_font, settings?.theme_size, settings?.favicon_url]);
 
   useEffect(() => {
     const handleScroll = () => {
