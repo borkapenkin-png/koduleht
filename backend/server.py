@@ -206,6 +206,12 @@ class SiteSettingsUpdate(BaseModel):
     contact_phone_2: Optional[str] = None
     contact_jobs_title: Optional[str] = None
     contact_jobs_text: Optional[str] = None
+    # Theme Settings
+    theme_font: Optional[str] = None
+    theme_color: Optional[str] = None
+    theme_size: Optional[str] = None
+    logo_url: Optional[str] = None
+    favicon_url: Optional[str] = None
 
 # Contact Form
 class ContactFormCreate(BaseModel):
