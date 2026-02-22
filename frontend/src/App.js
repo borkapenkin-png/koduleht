@@ -364,43 +364,43 @@ const AboutSection = () => {
   );
 };
 
-// References Section
+// References Section - Text only cards without images
 const ReferencesSection = () => {
   const references = [
     {
       name: "Mehiläinen Ympyrätalo",
       type: "Tasoitus- ja maalaustyöt",
-      image: "https://images.pexels.com/photos/3627486/pexels-photo-3627486.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+      description: "Laaja sisätilojen pintakäsittely terveydenhuollon tiloissa."
     },
     {
       name: "Crowne Plaza Hotel",
       type: "Tasoitus- ja maalaustyöt",
-      image: "https://images.unsplash.com/photo-1719437354892-f64ea7e03d4e?crop=entropy&cs=srgb&fm=jpg&q=85"
+      description: "Hotellin julkisten tilojen ja huoneiden maalaustyöt."
     },
     {
       name: "Ressun lukio",
       type: "Tasoitus- ja maalaustyöt",
-      image: "https://images.unsplash.com/photo-1654349804773-88067a5b3201?crop=entropy&cs=srgb&fm=jpg&q=85"
+      description: "Koulun sisätilojen kunnostus ja maalaus."
     },
     {
       name: "Jumbo Stockmann",
       type: "Tasoitus- ja maalaustyöt",
-      image: "https://images.pexels.com/photos/18435276/pexels-photo-18435276.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+      description: "Liiketilan pintakäsittely ja viimeistely."
     },
     {
       name: "Myllypuro koulu",
       type: "Tasoitus- ja maalaustyöt",
-      image: "https://images.pexels.com/photos/6474471/pexels-photo-6474471.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+      description: "Uuden koulun sisäpintojen tasoitus ja maalaus."
     },
     {
       name: "Ester1",
       type: "Tasoitus- ja maalaustyöt",
-      image: "https://images.pexels.com/photos/6444266/pexels-photo-6444266.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+      description: "Asuinrakennuksen sisäpintojen käsittely."
     }
   ];
 
   return (
-    <section id="referenssit" data-testid="references-section" className="section-padding bg-[#FAFAFA]">
+    <section id="referenssit" data-testid="references-section" className="section-padding bg-white">
       <div className="container-custom">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -425,20 +425,19 @@ const ReferencesSection = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               data-testid={`reference-card-${index}`}
-              className="reference-card group"
+              className="bg-[#FAFAFA] border border-[#E2E8F0] p-6 hover:border-[#0056D2]/30 hover:shadow-md transition-all group"
             >
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  src={ref.image}
-                  alt={ref.name}
-                  className="reference-image w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="text-lg font-bold text-[#0F172A] group-hover:text-[#0056D2] transition-colors">
-                  {ref.name}
-                </h3>
-                <p className="text-sm text-[#64748B] mt-1">{ref.type}</p>
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-[#EBF3FF] flex items-center justify-center flex-shrink-0 group-hover:bg-[#0056D2] transition-colors">
+                  <Building2 size={20} className="text-[#0056D2] group-hover:text-white transition-colors" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-[#0F172A] group-hover:text-[#0056D2] transition-colors">
+                    {ref.name}
+                  </h3>
+                  <p className="text-sm text-[#0056D2] font-medium mt-1">{ref.type}</p>
+                  <p className="text-sm text-[#64748B] mt-2">{ref.description}</p>
+                </div>
               </div>
             </motion.div>
           ))}
