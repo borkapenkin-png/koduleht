@@ -4,41 +4,57 @@
 Asiakas halusi uudistaa nykyisen verkkosivuston (jbtasoitusmaalaus.fi) modernimmaksi ja helpommin muokattavaksi.
 
 ## Käyttäjävalinnat
-- Moderni & minimalistinen design (paljon tyhjää tilaa, selkeät linjat)
+- Moderni & minimalistinen design
 - Sininen värimaailma säilytetään
-- Referenssiprojektit kortteina teksteineen
-- Yhteydenottolomake
+- Referenssiprojektit kortteina teksteineen (ei kuvia)
+- Palvelut-osio kuvilla
+- Admin-paneeli sisällön hallintaan
+- PNG-logo
 
 ## Arkkitehtuuri
 - **Frontend**: React.js + Tailwind CSS + Framer Motion
 - **Backend**: FastAPI + MongoDB
-- **Tyyli**: Nordic Minimalist, ammattimainen, luotettava
+- **Tyyli**: Nordic Minimalist
 
-## Toteutetut ominaisuudet (22.2.2026)
+## Toteutetut ominaisuudet
+
+### v1.0 (22.2.2026)
+- ✅ Moderni single-page sivusto
 - ✅ Hero-osio LAATUJOHTAJAT-sloganilla
 - ✅ Navigaatiopalkki glassmorphism-efektillä
-- ✅ Palvelut-osio (3 korttia: Julkisivurappaus, Tasoitustyöt, Maalaustyöt)
-- ✅ Meistä-osio yritystiedoilla
-- ✅ Referenssit-osio (6 projektia kortteina)
+- ✅ Palvelut-osio (dynaamiset kortit kuvilla tietokannasta)
+- ✅ Meistä-osio
+- ✅ Referenssit-osio (teksti-kortit tietokannasta)
 - ✅ Laatutakuu-osio
 - ✅ Yhteystiedot ja yhteydenottolomake
-- ✅ Footer
-- ✅ Mobiiliresponsiivinen design
-- ✅ Backend API: /api/contact lomakkeen lähetykseen
-- ✅ Backend API: /api/references referenssien hallintaan
 
-## Kohderyhmä
-Suomalaiset asunnonomistajat, yritykset ja taloyhtiöt, jotka etsivät ammattitaitoisia maalaus- ja tasoituspalveluita Uudellamaalla.
+### v1.1 (22.2.2026) - Admin-paneeli
+- ✅ PNG-logo lisätty
+- ✅ Admin-paneeli (/admin)
+- ✅ Kirjautuminen (admin / jbadmin2024)
+- ✅ Palveluiden CRUD (lisää, muokkaa, poista)
+- ✅ Referenssien CRUD
+- ✅ Yhteydenottojen hallinta
+- ✅ Dynaamiset palvelut ja referenssit API:sta
+- ✅ Kuva-URL tuki palveluille
 
-## Backlog / Seuraavat vaiheet
-- P0: Lisää asiakkaan oma logo PDF-muodossa
-- P1: Admin-paneeli referenssien hallintaan
-- P1: Lomakkeen sähköpostivahvistukset
-- P2: Google Analytics integraatio
-- P2: SEO-optimointi (meta-tagit, sitemap)
-- P3: Asiakasarvostelut/Google-arviot integraatio
+## API-reitit
+- GET /api/services - Julkiset palvelut
+- GET /api/references - Julkiset referenssit
+- POST /api/contact - Yhteydenottolomake
+- GET /api/admin/verify - Kirjautumisen tarkistus
+- POST/PUT/DELETE /api/admin/services - Palveluiden hallinta
+- POST/PUT/DELETE /api/admin/references - Referenssien hallinta
+- GET/DELETE /api/admin/contacts - Viestien hallinta
+- POST /api/admin/seed - Alkudatan lisäys
 
-## Tekninen dokumentaatio
-- Frontend: /app/frontend/src/App.js (pääkomponentti)
-- Backend: /app/backend/server.py (API)
-- Styles: /app/frontend/src/index.css, /app/frontend/src/App.css
+## Admin-tunnukset
+- Käyttäjätunnus: admin
+- Salasana: jbadmin2024
+
+## Backlog
+- P1: Kuvien lataus suoraan admin-paneelista
+- P1: Sähköpostivahvistukset lomakkeelle
+- P2: SEO-optimointi
+- P2: Google Analytics
+- P3: Asiakasarvostelut
