@@ -1,27 +1,104 @@
 <!doctype html>
-<html lang="en">
+<html lang="fi">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="description" content="A product of emergent.sh" />
+        <meta name="theme-color" content="#0056D2" />
+        
+        <!-- SEO Meta Tags -->
+        <title>J&B Tasoitus ja Maalaus Oy | Maalaustyöt Helsinki & Uusimaa</title>
+        <meta name="description" content="J&B Tasoitus ja Maalaus Oy - Ammattitaitoista maalausta ja tasoitusta Uudellamaalla vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset, tapetoinnit. Kotitalousvähennys. Ilmainen arvio!" />
+        <meta name="keywords" content="maalaus, tasoitus, maalaustyöt, sisämaalaus, ulkomaalaus, julkisivurappaus, tapetointi, Helsinki, Uusimaa, kotitalousvähennys, maalausliike" />
+        <meta name="author" content="J&B Tasoitus ja Maalaus Oy" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://www.jbtasoitusmaalaus.fi/" />
+        
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.jbtasoitusmaalaus.fi/" />
+        <meta property="og:title" content="J&B Tasoitus ja Maalaus Oy | Maalaustyöt Helsinki & Uusimaa" />
+        <meta property="og:description" content="Ammattitaitoista maalausta ja tasoitusta Uudellamaalla vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset, tapetoinnit. Pyydä ilmainen arvio!" />
+        <meta property="og:image" content="https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png" />
+        <meta property="og:locale" content="fi_FI" />
+        <meta property="og:site_name" content="J&B Tasoitus ja Maalaus Oy" />
+        
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="J&B Tasoitus ja Maalaus Oy | Maalaustyöt Helsinki & Uusimaa" />
+        <meta name="twitter:description" content="Ammattitaitoista maalausta ja tasoitusta Uudellamaalla vuodesta 2018. Pyydä ilmainen arvio!" />
+        <meta name="twitter:image" content="https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png" />
+        
+        <!-- Geo Tags -->
+        <meta name="geo.region" content="FI-18" />
+        <meta name="geo.placename" content="Helsinki" />
+        
+        <!-- Structured Data / JSON-LD -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "J&B Tasoitus ja Maalaus Oy",
+            "image": "https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png",
+            "url": "https://www.jbtasoitusmaalaus.fi/",
+            "telephone": ["+358400547270", "+358400298247"],
+            "email": "info@jbtasoitusmaalaus.fi",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Sienitie 52",
+                "addressLocality": "Helsinki",
+                "postalCode": "00760",
+                "addressCountry": "FI"
+            },
+            "areaServed": {
+                "@type": "GeoCircle",
+                "geoMidpoint": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 60.1699,
+                    "longitude": 24.9384
+                },
+                "geoRadius": "50000"
+            },
+            "priceRange": "$$",
+            "openingHours": "Mo-Fr 07:00-17:00",
+            "foundingDate": "2018",
+            "description": "Ammattitaitoista maalausta ja tasoitusta Uudellamaalla vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella.",
+            "sameAs": [],
+            "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Maalauspalvelut",
+                "itemListElement": [
+                    {
+                        "@type": "Offer",
+                        "itemOffered": {
+                            "@type": "Service",
+                            "name": "Maalaustyöt",
+                            "description": "Sisä- ja ulkomaalaukset ammattitaidolla"
+                        }
+                    },
+                    {
+                        "@type": "Offer",
+                        "itemOffered": {
+                            "@type": "Service",
+                            "name": "Tasoitustyöt",
+                            "description": "Tasoitetyöt huolella ennen uutta pintamateriaalia"
+                        }
+                    },
+                    {
+                        "@type": "Offer",
+                        "itemOffered": {
+                            "@type": "Service",
+                            "name": "Julkisivurappaus",
+                            "description": "Julkisivun rappaus antaa suojaavan pinnan rakenteille"
+                        }
+                    }
+                ]
+            }
+        }
+        </script>
+        
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
-        <!--
-        manifest.json provides metadata used when your web app is installed on a
-        user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-        -->
-        <!--
-        Notice the use of %PUBLIC_URL% in the tags above.
-        It will be replaced with the URL of the `public` folder during the build.
-        Only files inside the `public` folder can be referenced from the HTML.
-
-        Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-        work correctly both with client-side routing and a non-root public URL.
-        Learn how to configure a non-root public URL by running `npm run build`.
-        -->
-        <title>Emergent | Fullstack App</title>
         <script>window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);</script>
         <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
         <!--
