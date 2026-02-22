@@ -32,8 +32,18 @@ Uudistaa verkkosivusto (jbtasoitusmaalaus.fi) modernimmaksi ja helpommin muokatt
 ## Viimeisin päivitys: 22.2.2026
 - Käyttäjä päätti: **Ei tarvita sähköpostilähetystä** - admin-paneelin viestinhallinta riittää
 - Viestit-toiminto toimii: yhteydenottolomakkeen viestit tallennetaan tietokantaan ja näkyvät admin-paneelissa
+- ✅ SEO-optimointi toteutettu
+
+## SEO-optimointi (Toteutettu 22.2.2026)
+- ✅ Meta tags: title, description, keywords, author, robots
+- ✅ Open Graph -tagit (Facebook, sosiaalinen media)
+- ✅ Twitter Card -tagit
+- ✅ Structured Data / JSON-LD (LocalBusiness schema)
+- ✅ robots.txt (estää /admin ja /api)
+- ✅ sitemap.xml (kaikki sivut)
+- ✅ Canonical URL
+- ✅ Geo-tagit (Helsinki/Uusimaa)
 
 ## Backlog
-- P2: SEO-optimointi (meta tags, sitemap)
-- P2: Google Analytics -integraatio
+- P1: Google Analytics (käyttäjä lisää kun sivu omalla domainilla)
 - P3: Viestien "luettu/lukematon" -tila (optional enhancement)
