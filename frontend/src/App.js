@@ -31,7 +31,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 // Logo URL
-const LOGO_URL = "https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/y0ykpqft_jb2-logo.png";
+const LOGO_URL = "https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png";
 
 // Icon mapping
 const iconMap = {
