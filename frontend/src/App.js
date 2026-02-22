@@ -399,6 +399,7 @@ const AdminPanel = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [credentials, setCredentials] = useState({ username: "", password: "" });
   const [authError, setAuthError] = useState("");
+  const [token, setToken] = useState(localStorage.getItem('admin_token') || "");
   const [activeTab, setActiveTab] = useState("settings");
   const [settings, setSettings] = useState(defaultSettings);
   const [services, setServices] = useState([]);
@@ -409,80 +410,159 @@ const AdminPanel = () => {
   const [editingItem, setEditingItem] = useState(null);
   const [newItem, setNewItem] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [showPasswordChange, setShowPasswordChange] = useState(false);
+  const [passwordData, setPasswordData] = useState({ current: "", new: "", confirm: "" });
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordSuccess, setPasswordSuccess] = useState("");
 
-  const getAuth = () => ({ username: credentials.username, password: credentials.password });
+  const getAuthHeaders = () => ({ headers: { Authorization: `Bearer ${token}` } });
+
+  // Check existing token on mount
+  useEffect(() => {
+    const savedToken = localStorage.getItem('admin_token');
+    if (savedToken) {
+      setToken(savedToken);
+      verifyToken(savedToken);
+    }
+  }, []);
+
+  const verifyToken = async (tokenToVerify) => {
+    try {
+      await axios.get(`${API}/admin/verify`, { headers: { Authorization: `Bearer ${tokenToVerify}` } });
+      setIsAuthenticated(true);
+      setToken(tokenToVerify);
+      loadData(tokenToVerify);
+    } catch {
+      localStorage.removeItem('admin_token');
+      setToken("");
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setAuthError("");
     try {
-      await axios.get(`${API}/admin/verify`, { auth: getAuth() });
+      const response = await axios.post(`${API}/admin/login`, {
+        username: credentials.username,
+        password: credentials.password
+      });
+      const newToken = response.data.access_token;
+      setToken(newToken);
+      localStorage.setItem('admin_token', newToken);
       setIsAuthenticated(true);
-      loadData();
-    } catch { setAuthError("Väärä tunnus/salasana"); }
+      loadData(newToken);
+    } catch (error) {
+      const message = error.response?.data?.detail || "Kirjautuminen epäonnistui";
+      setAuthError(message);
+    }
   };
 
-  const loadData = async () => {
+  const handleLogout = () => {
+    localStorage.removeItem('admin_token');
+    setToken("");
+    setIsAuthenticated(false);
+    setCredentials({ username: "", password: "" });
+  };
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    setPasswordError("");
+    setPasswordSuccess("");
+
+    if (passwordData.new !== passwordData.confirm) {
+      setPasswordError("Salasanat eivät täsmää");
+      return;
+    }
+    if (passwordData.new.length < 8) {
+      setPasswordError("Salasanan tulee olla vähintään 8 merkkiä");
+      return;
+    }
+
+    try {
+      await axios.post(`${API}/admin/change-password`, {
+        current_password: passwordData.current,
+        new_password: passwordData.new
+      }, getAuthHeaders());
+      setPasswordSuccess("Salasana vaihdettu! Kirjaudu uudelleen uudella salasanalla.");
+      setPasswordData({ current: "", new: "", confirm: "" });
+      setTimeout(() => {
+        handleLogout();
+      }, 2000);
+    } catch (error) {
+      setPasswordError(error.response?.data?.detail || "Salasanan vaihto epäonnistui");
+    }
+  };
+
+  const loadData = async (tokenToUse = token) => {
     setLoading(true);
+    const headers = { headers: { Authorization: `Bearer ${tokenToUse}` } };
     try {
       const [settingsRes, servicesRes, refsRes, partnersRes, contactsRes] = await Promise.all([
         axios.get(`${API}/settings`),
         axios.get(`${API}/services`),
         axios.get(`${API}/references`),
         axios.get(`${API}/partners`),
-        axios.get(`${API}/admin/contacts`, { auth: getAuth() })
+        axios.get(`${API}/admin/contacts`, headers)
       ]);
       setSettings({ ...defaultSettings, ...settingsRes.data });
       setServices(servicesRes.data);
       setReferences(refsRes.data);
       setPartners(partnersRes.data);
       setContacts(contactsRes.data);
-    } catch (e) { console.error(e); }
+    } catch (e) { 
+      console.error(e);
+      if (e.response?.status === 401) {
+        handleLogout();
+      }
+    }
     setLoading(false);
   };
 
   const saveSettings = async () => {
     setSaving(true);
     try {
-      await axios.put(`${API}/admin/settings`, settings, { auth: getAuth() });
+      await axios.put(`${API}/admin/settings`, settings, getAuthHeaders());
       alert("Tallennettu!");
-    } catch { alert("Virhe tallennuksessa"); }
+    } catch (error) { 
+      if (error.response?.status === 401) handleLogout();
+      else alert("Virhe tallennuksessa"); 
+    }
     setSaving(false);
   };
 
   const seedData = async () => {
-    try { await axios.post(`${API}/admin/seed`, {}, { auth: getAuth() }); loadData(); } catch {}
+    try { await axios.post(`${API}/admin/seed`, {}, getAuthHeaders()); loadData(); } catch {}
   };
 
   // CRUD helpers
   const saveService = async (s) => {
     try {
-      if (s.id && !s.isNew) await axios.put(`${API}/admin/services/${s.id}`, s, { auth: getAuth() });
-      else { const { isNew, ...d } = s; await axios.post(`${API}/admin/services`, d, { auth: getAuth() }); }
+      if (s.id && !s.isNew) await axios.put(`${API}/admin/services/${s.id}`, s, getAuthHeaders());
+      else { const { isNew, ...d } = s; await axios.post(`${API}/admin/services`, d, getAuthHeaders()); }
       loadData(); setEditingItem(null); setNewItem(null);
-    } catch {}
+    } catch (error) { if (error.response?.status === 401) handleLogout(); }
   };
-  const deleteService = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/services/${id}`, { auth: getAuth() }); loadData(); } catch {} } };
+  const deleteService = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/services/${id}`, getAuthHeaders()); loadData(); } catch (error) { if (error.response?.status === 401) handleLogout(); } } };
   
   const saveReference = async (r) => {
     try {
-      if (r.id && !r.isNew) await axios.put(`${API}/admin/references/${r.id}`, r, { auth: getAuth() });
-      else { const { isNew, ...d } = r; await axios.post(`${API}/admin/references`, d, { auth: getAuth() }); }
+      if (r.id && !r.isNew) await axios.put(`${API}/admin/references/${r.id}`, r, getAuthHeaders());
+      else { const { isNew, ...d } = r; await axios.post(`${API}/admin/references`, d, getAuthHeaders()); }
       loadData(); setEditingItem(null); setNewItem(null);
-    } catch {}
+    } catch (error) { if (error.response?.status === 401) handleLogout(); }
   };
-  const deleteReference = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/references/${id}`, { auth: getAuth() }); loadData(); } catch {} } };
+  const deleteReference = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/references/${id}`, getAuthHeaders()); loadData(); } catch (error) { if (error.response?.status === 401) handleLogout(); } } };
 
   const savePartner = async (p) => {
     try {
-      if (p.id && !p.isNew) await axios.put(`${API}/admin/partners/${p.id}`, p, { auth: getAuth() });
-      else { const { isNew, ...d } = p; await axios.post(`${API}/admin/partners`, d, { auth: getAuth() }); }
+      if (p.id && !p.isNew) await axios.put(`${API}/admin/partners/${p.id}`, p, getAuthHeaders());
+      else { const { isNew, ...d } = p; await axios.post(`${API}/admin/partners`, d, getAuthHeaders()); }
       loadData(); setEditingItem(null); setNewItem(null);
-    } catch {}
+    } catch (error) { if (error.response?.status === 401) handleLogout(); }
   };
-  const deletePartner = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/partners/${id}`, { auth: getAuth() }); loadData(); } catch {} } };
+  const deletePartner = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/partners/${id}`, getAuthHeaders()); loadData(); } catch (error) { if (error.response?.status === 401) handleLogout(); } } };
 
-  const deleteContact = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/contacts/${id}`, { auth: getAuth() }); loadData(); } catch {} } };
+  const deleteContact = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/contacts/${id}`, getAuthHeaders()); loadData(); } catch (error) { if (error.response?.status === 401) handleLogout(); } } };
 
   if (!isAuthenticated) {
     return (
