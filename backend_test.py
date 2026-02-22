@@ -106,6 +106,10 @@ class JBMaalausAPITester:
     def test_get_services(self):
         """Test retrieving services"""
         return self.run_test("Get Services", "GET", "services", 200)
+
+    def test_get_partners(self):
+        """Test retrieving partners/quality badges"""
+        return self.run_test("Get Partners", "GET", "partners", 200)
     
     # ========== ADMIN TESTS ==========
     
