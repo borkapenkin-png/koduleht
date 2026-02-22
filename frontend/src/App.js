@@ -48,7 +48,7 @@ const defaultSettings = {
 };
 
 // ========== IMAGE UPLOAD ==========
-const ImageUpload = ({ currentImage, onImageChange, credentials }) => {
+const ImageUpload = ({ currentImage, onImageChange, token }) => {
   const fileInputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState(currentImage || "");
@@ -68,7 +68,10 @@ const ImageUpload = ({ currentImage, onImageChange, credentials }) => {
       const formData = new FormData();
       formData.append("file", file);
       const response = await axios.post(`${API}/admin/upload`, formData, {
-        auth: credentials, headers: { "Content-Type": "multipart/form-data" }
+        headers: { 
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token}`
+        }
       });
       const imageUrl = `${BACKEND_URL}${response.data.url}`;
       setPreview(imageUrl);
