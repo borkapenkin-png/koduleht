@@ -23,16 +23,11 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# Create the main app
 app = FastAPI()
-
-# Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
-# Basic Auth for Admin
+# Basic Auth
 security = HTTPBasic()
-
-# Admin credentials
 ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'jbadmin2024')
 
@@ -40,26 +35,79 @@ def verify_admin(credentials: HTTPBasicCredentials = Depends(security)):
     correct_username = secrets.compare_digest(credentials.username, ADMIN_USERNAME)
     correct_password = secrets.compare_digest(credentials.password, ADMIN_PASSWORD)
     if not (correct_username and correct_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid credentials",
-            headers={"WWW-Authenticate": "Basic"},
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials", headers={"WWW-Authenticate": "Basic"})
     return credentials.username
 
 
-# ========== Models ==========
+# ========== MODELS ==========
 
-class StatusCheck(BaseModel):
+# Site Settings Model (for Hero, About, Contact sections)
+class SiteSettings(BaseModel):
     model_config = ConfigDict(extra="ignore")
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    id: str = "site_settings"
+    # Hero Section
+    hero_slogan: str = "LAATUJOHTAJAT"
+    hero_title_1: str = "Ammattitaitoista"
+    hero_title_2: str = "maalausta"
+    hero_title_3: str = "ja tasoitusta"
+    hero_description: str = "Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella."
+    hero_image_url: Optional[str] = "https://images.pexels.com/photos/5493669/pexels-photo-5493669.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    hero_badge_1: str = "Kotitalousvähennys"
+    hero_badge_2: str = "Tyytyväisyystakuu"
+    # About Section
+    about_subtitle: str = "TIETOA MEISTÄ"
+    about_title: str = "Luotettava kumppani pintaremontteihin"
+    about_text_1: str = "J&B Tasoitus Ja Maalaus Oy on Uudellamaalla toimiva luotettava maalaustöiden ammattilainen. Olemme tehneet sisä- ja ulkomaalauksia vuodesta 2018."
+    about_text_2: str = "Meiltä sujuu myös katto- ja julkisivumaalaukset, julkisivurappaukset sekä sisäpintojen tapetoinnit. Toiminnassa panostamme asiakaslähtöisyyteen, joustavuuteen ja ensiluokkaiseen työnlaatuun."
+    about_text_3: str = "Teemme työt avaimet käteen -periaatteella ja tarjoamme asiakkaillemme tyytyväisyystakuun."
+    about_image_url: Optional[str] = "https://images.pexels.com/photos/7941435/pexels-photo-7941435.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    about_year: str = "2018"
+    about_info_title: str = "Muista kotitalousvähennys!"
+    about_info_text: str = "Maalaus luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen."
+    # Contact Section
+    contact_subtitle: str = "OTA YHTEYTTÄ"
+    contact_title: str = "Yhteystiedot"
+    contact_description: str = "Lähetä tarjouspyyntö tai pyydä meidät ilmaiselle arviokäynnille."
+    contact_address: str = "Sienitie 52, 00760 Helsinki"
+    contact_email: str = "info@jbtasoitusmaalaus.fi"
+    contact_phone_1_name: str = "Boris Penkin"
+    contact_phone_1: str = "+358 40 054 7270"
+    contact_phone_2_name: str = "Joosep Rohusaar"
+    contact_phone_2: str = "+358 40 029 8247"
+    contact_jobs_title: str = "Työpaikkahaku"
+    contact_jobs_text: str = "Haluatko töihin? Lähetä CV ja saatekirje: info@jbtasoitusmaalaus.fi"
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
+class SiteSettingsUpdate(BaseModel):
+    hero_slogan: Optional[str] = None
+    hero_title_1: Optional[str] = None
+    hero_title_2: Optional[str] = None
+    hero_title_3: Optional[str] = None
+    hero_description: Optional[str] = None
+    hero_image_url: Optional[str] = None
+    hero_badge_1: Optional[str] = None
+    hero_badge_2: Optional[str] = None
+    about_subtitle: Optional[str] = None
+    about_title: Optional[str] = None
+    about_text_1: Optional[str] = None
+    about_text_2: Optional[str] = None
+    about_text_3: Optional[str] = None
+    about_image_url: Optional[str] = None
+    about_year: Optional[str] = None
+    about_info_title: Optional[str] = None
+    about_info_text: Optional[str] = None
+    contact_subtitle: Optional[str] = None
+    contact_title: Optional[str] = None
+    contact_description: Optional[str] = None
+    contact_address: Optional[str] = None
+    contact_email: Optional[str] = None
+    contact_phone_1_name: Optional[str] = None
+    contact_phone_1: Optional[str] = None
+    contact_phone_2_name: Optional[str] = None
+    contact_phone_2: Optional[str] = None
+    contact_jobs_title: Optional[str] = None
+    contact_jobs_text: Optional[str] = None
 
-# Contact Form Models
+# Contact Form
 class ContactFormCreate(BaseModel):
     firstName: str
     lastName: str
@@ -80,7 +128,7 @@ class ContactForm(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     status: str = "new"
 
-# Service Models
+# Service
 class ServiceCreate(BaseModel):
     title: str
     description: str
@@ -105,7 +153,7 @@ class Service(BaseModel):
     order: int = 0
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-# Reference Models
+# Reference
 class ReferenceCreate(BaseModel):
     name: str
     type: str
@@ -127,7 +175,7 @@ class Reference(BaseModel):
     order: int = 0
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-# Partner/Quality Badge Models
+# Partner
 class PartnerCreate(BaseModel):
     name: str
     image_url: Optional[str] = None
@@ -146,38 +194,20 @@ class Partner(BaseModel):
     order: int = 0
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-# Image Storage Model
-class StoredImage(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    filename: str
-    content_type: str
-    data: str  # base64 encoded
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-
-# ========== Public Routes ==========
+# ========== PUBLIC ROUTES ==========
 
 @api_router.get("/")
 async def root():
     return {"message": "J&B Tasoitus ja Maalaus API"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
-
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-    return status_checks
+# Site Settings - Public
+@api_router.get("/settings", response_model=SiteSettings)
+async def get_site_settings():
+    settings = await db.site_settings.find_one({"id": "site_settings"}, {"_id": 0})
+    if not settings:
+        return SiteSettings()
+    return SiteSettings(**settings)
 
 # Contact Form - Public
 @api_router.post("/contact", response_model=ContactForm)
@@ -186,51 +216,49 @@ async def submit_contact_form(input: ContactFormCreate):
     contact_obj = ContactForm(**contact_dict)
     doc = contact_obj.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
-    _ = await db.contact_forms.insert_one(doc)
-    logging.info(f"New contact form submission from {contact_obj.email}")
+    await db.contact_forms.insert_one(doc)
+    logging.info(f"New contact form from {contact_obj.email}")
     return contact_obj
 
 # Services - Public
 @api_router.get("/services", response_model=List[Service])
 async def get_services():
     services = await db.services.find({}, {"_id": 0}).sort("order", 1).to_list(100)
-    for service in services:
-        if isinstance(service.get('created_at'), str):
-            service['created_at'] = datetime.fromisoformat(service['created_at'])
+    for s in services:
+        if isinstance(s.get('created_at'), str):
+            s['created_at'] = datetime.fromisoformat(s['created_at'])
     return services
 
 # References - Public
 @api_router.get("/references", response_model=List[Reference])
 async def get_references():
-    references = await db.references.find({}, {"_id": 0}).sort("order", 1).to_list(100)
-    for ref in references:
-        if isinstance(ref.get('created_at'), str):
-            ref['created_at'] = datetime.fromisoformat(ref['created_at'])
-    return references
+    refs = await db.references.find({}, {"_id": 0}).sort("order", 1).to_list(100)
+    for r in refs:
+        if isinstance(r.get('created_at'), str):
+            r['created_at'] = datetime.fromisoformat(r['created_at'])
+    return refs
 
-# Partners/Quality Badges - Public
+# Partners - Public
 @api_router.get("/partners", response_model=List[Partner])
 async def get_partners():
     partners = await db.partners.find({}, {"_id": 0}).sort("order", 1).to_list(100)
-    for partner in partners:
-        if isinstance(partner.get('created_at'), str):
-            partner['created_at'] = datetime.fromisoformat(partner['created_at'])
+    for p in partners:
+        if isinstance(p.get('created_at'), str):
+            p['created_at'] = datetime.fromisoformat(p['created_at'])
     return partners
 
-# Serve uploaded images
+# Images - Public
 @api_router.get("/images/{image_id}")
 async def get_image(image_id: str):
     image = await db.images.find_one({"id": image_id}, {"_id": 0})
     if not image:
         raise HTTPException(status_code=404, detail="Image not found")
-    
     image_data = base64.b64decode(image['data'])
     return Response(content=image_data, media_type=image['content_type'])
 
 
-# ========== Admin Routes ==========
+# ========== ADMIN ROUTES ==========
 
-# Admin Auth Check
 @api_router.get("/admin/verify")
 async def verify_admin_access(username: str = Depends(verify_admin)):
     return {"authenticated": True, "username": username}
@@ -238,48 +266,50 @@ async def verify_admin_access(username: str = Depends(verify_admin)):
 # Admin - Image Upload
 @api_router.post("/admin/upload")
 async def upload_image(file: UploadFile = File(...), username: str = Depends(verify_admin)):
-    """Upload an image and return its URL"""
-    
-    # Validate file type
     allowed_types = ["image/jpeg", "image/png", "image/gif", "image/webp"]
     if file.content_type not in allowed_types:
-        raise HTTPException(status_code=400, detail="Invalid file type. Allowed: JPEG, PNG, GIF, WEBP")
+        raise HTTPException(status_code=400, detail="Invalid file type")
     
-    # Read and encode file
     contents = await file.read()
-    
-    # Check file size (max 5MB)
     if len(contents) > 5 * 1024 * 1024:
-        raise HTTPException(status_code=400, detail="File too large. Max size: 5MB")
+        raise HTTPException(status_code=400, detail="File too large (max 5MB)")
     
     encoded = base64.b64encode(contents).decode('utf-8')
-    
-    # Store in database
     image_id = str(uuid.uuid4())
-    image_doc = {
+    
+    await db.images.insert_one({
         "id": image_id,
         "filename": file.filename,
         "content_type": file.content_type,
         "data": encoded,
         "created_at": datetime.now(timezone.utc).isoformat()
-    }
+    })
     
-    await db.images.insert_one(image_doc)
+    return {"id": image_id, "url": f"/api/images/{image_id}", "filename": file.filename}
+
+# Admin - Site Settings
+@api_router.put("/admin/settings", response_model=SiteSettings)
+async def update_site_settings(input: SiteSettingsUpdate, username: str = Depends(verify_admin)):
+    update_data = {k: v for k, v in input.model_dump().items() if v is not None}
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No data to update")
     
-    # Return the URL to access this image
-    return {
-        "id": image_id,
-        "url": f"/api/images/{image_id}",
-        "filename": file.filename
-    }
+    await db.site_settings.update_one(
+        {"id": "site_settings"},
+        {"$set": update_data},
+        upsert=True
+    )
+    
+    settings = await db.site_settings.find_one({"id": "site_settings"}, {"_id": 0})
+    return SiteSettings(**settings)
 
 # Admin - Contact Forms
 @api_router.get("/admin/contacts", response_model=List[ContactForm])
 async def admin_get_contacts(username: str = Depends(verify_admin)):
     forms = await db.contact_forms.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
-    for form in forms:
-        if isinstance(form.get('created_at'), str):
-            form['created_at'] = datetime.fromisoformat(form['created_at'])
+    for f in forms:
+        if isinstance(f.get('created_at'), str):
+            f['created_at'] = datetime.fromisoformat(f['created_at'])
     return forms
 
 @api_router.delete("/admin/contacts/{contact_id}")
@@ -287,28 +317,25 @@ async def admin_delete_contact(contact_id: str, username: str = Depends(verify_a
     result = await db.contact_forms.delete_one({"id": contact_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Contact not found")
-    return {"message": "Contact deleted successfully"}
+    return {"message": "Contact deleted"}
 
 # Admin - Services CRUD
 @api_router.post("/admin/services", response_model=Service)
 async def admin_create_service(input: ServiceCreate, username: str = Depends(verify_admin)):
-    service_dict = input.model_dump()
-    service_obj = Service(**service_dict)
+    service_obj = Service(**input.model_dump())
     doc = service_obj.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
-    _ = await db.services.insert_one(doc)
+    await db.services.insert_one(doc)
     return service_obj
 
 @api_router.put("/admin/services/{service_id}", response_model=Service)
 async def admin_update_service(service_id: str, input: ServiceUpdate, username: str = Depends(verify_admin)):
     update_data = {k: v for k, v in input.model_dump().items() if v is not None}
     if not update_data:
-        raise HTTPException(status_code=400, detail="No data to update")
-    
+        raise HTTPException(status_code=400, detail="No data")
     result = await db.services.update_one({"id": service_id}, {"$set": update_data})
     if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Service not found")
-    
+        raise HTTPException(status_code=404, detail="Not found")
     service = await db.services.find_one({"id": service_id}, {"_id": 0})
     if isinstance(service.get('created_at'), str):
         service['created_at'] = datetime.fromisoformat(service['created_at'])
@@ -318,29 +345,26 @@ async def admin_update_service(service_id: str, input: ServiceUpdate, username: 
 async def admin_delete_service(service_id: str, username: str = Depends(verify_admin)):
     result = await db.services.delete_one({"id": service_id})
     if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Service not found")
-    return {"message": "Service deleted successfully"}
+        raise HTTPException(status_code=404, detail="Not found")
+    return {"message": "Deleted"}
 
 # Admin - References CRUD
 @api_router.post("/admin/references", response_model=Reference)
 async def admin_create_reference(input: ReferenceCreate, username: str = Depends(verify_admin)):
-    ref_dict = input.model_dump()
-    ref_obj = Reference(**ref_dict)
+    ref_obj = Reference(**input.model_dump())
     doc = ref_obj.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
-    _ = await db.references.insert_one(doc)
+    await db.references.insert_one(doc)
     return ref_obj
 
 @api_router.put("/admin/references/{reference_id}", response_model=Reference)
 async def admin_update_reference(reference_id: str, input: ReferenceUpdate, username: str = Depends(verify_admin)):
     update_data = {k: v for k, v in input.model_dump().items() if v is not None}
     if not update_data:
-        raise HTTPException(status_code=400, detail="No data to update")
-    
+        raise HTTPException(status_code=400, detail="No data")
     result = await db.references.update_one({"id": reference_id}, {"$set": update_data})
     if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Reference not found")
-    
+        raise HTTPException(status_code=404, detail="Not found")
     ref = await db.references.find_one({"id": reference_id}, {"_id": 0})
     if isinstance(ref.get('created_at'), str):
         ref['created_at'] = datetime.fromisoformat(ref['created_at'])
@@ -350,29 +374,26 @@ async def admin_update_reference(reference_id: str, input: ReferenceUpdate, user
 async def admin_delete_reference(reference_id: str, username: str = Depends(verify_admin)):
     result = await db.references.delete_one({"id": reference_id})
     if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Reference not found")
-    return {"message": "Reference deleted successfully"}
+        raise HTTPException(status_code=404, detail="Not found")
+    return {"message": "Deleted"}
 
 # Admin - Partners CRUD
 @api_router.post("/admin/partners", response_model=Partner)
 async def admin_create_partner(input: PartnerCreate, username: str = Depends(verify_admin)):
-    partner_dict = input.model_dump()
-    partner_obj = Partner(**partner_dict)
+    partner_obj = Partner(**input.model_dump())
     doc = partner_obj.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
-    _ = await db.partners.insert_one(doc)
+    await db.partners.insert_one(doc)
     return partner_obj
 
 @api_router.put("/admin/partners/{partner_id}", response_model=Partner)
 async def admin_update_partner(partner_id: str, input: PartnerUpdate, username: str = Depends(verify_admin)):
     update_data = {k: v for k, v in input.model_dump().items() if v is not None}
     if not update_data:
-        raise HTTPException(status_code=400, detail="No data to update")
-    
+        raise HTTPException(status_code=400, detail="No data")
     result = await db.partners.update_one({"id": partner_id}, {"$set": update_data})
     if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Partner not found")
-    
+        raise HTTPException(status_code=404, detail="Not found")
     partner = await db.partners.find_one({"id": partner_id}, {"_id": 0})
     if isinstance(partner.get('created_at'), str):
         partner['created_at'] = datetime.fromisoformat(partner['created_at'])
@@ -382,57 +403,34 @@ async def admin_update_partner(partner_id: str, input: PartnerUpdate, username: 
 async def admin_delete_partner(partner_id: str, username: str = Depends(verify_admin)):
     result = await db.partners.delete_one({"id": partner_id})
     if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Partner not found")
-    return {"message": "Partner deleted successfully"}
+        raise HTTPException(status_code=404, detail="Not found")
+    return {"message": "Deleted"}
 
-
-# ========== Seed Data ==========
-
+# Admin - Seed Data
 @api_router.post("/admin/seed")
 async def seed_initial_data(username: str = Depends(verify_admin)):
-    """Seed initial services and references data"""
+    seeded = {"services": 0, "references": 0, "partners": 0, "settings": False}
     
-    services_count = await db.services.count_documents({})
-    refs_count = await db.references.count_documents({})
-    partners_count = await db.partners.count_documents({})
+    # Seed settings
+    settings_exists = await db.site_settings.find_one({"id": "site_settings"})
+    if not settings_exists:
+        default_settings = SiteSettings().model_dump()
+        await db.site_settings.insert_one(default_settings)
+        seeded["settings"] = True
     
-    seeded = {"services": 0, "references": 0, "partners": 0}
-    
-    if services_count == 0:
-        initial_services = [
-            {
-                "id": str(uuid.uuid4()),
-                "title": "Julkisivurappaus",
-                "description": "Julkisivun rappaus antaa tasalaatuisen sadetta ja muita sään rasituksia suojaavan pinnan rakenteille. Teemme kokonaisvaltaisia julkisivurappauksia sekä osarappauksia.",
-                "icon": "Building2",
-                "image_url": "https://images.pexels.com/photos/5691622/pexels-photo-5691622.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-                "order": 1,
-                "created_at": datetime.now(timezone.utc).isoformat()
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "title": "Tasoitustyöt",
-                "description": "Tasoitetyöt tulee tehdä huolella ennen uutta pintamateriaalia. Kokenut ammattilainen takaa tasaisen ja siistin lopputuloksen oikeilla välineillä.",
-                "icon": "Layers",
-                "image_url": "https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-                "order": 2,
-                "created_at": datetime.now(timezone.utc).isoformat()
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "title": "Maalaustyöt",
-                "description": "Maalaustyöt sisätiloihin ja ulkopinnoille huolellisesti toiveidenne mukaan. Palvelemme yrityksiä, yksityisasiakkaita ja taloyhtiöitä.",
-                "icon": "Paintbrush",
-                "image_url": "https://images.pexels.com/photos/5691629/pexels-photo-5691629.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-                "order": 3,
-                "created_at": datetime.now(timezone.utc).isoformat()
-            }
+    # Seed services
+    if await db.services.count_documents({}) == 0:
+        services = [
+            {"id": str(uuid.uuid4()), "title": "Julkisivurappaus", "description": "Julkisivun rappaus antaa tasalaatuisen sadetta ja muita sään rasituksia suojaavan pinnan rakenteille. Teemme kokonaisvaltaisia julkisivurappauksia sekä osarappauksia.", "icon": "Building2", "image_url": "https://images.pexels.com/photos/5691622/pexels-photo-5691622.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "order": 1, "created_at": datetime.now(timezone.utc).isoformat()},
+            {"id": str(uuid.uuid4()), "title": "Tasoitustyöt", "description": "Tasoitetyöt tulee tehdä huolella ennen uutta pintamateriaalia. Kokenut ammattilainen takaa tasaisen ja siistin lopputuloksen oikeilla välineillä.", "icon": "Layers", "image_url": "https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "order": 2, "created_at": datetime.now(timezone.utc).isoformat()},
+            {"id": str(uuid.uuid4()), "title": "Maalaustyöt", "description": "Maalaustyöt sisätiloihin ja ulkopinnoille huolellisesti toiveidenne mukaan. Palvelemme yrityksiä, yksityisasiakkaita ja taloyhtiöitä.", "icon": "Paintbrush", "image_url": "https://images.pexels.com/photos/5691629/pexels-photo-5691629.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "order": 3, "created_at": datetime.now(timezone.utc).isoformat()}
         ]
-        await db.services.insert_many(initial_services)
-        seeded["services"] = len(initial_services)
+        await db.services.insert_many(services)
+        seeded["services"] = 3
     
-    if refs_count == 0:
-        initial_refs = [
+    # Seed references
+    if await db.references.count_documents({}) == 0:
+        refs = [
             {"id": str(uuid.uuid4()), "name": "Mehiläinen Ympyrätalo", "type": "Tasoitus- ja maalaustyöt", "description": "Laaja sisätilojen pintakäsittely terveydenhuollon tiloissa.", "order": 1, "created_at": datetime.now(timezone.utc).isoformat()},
             {"id": str(uuid.uuid4()), "name": "Crowne Plaza Hotel", "type": "Tasoitus- ja maalaustyöt", "description": "Hotellin julkisten tilojen ja huoneiden maalaustyöt.", "order": 2, "created_at": datetime.now(timezone.utc).isoformat()},
             {"id": str(uuid.uuid4()), "name": "Ressun lukio", "type": "Tasoitus- ja maalaustyöt", "description": "Koulun sisätilojen kunnostus ja maalaus.", "order": 3, "created_at": datetime.now(timezone.utc).isoformat()},
@@ -440,23 +438,24 @@ async def seed_initial_data(username: str = Depends(verify_admin)):
             {"id": str(uuid.uuid4()), "name": "Myllypuro koulu", "type": "Tasoitus- ja maalaustyöt", "description": "Uuden koulun sisäpintojen tasoitus ja maalaus.", "order": 5, "created_at": datetime.now(timezone.utc).isoformat()},
             {"id": str(uuid.uuid4()), "name": "Ester1", "type": "Tasoitus- ja maalaustyöt", "description": "Asuinrakennuksen sisäpintojen käsittely.", "order": 6, "created_at": datetime.now(timezone.utc).isoformat()}
         ]
-        await db.references.insert_many(initial_refs)
-        seeded["references"] = len(initial_refs)
+        await db.references.insert_many(refs)
+        seeded["references"] = 6
     
-    if partners_count == 0:
-        initial_partners = [
+    # Seed partners
+    if await db.partners.count_documents({}) == 0:
+        partners = [
             {"id": str(uuid.uuid4()), "name": "Tyytyväisyystakuu", "image_url": None, "order": 1, "created_at": datetime.now(timezone.utc).isoformat()},
             {"id": str(uuid.uuid4()), "name": "Avaimet käteen -palvelu", "image_url": None, "order": 2, "created_at": datetime.now(timezone.utc).isoformat()},
             {"id": str(uuid.uuid4()), "name": "Kotitalousvähennys", "image_url": None, "order": 3, "created_at": datetime.now(timezone.utc).isoformat()},
             {"id": str(uuid.uuid4()), "name": "Ilmainen arviokäynti", "image_url": None, "order": 4, "created_at": datetime.now(timezone.utc).isoformat()}
         ]
-        await db.partners.insert_many(initial_partners)
-        seeded["partners"] = len(initial_partners)
+        await db.partners.insert_many(partners)
+        seeded["partners"] = 4
     
     return {"message": "Seed complete", "seeded": seeded}
 
 
-# Include the router
+# Include router
 app.include_router(api_router)
 
 app.add_middleware(
@@ -467,12 +466,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
