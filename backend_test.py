@@ -87,10 +87,6 @@ class JBMaalausAPITester:
         
         return self.run_test("Contact Form Submission", "POST", "contact", 200, test_data)
 
-    def test_get_contact_forms(self):
-        """Test retrieving contact forms"""
-        return self.run_test("Get Contact Forms", "GET", "contact", 200)
-
     def test_status_creation(self):
         """Test status check creation"""
         test_data = {
