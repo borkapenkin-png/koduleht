@@ -133,3 +133,232 @@ html {
     padding: 0 2rem;
   }
 }
+
+/* Theme-aware classes */
+.text-primary {
+  color: var(--color-primary);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-primary-light {
+  background-color: var(--color-primary-light);
+}
+
+.border-primary {
+  border-color: var(--color-primary);
+}
+
+/* Section titles - responsive and theme-aware */
+.section-title {
+  font-size: calc(1.5rem * var(--size-multiplier));
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+@media (min-width: 768px) {
+  .section-title {
+    font-size: calc(2.25rem * var(--size-multiplier));
+  }
+}
+
+/* Card titles - with text overflow handling */
+.card-title {
+  font-size: calc(1.125rem * var(--size-multiplier));
+  font-weight: 700;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 768px) {
+  .card-title {
+    font-size: calc(1.25rem * var(--size-multiplier));
+  }
+}
+
+/* Card text - with line clamping */
+.card-text {
+  font-size: calc(0.875rem * var(--size-multiplier));
+  color: var(--text-secondary);
+  line-height: 1.6;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+@media (min-width: 768px) {
+  .card-text {
+    font-size: calc(1rem * var(--size-multiplier));
+  }
+}
+
+/* Line clamp utilities */
+.line-clamp-2 {
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  -webkit-line-clamp: 3;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-4 {
+  -webkit-line-clamp: 4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Icon box - theme aware */
+.icon-box {
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--color-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .icon-box {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+/* Section backgrounds */
+.section-bg-alt {
+  background-color: var(--surface);
+}
+
+/* Footer background */
+.footer-bg {
+  background-color: #0F172A;
+}
+
+/* Navigation links - theme aware */
+.nav-link {
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: var(--color-primary);
+}
+
+.nav-link-active {
+  color: var(--color-primary);
+}
+
+.nav-link-mobile {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.nav-link-mobile:hover {
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+/* Buttons - theme aware */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-primary);
+  color: white;
+  font-weight: 600;
+  font-size: calc(0.875rem * var(--size-multiplier));
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background-color: white;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: calc(0.875rem * var(--size-multiplier));
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Service card */
+.service-card {
+  background-color: white;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+
+@media (min-width: 768px) {
+  .service-card {
+    padding: 2rem;
+  }
+}
+
+.service-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Section padding */
+.section-padding {
+  padding: 3rem 0;
+}
+
+@media (min-width: 768px) {
+  .section-padding {
+    padding: 5rem 0;
+  }
+}
+
+/* Form inputs */
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  background-color: white;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* Navbar glass effect */
+.navbar-glass {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+/* Hero overlay */
+.hero-overlay {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.4) 100%);
+}
