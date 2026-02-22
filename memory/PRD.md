@@ -29,7 +29,11 @@ Uudistaa verkkosivusto (jbtasoitusmaalaus.fi) modernimmaksi ja helpommin muokatt
 - Tunnukset: `admin` / `jbadmin2024`
 - Välilehdet: Sivusto | Palvelut | Referenssit | Laatutakuu | Viestit
 
+## Viimeisin päivitys: 22.2.2026
+- Käyttäjä päätti: **Ei tarvita sähköpostilähetystä** - admin-paneelin viestinhallinta riittää
+- Viestit-toiminto toimii: yhteydenottolomakkeen viestit tallennetaan tietokantaan ja näkyvät admin-paneelissa
+
 ## Backlog
-- P1: Sähköposti-ilmoitukset (SMTP/Resend odottaa tunnuksia)
-- P2: SEO-optimointi
-- P2: Google Analytics
+- P2: SEO-optimointi (meta tags, sitemap)
+- P2: Google Analytics -integraatio
+- P3: Viestien "luettu/lukematon" -tila (optional enhancement)
