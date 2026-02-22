@@ -7,14 +7,23 @@ Modernisoida yrityksen verkkosivusto (jbtasoitusmaalaus.fi) helposti hallittavak
 - **Frontend:** React, TailwindCSS, Framer Motion
 - **Backend:** FastAPI, Motor (async MongoDB)
 - **Tietokanta:** MongoDB
-- **Autentikointi:** JWT + bcrypt (päivitetty 22.2.2025)
+- **Autentikointi:** JWT + bcrypt
 
-## Turvallisuusominaisuudet (Toteutettu 22.2.2025)
-- ✅ **JWT-autentikointi** - Token-pohjainen kirjautuminen (24h voimassaolo)
-- ✅ **Rate limiting** - Max 5 kirjautumisyritystä / 5 min per IP
-- ✅ **Salasanan hashaus** - Bcrypt-salaus tietokannassa
-- ✅ **Salasanan vaihto** - Admin-paneelissa oma välilehti
-- ✅ **Token-tallennus** - localStorage (kirjautuminen säilyy)
+## Turvallisuusominaisuudet (Toteutettu)
+- ✅ JWT-autentikointi - Token-pohjainen kirjautuminen (24h voimassaolo)
+- ✅ Rate limiting - Max 5 kirjautumisyritystä / 5 min per IP
+- ✅ Salasanan hashaus - Bcrypt-salaus tietokannassa
+- ✅ Salasanan vaihto - Admin-paneelissa oma välilehti
+
+## Teeman hallinta (Toteutettu 22.2.2025)
+Admin-paneelissa "Teema" -välilehti mahdollistaa:
+- ✅ **Logo** - Lataa oma logo sivustolle
+- ✅ **Favicon** - Vaihda välilehden ikoni
+- ✅ **Värimaailma** - 8 esiasetettu väriä + mukautettu väri
+- ✅ **Fontti** - 8 Google-fonttia valittavissa (Inter, Poppins, Roboto, Open Sans, Montserrat, Lato, Playfair Display, Raleway)
+- ✅ **Tekstin koko** - Pieni/Keskikokoinen/Suuri preset
+- ✅ **Esikatselu** - Reaaliaikainen esikatselu teemamuutoksista
+- ✅ **Layout-suojaus** - Tekstit eivät riko layoutia (line-clamp)
 
 ## Sivuston osiot
 1. **Hero** - Pääbanneri teksteineen ja kuvineen
@@ -27,6 +36,7 @@ Modernisoida yrityksen verkkosivusto (jbtasoitusmaalaus.fi) helposti hallittavak
 ## Admin-paneeli (/admin)
 - **Kirjautumistiedot:** admin / jbadmin2024 (oletussalasana)
 - **Välilehdet:**
+  - Teema - Logo, favicon, värit, fontit, tekstikoko
   - Sivusto - Hero, Meistä, Yhteystiedot tekstit/kuvat
   - Palvelut - CRUD
   - Referenssit - CRUD
@@ -41,7 +51,7 @@ Modernisoida yrityksen verkkosivusto (jbtasoitusmaalaus.fi) helposti hallittavak
 
 ## Tietokantamallit
 - `admin_users` - {username, password_hash, created_at, updated_at}
-- `site_settings` - Sivuston tekstit ja kuvat
+- `site_settings` - Sivuston tekstit, kuvat JA teema-asetukset (theme_color, theme_font, theme_size, logo_url, favicon_url)
 - `services` - Palvelut
 - `references` - Referenssit
 - `partners` - Kumppanit/laatutakuu
@@ -50,7 +60,7 @@ Modernisoida yrityksen verkkosivusto (jbtasoitusmaalaus.fi) helposti hallittavak
 
 ## API-päätepisteet
 ### Julkiset
-- GET /api/settings - Sivuston asetukset
+- GET /api/settings - Sivuston asetukset (sis. teema)
 - GET /api/services - Palvelut
 - GET /api/references - Referenssit
 - GET /api/partners - Kumppanit
@@ -61,7 +71,7 @@ Modernisoida yrityksen verkkosivusto (jbtasoitusmaalaus.fi) helposti hallittavak
 - POST /api/admin/login - Kirjautuminen (palauttaa JWT-tokenin)
 - GET /api/admin/verify - Tokenin tarkistus
 - POST /api/admin/change-password - Salasanan vaihto
-- PUT /api/admin/settings - Päivitä asetukset
+- PUT /api/admin/settings - Päivitä asetukset (sis. teema)
 - POST/PUT/DELETE /api/admin/services/{id}
 - POST/PUT/DELETE /api/admin/references/{id}
 - POST/PUT/DELETE /api/admin/partners/{id}
@@ -74,5 +84,6 @@ Modernisoida yrityksen verkkosivusto (jbtasoitusmaalaus.fi) helposti hallittavak
 - P2: Google Analytics (käyttäjä lisää itse)
 
 ## Muutoshistoria
+- 22.2.2025: Teeman hallinta (värit, fontit, koko, logo, favicon)
 - 22.2.2025: JWT-autentikointi, rate limiting, salasanan hashaus ja vaihto
 - Aiemmin: Perussivusto, admin-paneeli, SEO
