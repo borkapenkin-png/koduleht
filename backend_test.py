@@ -405,6 +405,10 @@ class JBMaalausAPITester:
         self.test_get_references()
         self.test_get_partners()
         
+        # Test site settings (NEW)
+        print("\n🏠 Testing Site Settings...")
+        self.test_get_site_settings()
+        
         # Test admin authentication
         print("\n🔐 Testing Admin Authentication...")
         self.test_admin_auth()
@@ -414,6 +418,9 @@ class JBMaalausAPITester:
         print("\n👨‍💼 Testing Admin Operations...")
         self.test_admin_seed_data()
         self.test_admin_get_contacts()
+        
+        # Test site settings admin operations (NEW)
+        self.test_admin_update_site_settings()
         
         # Test image upload functionality
         self.test_admin_image_upload()
