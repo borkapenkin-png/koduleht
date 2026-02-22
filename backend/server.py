@@ -466,7 +466,7 @@ async def upload_image(file: UploadFile = File(...), username: str = Depends(get
 
 # Admin - Site Settings
 @api_router.put("/admin/settings", response_model=SiteSettings)
-async def update_site_settings(input: SiteSettingsUpdate, username: str = Depends(verify_admin)):
+async def update_site_settings(input: SiteSettingsUpdate, username: str = Depends(get_current_admin)):
     update_data = {k: v for k, v in input.model_dump().items() if v is not None}
     if not update_data:
         raise HTTPException(status_code=400, detail="No data to update")
@@ -482,7 +482,7 @@ async def update_site_settings(input: SiteSettingsUpdate, username: str = Depend
 
 # Admin - Contact Forms
 @api_router.get("/admin/contacts", response_model=List[ContactForm])
-async def admin_get_contacts(username: str = Depends(verify_admin)):
+async def admin_get_contacts(username: str = Depends(get_current_admin)):
     forms = await db.contact_forms.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
     for f in forms:
         if isinstance(f.get('created_at'), str):
@@ -490,7 +490,7 @@ async def admin_get_contacts(username: str = Depends(verify_admin)):
     return forms
 
 @api_router.delete("/admin/contacts/{contact_id}")
-async def admin_delete_contact(contact_id: str, username: str = Depends(verify_admin)):
+async def admin_delete_contact(contact_id: str, username: str = Depends(get_current_admin)):
     result = await db.contact_forms.delete_one({"id": contact_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Contact not found")
@@ -498,7 +498,7 @@ async def admin_delete_contact(contact_id: str, username: str = Depends(verify_a
 
 # Admin - Services CRUD
 @api_router.post("/admin/services", response_model=Service)
-async def admin_create_service(input: ServiceCreate, username: str = Depends(verify_admin)):
+async def admin_create_service(input: ServiceCreate, username: str = Depends(get_current_admin)):
     service_obj = Service(**input.model_dump())
     doc = service_obj.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
@@ -506,7 +506,7 @@ async def admin_create_service(input: ServiceCreate, username: str = Depends(ver
     return service_obj
 
 @api_router.put("/admin/services/{service_id}", response_model=Service)
-async def admin_update_service(service_id: str, input: ServiceUpdate, username: str = Depends(verify_admin)):
+async def admin_update_service(service_id: str, input: ServiceUpdate, username: str = Depends(get_current_admin)):
     update_data = {k: v for k, v in input.model_dump().items() if v is not None}
     if not update_data:
         raise HTTPException(status_code=400, detail="No data")
@@ -519,7 +519,7 @@ async def admin_update_service(service_id: str, input: ServiceUpdate, username: 
     return Service(**service)
 
 @api_router.delete("/admin/services/{service_id}")
-async def admin_delete_service(service_id: str, username: str = Depends(verify_admin)):
+async def admin_delete_service(service_id: str, username: str = Depends(get_current_admin)):
     result = await db.services.delete_one({"id": service_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Not found")
@@ -527,7 +527,7 @@ async def admin_delete_service(service_id: str, username: str = Depends(verify_a
 
 # Admin - References CRUD
 @api_router.post("/admin/references", response_model=Reference)
-async def admin_create_reference(input: ReferenceCreate, username: str = Depends(verify_admin)):
+async def admin_create_reference(input: ReferenceCreate, username: str = Depends(get_current_admin)):
     ref_obj = Reference(**input.model_dump())
     doc = ref_obj.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
@@ -535,7 +535,7 @@ async def admin_create_reference(input: ReferenceCreate, username: str = Depends
     return ref_obj
 
 @api_router.put("/admin/references/{reference_id}", response_model=Reference)
-async def admin_update_reference(reference_id: str, input: ReferenceUpdate, username: str = Depends(verify_admin)):
+async def admin_update_reference(reference_id: str, input: ReferenceUpdate, username: str = Depends(get_current_admin)):
     update_data = {k: v for k, v in input.model_dump().items() if v is not None}
     if not update_data:
         raise HTTPException(status_code=400, detail="No data")
@@ -548,7 +548,7 @@ async def admin_update_reference(reference_id: str, input: ReferenceUpdate, user
     return Reference(**ref)
 
 @api_router.delete("/admin/references/{reference_id}")
-async def admin_delete_reference(reference_id: str, username: str = Depends(verify_admin)):
+async def admin_delete_reference(reference_id: str, username: str = Depends(get_current_admin)):
     result = await db.references.delete_one({"id": reference_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Not found")
@@ -556,7 +556,7 @@ async def admin_delete_reference(reference_id: str, username: str = Depends(veri
 
 # Admin - Partners CRUD
 @api_router.post("/admin/partners", response_model=Partner)
-async def admin_create_partner(input: PartnerCreate, username: str = Depends(verify_admin)):
+async def admin_create_partner(input: PartnerCreate, username: str = Depends(get_current_admin)):
     partner_obj = Partner(**input.model_dump())
     doc = partner_obj.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
@@ -564,7 +564,7 @@ async def admin_create_partner(input: PartnerCreate, username: str = Depends(ver
     return partner_obj
 
 @api_router.put("/admin/partners/{partner_id}", response_model=Partner)
-async def admin_update_partner(partner_id: str, input: PartnerUpdate, username: str = Depends(verify_admin)):
+async def admin_update_partner(partner_id: str, input: PartnerUpdate, username: str = Depends(get_current_admin)):
     update_data = {k: v for k, v in input.model_dump().items() if v is not None}
     if not update_data:
         raise HTTPException(status_code=400, detail="No data")
@@ -577,7 +577,7 @@ async def admin_update_partner(partner_id: str, input: PartnerUpdate, username: 
     return Partner(**partner)
 
 @api_router.delete("/admin/partners/{partner_id}")
-async def admin_delete_partner(partner_id: str, username: str = Depends(verify_admin)):
+async def admin_delete_partner(partner_id: str, username: str = Depends(get_current_admin)):
     result = await db.partners.delete_one({"id": partner_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Not found")
@@ -585,7 +585,7 @@ async def admin_delete_partner(partner_id: str, username: str = Depends(verify_a
 
 # Admin - Seed Data
 @api_router.post("/admin/seed")
-async def seed_initial_data(username: str = Depends(verify_admin)):
+async def seed_initial_data(username: str = Depends(get_current_admin)):
     seeded = {"services": 0, "references": 0, "partners": 0, "settings": False}
     
     # Seed settings
