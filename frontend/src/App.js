@@ -42,9 +42,11 @@ const Navbar = ({ isScrolled, activeSection }) => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <a href="#" data-testid="logo-link" className="flex items-center gap-2">
-            <span className="text-xl font-bold text-[#0F172A]">
-              J&B <span className="text-[#0056D2]">Tasoitus & Maalaus</span>
-            </span>
+            <img 
+              src="https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/7282ajdy_jb2-logo.pdf"
+              alt="J&B Tasoitus & Maalaus"
+              className="h-10 w-auto"
+            />
           </a>
 
           {/* Desktop Navigation */}
