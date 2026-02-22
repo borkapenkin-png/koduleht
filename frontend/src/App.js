@@ -257,15 +257,15 @@ const HeroSection = ({ settings }) => {
 };
 
 // ========== SERVICES ==========
-const ServicesSection = ({ services }) => (
-  <section id="palvelut" data-testid="services-section" className="section-padding bg-[#FAFAFA]">
+const ServicesSection = ({ services_data }) => (
+  <section id="palvelut" data-testid="services-section" className="section-padding section-bg-alt">
     <div className="container-custom">
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10 md:mb-16">
-        <p className="font-slogan text-[#0056D2] text-sm mb-2 md:mb-3">MITÄ TEEMME</p>
-        <h2 className="text-2xl md:text-4xl font-bold text-[#0F172A]">Palvelumme</h2>
+        <p className="font-slogan text-primary text-sm mb-2 md:mb-3">MITÄ TEEMME</p>
+        <h2 className="section-title">Palvelumme</h2>
       </motion.div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
-        {services.map((service, index) => {
+        {services_data.map((service, index) => {
           const Icon = iconMap[service.icon] || Building2;
           return (
             <motion.div key={service.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="service-card group overflow-hidden">
@@ -275,10 +275,10 @@ const ServicesSection = ({ services }) => (
                 </div>
               )}
               <div className="flex items-center gap-3 mb-3 md:mb-4">
-                <div className="w-8 h-8 md:w-10 md:h-10 bg-[#EBF3FF] flex items-center justify-center"><Icon size={18} className="text-[#0056D2]" /></div>
-                <h3 className="text-lg md:text-xl font-bold text-[#0F172A]">{service.title}</h3>
+                <div className="icon-box"><Icon size={18} className="text-primary" /></div>
+                <h3 className="card-title line-clamp-2">{service.title}</h3>
               </div>
-              <p className="text-sm md:text-base text-[#64748B] leading-relaxed">{service.description}</p>
+              <p className="card-text line-clamp-4">{service.description}</p>
             </motion.div>
           );
         })}
