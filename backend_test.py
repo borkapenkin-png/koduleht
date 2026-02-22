@@ -1,6 +1,7 @@
 import requests
 import sys
 from datetime import datetime
+import base64
 
 class JBMaalausAPITester:
     def __init__(self, base_url="https://modern-jbta.preview.emergentagent.com"):
@@ -10,6 +11,11 @@ class JBMaalausAPITester:
         self.tests_passed = 0
         self.failed_tests = []
         self.passed_tests = []
+        
+        # Admin credentials
+        self.admin_username = "admin"
+        self.admin_password = "jbadmin2024"
+        self.admin_auth = (self.admin_username, self.admin_password)
 
     def run_test(self, name, method, endpoint, expected_status, data=None, headers=None):
         """Run a single API test"""
