@@ -640,7 +640,7 @@ const AdminPanel = () => {
                     <div><label className="block text-sm font-medium mb-1">Otsikko 3</label><input value={settings.hero_title_3} onChange={(e) => setSettings({...settings, hero_title_3: e.target.value})} className="form-input text-sm" /></div>
                   </div>
                   <div><label className="block text-sm font-medium mb-1">Kuvaus</label><textarea value={settings.hero_description} onChange={(e) => setSettings({...settings, hero_description: e.target.value})} className="form-input text-sm" rows={3} /></div>
-                  <div><label className="block text-sm font-medium mb-1">Taustakuva</label><ImageUpload currentImage={settings.hero_image_url} onImageChange={(url) => setSettings({...settings, hero_image_url: url})} credentials={getAuth()} /></div>
+                  <div><label className="block text-sm font-medium mb-1">Taustakuva</label><ImageUpload currentImage={settings.hero_image_url} onImageChange={(url) => setSettings({...settings, hero_image_url: url})} token={token} /></div>
                 </div>
 
                 {/* About */}
