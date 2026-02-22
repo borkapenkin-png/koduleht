@@ -1,0 +1,122 @@
+{
+  "design_guidelines": {
+    "identity": {
+      "persona": "E1",
+      "tone": "Nordic Minimalist, Professional, Trustworthy, High-Quality",
+      "description": "A clean, whitespace-dominant design that emphasizes craftsmanship and Finnish quality. Uses a specific blue theme against stark white/off-white backgrounds.",
+      "target_audience": "Finnish homeowners, businesses, housing associations"
+    },
+    "typography": {
+      "primary_font": "Manrope",
+      "secondary_font": "Inter",
+      "accent_font": "Barlow Condensed",
+      "usage": {
+        "headings": "Manrope, font-bold, tracking-tight, text-gray-900",
+        "body": "Inter, font-normal, text-gray-600, leading-relaxed",
+        "slogan": "Barlow Condensed, font-black, uppercase, tracking-wide, text-primary"
+      },
+      "scale": {
+        "h1": "text-5xl md:text-7xl",
+        "h2": "text-3xl md:text-4xl",
+        "h3": "text-xl md:text-2xl",
+        "body": "text-base md:text-lg"
+      }
+    },
+    "colors": {
+      "palette": {
+        "primary": {
+          "DEFAULT": "#0056D2",
+          "foreground": "#FFFFFF",
+          "hover": "#0044A8",
+          "light": "#EBF3FF"
+        },
+        "secondary": {
+          "DEFAULT": "#F1F5F9",
+          "foreground": "#0F172A"
+        },
+        "background": "#FFFFFF",
+        "surface": "#FAFAFA",
+        "text": {
+          "primary": "#0F172A",
+          "secondary": "#64748B",
+          "tertiary": "#94A3B8"
+        },
+        "border": "#E2E8F0"
+      },
+      "theme": "light",
+      "rules": "Use primary blue for CTAs, icons, and key accents. Keep backgrounds white or very light grey (zinc-50). Avoid gradients. Use high contrast."
+    },
+    "layout": {
+      "spacing": "Relaxed. Use p-8 to p-24 for section padding. Gap-8 to gap-12 for grids.",
+      "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+      "grid_system": "Use CSS Grid. Services: grid-cols-1 md:grid-cols-3. References: Masonry or grid-cols-1 md:grid-cols-2 lg:grid-cols-3.",
+      "radius": "rounded-none or rounded-sm (sharp, precise feel)",
+      "shadows": "shadow-sm for cards, shadow-md for hover states. Avoid heavy drop shadows."
+    },
+    "components": {
+      "buttons": {
+        "primary": "bg-primary text-white hover:bg-primary/90 rounded-sm px-8 py-3 font-semibold transition-all shadow-sm hover:shadow-md",
+        "secondary": "bg-white text-primary border border-primary/20 hover:bg-primary/5 rounded-sm px-8 py-3 font-medium transition-all"
+      },
+      "cards": {
+        "service": "bg-white p-8 border border-gray-100 hover:border-primary/20 transition-colors group relative overflow-hidden",
+        "reference": "bg-white overflow-hidden border border-gray-100 group"
+      },
+      "inputs": {
+        "style": "bg-gray-50 border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary rounded-sm h-12"
+      }
+    },
+    "images": {
+      "hero": {
+        "url": "https://images.pexels.com/photos/5493669/pexels-photo-5493669.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "alt": "Professional painter working",
+        "treatment": "Use gentle overlay if text is over image, or use split layout."
+      },
+      "textures": [
+        {
+          "url": "https://images.pexels.com/photos/7941435/pexels-photo-7941435.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "name": "plaster_texture",
+          "usage": "Subtle background for 'Quality' section or Footer"
+        }
+      ],
+      "references": [
+        "https://images.pexels.com/photos/3627486/pexels-photo-3627486.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "https://images.unsplash.com/photo-1719437354892-f64ea7e03d4e?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "https://images.unsplash.com/photo-1654349804773-88067a5b3201?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "https://images.pexels.com/photos/18435276/pexels-photo-18435276.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+      ]
+    },
+    "assets": {
+      "icons": "Use Lucide React icons. Thin stroke (1.5px) to match minimal aesthetic.",
+      "logos": "Use text for partner logos if PNGs not available, styled in grayscale opacity-50."
+    },
+    "motion": {
+      "type": "Subtle, professional",
+      "enter": "Fade in up (y: 20, opacity: 0)",
+      "hover": "Scale 1.02, border color change",
+      "scroll": "Parallax on hero image if possible"
+    },
+    "content_guidelines": {
+      "language": "Finnish",
+      "slogan": "LAATUJOHTAJAT",
+      "company_name": "J&B Tasoitus ja Maalaus",
+      "sections": {
+        "hero": "Focus on high quality and leadership in the field.",
+        "services": "Julkisivurappaus, Tasoitustyöt, Maalaustyöt. Brief descriptions.",
+        "references": "Showcase: Mehiläinen Ympyrätalo, Crowne Plaza Hotel, Ressun lukio, Jumbo Stockmann, Myllypuro koulu.",
+        "guarantee": "Customer satisfaction guarantee, flexible, turnkey service.",
+        "contact": "Form with Name, Email, Phone, Message."
+      }
+    },
+    "instructions_to_main_agent": [
+      "Implement a 'Sticky' Navbar that becomes glassmorphic on scroll.",
+      "Use 'Manrope' for all Headings.",
+      "Ensure the Blue (#0056D2) is used strategically for 'Call to Actions' and 'Highlights' only. Do not overuse.",
+      "The 'References' section should be a highlight - use a clean grid with high-quality placeholder images provided.",
+      "Install 'lucide-react' for icons.",
+      "Use 'framer-motion' for simple entrance animations.",
+      "Create a 'Quote' or 'Estimate' request form as the primary conversion goal.",
+      "Ensure the site is mobile-responsive with appropriate padding on small screens."
+    ]
+  }
+}
