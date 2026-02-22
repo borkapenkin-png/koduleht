@@ -874,7 +874,7 @@ const AdminPanel = () => {
 };
 
 // Form Components
-const ServiceForm = ({ service, onChange, onSave, onCancel, credentials }) => (
+const ServiceForm = ({ service, onChange, onSave, onCancel, token }) => (
   <div className="space-y-3 md:space-y-4">
     <div><label className="block text-sm font-medium mb-1">Otsikko</label><input value={service.title} onChange={(e) => onChange({ ...service, title: e.target.value })} className="form-input text-sm" placeholder="Nimi" /></div>
     <div><label className="block text-sm font-medium mb-1">Kuvaus</label><textarea value={service.description} onChange={(e) => onChange({ ...service, description: e.target.value })} className="form-input text-sm" rows={3} /></div>
@@ -882,7 +882,7 @@ const ServiceForm = ({ service, onChange, onSave, onCancel, credentials }) => (
       <div><label className="block text-sm font-medium mb-1">Ikoni</label><select value={service.icon} onChange={(e) => onChange({ ...service, icon: e.target.value })} className="form-input text-sm"><option value="Building2">Rakennus</option><option value="Layers">Kerrokset</option><option value="Paintbrush">Sivellin</option></select></div>
       <div><label className="block text-sm font-medium mb-1">Järjestys</label><input type="number" value={service.order} onChange={(e) => onChange({ ...service, order: parseInt(e.target.value) || 0 })} className="form-input text-sm" /></div>
     </div>
-    <div><label className="block text-sm font-medium mb-1">Kuva</label><ImageUpload currentImage={service.image_url} onImageChange={(url) => onChange({ ...service, image_url: url })} credentials={credentials} /></div>
+    <div><label className="block text-sm font-medium mb-1">Kuva</label><ImageUpload currentImage={service.image_url} onImageChange={(url) => onChange({ ...service, image_url: url })} token={token} /></div>
     <div className="flex gap-2"><button onClick={onSave} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Save size={14} />Tallenna</button><button onClick={onCancel} className="btn-secondary text-xs md:text-sm">Peruuta</button></div>
   </div>
 );
@@ -897,10 +897,10 @@ const ReferenceForm = ({ reference, onChange, onSave, onCancel }) => (
   </div>
 );
 
-const PartnerForm = ({ partner, onChange, onSave, onCancel, credentials }) => (
+const PartnerForm = ({ partner, onChange, onSave, onCancel, token }) => (
   <div className="space-y-3 md:space-y-4">
     <div><label className="block text-sm font-medium mb-1">Nimi</label><input value={partner.name} onChange={(e) => onChange({ ...partner, name: e.target.value })} className="form-input text-sm" placeholder="Luotettava kumppani" /></div>
-    <div><label className="block text-sm font-medium mb-1">Logo</label><ImageUpload currentImage={partner.image_url} onImageChange={(url) => onChange({ ...partner, image_url: url })} credentials={credentials} /></div>
+    <div><label className="block text-sm font-medium mb-1">Logo</label><ImageUpload currentImage={partner.image_url} onImageChange={(url) => onChange({ ...partner, image_url: url })} token={token} /></div>
     <div><label className="block text-sm font-medium mb-1">Järjestys</label><input type="number" value={partner.order} onChange={(e) => onChange({ ...partner, order: parseInt(e.target.value) || 0 })} className="form-input text-sm" /></div>
     <div className="flex gap-2"><button onClick={onSave} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Save size={14} />Tallenna</button><button onClick={onCancel} className="btn-secondary text-xs md:text-sm">Peruuta</button></div>
   </div>
