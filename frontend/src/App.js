@@ -1059,16 +1059,16 @@ const HomePage = () => {
 
   return (
     <>
-      <Navbar isScrolled={isScrolled} activeSection={activeSection} />
+      <Navbar isScrolled={isScrolled} activeSection={activeSection} logoUrl={settings.logo_url} />
       <main>
         <HeroSection settings={settings} />
-        <ServicesSection services={services} />
+        <ServicesSection services={settings} services_data={services} />
         <AboutSection settings={settings} />
-        <ReferencesSection references={references} />
-        <QualitySection partners={partners} />
+        <ReferencesSection settings={settings} references={references} />
+        <QualitySection settings={settings} partners={partners} />
         <ContactSection settings={settings} />
       </main>
-      <Footer />
+      <Footer logoUrl={settings.logo_url} />
     </>
   );
 };
