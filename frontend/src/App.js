@@ -671,6 +671,7 @@ const AdminPanel = () => {
   }
 
   const tabs = [
+    { id: "theme", label: "Teema", icon: Palette },
     { id: "settings", label: "Sivusto", icon: Home },
     { id: "services", label: "Palvelut", icon: Briefcase },
     { id: "references", label: "Referenssit", icon: Building2 },
