@@ -952,6 +952,18 @@ const HomePage = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Show loading state until data is fetched
+  if (isLoading || !settings) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center">
+          <img src={LOGO_URL} alt="J&B" className="h-16 mx-auto mb-4 animate-pulse" />
+          <div className="w-8 h-8 border-2 border-[#0056D2] border-t-transparent rounded-full animate-spin mx-auto"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <Navbar isScrolled={isScrolled} activeSection={activeSection} />
