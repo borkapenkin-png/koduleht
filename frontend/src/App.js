@@ -3,141 +3,103 @@ import "@/App.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { 
-  Phone, 
-  Mail, 
-  MapPin, 
-  Menu, 
-  X, 
-  ChevronDown,
-  Paintbrush,
-  Building2,
-  Layers,
-  CheckCircle,
-  ArrowRight,
-  Send,
-  Settings,
-  LogOut,
-  Plus,
-  Trash2,
-  Edit2,
-  Save,
-  MessageSquare,
-  Briefcase,
-  Upload,
-  Award,
-  Image as ImageIcon
+  Phone, Mail, MapPin, Menu, X, ChevronDown, Paintbrush, Building2, Layers,
+  CheckCircle, ArrowRight, Send, Settings, LogOut, Plus, Trash2, Edit2, Save,
+  MessageSquare, Briefcase, Upload, Award, Image as ImageIcon, Home, FileText, Users
 } from "lucide-react";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
-
-// Logo URL - korjattu versio
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png";
 
-// Icon mapping
-const iconMap = {
-  Building2: Building2,
-  Layers: Layers,
-  Paintbrush: Paintbrush,
+const iconMap = { Building2, Layers, Paintbrush };
+
+// Default settings
+const defaultSettings = {
+  hero_slogan: "LAATUJOHTAJAT",
+  hero_title_1: "Ammattitaitoista",
+  hero_title_2: "maalausta",
+  hero_title_3: "ja tasoitusta",
+  hero_description: "Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella.",
+  hero_image_url: "https://images.pexels.com/photos/5493669/pexels-photo-5493669.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  hero_badge_1: "Kotitalousvähennys",
+  hero_badge_2: "Tyytyväisyystakuu",
+  about_subtitle: "TIETOA MEISTÄ",
+  about_title: "Luotettava kumppani pintaremontteihin",
+  about_text_1: "J&B Tasoitus Ja Maalaus Oy on Uudellamaalla toimiva luotettava maalaustöiden ammattilainen. Olemme tehneet sisä- ja ulkomaalauksia vuodesta 2018.",
+  about_text_2: "Meiltä sujuu myös katto- ja julkisivumaalaukset, julkisivurappaukset sekä sisäpintojen tapetoinnit. Toiminnassa panostamme asiakaslähtöisyyteen, joustavuuteen ja ensiluokkaiseen työnlaatuun.",
+  about_text_3: "Teemme työt avaimet käteen -periaatteella ja tarjoamme asiakkaillemme tyytyväisyystakuun.",
+  about_image_url: "https://images.pexels.com/photos/7941435/pexels-photo-7941435.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  about_year: "2018",
+  about_info_title: "Muista kotitalousvähennys!",
+  about_info_text: "Maalaus luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen.",
+  contact_subtitle: "OTA YHTEYTTÄ",
+  contact_title: "Yhteystiedot",
+  contact_description: "Lähetä tarjouspyyntö tai pyydä meidät ilmaiselle arviokäynnille.",
+  contact_address: "Sienitie 52, 00760 Helsinki",
+  contact_email: "info@jbtasoitusmaalaus.fi",
+  contact_phone_1_name: "Boris Penkin",
+  contact_phone_1: "+358 40 054 7270",
+  contact_phone_2_name: "Joosep Rohusaar",
+  contact_phone_2: "+358 40 029 8247",
+  contact_jobs_title: "Työpaikkahaku",
+  contact_jobs_text: "Haluatko töihin? Lähetä CV ja saatekirje: info@jbtasoitusmaalaus.fi"
 };
 
-// ========== IMAGE UPLOAD COMPONENT ==========
+// ========== IMAGE UPLOAD ==========
 const ImageUpload = ({ currentImage, onImageChange, credentials }) => {
   const fileInputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState(currentImage || "");
 
-  useEffect(() => {
-    setPreview(currentImage || "");
-  }, [currentImage]);
+  useEffect(() => { setPreview(currentImage || ""); }, [currentImage]);
 
   const handleFileSelect = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
-    // Validate file type
-    const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-    if (!allowedTypes.includes(file.type)) {
-      alert("Sallitut tiedostotyypit: JPEG, PNG, GIF, WEBP");
-      return;
+    if (!["image/jpeg", "image/png", "image/gif", "image/webp"].includes(file.type)) {
+      alert("Sallitut: JPEG, PNG, GIF, WEBP"); return;
     }
-
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert("Tiedosto liian suuri. Max koko: 5MB");
-      return;
-    }
+    if (file.size > 5 * 1024 * 1024) { alert("Max 5MB"); return; }
 
     setUploading(true);
-
     try {
       const formData = new FormData();
       formData.append("file", file);
-
       const response = await axios.post(`${API}/admin/upload`, formData, {
-        auth: credentials,
-        headers: { "Content-Type": "multipart/form-data" }
+        auth: credentials, headers: { "Content-Type": "multipart/form-data" }
       });
-
       const imageUrl = `${BACKEND_URL}${response.data.url}`;
       setPreview(imageUrl);
       onImageChange(imageUrl);
-    } catch (error) {
-      console.error("Upload error:", error);
-      alert("Kuvan lataus epäonnistui");
-    }
-
+    } catch (error) { alert("Lataus epäonnistui"); }
     setUploading(false);
   };
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 flex-wrap">
         {preview ? (
-          <img src={preview} alt="Preview" className="w-20 h-14 object-cover border border-[#E2E8F0]" />
+          <img src={preview} alt="Preview" className="w-16 h-12 object-cover border border-[#E2E8F0]" />
         ) : (
-          <div className="w-20 h-14 bg-[#FAFAFA] border border-[#E2E8F0] flex items-center justify-center">
-            <ImageIcon size={20} className="text-[#94A3B8]" />
+          <div className="w-16 h-12 bg-[#FAFAFA] border border-[#E2E8F0] flex items-center justify-center">
+            <ImageIcon size={16} className="text-[#94A3B8]" />
           </div>
         )}
-        <div className="flex-1">
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileSelect}
-            accept="image/jpeg,image/png,image/gif,image/webp"
-            className="hidden"
-          />
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={uploading}
-            className="btn-secondary text-sm flex items-center gap-2"
-          >
-            <Upload size={16} />
-            {uploading ? "Ladataan..." : "Lataa kuva"}
-          </button>
-        </div>
+        <input type="file" ref={fileInputRef} onChange={handleFileSelect} accept="image/*" className="hidden" />
+        <button type="button" onClick={() => fileInputRef.current?.click()} disabled={uploading} className="btn-secondary text-xs py-2 px-3 flex items-center gap-1">
+          <Upload size={14} />{uploading ? "..." : "Lataa"}
+        </button>
       </div>
-      <input
-        type="url"
-        value={preview}
-        onChange={(e) => {
-          setPreview(e.target.value);
-          onImageChange(e.target.value);
-        }}
-        placeholder="Tai syötä kuvan URL"
-        className="form-input text-sm"
-      />
+      <input type="url" value={preview} onChange={(e) => { setPreview(e.target.value); onImageChange(e.target.value); }} placeholder="Tai URL" className="form-input text-sm" />
     </div>
   );
 };
 
-// ========== NAVIGATION ==========
+// ========== NAVBAR ==========
 const Navbar = ({ isScrolled, activeSection }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   const navLinks = [
     { href: "#palvelut", label: "Palvelut" },
     { href: "#meista", label: "Meistä" },
@@ -146,83 +108,28 @@ const Navbar = ({ isScrolled, activeSection }) => {
   ];
 
   return (
-    <nav
-      data-testid="navbar"
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "navbar-glass shadow-sm" : "bg-transparent"
-      }`}
-    >
+    <nav data-testid="navbar" className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "navbar-glass shadow-sm" : "bg-transparent"}`}>
       <div className="container-custom">
-        <div className="flex items-center justify-between h-20">
-          <a href="#" data-testid="logo-link" className="flex items-center">
-            <img 
-              src={LOGO_URL} 
-              alt="J&B Tasoitus & Maalaus" 
-              className="h-12 md:h-14 w-auto"
-            />
-          </a>
-
-          <div className="hidden md:flex items-center gap-8">
+        <div className="flex items-center justify-between h-16 md:h-20">
+          <a href="#" data-testid="logo-link"><img src={LOGO_URL} alt="J&B" className="h-10 md:h-12 w-auto" /></a>
+          <div className="hidden md:flex items-center gap-6 lg:gap-8">
             {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                data-testid={`nav-${link.label.toLowerCase()}`}
-                className={`text-sm font-medium transition-colors hover:text-[#0056D2] ${
-                  activeSection === link.href.substring(1)
-                    ? "text-[#0056D2]"
-                    : "text-[#64748B]"
-                }`}
-              >
-                {link.label}
-              </a>
+              <a key={link.href} href={link.href} className={`text-sm font-medium transition-colors hover:text-[#0056D2] ${activeSection === link.href.substring(1) ? "text-[#0056D2]" : "text-[#64748B]"}`}>{link.label}</a>
             ))}
-            <a
-              href="#yhteystiedot"
-              data-testid="cta-tarjouspyynto"
-              className="btn-primary text-sm"
-            >
-              Pyydä tarjous
-            </a>
+            <a href="#yhteystiedot" className="btn-primary text-sm py-2 px-4">Pyydä tarjous</a>
           </div>
-
-          <button
-            data-testid="mobile-menu-toggle"
-            className="md:hidden p-2 text-[#0F172A]"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
+          <button className="md:hidden p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-
         <AnimatePresence>
           {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white border-t border-[#E2E8F0]"
-            >
-              <div className="py-4 space-y-2">
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="md:hidden bg-white border-t">
+              <div className="py-4 space-y-1">
                 {navLinks.map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    className="block px-4 py-3 text-[#64748B] hover:text-[#0056D2] hover:bg-[#EBF3FF]"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {link.label}
-                  </a>
+                  <a key={link.href} href={link.href} className="block px-4 py-3 text-[#64748B] hover:text-[#0056D2] hover:bg-[#EBF3FF]" onClick={() => setIsMobileMenuOpen(false)}>{link.label}</a>
                 ))}
-                <div className="px-4 pt-2">
-                  <a
-                    href="#yhteystiedot"
-                    className="btn-primary block text-center text-sm"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Pyydä tarjous
-                  </a>
-                </div>
+                <div className="px-4 pt-2"><a href="#yhteystiedot" className="btn-primary block text-center text-sm" onClick={() => setIsMobileMenuOpen(false)}>Pyydä tarjous</a></div>
               </div>
             </motion.div>
           )}
@@ -232,240 +139,96 @@ const Navbar = ({ isScrolled, activeSection }) => {
   );
 };
 
-// ========== HERO SECTION ==========
-const HeroSection = () => {
+// ========== HERO ==========
+const HeroSection = ({ settings }) => {
+  const s = { ...defaultSettings, ...settings };
   return (
-    <section data-testid="hero-section" className="relative min-h-screen flex items-center">
+    <section data-testid="hero-section" className="relative min-h-[90vh] md:min-h-screen flex items-center pt-16">
       <div className="absolute inset-0">
-        <img
-          src="https://images.pexels.com/photos/5493669/pexels-photo-5493669.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-          alt="Ammattimainen maalari työssä"
-          className="w-full h-full object-cover"
-        />
+        <img src={s.hero_image_url} alt="Tausta" className="w-full h-full object-cover" />
         <div className="hero-overlay absolute inset-0"></div>
       </div>
-
-      <div className="container-custom relative z-10 pt-20">
+      <div className="container-custom relative z-10 py-12 md:py-20">
         <div className="max-w-2xl">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="font-slogan text-[#0056D2] text-lg md:text-xl mb-4"
-          >
-            LAATUJOHTAJAT
-          </motion.p>
-          
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold text-[#0F172A] mb-6 leading-tight"
-          >
-            Ammattitaitoista
-            <br />
-            <span className="text-[#0056D2]">maalausta</span> ja
-            <br />
-            tasoitusta
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="font-slogan text-[#0056D2] text-base md:text-xl mb-3 md:mb-4">{s.hero_slogan}</motion.p>
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-[#0F172A] mb-4 md:mb-6 leading-tight">
+            {s.hero_title_1}<br /><span className="text-[#0056D2]">{s.hero_title_2}</span> {s.hero_title_3}
           </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg text-[#64748B] mb-8 max-w-xl leading-relaxed"
-          >
-            Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. 
-            Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit 
-            avaimet käteen -periaatteella.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4"
-          >
-            <a href="#yhteystiedot" data-testid="hero-cta-primary" className="btn-primary inline-flex items-center justify-center gap-2">
-              Pyydä ilmainen arvio
-              <ArrowRight size={18} />
-            </a>
-            <a href="#palvelut" data-testid="hero-cta-secondary" className="btn-secondary inline-flex items-center justify-center gap-2">
-              Tutustu palveluihin
-              <ChevronDown size={18} />
-            </a>
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-base md:text-lg text-[#64748B] mb-6 md:mb-8 max-w-xl leading-relaxed">{s.hero_description}</motion.p>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-col sm:flex-row gap-3 md:gap-4">
+            <a href="#yhteystiedot" className="btn-primary inline-flex items-center justify-center gap-2 text-sm md:text-base">Pyydä ilmainen arvio<ArrowRight size={18} /></a>
+            <a href="#palvelut" className="btn-secondary inline-flex items-center justify-center gap-2 text-sm md:text-base">Tutustu palveluihin<ChevronDown size={18} /></a>
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="mt-12 flex items-center gap-8"
-          >
-            <div className="flex items-center gap-2 text-sm text-[#64748B]">
-              <CheckCircle size={18} className="text-[#0056D2]" />
-              <span>Kotitalousvähennys</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-[#64748B]">
-              <CheckCircle size={18} className="text-[#0056D2]" />
-              <span>Tyytyväisyystakuu</span>
-            </div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-8 md:mt-12 flex flex-wrap items-center gap-4 md:gap-8">
+            <div className="flex items-center gap-2 text-xs md:text-sm text-[#64748B]"><CheckCircle size={16} className="text-[#0056D2]" /><span>{s.hero_badge_1}</span></div>
+            <div className="flex items-center gap-2 text-xs md:text-sm text-[#64748B]"><CheckCircle size={16} className="text-[#0056D2]" /><span>{s.hero_badge_2}</span></div>
           </motion.div>
         </div>
       </div>
-
-      <motion.div
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
+      <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute bottom-6 left-1/2 -translate-x-1/2 hidden md:block">
         <ChevronDown size={32} className="text-[#0056D2] opacity-60" />
       </motion.div>
     </section>
   );
 };
 
-// ========== SERVICES SECTION ==========
-const ServicesSection = () => {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
-  const fetchServices = async () => {
-    try {
-      const response = await axios.get(`${API}/services`);
-      setServices(response.data);
-    } catch (error) {
-      console.error("Error fetching services:", error);
-    }
-    setLoading(false);
-  };
-
-  return (
-    <section id="palvelut" data-testid="services-section" className="section-padding bg-[#FAFAFA]">
-      <div className="container-custom">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <p className="font-slogan text-[#0056D2] text-sm mb-3">MITÄ TEEMME</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A]">Palvelumme</h2>
-        </motion.div>
-
-        {loading ? (
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0056D2]"></div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {services.map((service, index) => {
-              const IconComponent = iconMap[service.icon] || Building2;
-              return (
-                <motion.div
-                  key={service.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  data-testid={`service-card-${index}`}
-                  className="service-card group overflow-hidden"
-                >
-                  {service.image_url && (
-                    <div className="aspect-[16/10] overflow-hidden -mx-8 -mt-8 mb-6">
-                      <img
-                        src={service.image_url}
-                        alt={service.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-                  )}
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 bg-[#EBF3FF] flex items-center justify-center">
-                      <IconComponent size={20} className="text-[#0056D2]" />
-                    </div>
-                    <h3 className="text-xl font-bold text-[#0F172A]">{service.title}</h3>
-                  </div>
-                  <p className="text-[#64748B] leading-relaxed">{service.description}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-        )}
+// ========== SERVICES ==========
+const ServicesSection = ({ services }) => (
+  <section id="palvelut" data-testid="services-section" className="section-padding bg-[#FAFAFA]">
+    <div className="container-custom">
+      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10 md:mb-16">
+        <p className="font-slogan text-[#0056D2] text-sm mb-2 md:mb-3">MITÄ TEEMME</p>
+        <h2 className="text-2xl md:text-4xl font-bold text-[#0F172A]">Palvelumme</h2>
+      </motion.div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+        {services.map((service, index) => {
+          const Icon = iconMap[service.icon] || Building2;
+          return (
+            <motion.div key={service.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="service-card group overflow-hidden">
+              {service.image_url && (
+                <div className="aspect-[16/10] overflow-hidden -mx-6 md:-mx-8 -mt-6 md:-mt-8 mb-4 md:mb-6">
+                  <img src={service.image_url} alt={service.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                </div>
+              )}
+              <div className="flex items-center gap-3 mb-3 md:mb-4">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-[#EBF3FF] flex items-center justify-center"><Icon size={18} className="text-[#0056D2]" /></div>
+                <h3 className="text-lg md:text-xl font-bold text-[#0F172A]">{service.title}</h3>
+              </div>
+              <p className="text-sm md:text-base text-[#64748B] leading-relaxed">{service.description}</p>
+            </motion.div>
+          );
+        })}
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
-// ========== ABOUT SECTION ==========
-const AboutSection = () => {
+// ========== ABOUT ==========
+const AboutSection = ({ settings }) => {
+  const s = { ...defaultSettings, ...settings };
   return (
     <section id="meista" data-testid="about-section" className="section-padding">
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="relative"
-          >
-            <img
-              src="https://images.pexels.com/photos/7941435/pexels-photo-7941435.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-              alt="Tasoitustyö"
-              className="w-full h-[400px] lg:h-[500px] object-cover"
-            />
-            <div className="absolute -bottom-6 -right-6 bg-[#0056D2] text-white p-6 hidden lg:block">
-              <p className="font-slogan text-3xl">2018</p>
-              <p className="text-sm opacity-80">vuodesta alkaen</p>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
+          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="relative order-2 lg:order-1">
+            <img src={s.about_image_url} alt="Työ" className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover" />
+            <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-[#0056D2] text-white p-4 md:p-6 hidden sm:block">
+              <p className="font-slogan text-2xl md:text-3xl">{s.about_year}</p>
+              <p className="text-xs md:text-sm opacity-80">vuodesta alkaen</p>
             </div>
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <p className="font-slogan text-[#0056D2] text-sm mb-3">TIETOA MEISTÄ</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] mb-6">
-              Luotettava kumppani pintaremontteihin
-            </h2>
-            <div className="space-y-4 text-[#64748B] leading-relaxed">
-              <p>
-                J&B Tasoitus Ja Maalaus Oy on Uudellamaalla toimiva luotettava maalaustöiden 
-                ammattilainen. Olemme tehneet sisä- ja ulkomaalauksia vuodesta 2018.
-              </p>
-              <p>
-                Meiltä sujuu myös katto- ja julkisivumaalaukset, julkisivurappaukset sekä 
-                sisäpintojen tapetoinnit. Toiminnassa panostamme asiakaslähtöisyyteen, 
-                joustavuuteen ja ensiluokkaiseen työnlaatuun.
-              </p>
-              <p>
-                Teemme työt avaimet käteen -periaatteella ja tarjoamme asiakkaillemme 
-                tyytyväisyystakuun.
-              </p>
+          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="order-1 lg:order-2">
+            <p className="font-slogan text-[#0056D2] text-sm mb-2 md:mb-3">{s.about_subtitle}</p>
+            <h2 className="text-2xl md:text-4xl font-bold text-[#0F172A] mb-4 md:mb-6">{s.about_title}</h2>
+            <div className="space-y-3 md:space-y-4 text-sm md:text-base text-[#64748B] leading-relaxed">
+              <p>{s.about_text_1}</p>
+              <p>{s.about_text_2}</p>
+              <p>{s.about_text_3}</p>
             </div>
-
-            <div className="mt-8 p-6 bg-[#EBF3FF] border-l-4 border-[#0056D2]">
-              <p className="font-medium text-[#0F172A] mb-2">Muista kotitalousvähennys!</p>
-              <p className="text-sm text-[#64748B]">
-                Maalaus luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen.
-              </p>
-              <a 
-                href="https://www.vero.fi/henkiloasiakkaat/verokortti-ja-veroilmoitus/tulot-ja-vahennykset/kotitalousvahennys/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-[#0056D2] text-sm font-medium mt-2 hover:underline"
-              >
-                Lue lisää vero.fi
-                <ArrowRight size={14} />
-              </a>
+            <div className="mt-6 md:mt-8 p-4 md:p-6 bg-[#EBF3FF] border-l-4 border-[#0056D2]">
+              <p className="font-medium text-[#0F172A] mb-2 text-sm md:text-base">{s.about_info_title}</p>
+              <p className="text-xs md:text-sm text-[#64748B]">{s.about_info_text}</p>
+              <a href="https://www.vero.fi/henkiloasiakkaat/verokortti-ja-veroilmoitus/tulot-ja-vahennykset/kotitalousvahennys/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[#0056D2] text-xs md:text-sm font-medium mt-2 hover:underline">Lue lisää<ArrowRight size={12} /></a>
             </div>
           </motion.div>
         </div>
@@ -474,311 +237,130 @@ const AboutSection = () => {
   );
 };
 
-// ========== REFERENCES SECTION ==========
-const ReferencesSection = () => {
-  const [references, setReferences] = useState([]);
-  const [loading, setLoading] = useState(true);
+// ========== REFERENCES ==========
+const ReferencesSection = ({ references }) => (
+  <section id="referenssit" data-testid="references-section" className="section-padding bg-white">
+    <div className="container-custom">
+      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10 md:mb-16">
+        <p className="font-slogan text-[#0056D2] text-sm mb-2 md:mb-3">TYÖNÄYTTEITÄ</p>
+        <h2 className="text-2xl md:text-4xl font-bold text-[#0F172A]">Referenssit</h2>
+        <p className="text-sm md:text-base text-[#64748B] mt-3 md:mt-4 max-w-2xl mx-auto">Olemme toteuttaneet lukuisia projekteja yrityksille, taloyhtiöille ja yksityisille asiakkaille.</p>
+      </motion.div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        {references.map((ref, index) => (
+          <motion.div key={ref.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="bg-[#FAFAFA] border border-[#E2E8F0] p-4 md:p-6 hover:border-[#0056D2]/30 hover:shadow-md transition-all group">
+            <div className="flex items-start gap-3 md:gap-4">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-[#EBF3FF] flex items-center justify-center flex-shrink-0 group-hover:bg-[#0056D2] transition-colors">
+                <Building2 size={18} className="text-[#0056D2] group-hover:text-white transition-colors" />
+              </div>
+              <div>
+                <h3 className="text-base md:text-lg font-bold text-[#0F172A] group-hover:text-[#0056D2] transition-colors">{ref.name}</h3>
+                <p className="text-xs md:text-sm text-[#0056D2] font-medium mt-1">{ref.type}</p>
+                {ref.description && <p className="text-xs md:text-sm text-[#64748B] mt-2">{ref.description}</p>}
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
 
-  useEffect(() => {
-    fetchReferences();
-  }, []);
-
-  const fetchReferences = async () => {
-    try {
-      const response = await axios.get(`${API}/references`);
-      setReferences(response.data);
-    } catch (error) {
-      console.error("Error fetching references:", error);
-    }
-    setLoading(false);
-  };
-
-  return (
-    <section id="referenssit" data-testid="references-section" className="section-padding bg-white">
-      <div className="container-custom">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <p className="font-slogan text-[#0056D2] text-sm mb-3">TYÖNÄYTTEITÄ</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A]">Referenssit</h2>
-          <p className="text-[#64748B] mt-4 max-w-2xl mx-auto">
-            Olemme toteuttaneet lukuisia projekteja yrityksille, taloyhtiöille ja yksityisille asiakkaille.
-          </p>
-        </motion.div>
-
-        {loading ? (
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0056D2]"></div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {references.map((ref, index) => (
-              <motion.div
-                key={ref.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                data-testid={`reference-card-${index}`}
-                className="bg-[#FAFAFA] border border-[#E2E8F0] p-6 hover:border-[#0056D2]/30 hover:shadow-md transition-all group"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-[#EBF3FF] flex items-center justify-center flex-shrink-0 group-hover:bg-[#0056D2] transition-colors">
-                    <Building2 size={20} className="text-[#0056D2] group-hover:text-white transition-colors" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-[#0F172A] group-hover:text-[#0056D2] transition-colors">
-                      {ref.name}
-                    </h3>
-                    <p className="text-sm text-[#0056D2] font-medium mt-1">{ref.type}</p>
-                    {ref.description && (
-                      <p className="text-sm text-[#64748B] mt-2">{ref.description}</p>
-                    )}
-                  </div>
+// ========== QUALITY/PARTNERS ==========
+const QualitySection = ({ partners }) => (
+  <section data-testid="quality-section" className="section-padding bg-[#0056D2]">
+    <div className="container-custom">
+      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
+        <p className="font-slogan text-white/60 text-sm mb-2 md:mb-3">MIKSI VALITA MEIDÄT</p>
+        <h2 className="text-2xl md:text-4xl font-bold text-white mb-8 md:mb-12">Laatutakuu</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+          {partners.map((partner, index) => (
+            <motion.div key={partner.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="flex flex-col items-center">
+              {partner.image_url ? (
+                <div className="w-16 h-16 md:w-20 md:h-20 mb-3 md:mb-4 flex items-center justify-center">
+                  <img src={partner.image_url} alt={partner.name} className="max-w-full max-h-full object-contain" />
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </div>
-    </section>
-  );
-};
+              ) : (
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-white/10 flex items-center justify-center mb-3 md:mb-4">
+                  <CheckCircle size={24} className="text-white" />
+                </div>
+              )}
+              <p className="text-white font-medium text-center text-xs md:text-base">{partner.name}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    </div>
+  </section>
+);
 
-// ========== QUALITY/PARTNERS SECTION ==========
-const QualitySection = () => {
-  const [partners, setPartners] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchPartners();
-  }, []);
-
-  const fetchPartners = async () => {
-    try {
-      const response = await axios.get(`${API}/partners`);
-      setPartners(response.data);
-    } catch (error) {
-      console.error("Error fetching partners:", error);
-      // Fallback
-      setPartners([
-        { id: "1", name: "Tyytyväisyystakuu", image_url: null },
-        { id: "2", name: "Avaimet käteen -palvelu", image_url: null },
-        { id: "3", name: "Kotitalousvähennys", image_url: null },
-        { id: "4", name: "Ilmainen arviokäynti", image_url: null }
-      ]);
-    }
-    setLoading(false);
-  };
-
-  return (
-    <section data-testid="quality-section" className="section-padding bg-[#0056D2]">
-      <div className="container-custom">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <p className="font-slogan text-white/60 text-sm mb-3">MIKSI VALITA MEIDÄT</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-12">Laatutakuu</h2>
-          
-          {loading ? (
-            <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-              {partners.map((partner, index) => (
-                <motion.div
-                  key={partner.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="flex flex-col items-center"
-                >
-                  {partner.image_url ? (
-                    <div className="w-20 h-20 mb-4 flex items-center justify-center">
-                      <img 
-                        src={partner.image_url} 
-                        alt={partner.name}
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-16 h-16 bg-white/10 flex items-center justify-center mb-4">
-                      <CheckCircle size={28} className="text-white" />
-                    </div>
-                  )}
-                  <p className="text-white font-medium text-center">{partner.name}</p>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-// ========== CONTACT SECTION ==========
-const ContactSection = () => {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: ""
-  });
+// ========== CONTACT ==========
+const ContactSection = ({ settings }) => {
+  const s = { ...defaultSettings, ...settings };
+  const [formData, setFormData] = useState({ firstName: "", lastName: "", email: "", phone: "", subject: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
     try {
       await axios.post(`${API}/contact`, formData);
       setSubmitStatus("success");
       setFormData({ firstName: "", lastName: "", email: "", phone: "", subject: "", message: "" });
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setSubmitStatus("error");
-    }
-    
+    } catch { setSubmitStatus("error"); }
     setIsSubmitting(false);
     setTimeout(() => setSubmitStatus(null), 5000);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   return (
     <section id="yhteystiedot" data-testid="contact-section" className="section-padding">
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <p className="font-slogan text-[#0056D2] text-sm mb-3">OTA YHTEYTTÄ</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] mb-6">Yhteystiedot</h2>
-            <p className="text-[#64748B] mb-8 leading-relaxed">
-              Lähetä tarjouspyyntö tai pyydä meidät ilmaiselle arviokäynnille.
-            </p>
-
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-[#EBF3FF] flex items-center justify-center flex-shrink-0">
-                  <MapPin size={20} className="text-[#0056D2]" />
-                </div>
-                <div>
-                  <p className="font-medium text-[#0F172A]">Päätoimisto</p>
-                  <p className="text-[#64748B]">Sienitie 52, 00760 Helsinki</p>
-                </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20">
+          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+            <p className="font-slogan text-[#0056D2] text-sm mb-2 md:mb-3">{s.contact_subtitle}</p>
+            <h2 className="text-2xl md:text-4xl font-bold text-[#0F172A] mb-4 md:mb-6">{s.contact_title}</h2>
+            <p className="text-sm md:text-base text-[#64748B] mb-6 md:mb-8">{s.contact_description}</p>
+            <div className="space-y-4 md:space-y-6">
+              <div className="flex items-start gap-3 md:gap-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-[#EBF3FF] flex items-center justify-center flex-shrink-0"><MapPin size={18} className="text-[#0056D2]" /></div>
+                <div><p className="font-medium text-[#0F172A] text-sm md:text-base">Päätoimisto</p><p className="text-[#64748B] text-sm">{s.contact_address}</p></div>
               </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-[#EBF3FF] flex items-center justify-center flex-shrink-0">
-                  <Mail size={20} className="text-[#0056D2]" />
-                </div>
-                <div>
-                  <p className="font-medium text-[#0F172A]">Sähköposti</p>
-                  <a href="mailto:info@jbtasoitusmaalaus.fi" className="text-[#0056D2] hover:underline">
-                    info@jbtasoitusmaalaus.fi
-                  </a>
-                </div>
+              <div className="flex items-start gap-3 md:gap-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-[#EBF3FF] flex items-center justify-center flex-shrink-0"><Mail size={18} className="text-[#0056D2]" /></div>
+                <div><p className="font-medium text-[#0F172A] text-sm md:text-base">Sähköposti</p><a href={`mailto:${s.contact_email}`} className="text-[#0056D2] hover:underline text-sm">{s.contact_email}</a></div>
               </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-[#EBF3FF] flex items-center justify-center flex-shrink-0">
-                  <Phone size={20} className="text-[#0056D2]" />
-                </div>
+              <div className="flex items-start gap-3 md:gap-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-[#EBF3FF] flex items-center justify-center flex-shrink-0"><Phone size={18} className="text-[#0056D2]" /></div>
                 <div>
-                  <p className="font-medium text-[#0F172A]">Puhelin</p>
-                  <div className="text-[#64748B] space-y-1">
-                    <p>Boris Penkin: <a href="tel:+358400547270" className="text-[#0056D2] hover:underline">+358 40 054 7270</a></p>
-                    <p>Joosep Rohusaar: <a href="tel:+358400298247" className="text-[#0056D2] hover:underline">+358 40 029 8247</a></p>
+                  <p className="font-medium text-[#0F172A] text-sm md:text-base">Puhelin</p>
+                  <div className="text-[#64748B] space-y-1 text-sm">
+                    <p>{s.contact_phone_1_name}: <a href={`tel:${s.contact_phone_1.replace(/\s/g, '')}`} className="text-[#0056D2] hover:underline">{s.contact_phone_1}</a></p>
+                    <p>{s.contact_phone_2_name}: <a href={`tel:${s.contact_phone_2.replace(/\s/g, '')}`} className="text-[#0056D2] hover:underline">{s.contact_phone_2}</a></p>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div className="mt-10 p-6 bg-[#FAFAFA] border border-[#E2E8F0]">
-              <p className="font-medium text-[#0F172A] mb-2">Työpaikkahaku</p>
-              <p className="text-sm text-[#64748B]">
-                Haluatko töihin? Lähetä CV ja saatekirje: info@jbtasoitusmaalaus.fi
-              </p>
+            <div className="mt-6 md:mt-10 p-4 md:p-6 bg-[#FAFAFA] border border-[#E2E8F0]">
+              <p className="font-medium text-[#0F172A] mb-2 text-sm md:text-base">{s.contact_jobs_title}</p>
+              <p className="text-xs md:text-sm text-[#64748B]">{s.contact_jobs_text}</p>
             </div>
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="bg-[#FAFAFA] p-8 border border-[#E2E8F0]">
-              <h3 className="text-xl font-bold text-[#0F172A] mb-6">Lähetä tarjouspyyntö</h3>
-              
-              <form onSubmit={handleSubmit} data-testid="contact-form" className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium text-[#0F172A] mb-2">Etunimi *</label>
-                    <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} required data-testid="input-firstname" className="form-input" placeholder="Etunimi" />
-                  </div>
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium text-[#0F172A] mb-2">Sukunimi *</label>
-                    <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} required data-testid="input-lastname" className="form-input" placeholder="Sukunimi" />
-                  </div>
+          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+            <div className="bg-[#FAFAFA] p-5 md:p-8 border border-[#E2E8F0]">
+              <h3 className="text-lg md:text-xl font-bold text-[#0F172A] mb-4 md:mb-6">Lähetä tarjouspyyntö</h3>
+              <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                  <div><label className="block text-xs md:text-sm font-medium text-[#0F172A] mb-1 md:mb-2">Etunimi *</label><input type="text" name="firstName" value={formData.firstName} onChange={(e) => setFormData({...formData, firstName: e.target.value})} required className="form-input text-sm" placeholder="Etunimi" /></div>
+                  <div><label className="block text-xs md:text-sm font-medium text-[#0F172A] mb-1 md:mb-2">Sukunimi *</label><input type="text" name="lastName" value={formData.lastName} onChange={(e) => setFormData({...formData, lastName: e.target.value})} required className="form-input text-sm" placeholder="Sukunimi" /></div>
                 </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-[#0F172A] mb-2">Sähköposti *</label>
-                  <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required data-testid="input-email" className="form-input" placeholder="email@esimerkki.fi" />
-                </div>
-
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-[#0F172A] mb-2">Puhelin</label>
-                  <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} data-testid="input-phone" className="form-input" placeholder="+358 40 123 4567" />
-                </div>
-
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-[#0F172A] mb-2">Aihe</label>
-                  <input type="text" id="subject" name="subject" value={formData.subject} onChange={handleChange} data-testid="input-subject" className="form-input" placeholder="Esim. Tarjouspyyntö sisämaalauksesta" />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-[#0F172A] mb-2">Viesti *</label>
-                  <textarea id="message" name="message" value={formData.message} onChange={handleChange} required rows={5} data-testid="input-message" className="form-input resize-none" placeholder="Kerro projektistasi..." />
-                </div>
-
-                <button type="submit" disabled={isSubmitting} data-testid="submit-button" className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-60">
-                  {isSubmitting ? "Lähetetään..." : (<>Lähetä viesti<Send size={18} /></>)}
-                </button>
-
-                {submitStatus === "success" && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-4 bg-green-50 border border-green-200 text-green-800 text-sm">
-                    Kiitos viestistäsi! Otamme sinuun yhteyttä pian.
-                  </motion.div>
-                )}
-
-                {submitStatus === "error" && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-4 bg-red-50 border border-red-200 text-red-800 text-sm">
-                    Viestin lähetys epäonnistui. Yritä uudelleen.
-                  </motion.div>
-                )}
+                <div><label className="block text-xs md:text-sm font-medium text-[#0F172A] mb-1 md:mb-2">Sähköposti *</label><input type="email" name="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required className="form-input text-sm" placeholder="email@esimerkki.fi" /></div>
+                <div><label className="block text-xs md:text-sm font-medium text-[#0F172A] mb-1 md:mb-2">Puhelin</label><input type="tel" name="phone" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="form-input text-sm" placeholder="+358 40 123 4567" /></div>
+                <div><label className="block text-xs md:text-sm font-medium text-[#0F172A] mb-1 md:mb-2">Aihe</label><input type="text" name="subject" value={formData.subject} onChange={(e) => setFormData({...formData, subject: e.target.value})} className="form-input text-sm" placeholder="Tarjouspyyntö" /></div>
+                <div><label className="block text-xs md:text-sm font-medium text-[#0F172A] mb-1 md:mb-2">Viesti *</label><textarea name="message" value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} required rows={4} className="form-input text-sm resize-none" placeholder="Kerro projektistasi..." /></div>
+                <button type="submit" disabled={isSubmitting} className="btn-primary w-full flex items-center justify-center gap-2 text-sm disabled:opacity-60">{isSubmitting ? "Lähetetään..." : (<>Lähetä viesti<Send size={16} /></>)}</button>
+                {submitStatus === "success" && <div className="p-3 md:p-4 bg-green-50 border border-green-200 text-green-800 text-xs md:text-sm">Kiitos viestistäsi!</div>}
+                {submitStatus === "error" && <div className="p-3 md:p-4 bg-red-50 border border-red-200 text-red-800 text-xs md:text-sm">Lähetys epäonnistui.</div>}
               </form>
             </div>
           </motion.div>
@@ -789,44 +371,36 @@ const ContactSection = () => {
 };
 
 // ========== FOOTER ==========
-const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
-  return (
-    <footer data-testid="footer" className="bg-[#0F172A] text-white py-12">
-      <div className="container-custom">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-4">
-            <img src={LOGO_URL} alt="J&B Tasoitus & Maalaus" className="h-10 w-auto" />
-            <p className="text-white/60 text-sm">Laatujohtajat vuodesta 2018</p>
-          </div>
-          
-          <div className="flex items-center gap-8 text-sm text-white/60">
-            <a href="#palvelut" className="hover:text-white transition-colors">Palvelut</a>
-            <a href="#meista" className="hover:text-white transition-colors">Meistä</a>
-            <a href="#referenssit" className="hover:text-white transition-colors">Referenssit</a>
-            <a href="#yhteystiedot" className="hover:text-white transition-colors">Yhteystiedot</a>
-            <Link to="/admin" className="hover:text-white transition-colors flex items-center gap-1">
-              <Settings size={14} />
-              Admin
-            </Link>
-          </div>
+const Footer = () => (
+  <footer data-testid="footer" className="bg-[#0F172A] text-white py-8 md:py-12">
+    <div className="container-custom">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6">
+        <div className="flex items-center gap-3 md:gap-4">
+          <img src={LOGO_URL} alt="J&B" className="h-8 md:h-10 w-auto" />
+          <p className="text-white/60 text-xs md:text-sm">Laatujohtajat vuodesta 2018</p>
         </div>
-        
-        <div className="border-t border-white/10 mt-8 pt-8 text-center text-sm text-white/40">
-          <p>© {currentYear} J&B Tasoitus ja Maalaus Oy. Kaikki oikeudet pidätetään.</p>
+        <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-xs md:text-sm text-white/60">
+          <a href="#palvelut" className="hover:text-white">Palvelut</a>
+          <a href="#meista" className="hover:text-white">Meistä</a>
+          <a href="#referenssit" className="hover:text-white">Referenssit</a>
+          <a href="#yhteystiedot" className="hover:text-white">Yhteystiedot</a>
+          <Link to="/admin" className="hover:text-white flex items-center gap-1"><Settings size={12} />Admin</Link>
         </div>
       </div>
-    </footer>
-  );
-};
+      <div className="border-t border-white/10 mt-6 md:mt-8 pt-6 md:pt-8 text-center text-xs md:text-sm text-white/40">
+        <p>© {new Date().getFullYear()} J&B Tasoitus ja Maalaus Oy</p>
+      </div>
+    </div>
+  </footer>
+);
 
 // ========== ADMIN PANEL ==========
 const AdminPanel = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [credentials, setCredentials] = useState({ username: "", password: "" });
   const [authError, setAuthError] = useState("");
-  const [activeTab, setActiveTab] = useState("services");
+  const [activeTab, setActiveTab] = useState("settings");
+  const [settings, setSettings] = useState(defaultSettings);
   const [services, setServices] = useState([]);
   const [references, setReferences] = useState([]);
   const [partners, setPartners] = useState([]);
@@ -834,298 +408,218 @@ const AdminPanel = () => {
   const [loading, setLoading] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [newItem, setNewItem] = useState(null);
+  const [saving, setSaving] = useState(false);
 
-  const getAuthHeader = () => ({ username: credentials.username, password: credentials.password });
+  const getAuth = () => ({ username: credentials.username, password: credentials.password });
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setAuthError("");
     try {
-      await axios.get(`${API}/admin/verify`, { auth: getAuthHeader() });
+      await axios.get(`${API}/admin/verify`, { auth: getAuth() });
       setIsAuthenticated(true);
       loadData();
-    } catch (error) {
-      setAuthError("Väärä käyttäjätunnus tai salasana");
-    }
+    } catch { setAuthError("Väärä tunnus/salasana"); }
   };
 
   const loadData = async () => {
     setLoading(true);
     try {
-      const [servicesRes, refsRes, partnersRes, contactsRes] = await Promise.all([
+      const [settingsRes, servicesRes, refsRes, partnersRes, contactsRes] = await Promise.all([
+        axios.get(`${API}/settings`),
         axios.get(`${API}/services`),
         axios.get(`${API}/references`),
         axios.get(`${API}/partners`),
-        axios.get(`${API}/admin/contacts`, { auth: getAuthHeader() })
+        axios.get(`${API}/admin/contacts`, { auth: getAuth() })
       ]);
+      setSettings({ ...defaultSettings, ...settingsRes.data });
       setServices(servicesRes.data);
       setReferences(refsRes.data);
       setPartners(partnersRes.data);
       setContacts(contactsRes.data);
-    } catch (error) {
-      console.error("Error loading data:", error);
-    }
+    } catch (e) { console.error(e); }
     setLoading(false);
   };
 
+  const saveSettings = async () => {
+    setSaving(true);
+    try {
+      await axios.put(`${API}/admin/settings`, settings, { auth: getAuth() });
+      alert("Tallennettu!");
+    } catch { alert("Virhe tallennuksessa"); }
+    setSaving(false);
+  };
+
   const seedData = async () => {
-    try {
-      await axios.post(`${API}/admin/seed`, {}, { auth: getAuthHeader() });
-      loadData();
-    } catch (error) {
-      console.error("Error seeding data:", error);
-    }
+    try { await axios.post(`${API}/admin/seed`, {}, { auth: getAuth() }); loadData(); } catch {}
   };
 
-  // Service CRUD
-  const saveService = async (service) => {
+  // CRUD helpers
+  const saveService = async (s) => {
     try {
-      if (service.id && !service.isNew) {
-        await axios.put(`${API}/admin/services/${service.id}`, service, { auth: getAuthHeader() });
-      } else {
-        const { isNew, ...data } = service;
-        await axios.post(`${API}/admin/services`, data, { auth: getAuthHeader() });
-      }
-      loadData();
-      setEditingItem(null);
-      setNewItem(null);
-    } catch (error) {
-      console.error("Error saving service:", error);
-    }
+      if (s.id && !s.isNew) await axios.put(`${API}/admin/services/${s.id}`, s, { auth: getAuth() });
+      else { const { isNew, ...d } = s; await axios.post(`${API}/admin/services`, d, { auth: getAuth() }); }
+      loadData(); setEditingItem(null); setNewItem(null);
+    } catch {}
   };
+  const deleteService = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/services/${id}`, { auth: getAuth() }); loadData(); } catch {} } };
+  
+  const saveReference = async (r) => {
+    try {
+      if (r.id && !r.isNew) await axios.put(`${API}/admin/references/${r.id}`, r, { auth: getAuth() });
+      else { const { isNew, ...d } = r; await axios.post(`${API}/admin/references`, d, { auth: getAuth() }); }
+      loadData(); setEditingItem(null); setNewItem(null);
+    } catch {}
+  };
+  const deleteReference = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/references/${id}`, { auth: getAuth() }); loadData(); } catch {} } };
 
-  const deleteService = async (id) => {
-    if (!window.confirm("Haluatko varmasti poistaa tämän palvelun?")) return;
+  const savePartner = async (p) => {
     try {
-      await axios.delete(`${API}/admin/services/${id}`, { auth: getAuthHeader() });
-      loadData();
-    } catch (error) {
-      console.error("Error deleting service:", error);
-    }
+      if (p.id && !p.isNew) await axios.put(`${API}/admin/partners/${p.id}`, p, { auth: getAuth() });
+      else { const { isNew, ...d } = p; await axios.post(`${API}/admin/partners`, d, { auth: getAuth() }); }
+      loadData(); setEditingItem(null); setNewItem(null);
+    } catch {}
   };
+  const deletePartner = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/partners/${id}`, { auth: getAuth() }); loadData(); } catch {} } };
 
-  // Reference CRUD
-  const saveReference = async (ref) => {
-    try {
-      if (ref.id && !ref.isNew) {
-        await axios.put(`${API}/admin/references/${ref.id}`, ref, { auth: getAuthHeader() });
-      } else {
-        const { isNew, ...data } = ref;
-        await axios.post(`${API}/admin/references`, data, { auth: getAuthHeader() });
-      }
-      loadData();
-      setEditingItem(null);
-      setNewItem(null);
-    } catch (error) {
-      console.error("Error saving reference:", error);
-    }
-  };
-
-  const deleteReference = async (id) => {
-    if (!window.confirm("Haluatko varmasti poistaa tämän referenssin?")) return;
-    try {
-      await axios.delete(`${API}/admin/references/${id}`, { auth: getAuthHeader() });
-      loadData();
-    } catch (error) {
-      console.error("Error deleting reference:", error);
-    }
-  };
-
-  // Partner CRUD
-  const savePartner = async (partner) => {
-    try {
-      if (partner.id && !partner.isNew) {
-        await axios.put(`${API}/admin/partners/${partner.id}`, partner, { auth: getAuthHeader() });
-      } else {
-        const { isNew, ...data } = partner;
-        await axios.post(`${API}/admin/partners`, data, { auth: getAuthHeader() });
-      }
-      loadData();
-      setEditingItem(null);
-      setNewItem(null);
-    } catch (error) {
-      console.error("Error saving partner:", error);
-    }
-  };
-
-  const deletePartner = async (id) => {
-    if (!window.confirm("Haluatko varmasti poistaa tämän kumppanin?")) return;
-    try {
-      await axios.delete(`${API}/admin/partners/${id}`, { auth: getAuthHeader() });
-      loadData();
-    } catch (error) {
-      console.error("Error deleting partner:", error);
-    }
-  };
-
-  const deleteContact = async (id) => {
-    if (!window.confirm("Haluatko varmasti poistaa tämän viestin?")) return;
-    try {
-      await axios.delete(`${API}/admin/contacts/${id}`, { auth: getAuthHeader() });
-      loadData();
-    } catch (error) {
-      console.error("Error deleting contact:", error);
-    }
-  };
+  const deleteContact = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/contacts/${id}`, { auth: getAuth() }); loadData(); } catch {} } };
 
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center p-4">
-        <div className="bg-white p-8 border border-[#E2E8F0] w-full max-w-md">
-          <div className="flex justify-center mb-6">
-            <img src={LOGO_URL} alt="J&B" className="h-14" />
-          </div>
-          <h1 className="text-2xl font-bold text-center text-[#0F172A] mb-6">Admin-paneeli</h1>
-          
+        <div className="bg-white p-6 md:p-8 border border-[#E2E8F0] w-full max-w-md">
+          <div className="flex justify-center mb-6"><img src={LOGO_URL} alt="J&B" className="h-12 md:h-14" /></div>
+          <h1 className="text-xl md:text-2xl font-bold text-center text-[#0F172A] mb-6">Admin</h1>
           <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-[#0F172A] mb-2">Käyttäjätunnus</label>
-              <input
-                type="text"
-                value={credentials.username}
-                onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
-                className="form-input"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[#0F172A] mb-2">Salasana</label>
-              <input
-                type="password"
-                value={credentials.password}
-                onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-                className="form-input"
-                required
-              />
-            </div>
+            <div><label className="block text-sm font-medium mb-2">Käyttäjä</label><input type="text" value={credentials.username} onChange={(e) => setCredentials({ ...credentials, username: e.target.value })} className="form-input" required /></div>
+            <div><label className="block text-sm font-medium mb-2">Salasana</label><input type="password" value={credentials.password} onChange={(e) => setCredentials({ ...credentials, password: e.target.value })} className="form-input" required /></div>
             {authError && <p className="text-red-600 text-sm">{authError}</p>}
             <button type="submit" className="btn-primary w-full">Kirjaudu</button>
           </form>
-          
-          <Link to="/" className="block text-center text-sm text-[#64748B] mt-4 hover:text-[#0056D2]">
-            ← Takaisin etusivulle
-          </Link>
+          <Link to="/" className="block text-center text-sm text-[#64748B] mt-4 hover:text-[#0056D2]">← Etusivulle</Link>
         </div>
       </div>
     );
   }
 
+  const tabs = [
+    { id: "settings", label: "Sivusto", icon: Home },
+    { id: "services", label: "Palvelut", icon: Briefcase },
+    { id: "references", label: "Referenssit", icon: Building2 },
+    { id: "partners", label: "Laatutakuu", icon: Award },
+    { id: "contacts", label: "Viestit", icon: MessageSquare },
+  ];
+
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      <header className="bg-white border-b border-[#E2E8F0] sticky top-0 z-50">
-        <div className="container-custom flex items-center justify-between h-16">
-          <div className="flex items-center gap-4">
-            <img src={LOGO_URL} alt="J&B" className="h-10" />
-            <span className="font-bold text-[#0F172A]">Admin</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link to="/" className="text-sm text-[#64748B] hover:text-[#0056D2]">Katso sivusto</Link>
-            <button
-              onClick={() => setIsAuthenticated(false)}
-              className="flex items-center gap-2 text-sm text-[#64748B] hover:text-red-600"
-            >
-              <LogOut size={16} />
-              Kirjaudu ulos
-            </button>
+      <header className="bg-white border-b sticky top-0 z-50">
+        <div className="container-custom flex items-center justify-between h-14 md:h-16">
+          <div className="flex items-center gap-3"><img src={LOGO_URL} alt="J&B" className="h-8 md:h-10" /><span className="font-bold text-[#0F172A] text-sm md:text-base">Admin</span></div>
+          <div className="flex items-center gap-3 md:gap-4">
+            <Link to="/" className="text-xs md:text-sm text-[#64748B] hover:text-[#0056D2]">Sivusto</Link>
+            <button onClick={() => setIsAuthenticated(false)} className="flex items-center gap-1 text-xs md:text-sm text-[#64748B] hover:text-red-600"><LogOut size={14} />Ulos</button>
           </div>
         </div>
       </header>
 
-      <div className="container-custom py-8">
-        <div className="flex gap-2 mb-8 border-b border-[#E2E8F0] overflow-x-auto">
-          {[
-            { id: "services", label: "Palvelut", icon: Briefcase },
-            { id: "references", label: "Referenssit", icon: Building2 },
-            { id: "partners", label: "Laatutakuu", icon: Award },
-            { id: "contacts", label: "Viestit", icon: MessageSquare },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => { setActiveTab(tab.id); setEditingItem(null); setNewItem(null); }}
-              className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 -mb-px transition-colors whitespace-nowrap ${
-                activeTab === tab.id
-                  ? "border-[#0056D2] text-[#0056D2]"
-                  : "border-transparent text-[#64748B] hover:text-[#0F172A]"
-              }`}
-            >
-              <tab.icon size={18} />
-              {tab.label}
-              {tab.id === "contacts" && contacts.length > 0 && (
-                <span className="bg-[#0056D2] text-white text-xs px-2 py-0.5 rounded-full">{contacts.length}</span>
-              )}
+      <div className="container-custom py-4 md:py-8">
+        <div className="flex gap-1 md:gap-2 mb-6 md:mb-8 border-b overflow-x-auto">
+          {tabs.map((tab) => (
+            <button key={tab.id} onClick={() => { setActiveTab(tab.id); setEditingItem(null); setNewItem(null); }} className={`flex items-center gap-1 md:gap-2 px-3 md:px-4 py-2 md:py-3 font-medium text-xs md:text-sm border-b-2 -mb-px whitespace-nowrap ${activeTab === tab.id ? "border-[#0056D2] text-[#0056D2]" : "border-transparent text-[#64748B]"}`}>
+              <tab.icon size={16} />{tab.label}
+              {tab.id === "contacts" && contacts.length > 0 && <span className="bg-[#0056D2] text-white text-xs px-1.5 py-0.5 rounded-full">{contacts.length}</span>}
             </button>
           ))}
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0056D2]"></div>
-          </div>
+          <div className="flex justify-center py-12"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0056D2]"></div></div>
         ) : (
           <>
-            {/* Services Tab */}
+            {/* SETTINGS TAB */}
+            {activeTab === "settings" && (
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-lg md:text-xl font-bold">Sivuston asetukset</h2>
+                  <button onClick={saveSettings} disabled={saving} className="btn-primary text-sm flex items-center gap-2"><Save size={16} />{saving ? "..." : "Tallenna"}</button>
+                </div>
+                
+                {/* Hero */}
+                <div className="bg-white border p-4 md:p-6 space-y-4">
+                  <h3 className="font-bold text-[#0F172A] border-b pb-2">Hero-osio</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label className="block text-sm font-medium mb-1">Slogan</label><input value={settings.hero_slogan} onChange={(e) => setSettings({...settings, hero_slogan: e.target.value})} className="form-input text-sm" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Badge 1</label><input value={settings.hero_badge_1} onChange={(e) => setSettings({...settings, hero_badge_1: e.target.value})} className="form-input text-sm" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Otsikko 1</label><input value={settings.hero_title_1} onChange={(e) => setSettings({...settings, hero_title_1: e.target.value})} className="form-input text-sm" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Badge 2</label><input value={settings.hero_badge_2} onChange={(e) => setSettings({...settings, hero_badge_2: e.target.value})} className="form-input text-sm" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Otsikko 2 (sininen)</label><input value={settings.hero_title_2} onChange={(e) => setSettings({...settings, hero_title_2: e.target.value})} className="form-input text-sm" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Otsikko 3</label><input value={settings.hero_title_3} onChange={(e) => setSettings({...settings, hero_title_3: e.target.value})} className="form-input text-sm" /></div>
+                  </div>
+                  <div><label className="block text-sm font-medium mb-1">Kuvaus</label><textarea value={settings.hero_description} onChange={(e) => setSettings({...settings, hero_description: e.target.value})} className="form-input text-sm" rows={3} /></div>
+                  <div><label className="block text-sm font-medium mb-1">Taustakuva</label><ImageUpload currentImage={settings.hero_image_url} onImageChange={(url) => setSettings({...settings, hero_image_url: url})} credentials={getAuth()} /></div>
+                </div>
+
+                {/* About */}
+                <div className="bg-white border p-4 md:p-6 space-y-4">
+                  <h3 className="font-bold text-[#0F172A] border-b pb-2">Meistä-osio</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label className="block text-sm font-medium mb-1">Alaotsikko</label><input value={settings.about_subtitle} onChange={(e) => setSettings({...settings, about_subtitle: e.target.value})} className="form-input text-sm" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Vuosi</label><input value={settings.about_year} onChange={(e) => setSettings({...settings, about_year: e.target.value})} className="form-input text-sm" /></div>
+                  </div>
+                  <div><label className="block text-sm font-medium mb-1">Otsikko</label><input value={settings.about_title} onChange={(e) => setSettings({...settings, about_title: e.target.value})} className="form-input text-sm" /></div>
+                  <div><label className="block text-sm font-medium mb-1">Teksti 1</label><textarea value={settings.about_text_1} onChange={(e) => setSettings({...settings, about_text_1: e.target.value})} className="form-input text-sm" rows={2} /></div>
+                  <div><label className="block text-sm font-medium mb-1">Teksti 2</label><textarea value={settings.about_text_2} onChange={(e) => setSettings({...settings, about_text_2: e.target.value})} className="form-input text-sm" rows={2} /></div>
+                  <div><label className="block text-sm font-medium mb-1">Teksti 3</label><textarea value={settings.about_text_3} onChange={(e) => setSettings({...settings, about_text_3: e.target.value})} className="form-input text-sm" rows={2} /></div>
+                  <div><label className="block text-sm font-medium mb-1">Kuva</label><ImageUpload currentImage={settings.about_image_url} onImageChange={(url) => setSettings({...settings, about_image_url: url})} credentials={getAuth()} /></div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label className="block text-sm font-medium mb-1">Info-otsikko</label><input value={settings.about_info_title} onChange={(e) => setSettings({...settings, about_info_title: e.target.value})} className="form-input text-sm" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Info-teksti</label><input value={settings.about_info_text} onChange={(e) => setSettings({...settings, about_info_text: e.target.value})} className="form-input text-sm" /></div>
+                  </div>
+                </div>
+
+                {/* Contact */}
+                <div className="bg-white border p-4 md:p-6 space-y-4">
+                  <h3 className="font-bold text-[#0F172A] border-b pb-2">Yhteystiedot-osio</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label className="block text-sm font-medium mb-1">Alaotsikko</label><input value={settings.contact_subtitle} onChange={(e) => setSettings({...settings, contact_subtitle: e.target.value})} className="form-input text-sm" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Otsikko</label><input value={settings.contact_title} onChange={(e) => setSettings({...settings, contact_title: e.target.value})} className="form-input text-sm" /></div>
+                  </div>
+                  <div><label className="block text-sm font-medium mb-1">Kuvaus</label><input value={settings.contact_description} onChange={(e) => setSettings({...settings, contact_description: e.target.value})} className="form-input text-sm" /></div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label className="block text-sm font-medium mb-1">Osoite</label><input value={settings.contact_address} onChange={(e) => setSettings({...settings, contact_address: e.target.value})} className="form-input text-sm" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Sähköposti</label><input value={settings.contact_email} onChange={(e) => setSettings({...settings, contact_email: e.target.value})} className="form-input text-sm" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Puh 1 nimi</label><input value={settings.contact_phone_1_name} onChange={(e) => setSettings({...settings, contact_phone_1_name: e.target.value})} className="form-input text-sm" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Puh 1</label><input value={settings.contact_phone_1} onChange={(e) => setSettings({...settings, contact_phone_1: e.target.value})} className="form-input text-sm" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Puh 2 nimi</label><input value={settings.contact_phone_2_name} onChange={(e) => setSettings({...settings, contact_phone_2_name: e.target.value})} className="form-input text-sm" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Puh 2</label><input value={settings.contact_phone_2} onChange={(e) => setSettings({...settings, contact_phone_2: e.target.value})} className="form-input text-sm" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Työpaikat otsikko</label><input value={settings.contact_jobs_title} onChange={(e) => setSettings({...settings, contact_jobs_title: e.target.value})} className="form-input text-sm" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Työpaikat teksti</label><input value={settings.contact_jobs_text} onChange={(e) => setSettings({...settings, contact_jobs_text: e.target.value})} className="form-input text-sm" /></div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SERVICES TAB */}
             {activeTab === "services" && (
               <div>
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-xl font-bold text-[#0F172A]">Palvelut ({services.length})</h2>
+                <div className="flex justify-between items-center mb-4 md:mb-6">
+                  <h2 className="text-lg md:text-xl font-bold">Palvelut ({services.length})</h2>
                   <div className="flex gap-2">
-                    {services.length === 0 && (
-                      <button onClick={seedData} className="btn-secondary text-sm">Lisää oletusdata</button>
-                    )}
-                    <button
-                      onClick={() => setNewItem({ title: "", description: "", icon: "Building2", image_url: "", order: services.length + 1, isNew: true })}
-                      className="btn-primary text-sm flex items-center gap-2"
-                    >
-                      <Plus size={16} />
-                      Lisää palvelu
-                    </button>
+                    {services.length === 0 && <button onClick={seedData} className="btn-secondary text-xs md:text-sm">Lisää oletukset</button>}
+                    <button onClick={() => setNewItem({ title: "", description: "", icon: "Building2", image_url: "", order: services.length + 1, isNew: true })} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Plus size={14} />Lisää</button>
                   </div>
                 </div>
-
-                {newItem && (
-                  <div className="bg-white border border-[#0056D2] p-6 mb-6">
-                    <h3 className="font-bold text-[#0F172A] mb-4">Uusi palvelu</h3>
-                    <ServiceForm
-                      service={newItem}
-                      onChange={setNewItem}
-                      onSave={() => saveService(newItem)}
-                      onCancel={() => setNewItem(null)}
-                      credentials={getAuthHeader()}
-                    />
-                  </div>
-                )}
-
-                <div className="space-y-4">
-                  {services.map((service) => (
-                    <div key={service.id} className="bg-white border border-[#E2E8F0] p-6">
-                      {editingItem?.id === service.id ? (
-                        <ServiceForm
-                          service={editingItem}
-                          onChange={setEditingItem}
-                          onSave={() => saveService(editingItem)}
-                          onCancel={() => setEditingItem(null)}
-                          credentials={getAuthHeader()}
-                        />
-                      ) : (
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex items-start gap-4">
-                            {service.image_url && (
-                              <img src={service.image_url} alt={service.title} className="w-24 h-16 object-cover" />
-                            )}
-                            <div>
-                              <h3 className="font-bold text-[#0F172A]">{service.title}</h3>
-                              <p className="text-sm text-[#64748B] mt-1">{service.description}</p>
-                              <p className="text-xs text-[#94A3B8] mt-2">Ikoni: {service.icon} | Järjestys: {service.order}</p>
-                            </div>
+                {newItem && <div className="bg-white border border-[#0056D2] p-4 md:p-6 mb-4"><h3 className="font-bold mb-4">Uusi palvelu</h3><ServiceForm service={newItem} onChange={setNewItem} onSave={() => saveService(newItem)} onCancel={() => setNewItem(null)} credentials={getAuth()} /></div>}
+                <div className="space-y-3 md:space-y-4">
+                  {services.map((s) => (
+                    <div key={s.id} className="bg-white border p-4 md:p-6">
+                      {editingItem?.id === s.id ? <ServiceForm service={editingItem} onChange={setEditingItem} onSave={() => saveService(editingItem)} onCancel={() => setEditingItem(null)} credentials={getAuth()} /> : (
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-start gap-3">
+                            {s.image_url && <img src={s.image_url} alt={s.title} className="w-16 md:w-24 h-12 md:h-16 object-cover" />}
+                            <div><h3 className="font-bold text-sm md:text-base">{s.title}</h3><p className="text-xs md:text-sm text-[#64748B] mt-1 line-clamp-2">{s.description}</p></div>
                           </div>
-                          <div className="flex gap-2">
-                            <button onClick={() => setEditingItem(service)} className="p-2 text-[#64748B] hover:text-[#0056D2]">
-                              <Edit2 size={18} />
-                            </button>
-                            <button onClick={() => deleteService(service.id)} className="p-2 text-[#64748B] hover:text-red-600">
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
+                          <div className="flex gap-1"><button onClick={() => setEditingItem(s)} className="p-2 text-[#64748B] hover:text-[#0056D2]"><Edit2 size={16} /></button><button onClick={() => deleteService(s.id)} className="p-2 text-[#64748B] hover:text-red-600"><Trash2 size={16} /></button></div>
                         </div>
                       )}
                     </div>
@@ -1134,57 +628,21 @@ const AdminPanel = () => {
               </div>
             )}
 
-            {/* References Tab */}
+            {/* REFERENCES TAB */}
             {activeTab === "references" && (
               <div>
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-xl font-bold text-[#0F172A]">Referenssit ({references.length})</h2>
-                  <button
-                    onClick={() => setNewItem({ name: "", type: "Tasoitus- ja maalaustyöt", description: "", order: references.length + 1, isNew: true })}
-                    className="btn-primary text-sm flex items-center gap-2"
-                  >
-                    <Plus size={16} />
-                    Lisää referenssi
-                  </button>
+                <div className="flex justify-between items-center mb-4 md:mb-6">
+                  <h2 className="text-lg md:text-xl font-bold">Referenssit ({references.length})</h2>
+                  <button onClick={() => setNewItem({ name: "", type: "Tasoitus- ja maalaustyöt", description: "", order: references.length + 1, isNew: true })} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Plus size={14} />Lisää</button>
                 </div>
-
-                {newItem && (
-                  <div className="bg-white border border-[#0056D2] p-6 mb-6">
-                    <h3 className="font-bold text-[#0F172A] mb-4">Uusi referenssi</h3>
-                    <ReferenceForm
-                      reference={newItem}
-                      onChange={setNewItem}
-                      onSave={() => saveReference(newItem)}
-                      onCancel={() => setNewItem(null)}
-                    />
-                  </div>
-                )}
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {references.map((ref) => (
-                    <div key={ref.id} className="bg-white border border-[#E2E8F0] p-6">
-                      {editingItem?.id === ref.id ? (
-                        <ReferenceForm
-                          reference={editingItem}
-                          onChange={setEditingItem}
-                          onSave={() => saveReference(editingItem)}
-                          onCancel={() => setEditingItem(null)}
-                        />
-                      ) : (
+                {newItem && <div className="bg-white border border-[#0056D2] p-4 md:p-6 mb-4"><h3 className="font-bold mb-4">Uusi referenssi</h3><ReferenceForm reference={newItem} onChange={setNewItem} onSave={() => saveReference(newItem)} onCancel={() => setNewItem(null)} /></div>}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                  {references.map((r) => (
+                    <div key={r.id} className="bg-white border p-4 md:p-6">
+                      {editingItem?.id === r.id ? <ReferenceForm reference={editingItem} onChange={setEditingItem} onSave={() => saveReference(editingItem)} onCancel={() => setEditingItem(null)} /> : (
                         <div className="flex justify-between items-start">
-                          <div>
-                            <h3 className="font-bold text-[#0F172A]">{ref.name}</h3>
-                            <p className="text-sm text-[#0056D2]">{ref.type}</p>
-                            {ref.description && <p className="text-sm text-[#64748B] mt-1">{ref.description}</p>}
-                          </div>
-                          <div className="flex gap-2">
-                            <button onClick={() => setEditingItem(ref)} className="p-2 text-[#64748B] hover:text-[#0056D2]">
-                              <Edit2 size={18} />
-                            </button>
-                            <button onClick={() => deleteReference(ref.id)} className="p-2 text-[#64748B] hover:text-red-600">
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
+                          <div><h3 className="font-bold text-sm md:text-base">{r.name}</h3><p className="text-xs md:text-sm text-[#0056D2]">{r.type}</p>{r.description && <p className="text-xs text-[#64748B] mt-1">{r.description}</p>}</div>
+                          <div className="flex gap-1"><button onClick={() => setEditingItem(r)} className="p-2 text-[#64748B] hover:text-[#0056D2]"><Edit2 size={16} /></button><button onClick={() => deleteReference(r.id)} className="p-2 text-[#64748B] hover:text-red-600"><Trash2 size={16} /></button></div>
                         </div>
                       )}
                     </div>
@@ -1193,70 +651,24 @@ const AdminPanel = () => {
               </div>
             )}
 
-            {/* Partners/Quality Tab */}
+            {/* PARTNERS TAB */}
             {activeTab === "partners" && (
               <div>
-                <div className="flex justify-between items-center mb-6">
-                  <div>
-                    <h2 className="text-xl font-bold text-[#0F172A]">Laatutakuu / Kumppanit ({partners.length})</h2>
-                    <p className="text-sm text-[#64748B] mt-1">Lisää luotettava kumppani -logot ja sertifikaatit tähän</p>
-                  </div>
-                  <button
-                    onClick={() => setNewItem({ name: "", image_url: "", order: partners.length + 1, isNew: true })}
-                    className="btn-primary text-sm flex items-center gap-2"
-                  >
-                    <Plus size={16} />
-                    Lisää kumppani
-                  </button>
+                <div className="flex justify-between items-center mb-4 md:mb-6">
+                  <div><h2 className="text-lg md:text-xl font-bold">Laatutakuu ({partners.length})</h2><p className="text-xs md:text-sm text-[#64748B] mt-1">Kumppanit ja sertifikaatit</p></div>
+                  <button onClick={() => setNewItem({ name: "", image_url: "", order: partners.length + 1, isNew: true })} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Plus size={14} />Lisää</button>
                 </div>
-
-                {newItem && (
-                  <div className="bg-white border border-[#0056D2] p-6 mb-6">
-                    <h3 className="font-bold text-[#0F172A] mb-4">Uusi kumppani/sertifikaatti</h3>
-                    <PartnerForm
-                      partner={newItem}
-                      onChange={setNewItem}
-                      onSave={() => savePartner(newItem)}
-                      onCancel={() => setNewItem(null)}
-                      credentials={getAuthHeader()}
-                    />
-                  </div>
-                )}
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {partners.map((partner) => (
-                    <div key={partner.id} className="bg-white border border-[#E2E8F0] p-6">
-                      {editingItem?.id === partner.id ? (
-                        <PartnerForm
-                          partner={editingItem}
-                          onChange={setEditingItem}
-                          onSave={() => savePartner(editingItem)}
-                          onCancel={() => setEditingItem(null)}
-                          credentials={getAuthHeader()}
-                        />
-                      ) : (
+                {newItem && <div className="bg-white border border-[#0056D2] p-4 md:p-6 mb-4"><h3 className="font-bold mb-4">Uusi</h3><PartnerForm partner={newItem} onChange={setNewItem} onSave={() => savePartner(newItem)} onCancel={() => setNewItem(null)} credentials={getAuth()} /></div>}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+                  {partners.map((p) => (
+                    <div key={p.id} className="bg-white border p-4 md:p-6">
+                      {editingItem?.id === p.id ? <PartnerForm partner={editingItem} onChange={setEditingItem} onSave={() => savePartner(editingItem)} onCancel={() => setEditingItem(null)} credentials={getAuth()} /> : (
                         <div className="flex justify-between items-start">
-                          <div className="flex items-center gap-4">
-                            {partner.image_url ? (
-                              <img src={partner.image_url} alt={partner.name} className="w-16 h-16 object-contain" />
-                            ) : (
-                              <div className="w-16 h-16 bg-[#EBF3FF] flex items-center justify-center">
-                                <Award size={24} className="text-[#0056D2]" />
-                              </div>
-                            )}
-                            <div>
-                              <h3 className="font-bold text-[#0F172A]">{partner.name}</h3>
-                              <p className="text-xs text-[#94A3B8]">Järjestys: {partner.order}</p>
-                            </div>
+                          <div className="flex items-center gap-3">
+                            {p.image_url ? <img src={p.image_url} alt={p.name} className="w-12 h-12 object-contain" /> : <div className="w-12 h-12 bg-[#EBF3FF] flex items-center justify-center"><Award size={20} className="text-[#0056D2]" /></div>}
+                            <div><h3 className="font-bold text-sm md:text-base">{p.name}</h3></div>
                           </div>
-                          <div className="flex gap-2">
-                            <button onClick={() => setEditingItem(partner)} className="p-2 text-[#64748B] hover:text-[#0056D2]">
-                              <Edit2 size={18} />
-                            </button>
-                            <button onClick={() => deletePartner(partner.id)} className="p-2 text-[#64748B] hover:text-red-600">
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
+                          <div className="flex gap-1"><button onClick={() => setEditingItem(p)} className="p-2 text-[#64748B] hover:text-[#0056D2]"><Edit2 size={16} /></button><button onClick={() => deletePartner(p.id)} className="p-2 text-[#64748B] hover:text-red-600"><Trash2 size={16} /></button></div>
                         </div>
                       )}
                     </div>
@@ -1265,29 +677,24 @@ const AdminPanel = () => {
               </div>
             )}
 
-            {/* Contacts Tab */}
+            {/* CONTACTS TAB */}
             {activeTab === "contacts" && (
               <div>
-                <h2 className="text-xl font-bold text-[#0F172A] mb-6">Viestit ({contacts.length})</h2>
-                
-                {contacts.length === 0 ? (
-                  <p className="text-[#64748B] text-center py-12">Ei viestejä</p>
-                ) : (
-                  <div className="space-y-4">
-                    {contacts.map((contact) => (
-                      <div key={contact.id} className="bg-white border border-[#E2E8F0] p-6">
+                <h2 className="text-lg md:text-xl font-bold mb-4 md:mb-6">Viestit ({contacts.length})</h2>
+                {contacts.length === 0 ? <p className="text-[#64748B] text-center py-12">Ei viestejä</p> : (
+                  <div className="space-y-3 md:space-y-4">
+                    {contacts.map((c) => (
+                      <div key={c.id} className="bg-white border p-4 md:p-6">
                         <div className="flex justify-between items-start">
                           <div>
-                            <h3 className="font-bold text-[#0F172A]">{contact.firstName} {contact.lastName}</h3>
-                            <p className="text-sm text-[#0056D2]">{contact.email}</p>
-                            {contact.phone && <p className="text-sm text-[#64748B]">{contact.phone}</p>}
-                            {contact.subject && <p className="text-sm font-medium text-[#0F172A] mt-2">Aihe: {contact.subject}</p>}
-                            <p className="text-[#64748B] mt-2">{contact.message}</p>
-                            <p className="text-xs text-[#94A3B8] mt-2">{new Date(contact.created_at).toLocaleString('fi-FI')}</p>
+                            <h3 className="font-bold text-sm md:text-base">{c.firstName} {c.lastName}</h3>
+                            <p className="text-xs md:text-sm text-[#0056D2]">{c.email}</p>
+                            {c.phone && <p className="text-xs text-[#64748B]">{c.phone}</p>}
+                            {c.subject && <p className="text-xs md:text-sm font-medium mt-2">Aihe: {c.subject}</p>}
+                            <p className="text-xs md:text-sm text-[#64748B] mt-2">{c.message}</p>
+                            <p className="text-xs text-[#94A3B8] mt-2">{new Date(c.created_at).toLocaleString('fi-FI')}</p>
                           </div>
-                          <button onClick={() => deleteContact(contact.id)} className="p-2 text-[#64748B] hover:text-red-600">
-                            <Trash2 size={18} />
-                          </button>
+                          <button onClick={() => deleteContact(c.id)} className="p-2 text-[#64748B] hover:text-red-600"><Trash2 size={16} /></button>
                         </div>
                       </div>
                     ))}
@@ -1302,159 +709,36 @@ const AdminPanel = () => {
   );
 };
 
-// Service Form Component
+// Form Components
 const ServiceForm = ({ service, onChange, onSave, onCancel, credentials }) => (
-  <div className="space-y-4">
-    <div>
-      <label className="block text-sm font-medium text-[#0F172A] mb-1">Otsikko</label>
-      <input
-        type="text"
-        value={service.title}
-        onChange={(e) => onChange({ ...service, title: e.target.value })}
-        className="form-input"
-        placeholder="Palvelun nimi"
-      />
+  <div className="space-y-3 md:space-y-4">
+    <div><label className="block text-sm font-medium mb-1">Otsikko</label><input value={service.title} onChange={(e) => onChange({ ...service, title: e.target.value })} className="form-input text-sm" placeholder="Nimi" /></div>
+    <div><label className="block text-sm font-medium mb-1">Kuvaus</label><textarea value={service.description} onChange={(e) => onChange({ ...service, description: e.target.value })} className="form-input text-sm" rows={3} /></div>
+    <div className="grid grid-cols-2 gap-3">
+      <div><label className="block text-sm font-medium mb-1">Ikoni</label><select value={service.icon} onChange={(e) => onChange({ ...service, icon: e.target.value })} className="form-input text-sm"><option value="Building2">Rakennus</option><option value="Layers">Kerrokset</option><option value="Paintbrush">Sivellin</option></select></div>
+      <div><label className="block text-sm font-medium mb-1">Järjestys</label><input type="number" value={service.order} onChange={(e) => onChange({ ...service, order: parseInt(e.target.value) || 0 })} className="form-input text-sm" /></div>
     </div>
-    <div>
-      <label className="block text-sm font-medium text-[#0F172A] mb-1">Kuvaus</label>
-      <textarea
-        value={service.description}
-        onChange={(e) => onChange({ ...service, description: e.target.value })}
-        className="form-input resize-none"
-        rows={3}
-        placeholder="Palvelun kuvaus"
-      />
-    </div>
-    <div className="grid grid-cols-2 gap-4">
-      <div>
-        <label className="block text-sm font-medium text-[#0F172A] mb-1">Ikoni</label>
-        <select
-          value={service.icon}
-          onChange={(e) => onChange({ ...service, icon: e.target.value })}
-          className="form-input"
-        >
-          <option value="Building2">Rakennus</option>
-          <option value="Layers">Kerrokset</option>
-          <option value="Paintbrush">Sivellin</option>
-        </select>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-[#0F172A] mb-1">Järjestys</label>
-        <input
-          type="number"
-          value={service.order}
-          onChange={(e) => onChange({ ...service, order: parseInt(e.target.value) || 0 })}
-          className="form-input"
-        />
-      </div>
-    </div>
-    <div>
-      <label className="block text-sm font-medium text-[#0F172A] mb-1">Kuva</label>
-      <ImageUpload
-        currentImage={service.image_url}
-        onImageChange={(url) => onChange({ ...service, image_url: url })}
-        credentials={credentials}
-      />
-    </div>
-    <div className="flex gap-2 pt-2">
-      <button onClick={onSave} className="btn-primary text-sm flex items-center gap-2">
-        <Save size={16} />
-        Tallenna
-      </button>
-      <button onClick={onCancel} className="btn-secondary text-sm">Peruuta</button>
-    </div>
+    <div><label className="block text-sm font-medium mb-1">Kuva</label><ImageUpload currentImage={service.image_url} onImageChange={(url) => onChange({ ...service, image_url: url })} credentials={credentials} /></div>
+    <div className="flex gap-2"><button onClick={onSave} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Save size={14} />Tallenna</button><button onClick={onCancel} className="btn-secondary text-xs md:text-sm">Peruuta</button></div>
   </div>
 );
 
-// Reference Form Component
 const ReferenceForm = ({ reference, onChange, onSave, onCancel }) => (
-  <div className="space-y-4">
-    <div>
-      <label className="block text-sm font-medium text-[#0F172A] mb-1">Nimi</label>
-      <input
-        type="text"
-        value={reference.name}
-        onChange={(e) => onChange({ ...reference, name: e.target.value })}
-        className="form-input"
-        placeholder="Projektin nimi"
-      />
-    </div>
-    <div>
-      <label className="block text-sm font-medium text-[#0F172A] mb-1">Tyyppi</label>
-      <input
-        type="text"
-        value={reference.type}
-        onChange={(e) => onChange({ ...reference, type: e.target.value })}
-        className="form-input"
-        placeholder="Tasoitus- ja maalaustyöt"
-      />
-    </div>
-    <div>
-      <label className="block text-sm font-medium text-[#0F172A] mb-1">Kuvaus</label>
-      <textarea
-        value={reference.description || ""}
-        onChange={(e) => onChange({ ...reference, description: e.target.value })}
-        className="form-input resize-none"
-        rows={2}
-        placeholder="Lyhyt kuvaus projektista"
-      />
-    </div>
-    <div>
-      <label className="block text-sm font-medium text-[#0F172A] mb-1">Järjestys</label>
-      <input
-        type="number"
-        value={reference.order}
-        onChange={(e) => onChange({ ...reference, order: parseInt(e.target.value) || 0 })}
-        className="form-input"
-      />
-    </div>
-    <div className="flex gap-2 pt-2">
-      <button onClick={onSave} className="btn-primary text-sm flex items-center gap-2">
-        <Save size={16} />
-        Tallenna
-      </button>
-      <button onClick={onCancel} className="btn-secondary text-sm">Peruuta</button>
-    </div>
+  <div className="space-y-3 md:space-y-4">
+    <div><label className="block text-sm font-medium mb-1">Nimi</label><input value={reference.name} onChange={(e) => onChange({ ...reference, name: e.target.value })} className="form-input text-sm" /></div>
+    <div><label className="block text-sm font-medium mb-1">Tyyppi</label><input value={reference.type} onChange={(e) => onChange({ ...reference, type: e.target.value })} className="form-input text-sm" /></div>
+    <div><label className="block text-sm font-medium mb-1">Kuvaus</label><textarea value={reference.description || ""} onChange={(e) => onChange({ ...reference, description: e.target.value })} className="form-input text-sm" rows={2} /></div>
+    <div><label className="block text-sm font-medium mb-1">Järjestys</label><input type="number" value={reference.order} onChange={(e) => onChange({ ...reference, order: parseInt(e.target.value) || 0 })} className="form-input text-sm" /></div>
+    <div className="flex gap-2"><button onClick={onSave} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Save size={14} />Tallenna</button><button onClick={onCancel} className="btn-secondary text-xs md:text-sm">Peruuta</button></div>
   </div>
 );
 
-// Partner Form Component
 const PartnerForm = ({ partner, onChange, onSave, onCancel, credentials }) => (
-  <div className="space-y-4">
-    <div>
-      <label className="block text-sm font-medium text-[#0F172A] mb-1">Nimi</label>
-      <input
-        type="text"
-        value={partner.name}
-        onChange={(e) => onChange({ ...partner, name: e.target.value })}
-        className="form-input"
-        placeholder="Esim. Luotettava Kumppani, Kasvuyritys"
-      />
-    </div>
-    <div>
-      <label className="block text-sm font-medium text-[#0F172A] mb-1">Logo/Kuva</label>
-      <ImageUpload
-        currentImage={partner.image_url}
-        onImageChange={(url) => onChange({ ...partner, image_url: url })}
-        credentials={credentials}
-      />
-    </div>
-    <div>
-      <label className="block text-sm font-medium text-[#0F172A] mb-1">Järjestys</label>
-      <input
-        type="number"
-        value={partner.order}
-        onChange={(e) => onChange({ ...partner, order: parseInt(e.target.value) || 0 })}
-        className="form-input"
-      />
-    </div>
-    <div className="flex gap-2 pt-2">
-      <button onClick={onSave} className="btn-primary text-sm flex items-center gap-2">
-        <Save size={16} />
-        Tallenna
-      </button>
-      <button onClick={onCancel} className="btn-secondary text-sm">Peruuta</button>
-    </div>
+  <div className="space-y-3 md:space-y-4">
+    <div><label className="block text-sm font-medium mb-1">Nimi</label><input value={partner.name} onChange={(e) => onChange({ ...partner, name: e.target.value })} className="form-input text-sm" placeholder="Luotettava kumppani" /></div>
+    <div><label className="block text-sm font-medium mb-1">Logo</label><ImageUpload currentImage={partner.image_url} onImageChange={(url) => onChange({ ...partner, image_url: url })} credentials={credentials} /></div>
+    <div><label className="block text-sm font-medium mb-1">Järjestys</label><input type="number" value={partner.order} onChange={(e) => onChange({ ...partner, order: parseInt(e.target.value) || 0 })} className="form-input text-sm" /></div>
+    <div className="flex gap-2"><button onClick={onSave} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Save size={14} />Tallenna</button><button onClick={onCancel} className="btn-secondary text-xs md:text-sm">Peruuta</button></div>
   </div>
 );
 
@@ -1462,24 +746,40 @@ const PartnerForm = ({ partner, onChange, onSave, onCancel, credentials }) => (
 const HomePage = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const [settings, setSettings] = useState(defaultSettings);
+  const [services, setServices] = useState([]);
+  const [references, setReferences] = useState([]);
+  const [partners, setPartners] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [settingsRes, servicesRes, refsRes, partnersRes] = await Promise.all([
+          axios.get(`${API}/settings`),
+          axios.get(`${API}/services`),
+          axios.get(`${API}/references`),
+          axios.get(`${API}/partners`)
+        ]);
+        setSettings({ ...defaultSettings, ...settingsRes.data });
+        setServices(servicesRes.data);
+        setReferences(refsRes.data);
+        setPartners(partnersRes.data);
+      } catch {}
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
-
-      const sections = ["palvelut", "meista", "referenssit", "yhteystiedot"];
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= 100 && rect.bottom >= 100) {
-            setActiveSection(section);
-            break;
-          }
+      ["palvelut", "meista", "referenssit", "yhteystiedot"].forEach((section) => {
+        const el = document.getElementById(section);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 100 && rect.bottom >= 100) setActiveSection(section);
         }
-      }
+      });
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -1488,19 +788,19 @@ const HomePage = () => {
     <>
       <Navbar isScrolled={isScrolled} activeSection={activeSection} />
       <main>
-        <HeroSection />
-        <ServicesSection />
-        <AboutSection />
-        <ReferencesSection />
-        <QualitySection />
-        <ContactSection />
+        <HeroSection settings={settings} />
+        <ServicesSection services={services} />
+        <AboutSection settings={settings} />
+        <ReferencesSection references={references} />
+        <QualitySection partners={partners} />
+        <ContactSection settings={settings} />
       </main>
       <Footer />
     </>
   );
 };
 
-// ========== MAIN APP ==========
+// ========== APP ==========
 function App() {
   return (
     <div className="App" data-testid="app-container">
