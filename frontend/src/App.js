@@ -352,8 +352,8 @@ const ReferencesSection = ({ settings, references }) => (
 );
 
 // ========== QUALITY/PARTNERS ==========
-const QualitySection = ({ partners }) => (
-  <section data-testid="quality-section" className="section-padding bg-[#0056D2]">
+const QualitySection = ({ settings, partners }) => (
+  <section data-testid="quality-section" className="section-padding bg-primary">
     <div className="container-custom">
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
         <p className="font-slogan text-white/60 text-sm mb-2 md:mb-3">MIKSI VALITA MEIDÄT</p>
@@ -370,7 +370,7 @@ const QualitySection = ({ partners }) => (
                   <CheckCircle size={24} className="text-white" />
                 </div>
               )}
-              <p className="text-white font-medium text-center text-xs md:text-base">{partner.name}</p>
+              <p className="text-white font-medium text-center text-xs md:text-base line-clamp-2">{partner.name}</p>
             </motion.div>
           ))}
         </div>
@@ -403,25 +403,25 @@ const ContactSection = ({ settings }) => {
       <div className="container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-            <p className="font-slogan text-[#0056D2] text-sm mb-2 md:mb-3">{s.contact_subtitle}</p>
-            <h2 className="text-2xl md:text-4xl font-bold text-[#0F172A] mb-4 md:mb-6">{s.contact_title}</h2>
+            <p className="font-slogan text-primary text-sm mb-2 md:mb-3">{s.contact_subtitle}</p>
+            <h2 className="section-title mb-4 md:mb-6">{s.contact_title}</h2>
             <p className="text-sm md:text-base text-[#64748B] mb-6 md:mb-8">{s.contact_description}</p>
             <div className="space-y-4 md:space-y-6">
               <div className="flex items-start gap-3 md:gap-4">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-[#EBF3FF] flex items-center justify-center flex-shrink-0"><MapPin size={18} className="text-[#0056D2]" /></div>
+                <div className="icon-box flex-shrink-0"><MapPin size={18} className="text-primary" /></div>
                 <div><p className="font-medium text-[#0F172A] text-sm md:text-base">Päätoimisto</p><p className="text-[#64748B] text-sm">{s.contact_address}</p></div>
               </div>
               <div className="flex items-start gap-3 md:gap-4">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-[#EBF3FF] flex items-center justify-center flex-shrink-0"><Mail size={18} className="text-[#0056D2]" /></div>
-                <div><p className="font-medium text-[#0F172A] text-sm md:text-base">Sähköposti</p><a href={`mailto:${s.contact_email}`} className="text-[#0056D2] hover:underline text-sm">{s.contact_email}</a></div>
+                <div className="icon-box flex-shrink-0"><Mail size={18} className="text-primary" /></div>
+                <div><p className="font-medium text-[#0F172A] text-sm md:text-base">Sähköposti</p><a href={`mailto:${s.contact_email}`} className="text-primary hover:underline text-sm">{s.contact_email}</a></div>
               </div>
               <div className="flex items-start gap-3 md:gap-4">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-[#EBF3FF] flex items-center justify-center flex-shrink-0"><Phone size={18} className="text-[#0056D2]" /></div>
+                <div className="icon-box flex-shrink-0"><Phone size={18} className="text-primary" /></div>
                 <div>
                   <p className="font-medium text-[#0F172A] text-sm md:text-base">Puhelin</p>
                   <div className="text-[#64748B] space-y-1 text-sm">
-                    <p>{s.contact_phone_1_name}: <a href={`tel:${s.contact_phone_1.replace(/\s/g, '')}`} className="text-[#0056D2] hover:underline">{s.contact_phone_1}</a></p>
-                    <p>{s.contact_phone_2_name}: <a href={`tel:${s.contact_phone_2.replace(/\s/g, '')}`} className="text-[#0056D2] hover:underline">{s.contact_phone_2}</a></p>
+                    <p>{s.contact_phone_1_name}: <a href={`tel:${s.contact_phone_1.replace(/\s/g, '')}`} className="text-primary hover:underline">{s.contact_phone_1}</a></p>
+                    <p>{s.contact_phone_2_name}: <a href={`tel:${s.contact_phone_2.replace(/\s/g, '')}`} className="text-primary hover:underline">{s.contact_phone_2}</a></p>
                   </div>
                 </div>
               </div>
