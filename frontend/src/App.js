@@ -64,7 +64,8 @@ const Navbar = ({ isScrolled, activeSection }) => {
             <img 
               src={LOGO_URL} 
               alt="J&B Tasoitus & Maalaus" 
-              className="h-8 md:h-10 w-auto max-w-[200px]"
+              className="h-14 md:h-16 w-auto"
+              style={{ objectFit: 'contain' }}
             />
           </a>
 
