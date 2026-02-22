@@ -5,7 +5,12 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { 
   Phone, Mail, MapPin, Menu, X, ChevronDown, Paintbrush, Building2, Layers,
   CheckCircle, ArrowRight, Send, Settings, LogOut, Plus, Trash2, Edit2, Save,
-  MessageSquare, Briefcase, Upload, Award, Image as ImageIcon, Home, FileText, Users, Lock, Shield, Palette
+  MessageSquare, Briefcase, Upload, Award, Image as ImageIcon, Home, FileText, Users, Lock, Shield, Palette,
+  // Additional service icons
+  Hammer, Wrench, PaintBucket, Brush, Ruler, HardHat, Construction, Warehouse,
+  DoorOpen, DoorClosed, Sofa, Lamp, Frame, Square, CircleDot, Sparkles,
+  Sun, Droplets, Wind, TreeDeciduous, Fence, Scaling, LayoutGrid, PanelTop,
+  Wallpaper, LampCeiling, Armchair
 } from "lucide-react";
 import axios from "axios";
 
@@ -13,7 +18,17 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png";
 
-const iconMap = { Building2, Layers, Paintbrush };
+// Extended icon map with more service icons
+const iconMap = { 
+  // Original icons
+  Building2, Layers, Paintbrush,
+  // Construction & Tools
+  Hammer, Wrench, PaintBucket, Brush, Ruler, HardHat, Construction, Warehouse,
+  // Interior icons
+  DoorOpen, DoorClosed, Sofa, Lamp, Frame, Square, Sparkles, Wallpaper, LampCeiling, Armchair,
+  // Exterior/Roof icons
+  Sun, Droplets, Wind, TreeDeciduous, Fence, Scaling, LayoutGrid, PanelTop, CircleDot
+};
 
 // Default settings
 const defaultSettings = {
