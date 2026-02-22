@@ -706,6 +706,125 @@ const AdminPanel = () => {
           <div className="flex justify-center py-12"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0056D2]"></div></div>
         ) : (
           <>
+            {/* THEME TAB */}
+            {activeTab === "theme" && (
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-lg md:text-xl font-bold flex items-center gap-2"><Palette size={20} className="text-[#0056D2]" />Teema-asetukset</h2>
+                  <button onClick={saveSettings} disabled={saving} className="btn-primary text-sm flex items-center gap-2"><Save size={16} />{saving ? "..." : "Tallenna"}</button>
+                </div>
+
+                {/* Logo & Favicon */}
+                <div className="bg-white border p-4 md:p-6 space-y-4">
+                  <h3 className="font-bold text-[#0F172A] border-b pb-2">Logo ja Favicon</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Sivuston logo</label>
+                      <ImageUpload currentImage={settings.logo_url} onImageChange={(url) => setSettings({...settings, logo_url: url})} token={token} />
+                      <p className="text-xs text-[#64748B] mt-2">Suositeltu: PNG tai SVG, max leveys 200px</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Favicon (välilehden ikoni)</label>
+                      <ImageUpload currentImage={settings.favicon_url} onImageChange={(url) => setSettings({...settings, favicon_url: url})} token={token} />
+                      <p className="text-xs text-[#64748B] mt-2">Suositeltu: 32x32px PNG tai ICO</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Colors */}
+                <div className="bg-white border p-4 md:p-6 space-y-4">
+                  <h3 className="font-bold text-[#0F172A] border-b pb-2">Värimaailma</h3>
+                  <p className="text-sm text-[#64748B]">Valitse pääväri - koko sivuston teema päivittyy automaattisesti</p>
+                  <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
+                    {COLOR_OPTIONS.map((color) => (
+                      <button
+                        key={color.value}
+                        onClick={() => setSettings({...settings, theme_color: color.value})}
+                        className={`aspect-square rounded-lg border-2 transition-all ${settings.theme_color === color.value ? 'border-[#0F172A] scale-110 shadow-lg' : 'border-transparent hover:scale-105'}`}
+                        style={{ backgroundColor: color.bg }}
+                        title={color.label}
+                      >
+                        {settings.theme_color === color.value && (
+                          <CheckCircle size={20} className="text-white mx-auto" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-3 mt-4">
+                    <label className="text-sm font-medium">Mukautettu väri:</label>
+                    <input 
+                      type="color" 
+                      value={settings.theme_color || "#0056D2"} 
+                      onChange={(e) => setSettings({...settings, theme_color: e.target.value})}
+                      className="w-12 h-10 cursor-pointer border border-[#E2E8F0] rounded"
+                    />
+                    <span className="text-sm text-[#64748B]">{settings.theme_color}</span>
+                  </div>
+                </div>
+
+                {/* Font */}
+                <div className="bg-white border p-4 md:p-6 space-y-4">
+                  <h3 className="font-bold text-[#0F172A] border-b pb-2">Fontti</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {FONT_OPTIONS.map((font) => (
+                      <button
+                        key={font.value}
+                        onClick={() => setSettings({...settings, theme_font: font.value})}
+                        className={`p-4 border rounded-lg text-left transition-all ${settings.theme_font === font.value ? 'border-[#0056D2] bg-[#EBF3FF]' : 'border-[#E2E8F0] hover:border-[#0056D2]/50'}`}
+                        style={{ fontFamily: `"${font.value}", sans-serif` }}
+                      >
+                        <span className="block text-lg font-bold">Aa</span>
+                        <span className="text-xs text-[#64748B]">{font.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Size */}
+                <div className="bg-white border p-4 md:p-6 space-y-4">
+                  <h3 className="font-bold text-[#0F172A] border-b pb-2">Tekstin koko</h3>
+                  <div className="grid grid-cols-3 gap-3">
+                    {SIZE_OPTIONS.map((size) => (
+                      <button
+                        key={size.value}
+                        onClick={() => setSettings({...settings, theme_size: size.value})}
+                        className={`p-4 border rounded-lg text-center transition-all ${settings.theme_size === size.value ? 'border-[#0056D2] bg-[#EBF3FF]' : 'border-[#E2E8F0] hover:border-[#0056D2]/50'}`}
+                      >
+                        <span className={`block font-bold ${size.value === 'small' ? 'text-lg' : size.value === 'large' ? 'text-3xl' : 'text-2xl'}`}>Aa</span>
+                        <span className="text-sm text-[#64748B]">{size.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Preview */}
+                <div className="bg-white border p-4 md:p-6">
+                  <h3 className="font-bold text-[#0F172A] border-b pb-2 mb-4">Esikatselu</h3>
+                  <div 
+                    className="p-6 rounded-lg border" 
+                    style={{ 
+                      fontFamily: `"${settings.theme_font || 'Inter'}", sans-serif`,
+                      '--preview-color': settings.theme_color || '#0056D2'
+                    }}
+                  >
+                    <p className="text-sm mb-2" style={{ color: settings.theme_color }}>ALAOTSIKKO</p>
+                    <h2 className={`font-bold text-[#0F172A] mb-4 ${settings.theme_size === 'small' ? 'text-xl' : settings.theme_size === 'large' ? 'text-4xl' : 'text-2xl'}`}>
+                      Esimerkki otsikko
+                    </h2>
+                    <p className={`text-[#64748B] mb-4 ${settings.theme_size === 'small' ? 'text-sm' : settings.theme_size === 'large' ? 'text-lg' : 'text-base'}`}>
+                      Tämä on esimerkkiteksti, joka näyttää miltä sivuston sisältö näyttää valituilla asetuksilla.
+                    </p>
+                    <button 
+                      className="px-4 py-2 text-white rounded font-medium"
+                      style={{ backgroundColor: settings.theme_color }}
+                    >
+                      Esimerkki nappi
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* SETTINGS TAB */}
             {activeTab === "settings" && (
               <div className="space-y-6">
