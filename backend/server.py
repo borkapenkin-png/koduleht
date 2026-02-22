@@ -1,5 +1,5 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, UploadFile, File
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, UploadFile, File, Request
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.responses import Response
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -12,7 +12,11 @@ from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+import jwt
+import bcrypt
+from collections import defaultdict
+import time
 
 
 ROOT_DIR = Path(__file__).parent
@@ -26,17 +30,107 @@ db = client[os.environ['DB_NAME']]
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
-# Basic Auth
-security = HTTPBasic()
-ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
-ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'jbadmin2024')
+# JWT Configuration
+JWT_SECRET = os.environ.get('JWT_SECRET', secrets.token_hex(32))
+JWT_ALGORITHM = "HS256"
+JWT_EXPIRATION_HOURS = 24
 
-def verify_admin(credentials: HTTPBasicCredentials = Depends(security)):
-    correct_username = secrets.compare_digest(credentials.username, ADMIN_USERNAME)
-    correct_password = secrets.compare_digest(credentials.password, ADMIN_PASSWORD)
-    if not (correct_username and correct_password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials", headers={"WWW-Authenticate": "Basic"})
-    return credentials.username
+# OAuth2 scheme
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/admin/login", auto_error=False)
+
+# Rate limiting for login attempts
+login_attempts = defaultdict(list)
+MAX_LOGIN_ATTEMPTS = 5
+LOCKOUT_DURATION = 300  # 5 minutes in seconds
+
+def check_rate_limit(ip: str) -> bool:
+    """Check if IP is rate limited. Returns True if allowed, False if blocked."""
+    current_time = time.time()
+    # Clean old attempts
+    login_attempts[ip] = [t for t in login_attempts[ip] if current_time - t < LOCKOUT_DURATION]
+    return len(login_attempts[ip]) < MAX_LOGIN_ATTEMPTS
+
+def record_login_attempt(ip: str):
+    """Record a failed login attempt."""
+    login_attempts[ip].append(time.time())
+
+def get_remaining_lockout(ip: str) -> int:
+    """Get remaining lockout time in seconds."""
+    if not login_attempts[ip]:
+        return 0
+    oldest_attempt = min(login_attempts[ip])
+    remaining = LOCKOUT_DURATION - (time.time() - oldest_attempt)
+    return max(0, int(remaining))
+
+# Password hashing functions
+def hash_password(password: str) -> str:
+    """Hash a password using bcrypt."""
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verify a password against its hash."""
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+
+# JWT functions
+def create_access_token(username: str) -> str:
+    """Create a JWT access token."""
+    expire = datetime.now(timezone.utc) + timedelta(hours=JWT_EXPIRATION_HOURS)
+    payload = {
+        "sub": username,
+        "exp": expire,
+        "iat": datetime.now(timezone.utc)
+    }
+    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+def decode_access_token(token: str) -> Optional[str]:
+    """Decode and verify a JWT token. Returns username if valid."""
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        return payload.get("sub")
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
+        return None
+
+async def get_current_admin(token: str = Depends(oauth2_scheme)) -> str:
+    """Dependency to get current authenticated admin user."""
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+    username = decode_access_token(token)
+    if not username:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+    # Verify user still exists in DB
+    user = await db.admin_users.find_one({"username": username}, {"_id": 0})
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+    return username
+
+# Initialize default admin user on startup
+async def init_admin_user():
+    """Create default admin user if none exists."""
+    existing = await db.admin_users.find_one({"username": "admin"})
+    if not existing:
+        default_password = os.environ.get('ADMIN_PASSWORD', 'jbadmin2024')
+        hashed = hash_password(default_password)
+        await db.admin_users.insert_one({
+            "username": "admin",
+            "password_hash": hashed,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        })
+        logging.info("Default admin user created")
 
 
 # ========== MODELS ==========
