@@ -47,7 +47,7 @@ export const servicesSEO = {
   
   "maalaustyot": {
     slug: "maalaustyot",
-    title: "Maalaustyöt Helsinki | Ammattimaalari Sisä- ja Ulkomaalaukseen",
+    title: "Maalaustyöt Helsinki - Ammattimaalari Sisä- ja Ulkomaalaukseen",
     metaDescription: "Ammattitaitoista maalaustyötä Helsingissä. Sisämaalaukset, ulkomaalaukset, julkisivumaalaus. Kokenut maalari, laadukas lopputulos. Pyydä tarjous!",
     keywords: "maalaustyöt helsinki, maalari helsinki, sisämaalaus, ulkomaalaus, julkisivumaalaus uusimaa, maalaus hinta",
     h1: "Maalaustyöt Helsingissä - Sisä- ja Ulkomaalaukset",
@@ -90,7 +90,7 @@ export const servicesSEO = {
   
   "mikrosementti": {
     slug: "mikrosementti",
-    title: "Mikrosementti Helsinki | Moderni Pinnoite Seinille ja Lattioille",
+    title: "Mikrosementti Helsinki - Moderni Pinnoite Seinille ja Lattioille",
     metaDescription: "Mikrosementtipinnoitus Helsingissä. Moderni, saumaton ja kestävä pinta seinille, lattioille ja märkätiloihin. Pyydä tarjous mikrosementille!",
     keywords: "mikrosementti helsinki, mikrosementti hinta, mikrosementti lattia, mikrosementti seinä, mikrosementti kylpyhuone",
     h1: "Mikrosementti - Moderni ja Saumaton Pinnoite",
@@ -134,7 +134,7 @@ export const servicesSEO = {
   
   "julkisivurappaus": {
     slug: "julkisivurappaus",
-    title: "Julkisivurappaus Helsinki | Rappaustöitä Uudellamaalla",
+    title: "Julkisivurappaus Helsinki - Rappaustöitä Uudellamaalla",
     metaDescription: "Ammattitaitoista julkisivurappausta Helsingissä ja Uudellamaalla. Uuden julkisivun rappaus, rappauksen korjaus ja kunnostus. Pyydä ilmainen arvio!",
     keywords: "julkisivurappaus helsinki, rappaus helsinki, julkisivun rappaus hinta, rappauskustannukset, rappaustyöt uusimaa",
     h1: "Julkisivurappaus Helsingissä ja Uudellamaalla",
@@ -178,7 +178,7 @@ export const servicesSEO = {
   
   "kattomaalaus": {
     slug: "kattomaalaus",
-    title: "Kattojen Pesut ja Maalaukset Helsinki | Kattomaalaus Uusimaa",
+    title: "Kattojen Pesut ja Maalaukset Helsinki - Kattomaalaus Uusimaa",
     metaDescription: "Kattojen pesu ja maalaus Helsingissä. Ammattitaitoista kattojenmaalauspalvelua taloyhtiöille ja omakotitaloille. Pyydä ilmainen arvio!",
     keywords: "kattomaalaus helsinki, katon maalaus, katon pesu helsinki, katon huoltomaalaus, peltikaton maalaus",
     h1: "Kattojen Pesut ja Maalaukset Helsingissä",
@@ -222,7 +222,7 @@ export const servicesSEO = {
   
   "julkisivumaalaus": {
     slug: "julkisivumaalaus",
-    title: "Julkisivujen Pesut ja Maalaukset Helsinki | Julkisivumaalaus Uusimaa",
+    title: "Julkisivujen Pesut ja Maalaukset Helsinki - Julkisivumaalaus Uusimaa",
     metaDescription: "Julkisivujen pesu ja maalaus Helsingissä. Talojen ulkomaalaus ammattitaidolla. Puu- ja kivitalojen julkisivumaalaus. Pyydä ilmainen arvio!",
     keywords: "julkisivumaalaus helsinki, julkisivumaalaus uusimaa, ulkomaalaus helsinki, talon maalaus ulkoa, julkisivun pesu",
     h1: "Julkisivujen Pesut ja Maalaukset Helsingissä",
@@ -275,4 +275,4 @@ export const serviceSlugMap = {
   "Julkisivujen pesut ja maalaukset": "julkisivumaalaus"
 };
 
-export const getServiceSEO = (slug) => servicesSEO[slug] || null;
+export const getServiceSEO = (slug) => servicesSEO[slug] |- null;
