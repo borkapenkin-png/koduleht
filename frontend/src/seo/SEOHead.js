@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 const COMPANY = {
   name: "J&B Tasoitus ja Maalaus Oy",
   url: "https://jbtasoitusmaalaus.fi",
-  logo: "https://jbtasoitusmaalaus.fi/logo.png",
+  logo: "https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png",
   phone: "+358 40 054 7270",
   email: "info@jbtasoitusmaalaus.fi",
   address: {
@@ -73,7 +73,7 @@ const getServiceSchema = (service) => ({
     "name": area
   })),
   "description": service.description,
-  "url": `${COMPANY.url}/palvelut/${service.slug}`
+  "url": COMPANY.url + "/palvelut/" + service.slug
 });
 
 // BreadcrumbList Schema
@@ -93,66 +93,40 @@ export const SEOHead = ({
   description, 
   keywords,
   canonical,
-  type = "website",
-  image,
   service,
   breadcrumbs
 }) => {
-  const fullTitle = title ? `${title} | J&B Tasoitus ja Maalaus` : "J&B Tasoitus ja Maalaus | Ammattitaitoista maalausta ja tasoitusta Helsinki";
-  const fullDescription = description || "Ammattitaitoista tasoitus- ja maalaustyötä Helsingissä ja Uudellamaalla vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset, tasoitustyöt. Pyydä ilmainen arvio!";
-  const fullImage = image || COMPANY.logo;
-  const fullCanonical = canonical || COMPANY.url;
+  const pageTitle = title || "J&B Tasoitus ja Maalaus - Ammattitaitoista maalausta ja tasoitusta Helsinki";
+  const pageDescription = description || "Ammattitaitoista tasoitus- ja maalaustyötä Helsingissä ja Uudellamaalla vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset, tasoitustyöt. Pyydä ilmainen arvio!";
+  const pageCanonical = canonical || COMPANY.url;
+
+  const localBusinessSchema = JSON.stringify(getLocalBusinessSchema());
+  const serviceSchema = service ? JSON.stringify(getServiceSchema(service)) : null;
+  const breadcrumbSchema = breadcrumbs ? JSON.stringify(getBreadcrumbSchema(breadcrumbs)) : null;
 
   return (
     <Helmet>
-      {/* Basic Meta Tags */}
-      <title>{fullTitle}</title>
-      <meta name="description" content={fullDescription} />
+      <title>{pageTitle}</title>
+      <meta name="description" content={pageDescription} />
       {keywords && <meta name="keywords" content={keywords} />}
-      <link rel="canonical" href={fullCanonical} />
-      
-      {/* Language */}
+      <link rel="canonical" href={pageCanonical} />
       <meta name="language" content="Finnish" />
       <meta name="geo.region" content="FI-18" />
       <meta name="geo.placename" content="Helsinki" />
-      
-      {/* Open Graph */}
-      <meta property="og:title" content={fullTitle} />
-      <meta property="og:description" content={fullDescription} />
-      <meta property="og:type" content={type} />
-      <meta property="og:url" content={fullCanonical} />
-      <meta property="og:image" content={fullImage} />
+      <meta property="og:title" content={pageTitle} />
+      <meta property="og:description" content={pageDescription} />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content={pageCanonical} />
+      <meta property="og:image" content={COMPANY.logo} />
       <meta property="og:site_name" content="J&B Tasoitus ja Maalaus" />
       <meta property="og:locale" content="fi_FI" />
-      
-      {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={fullTitle} />
-      <meta name="twitter:description" content={fullDescription} />
-      <meta name="twitter:image" content={fullImage} />
-      
-      {/* Mobile */}
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta name="theme-color" content="#0891B2" />
-      
-      {/* LocalBusiness Schema */}
-      <script type="application/ld+json">
-        {JSON.stringify(getLocalBusinessSchema())}
-      </script>
-      
-      {/* Service Schema (if service page) */}
-      {service && (
-        <script type="application/ld+json">
-          {JSON.stringify(getServiceSchema(service))}
-        </script>
-      )}
-      
-      {/* Breadcrumb Schema */}
-      {breadcrumbs && (
-        <script type="application/ld+json">
-          {JSON.stringify(getBreadcrumbSchema(breadcrumbs))}
-        </script>
-      )}
+      <meta name="twitter:title" content={pageTitle} />
+      <meta name="twitter:description" content={pageDescription} />
+      <meta name="twitter:image" content={COMPANY.logo} />
+      <script type="application/ld+json">{localBusinessSchema}</script>
+      {serviceSchema && <script type="application/ld+json">{serviceSchema}</script>}
+      {breadcrumbSchema && <script type="application/ld+json">{breadcrumbSchema}</script>}
     </Helmet>
   );
 };
