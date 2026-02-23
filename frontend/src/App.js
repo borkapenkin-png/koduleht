@@ -309,6 +309,8 @@ const HeroSection = ({ settings }) => {
   const s = { ...defaultSettings, ...settings };
   // Use default image if hero_image_url is empty
   const heroImage = s.hero_image_url || defaultSettings.hero_image_url;
+  const subtitleClasses = getSubtitleClasses(s);
+  const subtitleFont = s.subtitle_font || 'Inter';
   return (
     <section data-testid="hero-section" className="relative min-h-[90vh] md:min-h-screen flex items-center pt-16">
       <div className="absolute inset-0">
@@ -317,7 +319,7 @@ const HeroSection = ({ settings }) => {
       </div>
       <div className="container-custom relative z-10 py-12 md:py-20">
         <div className="max-w-2xl">
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="font-slogan text-primary text-base md:text-xl mb-3 md:mb-4">{s.hero_slogan}</motion.p>
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className={`uppercase text-primary mb-3 md:mb-4 ${subtitleClasses}`} style={{ fontFamily: `"${subtitleFont}", sans-serif` }}>{s.hero_slogan}</motion.p>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-[#0F172A] mb-4 md:mb-6 leading-tight">
             {s.hero_title_1}<br /><span className="text-primary">{s.hero_title_2}</span> {s.hero_title_3}
           </motion.h1>
