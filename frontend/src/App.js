@@ -1155,10 +1155,9 @@ const ReferenceForm = ({ reference, onChange, onSave, onCancel }) => (
 
 const PartnerForm = ({ partner, onChange, onSave, onCancel, token }) => (
   <div className="space-y-3 md:space-y-4">
-    <div><label className="block text-sm font-medium mb-1">Nimi</label><input value={partner.name} onChange={(e) => onChange({ ...partner, name: e.target.value })} className="form-input text-sm" placeholder="Luotettava kumppani" /></div>
-    <div><label className="block text-sm font-medium mb-1">Logo</label><ImageUpload currentImage={partner.image_url} onImageChange={(url) => onChange({ ...partner, image_url: url })} token={token} /></div>
-    <div><label className="block text-sm font-medium mb-1">Järjestys</label><input type="number" value={partner.order} onChange={(e) => onChange({ ...partner, order: parseInt(e.target.value) || 0 })} className="form-input text-sm" /></div>
-    <div className="flex gap-2"><button onClick={onSave} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Save size={14} />Tallenna</button><button onClick={onCancel} className="btn-secondary text-xs md:text-sm">Peruuta</button></div>
+    <div><label className="block text-sm font-medium mb-1">Logo *</label><ImageUpload currentImage={partner.image_url} onImageChange={(url) => onChange({ ...partner, image_url: url })} token={token} /></div>
+    <p className="text-xs text-[#64748B]">Lataa logo (PNG tai SVG suositeltu, läpinäkyvä tausta toimii parhaiten)</p>
+    <div className="flex gap-2"><button onClick={onSave} disabled={!partner.image_url} className="btn-primary text-xs md:text-sm flex items-center gap-1 disabled:opacity-50"><Save size={14} />Tallenna</button><button onClick={onCancel} className="btn-secondary text-xs md:text-sm">Peruuta</button></div>
   </div>
 );
 
