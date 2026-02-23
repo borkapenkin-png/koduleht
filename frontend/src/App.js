@@ -498,7 +498,7 @@ const ContactSection = ({ settings }) => {
       <div className="container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-            <p className="font-slogan text-primary text-sm mb-2 md:mb-3">{s.contact_subtitle}</p>
+            <Subtitle settings={s} className="mb-2 md:mb-3">{s.contact_subtitle}</Subtitle>
             <h2 className="section-title mb-4 md:mb-6">{s.contact_title}</h2>
             <p className="text-sm md:text-base text-[#64748B] mb-6 md:mb-8">{s.contact_description}</p>
             <div className="space-y-4 md:space-y-6">
