@@ -429,7 +429,7 @@ const ReferencesSection = ({ settings, references }) => (
   <section id="referenssit" data-testid="references-section" className="section-padding bg-white">
     <div className="container-custom">
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10 md:mb-16">
-        <p className="font-slogan text-primary text-sm mb-2 md:mb-3">TYÖNÄYTTEITÄ</p>
+        <Subtitle settings={settings} className="mb-2 md:mb-3">TYÖNÄYTTEITÄ</Subtitle>
         <h2 className="section-title">Referenssit</h2>
         <p className="text-sm md:text-base text-[#64748B] mt-3 md:mt-4 max-w-2xl mx-auto">Olemme toteuttaneet lukuisia projekteja yrityksille, taloyhtiöille ja yksityisille asiakkaille.</p>
       </motion.div>
@@ -458,7 +458,7 @@ const QualitySection = ({ settings, partners }) => (
   <section data-testid="quality-section" className="section-padding bg-primary">
     <div className="container-custom">
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
-        <p className="font-slogan text-white/60 text-sm mb-2 md:mb-3">MIKSI VALITA MEIDÄT</p>
+        <Subtitle settings={settings} white className="mb-2 md:mb-3">MIKSI VALITA MEIDÄT</Subtitle>
         <h2 className="text-2xl md:text-4xl font-bold text-white mb-8 md:mb-12">Laatutakuu</h2>
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
           {partners.filter(p => p.image_url).map((partner, index) => (
