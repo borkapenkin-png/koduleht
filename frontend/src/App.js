@@ -342,11 +342,11 @@ const HeroSection = ({ settings }) => {
 };
 
 // ========== SERVICES ==========
-const ServicesSection = ({ services_data }) => (
+const ServicesSection = ({ services_data, settings }) => (
   <section id="palvelut" data-testid="services-section" className="section-padding section-bg-alt">
     <div className="container-custom">
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10 md:mb-16">
-        <p className="font-slogan text-primary text-sm mb-2 md:mb-3">MITÄ TEEMME</p>
+        <Subtitle settings={settings} className="mb-2 md:mb-3">MITÄ TEEMME</Subtitle>
         <h2 className="section-title">Palvelumme</h2>
       </motion.div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
