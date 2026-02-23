@@ -275,4 +275,4 @@ export const serviceSlugMap = {
   "Julkisivujen pesut ja maalaukset": "julkisivumaalaus"
 };
 
-export const getServiceSEO = (slug) => servicesSEO[slug] |- null;
+export const getServiceSEO = (slug) => servicesSEO[slug] || null;
