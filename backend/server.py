@@ -217,6 +217,11 @@ class SiteSettingsUpdate(BaseModel):
     theme_size: Optional[str] = None
     logo_url: Optional[str] = None
     favicon_url: Optional[str] = None
+    # Subtitle/Slogan settings
+    subtitle_font: Optional[str] = None
+    subtitle_size: Optional[str] = None
+    subtitle_weight: Optional[str] = None
+    subtitle_spacing: Optional[str] = None
 
 # Contact Form
 class ContactFormCreate(BaseModel):
