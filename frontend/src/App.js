@@ -89,6 +89,26 @@ const FONT_OPTIONS = [
   { value: "Raleway", label: "Raleway (Elegantti)" }
 ];
 
+// Subtitle/Slogan options
+const SUBTITLE_SIZE_OPTIONS = [
+  { value: "small", label: "Pieni", class: "text-xs" },
+  { value: "normal", label: "Normaali", class: "text-sm" },
+  { value: "large", label: "Suuri", class: "text-base" }
+];
+
+const SUBTITLE_WEIGHT_OPTIONS = [
+  { value: "normal", label: "Normaali", class: "font-normal" },
+  { value: "medium", label: "Keskipaksu", class: "font-medium" },
+  { value: "bold", label: "Lihavoitu", class: "font-bold" }
+];
+
+const SUBTITLE_SPACING_OPTIONS = [
+  { value: "normal", label: "Normaali", class: "tracking-normal" },
+  { value: "wide", label: "Leveä", class: "tracking-wide" },
+  { value: "wider", label: "Leveämpi", class: "tracking-wider" },
+  { value: "widest", label: "Levein", class: "tracking-widest" }
+];
+
 // Color presets
 const COLOR_OPTIONS = [
   { value: "#0056D2", label: "Sininen", bg: "#0056D2" },
