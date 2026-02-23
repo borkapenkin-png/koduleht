@@ -620,8 +620,9 @@ const AdminPanel = () => {
       await axios.put(`${API}/admin/settings`, settings, getAuthHeaders());
       alert("Tallennettu!");
     } catch (error) { 
+      console.error('Save settings error:', error);
       if (error.response?.status === 401) handleLogout();
-      else alert("Virhe tallennuksessa"); 
+      else alert(`Virhe tallennuksessa: ${error.response?.data?.detail || error.message}`); 
     }
     setSaving(false);
   };
@@ -636,9 +637,24 @@ const AdminPanel = () => {
       if (s.id && !s.isNew) await axios.put(`${API}/admin/services/${s.id}`, s, getAuthHeaders());
       else { const { isNew, ...d } = s; await axios.post(`${API}/admin/services`, d, getAuthHeaders()); }
       loadData(); setEditingItem(null); setNewItem(null);
-    } catch (error) { if (error.response?.status === 401) handleLogout(); }
+    } catch (error) { 
+      console.error('Save service error:', error);
+      if (error.response?.status === 401) handleLogout();
+      else alert(`Virhe: ${error.response?.data?.detail || error.message}`);
+    }
   };
-  const deleteService = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/services/${id}`, getAuthHeaders()); loadData(); } catch (error) { if (error.response?.status === 401) handleLogout(); } } };
+  const deleteService = async (id) => { 
+    if (window.confirm("Poista?")) { 
+      try { 
+        await axios.delete(`${API}/admin/services/${id}`, getAuthHeaders()); 
+        loadData(); 
+      } catch (error) { 
+        console.error('Delete service error:', error);
+        if (error.response?.status === 401) handleLogout();
+        else alert(`Virhe: ${error.response?.data?.detail || error.message}`);
+      } 
+    } 
+  };
   
   const saveReference = async (r) => {
     try {
