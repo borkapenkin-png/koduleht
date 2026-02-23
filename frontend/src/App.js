@@ -1463,7 +1463,7 @@ const HomePage = () => {
       <Navbar isScrolled={isScrolled} activeSection={activeSection} logoUrl={settings.logo_url} />
       <main>
         <HeroSection settings={settings} />
-        <ServicesSection services={settings} services_data={services} />
+        <ServicesSection settings={settings} services_data={services} />
         <AboutSection settings={settings} />
         <ReferencesSection settings={settings} references={references} />
         <QualitySection settings={settings} partners={partners} />
