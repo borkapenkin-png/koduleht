@@ -400,12 +400,12 @@ const AboutSection = ({ settings }) => {
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="relative order-2 lg:order-1">
             <img src={aboutImage} alt="Työ" className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover" />
             <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-primary text-white p-4 md:p-6 hidden sm:block">
-              <p className="font-slogan text-2xl md:text-3xl">{s.about_year}</p>
+              <p className="font-bold text-2xl md:text-3xl">{s.about_year}</p>
               <p className="text-xs md:text-sm opacity-80">vuodesta alkaen</p>
             </div>
           </motion.div>
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="order-1 lg:order-2">
-            <p className="font-slogan text-primary text-sm mb-2 md:mb-3">{s.about_subtitle}</p>
+            <Subtitle settings={s} className="mb-2 md:mb-3">{s.about_subtitle}</Subtitle>
             <h2 className="section-title mb-4 md:mb-6">{s.about_title}</h2>
             <div className="space-y-3 md:space-y-4 text-sm md:text-base text-[#64748B] leading-relaxed">
               <p>{s.about_text_1}</p>
