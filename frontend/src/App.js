@@ -463,8 +463,8 @@ const QualitySection = ({ settings, partners }) => (
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
           {partners.filter(p => p.image_url).map((partner, index) => (
             <motion.div key={partner.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="flex items-center justify-center">
-              <div className="w-24 h-16 md:w-32 md:h-20 flex items-center justify-center bg-white/10 rounded-lg p-3">
-                <img src={partner.image_url} alt="Partner logo" className="max-w-full max-h-full object-contain filter brightness-0 invert" />
+              <div className="bg-white rounded-lg p-4 shadow-lg">
+                <img src={partner.image_url} alt={partner.name || "Partner logo"} className="h-12 md:h-16 w-auto max-w-[150px] md:max-w-[200px] object-contain" />
               </div>
             </motion.div>
           ))}
