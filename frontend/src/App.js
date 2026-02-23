@@ -1292,6 +1292,12 @@ const HomePage = () => {
 
   return (
     <>
+      <SEOHead 
+        title="Ammattitaitoista Maalausta ja Tasoitusta Helsinki"
+        description="J&B Tasoitus ja Maalaus Oy - Ammattitaitoista tasoitus- ja maalaustyötä Helsingissä ja Uudellamaalla vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset, tasoitustyöt. Kotitalousvähennys. Pyydä ilmainen arvio!"
+        keywords="tasoitus helsinki, maalaustyöt helsinki, seinien tasoitus hinta, julkisivumaalaus uusimaa, maalari helsinki, tasoittaja helsinki, sisämaalaus, ulkomaalaus"
+        canonical="https://jbtasoitusmaalaus.fi"
+      />
       <Navbar isScrolled={isScrolled} activeSection={activeSection} logoUrl={settings.logo_url} />
       <main>
         <HeroSection settings={settings} />
@@ -1309,14 +1315,17 @@ const HomePage = () => {
 // ========== APP ==========
 function App() {
   return (
-    <div className="App" data-testid="app-container">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/admin" element={<AdminPanel />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <HelmetProvider>
+      <div className="App" data-testid="app-container">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/palvelut/:slug" element={<ServicePage />} />
+            <Route path="/admin" element={<AdminPanel />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </HelmetProvider>
   );
 }
 
