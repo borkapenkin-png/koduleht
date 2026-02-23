@@ -645,18 +645,48 @@ const AdminPanel = () => {
       if (r.id && !r.isNew) await axios.put(`${API}/admin/references/${r.id}`, r, getAuthHeaders());
       else { const { isNew, ...d } = r; await axios.post(`${API}/admin/references`, d, getAuthHeaders()); }
       loadData(); setEditingItem(null); setNewItem(null);
-    } catch (error) { if (error.response?.status === 401) handleLogout(); }
+    } catch (error) { 
+      console.error('Save reference error:', error);
+      if (error.response?.status === 401) handleLogout();
+      else alert(`Virhe: ${error.response?.data?.detail || error.message}`);
+    }
   };
-  const deleteReference = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/references/${id}`, getAuthHeaders()); loadData(); } catch (error) { if (error.response?.status === 401) handleLogout(); } } };
+  const deleteReference = async (id) => { 
+    if (window.confirm("Poista?")) { 
+      try { 
+        await axios.delete(`${API}/admin/references/${id}`, getAuthHeaders()); 
+        loadData(); 
+      } catch (error) { 
+        console.error('Delete reference error:', error);
+        if (error.response?.status === 401) handleLogout(); 
+        else alert(`Virhe: ${error.response?.data?.detail || error.message}`);
+      } 
+    } 
+  };
 
   const savePartner = async (p) => {
     try {
       if (p.id && !p.isNew) await axios.put(`${API}/admin/partners/${p.id}`, p, getAuthHeaders());
       else { const { isNew, ...d } = p; await axios.post(`${API}/admin/partners`, d, getAuthHeaders()); }
       loadData(); setEditingItem(null); setNewItem(null);
-    } catch (error) { if (error.response?.status === 401) handleLogout(); }
+    } catch (error) { 
+      console.error('Save partner error:', error);
+      if (error.response?.status === 401) handleLogout();
+      else alert(`Virhe: ${error.response?.data?.detail || error.message}`);
+    }
   };
-  const deletePartner = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/partners/${id}`, getAuthHeaders()); loadData(); } catch (error) { if (error.response?.status === 401) handleLogout(); } } };
+  const deletePartner = async (id) => { 
+    if (window.confirm("Poista?")) { 
+      try { 
+        await axios.delete(`${API}/admin/partners/${id}`, getAuthHeaders()); 
+        loadData(); 
+      } catch (error) { 
+        console.error('Delete partner error:', error);
+        if (error.response?.status === 401) handleLogout();
+        else alert(`Virhe: ${error.response?.data?.detail || error.message}`);
+      } 
+    } 
+  };
 
   const deleteContact = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/contacts/${id}`, getAuthHeaders()); loadData(); } catch (error) { if (error.response?.status === 401) handleLogout(); } } };
 
