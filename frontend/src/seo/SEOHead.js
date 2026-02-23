@@ -112,7 +112,6 @@ export const SEOHead = ({
       <link rel="canonical" href={fullCanonical} />
       
       {/* Language */}
-      <html lang="fi" />
       <meta name="language" content="Finnish" />
       <meta name="geo.region" content="FI-18" />
       <meta name="geo.placename" content="Helsinki" />
