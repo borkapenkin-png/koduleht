@@ -23,6 +23,7 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 - ✅ Rate limiting on login
 - ✅ Password change functionality
 - ✅ Theme customization (colors, fonts, sizes, logo, favicon)
+- ✅ **Subtitle/Slogan customization (font, size, weight, letter-spacing)** - NEW
 - ✅ Content management for all sections
 - ✅ Service management with 30+ icon options
 - ✅ Reference management
@@ -51,7 +52,7 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 - ✅ Improved CRUD error handling with user feedback
 
 ### Tech Stack
-- **Frontend:** React 18, TailwindCSS, Framer Motion
+- **Frontend:** React 18, TailwindCSS, Framer Motion, React Router, React Helmet Async
 - **Backend:** FastAPI, Motor (MongoDB async)
 - **Database:** MongoDB
 - **Authentication:** JWT with bcrypt password hashing
@@ -74,7 +75,7 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 │   │   ├── robots.txt
 │   │   └── sitemap.xml
 │   ├── src/
-│   │   ├── App.js (main application)
+│   │   ├── App.js (main application, Subtitle component)
 │   │   ├── seo/
 │   │   │   ├── SEOHead.js
 │   │   │   └── serviceContent.js (SEO content for service pages)
@@ -88,18 +89,19 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 ### Pending/Future Tasks
 
 #### P0 (High Priority)
-- None currently
+- **Dynamic Per-Page SEO** - Create separate URLs for each service with unique meta tags (deferred until final domain deployment)
 
 #### P1 (Medium Priority)
 - Backend refactoring (split server.py into modules)
-- Service detail pages with full SEO content (Helmet issue needs resolution)
+- Refactor image URL storage to use relative paths
 
 #### P2 (Low Priority)
 - Google Analytics integration (user will add on own domain)
 - Additional schema types (FAQ, Review)
 
 ### Known Issues
-- react-helmet-async causes title formatting errors - using static index.html SEO instead
+- react-helmet-async implementation deferred - using static index.html SEO instead
+- Image URLs stored as absolute paths - need to re-upload after domain change
 
 ### Deployment Notes
 - Ready for deployment
