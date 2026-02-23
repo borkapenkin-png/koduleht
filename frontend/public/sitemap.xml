@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.jbtasoitusmaalaus.fi/</loc>
-    <lastmod>2026-02-22</lastmod>
+    <loc>https://jbtasoitusmaalaus.fi/</loc>
+    <lastmod>2026-02-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.jbtasoitusmaalaus.fi/#palvelut</loc>
-    <lastmod>2026-02-22</lastmod>
+    <loc>https://jbtasoitusmaalaus.fi/palvelut/tasoitustyo</loc>
+    <lastmod>2026-02-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://jbtasoitusmaalaus.fi/palvelut/maalaustyot</loc>
+    <lastmod>2026-02-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://jbtasoitusmaalaus.fi/palvelut/mikrosementti</loc>
+    <lastmod>2026-02-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.jbtasoitusmaalaus.fi/#meista</loc>
-    <lastmod>2026-02-22</lastmod>
+    <loc>https://jbtasoitusmaalaus.fi/palvelut/julkisivurappaus</loc>
+    <lastmod>2026-02-23</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.jbtasoitusmaalaus.fi/#referenssit</loc>
-    <lastmod>2026-02-22</lastmod>
+    <loc>https://jbtasoitusmaalaus.fi/palvelut/kattomaalaus</loc>
+    <lastmod>2026-02-23</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.jbtasoitusmaalaus.fi/#yhteystiedot</loc>
-    <lastmod>2026-02-22</lastmod>
+    <loc>https://jbtasoitusmaalaus.fi/palvelut/julkisivumaalaus</loc>
+    <lastmod>2026-02-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
