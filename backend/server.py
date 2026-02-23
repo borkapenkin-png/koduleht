@@ -176,6 +176,11 @@ class SiteSettings(BaseModel):
     theme_size: str = "medium"  # small, medium, large
     logo_url: Optional[str] = None
     favicon_url: Optional[str] = None
+    # Subtitle/Slogan settings
+    subtitle_font: str = "Inter"
+    subtitle_size: str = "normal"  # small, normal, large
+    subtitle_weight: str = "normal"  # normal, medium, bold
+    subtitle_spacing: str = "normal"  # normal, wide, wider, widest
 
 class SiteSettingsUpdate(BaseModel):
     hero_slogan: Optional[str] = None
