@@ -2,6 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import "@/App.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
+import { SEOHead, COMPANY } from "./seo/SEOHead";
+import { serviceSlugMap } from "./seo/serviceContent";
+import ServicePage from "./pages/ServicePage";
 import { 
   Phone, Mail, MapPin, Menu, X, ChevronDown, Paintbrush, Building2, Layers,
   CheckCircle, ArrowRight, Send, Settings, LogOut, Plus, Trash2, Edit2, Save,
