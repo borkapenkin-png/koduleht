@@ -68,6 +68,11 @@ const defaultSettings = {
   theme_font: "Inter",
   theme_color: "#0056D2",
   theme_size: "medium",
+  // Subtitle/slogan settings
+  subtitle_font: "Inter",
+  subtitle_size: "normal",
+  subtitle_weight: "normal",
+  subtitle_spacing: "normal",
   logo_url: null,
   favicon_url: null
 };
