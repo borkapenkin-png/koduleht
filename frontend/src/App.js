@@ -910,6 +910,91 @@ const AdminPanel = () => {
                   </div>
                 </div>
 
+                {/* Subtitle/Slogan Settings */}
+                <div className="bg-white border p-4 md:p-6 space-y-4">
+                  <h3 className="font-bold text-[#0F172A] border-b pb-2">Alaotsikko (Slogan) asetukset</h3>
+                  <p className="text-sm text-[#64748B]">Muokkaa alaotsikon ulkonäköä (esim. "LAATUJOHTAJAT", "MITÄ TEEMME")</p>
+                  
+                  {/* Subtitle Font */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Fontti</label>
+                    <select 
+                      value={settings.subtitle_font || 'Inter'} 
+                      onChange={(e) => setSettings({...settings, subtitle_font: e.target.value})}
+                      className="form-input text-sm w-full"
+                    >
+                      {FONT_OPTIONS.map(f => (
+                        <option key={f.value} value={f.value}>{f.label}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Subtitle Size */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Koko</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {SUBTITLE_SIZE_OPTIONS.map((opt) => (
+                        <button
+                          key={opt.value}
+                          onClick={() => setSettings({...settings, subtitle_size: opt.value})}
+                          className={`p-2 border rounded text-center transition-all ${settings.subtitle_size === opt.value ? 'border-[#0056D2] bg-[#EBF3FF]' : 'border-[#E2E8F0] hover:border-[#0056D2]/50'}`}
+                        >
+                          <span className={`block ${opt.class}`}>ABC</span>
+                          <span className="text-xs text-[#64748B]">{opt.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Subtitle Weight */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Paksuus</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {SUBTITLE_WEIGHT_OPTIONS.map((opt) => (
+                        <button
+                          key={opt.value}
+                          onClick={() => setSettings({...settings, subtitle_weight: opt.value})}
+                          className={`p-2 border rounded text-center transition-all ${settings.subtitle_weight === opt.value ? 'border-[#0056D2] bg-[#EBF3FF]' : 'border-[#E2E8F0] hover:border-[#0056D2]/50'}`}
+                        >
+                          <span className={`block ${opt.class}`}>Aa</span>
+                          <span className="text-xs text-[#64748B]">{opt.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Subtitle Letter Spacing */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Kirjainväli</label>
+                    <div className="grid grid-cols-4 gap-2">
+                      {SUBTITLE_SPACING_OPTIONS.map((opt) => (
+                        <button
+                          key={opt.value}
+                          onClick={() => setSettings({...settings, subtitle_spacing: opt.value})}
+                          className={`p-2 border rounded text-center transition-all ${settings.subtitle_spacing === opt.value ? 'border-[#0056D2] bg-[#EBF3FF]' : 'border-[#E2E8F0] hover:border-[#0056D2]/50'}`}
+                        >
+                          <span className={`block text-xs ${opt.class}`}>ABC</span>
+                          <span className="text-xs text-[#64748B]">{opt.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Subtitle Preview */}
+                  <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-[#64748B] mb-2">Esikatselu:</p>
+                    <p 
+                      className={`uppercase ${SUBTITLE_SIZE_OPTIONS.find(o => o.value === (settings.subtitle_size || 'normal'))?.class || 'text-sm'} ${SUBTITLE_WEIGHT_OPTIONS.find(o => o.value === (settings.subtitle_weight || 'normal'))?.class || 'font-normal'} ${SUBTITLE_SPACING_OPTIONS.find(o => o.value === (settings.subtitle_spacing || 'normal'))?.class || 'tracking-normal'}`}
+                      style={{ 
+                        color: settings.theme_color || '#0056D2',
+                        fontFamily: `"${settings.subtitle_font || 'Inter'}", sans-serif`
+                      }}
+                    >
+                      LAATUJOHTAJAT
+                    </p>
+                  </div>
+                </div>
+
                 {/* Preview */}
                 <div className="bg-white border p-4 md:p-6">
                   <h3 className="font-bold text-[#0F172A] border-b pb-2 mb-4">Esikatselu</h3>
