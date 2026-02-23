@@ -593,20 +593,33 @@ const AdminPanel = () => {
     setLoading(true);
     const headers = { headers: { Authorization: `Bearer ${tokenToUse}` } };
     try {
-      const [settingsRes, servicesRes, refsRes, partnersRes, contactsRes] = await Promise.all([
+      // Load public data first
+      const [settingsRes, servicesRes, refsRes, partnersRes] = await Promise.all([
         axios.get(`${API}/settings`),
         axios.get(`${API}/services`),
         axios.get(`${API}/references`),
-        axios.get(`${API}/partners`),
-        axios.get(`${API}/admin/contacts`, headers)
+        axios.get(`${API}/partners`)
       ]);
       setSettings({ ...defaultSettings, ...settingsRes.data });
       setServices(servicesRes.data);
       setReferences(refsRes.data);
       setPartners(partnersRes.data);
-      setContacts(contactsRes.data);
+      
+      // Load protected data separately
+      try {
+        const contactsRes = await axios.get(`${API}/admin/contacts`, headers);
+        setContacts(contactsRes.data);
+      } catch (contactError) {
+        console.error('Failed to load contacts:', contactError);
+        if (contactError.response?.status === 401) {
+          handleLogout();
+          return;
+        }
+        // Don't logout for other errors, just show empty contacts
+        setContacts([]);
+      }
     } catch (e) { 
-      console.error(e);
+      console.error('Failed to load data:', e);
       if (e.response?.status === 401) {
         handleLogout();
       }
