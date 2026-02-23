@@ -4,7 +4,7 @@
 export const servicesSEO = {
   "tasoitustyo": {
     slug: "tasoitustyo",
-    title: "Tasoitustyöt Helsinki | Seinien ja Kattojen Tasoitus",
+    title: "Tasoitustyöt Helsinki - Seinien ja Kattojen Tasoitus - J&B Tasoitus ja Maalaus",
     metaDescription: "Ammattitaitoista seinien tasoitusta Helsingissä. Kokenut tasoittaja takaa tasaisen pinnan ennen maalausta. Pyydä ilmainen arvio tasoitustyölle!",
     keywords: "tasoitus helsinki, seinien tasoitus, seinien tasoitus hinta, tasoittaja helsinki, katon tasoitus, tasoitustyöt uusimaa",
     h1: "Tasoitustyöt Helsingissä ja Uudellamaalla",
