@@ -138,6 +138,45 @@ const lightenColor = (hex, percent) => {
   return `#${(0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1)}`;
 };
 
+// Helper to get subtitle classes from settings
+const getSubtitleClasses = (settings) => {
+  const sizeClass = {
+    'small': 'text-xs',
+    'normal': 'text-sm',
+    'large': 'text-base'
+  }[settings?.subtitle_size || 'normal'] || 'text-sm';
+  
+  const weightClass = {
+    'normal': 'font-normal',
+    'medium': 'font-medium',
+    'bold': 'font-bold'
+  }[settings?.subtitle_weight || 'normal'] || 'font-normal';
+  
+  const spacingClass = {
+    'normal': 'tracking-normal',
+    'wide': 'tracking-wide',
+    'wider': 'tracking-wider',
+    'widest': 'tracking-widest'
+  }[settings?.subtitle_spacing || 'normal'] || 'tracking-normal';
+  
+  return `${sizeClass} ${weightClass} ${spacingClass}`;
+};
+
+// Subtitle component with custom styling
+const Subtitle = ({ children, settings, className = "", white = false }) => {
+  const subtitleClasses = getSubtitleClasses(settings);
+  const fontFamily = settings?.subtitle_font || 'Inter';
+  
+  return (
+    <p 
+      className={`uppercase ${subtitleClasses} ${white ? 'text-white/60' : 'text-primary'} ${className}`}
+      style={{ fontFamily: `"${fontFamily}", sans-serif` }}
+    >
+      {children}
+    </p>
+  );
+};
+
 // Apply theme to document
 const applyTheme = (settings) => {
   const root = document.documentElement;
