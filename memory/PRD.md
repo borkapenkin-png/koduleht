@@ -1,89 +1,107 @@
-# J&B Tasoitus ja Maalaus - Verkkosivusto
+# J&B Tasoitus ja Maalaus - Product Requirements Document
 
-## Alkuperäinen tavoite
-Modernisoida yrityksen verkkosivusto (jbtasoitusmaalaus.fi) helposti hallittavaksi ja päivitettäväksi.
+## Original Problem Statement
+Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
-## Tekniset vaatimukset
-- **Frontend:** React, TailwindCSS, Framer Motion
-- **Backend:** FastAPI, Motor (async MongoDB)
-- **Tietokanta:** MongoDB
-- **Autentikointi:** JWT + bcrypt
+## Latest Update: February 23, 2026
 
-## Turvallisuusominaisuudet (Toteutettu)
-- ✅ JWT-autentikointi - Token-pohjainen kirjautuminen (24h voimassaolo)
-- ✅ Rate limiting - Max 5 kirjautumisyritystä / 5 min per IP
-- ✅ Salasanan hashaus - Bcrypt-salaus tietokannassa
-- ✅ Salasanan vaihto - Admin-paneelissa oma välilehti
+### Completed Features
 
-## Teeman hallinta (Toteutettu 22.2.2025)
-Admin-paneelissa "Teema" -välilehti mahdollistaa:
-- ✅ **Logo** - Lataa oma logo sivustolle
-- ✅ **Favicon** - Vaihda välilehden ikoni
-- ✅ **Värimaailma** - 8 esiasetettu väriä + mukautettu väri
-- ✅ **Fontti** - 8 Google-fonttia valittavissa (Inter, Poppins, Roboto, Open Sans, Montserrat, Lato, Playfair Display, Raleway)
-- ✅ **Tekstin koko** - Pieni/Keskikokoinen/Suuri preset
-- ✅ **Esikatselu** - Reaaliaikainen esikatselu teemamuutoksista
-- ✅ **Layout-suojaus** - Tekstit eivät riko layoutia (line-clamp)
+#### Core Website
+- ✅ Modern responsive design with React + TailwindCSS
+- ✅ Hero section with customizable content
+- ✅ Services section (6 services)
+- ✅ About section with company info
+- ✅ References section (client testimonials)
+- ✅ Quality guarantee section (partner logos)
+- ✅ Contact form with message storage
+- ✅ Footer with company info
 
-## Sivuston osiot
-1. **Hero** - Pääbanneri teksteineen ja kuvineen
-2. **Palvelut** - Dynaaminen palvelulista (admin-hallinta)
-3. **Meistä** - Yritysesittely
-4. **Referenssit** - Asiakasreferenssit (admin-hallinta)
-5. **Laatutakuu** - Kumppanit ja sertifikaatit (admin-hallinta)
-6. **Yhteystiedot** - Lomake + yhteystiedot
+#### Admin Panel (/admin)
+- ✅ JWT-based secure authentication
+- ✅ Password hashing (bcrypt)
+- ✅ Rate limiting on login
+- ✅ Password change functionality
+- ✅ Theme customization (colors, fonts, sizes, logo, favicon)
+- ✅ Content management for all sections
+- ✅ Service management with 30+ icon options
+- ✅ Reference management
+- ✅ Partner/Logo management (simplified)
+- ✅ Contact messages viewer
 
-## Admin-paneeli (/admin)
-- **Kirjautumistiedot:** admin / jbadmin2024 (oletussalasana)
-- **Välilehdet:**
-  - Teema - Logo, favicon, värit, fontit, tekstikoko
-  - Sivusto - Hero, Meistä, Yhteystiedot tekstit/kuvat
-  - Palvelut - CRUD
-  - Referenssit - CRUD
-  - Laatutakuu - CRUD
-  - Viestit - Yhteydenottolomakkeen viestit
-  - Turvallisuus - Salasanan vaihto ja suojaustiedot
+#### SEO Optimization (Latest Session)
+- ✅ Updated meta tags with target keywords:
+  - "tasoitus helsinki"
+  - "maalaustyöt helsinki"
+  - "seinien tasoitus hinta"
+  - "julkisivumaalaus uusimaa"
+- ✅ Schema.org LocalBusiness structured data
+- ✅ Service schema markup
+- ✅ Open Graph tags for social sharing
+- ✅ Twitter card support
+- ✅ Geo tags for local SEO
+- ✅ Updated sitemap.xml with service pages
+- ✅ robots.txt configured
+- ✅ Optimized images with alt texts
+- ✅ Proper H1-H2 structure
 
-## SEO (Toteutettu)
-- Meta-tagit (title, description)
-- robots.txt
-- sitemap.xml
+#### Bug Fixes (Latest Session)
+- ✅ Fixed image URL issues after deployment domain change
+- ✅ Fixed admin logout issue with improved loadData error handling
+- ✅ Improved CRUD error handling with user feedback
 
-## Tietokantamallit
-- `admin_users` - {username, password_hash, created_at, updated_at}
-- `site_settings` - Sivuston tekstit, kuvat JA teema-asetukset (theme_color, theme_font, theme_size, logo_url, favicon_url)
-- `services` - Palvelut
-- `references` - Referenssit
-- `partners` - Kumppanit/laatutakuu
-- `contact_forms` - Yhteydenottolomakkeen viestit
-- `images` - Ladatut kuvat (base64)
+### Tech Stack
+- **Frontend:** React 18, TailwindCSS, Framer Motion
+- **Backend:** FastAPI, Motor (MongoDB async)
+- **Database:** MongoDB
+- **Authentication:** JWT with bcrypt password hashing
+- **Rate Limiting:** slowapi
 
-## API-päätepisteet
-### Julkiset
-- GET /api/settings - Sivuston asetukset (sis. teema)
-- GET /api/services - Palvelut
-- GET /api/references - Referenssit
-- GET /api/partners - Kumppanit
-- POST /api/contact - Yhteydenottolomake
-- GET /api/images/{id} - Kuvat
+### Credentials
+- **Admin URL:** /admin
+- **Username:** admin
+- **Password:** jbadmin2024
 
-### Admin (JWT vaaditaan)
-- POST /api/admin/login - Kirjautuminen (palauttaa JWT-tokenin)
-- GET /api/admin/verify - Tokenin tarkistus
-- POST /api/admin/change-password - Salasanan vaihto
-- PUT /api/admin/settings - Päivitä asetukset (sis. teema)
-- POST/PUT/DELETE /api/admin/services/{id}
-- POST/PUT/DELETE /api/admin/references/{id}
-- POST/PUT/DELETE /api/admin/partners/{id}
-- GET/DELETE /api/admin/contacts/{id}
-- POST /api/admin/upload - Kuvan lataus
+### Files Structure
+```
+/app/
+├── backend/
+│   ├── server.py (main API)
+│   └── requirements.txt
+├── frontend/
+│   ├── public/
+│   │   ├── index.html (SEO meta tags, schema.org)
+│   │   ├── robots.txt
+│   │   └── sitemap.xml
+│   ├── src/
+│   │   ├── App.js (main application)
+│   │   ├── seo/
+│   │   │   ├── SEOHead.js
+│   │   │   └── serviceContent.js (SEO content for service pages)
+│   │   └── pages/
+│   │       └── ServicePage.js (individual service pages)
+│   └── .env
+└── memory/
+    └── PRD.md
+```
 
-## Tulevat tehtävät
-- P1: Käyttäjän oma sisällönlisäys
-- P2: Backend-koodin refaktorointi (router-jako)
-- P2: Google Analytics (käyttäjä lisää itse)
+### Pending/Future Tasks
 
-## Muutoshistoria
-- 22.2.2025: Teeman hallinta (värit, fontit, koko, logo, favicon)
-- 22.2.2025: JWT-autentikointi, rate limiting, salasanan hashaus ja vaihto
-- Aiemmin: Perussivusto, admin-paneeli, SEO
+#### P0 (High Priority)
+- None currently
+
+#### P1 (Medium Priority)
+- Backend refactoring (split server.py into modules)
+- Service detail pages with full SEO content (Helmet issue needs resolution)
+
+#### P2 (Low Priority)
+- Google Analytics integration (user will add on own domain)
+- Additional schema types (FAQ, Review)
+
+### Known Issues
+- react-helmet-async causes title formatting errors - using static index.html SEO instead
+
+### Deployment Notes
+- Ready for deployment
+- Images must be re-uploaded after domain change
+- Use Emergent Deploy feature
