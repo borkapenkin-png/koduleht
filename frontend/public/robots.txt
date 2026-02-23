@@ -1,8 +1,11 @@
-# robots.txt for J&B Tasoitus ja Maalaus Oy
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /api/
 
 # Sitemap
-Sitemap: https://www.jbtasoitusmaalaus.fi/sitemap.xml
+Sitemap: https://jbtasoitusmaalaus.fi/sitemap.xml
+
+# Disallow admin
+Disallow: /admin
+
+# Crawl delay (optional, polite to search engines)
+Crawl-delay: 1
