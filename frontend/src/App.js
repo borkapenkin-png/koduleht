@@ -366,26 +366,19 @@ const ReferencesSection = ({ settings, references }) => (
   </section>
 );
 
-// ========== QUALITY/PARTNERS ==========
+// ========== QUALITY/PARTNERS (LOGOS ONLY) ==========
 const QualitySection = ({ settings, partners }) => (
   <section data-testid="quality-section" className="section-padding bg-primary">
     <div className="container-custom">
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
         <p className="font-slogan text-white/60 text-sm mb-2 md:mb-3">MIKSI VALITA MEIDÄT</p>
         <h2 className="text-2xl md:text-4xl font-bold text-white mb-8 md:mb-12">Laatutakuu</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-          {partners.map((partner, index) => (
-            <motion.div key={partner.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="flex flex-col items-center">
-              {partner.image_url ? (
-                <div className="w-16 h-16 md:w-20 md:h-20 mb-3 md:mb-4 flex items-center justify-center">
-                  <img src={partner.image_url} alt={partner.name} className="max-w-full max-h-full object-contain" />
-                </div>
-              ) : (
-                <div className="w-12 h-12 md:w-16 md:h-16 bg-white/10 flex items-center justify-center mb-3 md:mb-4">
-                  <CheckCircle size={24} className="text-white" />
-                </div>
-              )}
-              <p className="text-white font-medium text-center text-xs md:text-base line-clamp-2">{partner.name}</p>
+        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+          {partners.filter(p => p.image_url).map((partner, index) => (
+            <motion.div key={partner.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="flex items-center justify-center">
+              <div className="w-24 h-16 md:w-32 md:h-20 flex items-center justify-center bg-white/10 rounded-lg p-3">
+                <img src={partner.image_url} alt="Partner logo" className="max-w-full max-h-full object-contain filter brightness-0 invert" />
+              </div>
             </motion.div>
           ))}
         </div>
