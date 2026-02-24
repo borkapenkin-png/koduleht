@@ -340,6 +340,35 @@ async def submit_contact_form(input: ContactFormCreate):
     doc['created_at'] = doc['created_at'].isoformat()
     await db.contact_forms.insert_one(doc)
     logging.info(f"New contact form from {contact_obj.email}")
+    
+    # Send email notification
+    try:
+        html_content = f"""
+        <h2>Uusi tarjouspyyntö</h2>
+        <table style="border-collapse: collapse; width: 100%;">
+            <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Nimi:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">{contact_obj.firstName} {contact_obj.lastName}</td></tr>
+            <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Sähköposti:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">{contact_obj.email}</td></tr>
+            <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Puhelin:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">{contact_obj.phone or '-'}</td></tr>
+            <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Aihe:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">{contact_obj.subject or '-'}</td></tr>
+            <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Viesti:</strong></td><td style="padding: 8px; border: 1px solid #ddd;">{contact_obj.message}</td></tr>
+        </table>
+        <p style="margin-top: 20px; color: #666;">Tämä viesti lähetettiin J&B Tasoitus ja Maalaus verkkosivuilta.</p>
+        """
+        
+        params = {
+            "from": "J&B Tarjouspyynnöt <onboarding@resend.dev>",
+            "to": [NOTIFICATION_EMAIL],
+            "subject": f"Uusi tarjouspyyntö: {contact_obj.subject or 'Ei aihetta'}",
+            "html": html_content,
+            "reply_to": contact_obj.email
+        }
+        
+        await asyncio.to_thread(resend.Emails.send, params)
+        logging.info(f"Email notification sent to {NOTIFICATION_EMAIL}")
+    except Exception as e:
+        logging.error(f"Failed to send email notification: {str(e)}")
+        # Don't fail the request if email fails - form is still saved
+    
     return contact_obj
 
 # Services - Public
