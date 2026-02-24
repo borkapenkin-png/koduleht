@@ -8,6 +8,7 @@ import os
 import logging
 import secrets
 import base64
+import asyncio
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
@@ -17,10 +18,15 @@ import jwt
 import bcrypt
 from collections import defaultdict
 import time
+import resend
 
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
+
+# Resend setup
+resend.api_key = os.environ.get('RESEND_API_KEY')
+NOTIFICATION_EMAIL = os.environ.get('NOTIFICATION_EMAIL', 'info@jbtasoitusmaalaus.fi')
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
