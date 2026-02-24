@@ -460,12 +460,10 @@ const QualitySection = ({ settings, partners }) => (
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
         <Subtitle settings={settings} white className="mb-2 md:mb-3">MIKSI VALITA MEIDÄT</Subtitle>
         <h2 className="text-2xl md:text-4xl font-bold text-white mb-8 md:mb-12">Laatutakuu</h2>
-        <div className="flex flex-wrap justify-center gap-6 md:gap-8">
+        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
           {partners.filter(p => p.image_url).map((partner, index) => (
             <motion.div key={partner.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
-              <div className="bg-white rounded-xl p-6 shadow-xl">
-                <img src={partner.image_url} alt={partner.name || "Partner logo"} className="h-16 md:h-20 w-auto min-w-[120px] max-w-[220px] md:max-w-[280px] object-contain" />
-              </div>
+              <img src={partner.image_url} alt={partner.name || "Partner logo"} className="h-12 md:h-16 w-auto max-w-[180px] md:max-w-[220px] object-contain" />
             </motion.div>
           ))}
         </div>
