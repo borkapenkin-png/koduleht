@@ -460,9 +460,9 @@ const QualitySection = ({ settings, partners }) => (
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
         <Subtitle settings={settings} white className="mb-2 md:mb-3">MIKSI VALITA MEIDÄT</Subtitle>
         <h2 className="text-2xl md:text-4xl font-bold text-white mb-8 md:mb-12">Laatutakuu</h2>
-        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+        <div className="flex overflow-x-auto gap-6 md:gap-8 pb-4 justify-start md:justify-center scrollbar-hide">
           {partners.filter(p => p.image_url).map((partner, index) => (
-            <motion.div key={partner.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="flex items-center justify-center">
+            <motion.div key={partner.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="flex-shrink-0">
               <div className="bg-white rounded-lg p-5 shadow-lg">
                 <img src={partner.image_url} alt={partner.name || "Partner logo"} className="h-16 md:h-20 w-auto max-w-[200px] md:max-w-[260px] object-contain" />
               </div>
