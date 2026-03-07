@@ -461,7 +461,7 @@ const LocationSection = ({ settings }) => (
           className="rounded-xl overflow-hidden shadow-2xl mb-8"
         >
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1978.8!2d25.0!3d60.24!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x469208e7b5b4e8d7%3A0x0!2sSienitie%2052%2C%2000760%20Helsinki!5e0!3m2!1sfi!2sfi!4v1709910000000!5m2!1sfi!2sfi"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1984.5!2d25.08!3d60.24!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x469208e7b5b4e8d7%3A0x0!2sSienitie%2025%2C%2000760%20Helsinki!5e0!3m2!1sfi!2sfi!4v1709910000000!5m2!1sfi!2sfi"
             width="100%"
             height="380"
             style={{ border: 0 }}
