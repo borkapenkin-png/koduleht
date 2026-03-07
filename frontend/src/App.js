@@ -352,13 +352,10 @@ const ServicesSection = ({ services_data, settings }) => (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
         {services_data.map((service, index) => {
           const Icon = iconMap[service.icon] || Building2;
-          const serviceSlug = serviceSlugMap[service.title];
-          const ServiceWrapper = serviceSlug ? Link : 'div';
-          const wrapperProps = serviceSlug ? { to: `/palvelut/${serviceSlug}` } : {};
           
           return (
-            <motion.div key={service.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
-              <ServiceWrapper {...wrapperProps} className="service-card group overflow-hidden block hover:shadow-xl transition-shadow cursor-pointer">
+            <motion.div key={service.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="h-full">
+              <div className="service-card group overflow-hidden h-full flex flex-col">
                 {service.image_url && (
                   <div className="aspect-[16/10] overflow-hidden -mx-6 md:-mx-8 -mt-6 md:-mt-8 mb-4 md:mb-6">
                     <img 
@@ -374,13 +371,8 @@ const ServicesSection = ({ services_data, settings }) => (
                   <div className="icon-box"><Icon size={18} className="text-primary" /></div>
                   <h3 className="card-title line-clamp-2">{service.title}</h3>
                 </div>
-                <p className="card-text line-clamp-4">{service.description}</p>
-                {serviceSlug && (
-                  <span className="mt-4 inline-flex items-center text-primary text-sm font-medium group-hover:underline">
-                    Lue lisää <ArrowRight size={14} className="ml-1" />
-                  </span>
-                )}
-              </ServiceWrapper>
+                <p className="card-text flex-grow">{service.description}</p>
+              </div>
             </motion.div>
           );
         })}
