@@ -5,6 +5,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#0056D2" />
         
+        <!-- Hide Emergent Badge -->
+        <style>
+            #emergent-badge,
+            [class*="emergent"],
+            [id*="emergent"],
+            div[style*="Made with Emergent"] {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+            }
+        </style>
+        
         <!-- SEO Meta Tags -->
         <title>Tasoitus Helsinki | Maalaustyöt Helsinki | J&B Tasoitus ja Maalaus Oy</title>
         <meta name="description" content="Ammattitaitoista tasoitusta ja maalaustyötä Helsingissä ja Uudellamaalla vuodesta 2018. Seinien tasoitus, julkisivumaalaus, sisämaalaukset. Kotitalousvähennys. Pyydä ilmainen arvio!" />
@@ -253,6 +265,30 @@
                     capturePerformance: false,
                 },
             });
+        </script>
+        
+        <!-- Remove Emergent Badge from DOM -->
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const badge = document.getElementById("emergent-badge");
+                if (badge) badge.remove();
+            });
+            
+            // Also remove via MutationObserver for dynamically added badges
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === 1) {
+                            if (node.id === 'emergent-badge' || 
+                                node.textContent?.includes('Made with Emergent') ||
+                                node.innerHTML?.includes('Made with Emergent')) {
+                                node.remove();
+                            }
+                        }
+                    });
+                });
+            });
+            observer.observe(document.body || document.documentElement, { childList: true, subtree: true });
         </script>
     </body>
 </html>
