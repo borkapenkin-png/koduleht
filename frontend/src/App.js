@@ -445,20 +445,44 @@ const ReferencesSection = ({ settings, references }) => (
   </section>
 );
 
-// ========== QUALITY/PARTNERS (LOGOS ONLY) ==========
-const QualitySection = ({ settings, partners }) => (
-  <section data-testid="quality-section" className="section-padding bg-primary">
+// ========== LOCATION (GOOGLE MAPS) ==========
+const LocationSection = ({ settings }) => (
+  <section data-testid="location-section" className="section-padding bg-primary">
     <div className="container-custom">
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
-        <Subtitle settings={settings} white className="mb-2 md:mb-3">MIKSI VALITA MEIDÄT</Subtitle>
-        <h2 className="text-2xl md:text-4xl font-bold text-white mb-8 md:mb-12">Laatutakuu</h2>
-        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-          {partners.filter(p => p.image_url).map((partner, index) => (
-            <motion.div key={partner.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
-              <img src={partner.image_url} alt={partner.name || "Partner logo"} className="h-[68px] md:h-[90px] w-auto max-w-[250px] md:max-w-[320px] object-contain" />
-            </motion.div>
-          ))}
-        </div>
+        <Subtitle settings={settings} white className="mb-2 md:mb-3">SIJAINTI</Subtitle>
+        <h2 className="text-2xl md:text-4xl font-bold text-white mb-8 md:mb-12">Löydät meidät</h2>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true }} 
+          transition={{ delay: 0.1 }}
+          className="rounded-xl overflow-hidden shadow-2xl mb-8"
+        >
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1978.8!2d25.0!3d60.24!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x469208e7b5b4e8d7%3A0x0!2sSienitie%2052%2C%2000760%20Helsinki!5e0!3m2!1sfi!2sfi!4v1709910000000!5m2!1sfi!2sfi"
+            width="100%"
+            height="380"
+            style={{ border: 0 }}
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="J&B Tasoitus ja Maalaus sijainti"
+            className="w-full"
+          />
+        </motion.div>
+        
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true }} 
+          transition={{ delay: 0.2 }}
+          className="text-white/90 text-base md:text-lg max-w-3xl mx-auto leading-relaxed"
+        >
+          J&B Tasoitus ja Maalaus Oy palvelee asiakkaita Helsingissä sekä koko Uudenmaan alueella. 
+          Toteutamme tasoitus-, maalaus- ja rappaustyöt luotettavasti rakennusliikkeille, taloyhtiöille ja yrityksille.
+        </motion.p>
       </motion.div>
     </div>
   </section>
@@ -1456,7 +1480,7 @@ const HomePage = () => {
         <ServicesSection settings={settings} services_data={services} />
         <AboutSection settings={settings} />
         <ReferencesSection settings={settings} references={references} />
-        <QualitySection settings={settings} partners={partners} />
+        <LocationSection settings={settings} />
         <ContactSection settings={settings} />
       </main>
       <Footer logoUrl={settings.logo_url} />
