@@ -7,13 +7,16 @@
         
         <!-- Hide Emergent Badge -->
         <style>
-            #emergent-badge,
-            [class*="emergent"],
-            [id*="emergent"],
-            div[style*="Made with Emergent"] {
+            #emergent-badge {
                 display: none !important;
                 visibility: hidden !important;
                 opacity: 0 !important;
+                pointer-events: none !important;
+                width: 0 !important;
+                height: 0 !important;
+                overflow: hidden !important;
+                position: absolute !important;
+                left: -9999px !important;
             }
         </style>
         

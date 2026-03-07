@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide Emergent Badge */
+#emergent-badge {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+
 /* Hide scrollbar for horizontal scroll */
 .scrollbar-hide {
   -ms-overflow-style: none;
