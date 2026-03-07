@@ -314,7 +314,7 @@ const HeroSection = ({ settings }) => {
   return (
     <section data-testid="hero-section" className="relative min-h-[90vh] md:min-h-screen flex items-center pt-16">
       <div className="absolute inset-0">
-        <img src={heroImage} alt="Tausta" className="w-full h-full object-cover" />
+        <img src={heroImage} alt="Tausta" className="w-full h-full object-cover" loading="eager" fetchpriority="high" />
         <div className="hero-overlay absolute inset-0"></div>
       </div>
       <div className="container-custom relative z-10 py-12 md:py-20">
