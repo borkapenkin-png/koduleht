@@ -22,26 +22,6 @@ import { getServiceSEO } from '../seo/serviceContent';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
-// Hero images for each service
-const serviceHeroImages = {
-  tasoitustyo: 'https://images.unsplash.com/photo-1761986757577-140af8859587?auto=format&fit=crop&w=1920&q=80',
-  maalaustyot: 'https://images.unsplash.com/photo-1693985120993-e9b203ce7631?auto=format&fit=crop&w=1920&q=80',
-  mikrosementti: 'https://images.unsplash.com/photo-1766961980272-921bba4240bc?auto=format&fit=crop&w=1920&q=80',
-  julkisivurappaus: 'https://images.unsplash.com/photo-1766961980272-921bba4240bc?auto=format&fit=crop&w=1920&q=80',
-  kattomaalaus: 'https://images.unsplash.com/photo-1726589004565-bedfba94d3a2?auto=format&fit=crop&w=1920&q=80',
-  julkisivumaalaus: 'https://images.unsplash.com/photo-1722876720000-f39b65b7d4a1?auto=format&fit=crop&w=1920&q=80'
-};
-
-// Service-specific work images
-const serviceWorkImages = {
-  tasoitustyo: 'https://images.unsplash.com/photo-1761986757577-140af8859587?auto=format&fit=crop&w=800&q=80',
-  maalaustyot: 'https://images.unsplash.com/photo-1693985120993-e9b203ce7631?auto=format&fit=crop&w=800&q=80',
-  mikrosementti: 'https://images.pexels.com/photos/6474471/pexels-photo-6474471.jpeg?auto=compress&cs=tinysrgb&w=800',
-  julkisivurappaus: 'https://images.unsplash.com/photo-1766961980272-921bba4240bc?auto=format&fit=crop&w=800&q=80',
-  kattomaalaus: 'https://images.unsplash.com/photo-1726589004565-bedfba94d3a2?auto=format&fit=crop&w=800&q=80',
-  julkisivumaalaus: 'https://images.unsplash.com/photo-1722876720000-f39b65b7d4a1?auto=format&fit=crop&w=800&q=80'
-};
-
 // Trust badges
 const trustBadges = [
   { icon: Clock, text: 'Vuodesta 2018', subtext: 'Luotettava kokemus' },
@@ -180,19 +160,42 @@ const QuickContactForm = ({ serviceName }) => {
 const ServicePage = () => {
   const { slug } = useParams();
   const [settings, setSettings] = useState({});
+  const [services, setServices] = useState([]);
+  const [serviceImage, setServiceImage] = useState(null);
   const seoContent = getServiceSEO(slug);
 
   useEffect(() => {
-    const fetchSettings = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/settings`);
-        const data = await res.json();
-        setSettings(data);
+        // Fetch settings
+        const settingsRes = await fetch(`${API_URL}/api/settings`);
+        const settingsData = await settingsRes.json();
+        setSettings(settingsData);
+        
+        // Fetch services to get the image
+        const servicesRes = await fetch(`${API_URL}/api/services`);
+        const servicesData = await servicesRes.json();
+        setServices(servicesData);
+        
+        // Find matching service by slug
+        const slugToTitle = {
+          'tasoitustyo': 'Tasoitustyöt',
+          'maalaustyot': 'Maalaustyöt',
+          'mikrosementti': 'Mikrosementti',
+          'julkisivurappaus': 'Julkisivurappaus',
+          'kattomaalaus': 'Kattojen maalaukset',
+          'julkisivumaalaus': 'Julkisivujen maalaukset'
+        };
+        
+        const matchingService = servicesData.find(s => s.title === slugToTitle[slug]);
+        if (matchingService && matchingService.image_url) {
+          setServiceImage(matchingService.image_url);
+        }
       } catch (err) {
-        console.error('Failed to fetch settings');
+        console.error('Failed to fetch data');
       }
     };
-    fetchSettings();
+    fetchData();
     window.scrollTo(0, 0);
   }, [slug]);
 
@@ -207,8 +210,10 @@ const ServicePage = () => {
     );
   }
 
-  const heroImage = serviceHeroImages[slug] || serviceHeroImages.maalaustyot;
-  const workImage = serviceWorkImages[slug] || serviceWorkImages.maalaustyot;
+  // Use service image from database, fallback to default
+  const defaultImage = 'https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&w=1920';
+  const heroImage = serviceImage || defaultImage;
+  const workImage = serviceImage || defaultImage;
   const features = serviceFeatures[slug] || serviceFeatures.maalaustyot;
 
   const breadcrumbs = [
