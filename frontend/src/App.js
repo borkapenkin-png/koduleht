@@ -314,7 +314,13 @@ const HeroSection = ({ settings }) => {
   return (
     <section data-testid="hero-section" className="relative min-h-[90vh] md:min-h-screen flex items-center pt-16">
       <div className="absolute inset-0">
-        <img src={heroImage} alt="Tausta" className="w-full h-full object-cover" />
+        <img 
+          src={heroImage} 
+          alt="Maalaustyöt ja tasoitustyöt Helsinki - J&B Tasoitus ja Maalaus Oy" 
+          className="w-full h-full object-cover"
+          loading="eager"
+          fetchpriority="high"
+        />
         <div className="hero-overlay absolute inset-0"></div>
       </div>
       <div className="container-custom relative z-10 py-12 md:py-20">
@@ -342,12 +348,25 @@ const HeroSection = ({ settings }) => {
 };
 
 // ========== SERVICES ==========
+// SEO-friendly alt text generator
+const getServiceAltText = (title) => {
+  const altMap = {
+    'Tasoitustyöt': 'Tasoitustyöt Helsinki - ammattitaitoinen seinien tasoitus',
+    'Maalaustyöt': 'Maalaustyöt Helsinki - sisä- ja ulkomaalaukset',
+    'Mikrosementti': 'Mikrosementti pinnoitus Helsinki - moderni sisustus',
+    'Julkisivurappaus': 'Julkisivurappaus Helsinki - julkisivujen kunnostus',
+    'Julkisivujen pesut ja maalaukset': 'Julkisivumaalaus Helsinki - ulkomaalaustyöt',
+    'Kattojen pesut ja maalaukset': 'Kattomaalaus Helsinki - kattojen kunnostus'
+  };
+  return altMap[title] || `${title} Helsinki - J&B Tasoitus ja Maalaus`;
+};
+
 const ServicesSection = ({ services_data, settings }) => (
-  <section id="palvelut" data-testid="services-section" className="section-padding section-bg-alt">
+  <section id="palvelut" data-testid="services-section" className="section-padding section-bg-alt" aria-labelledby="services-heading">
     <div className="container-custom">
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10 md:mb-16">
         <Subtitle settings={settings} className="mb-2 md:mb-3">MITÄ TEEMME</Subtitle>
-        <h2 className="section-title">Palvelumme</h2>
+        <h2 id="services-heading" className="section-title">Palvelumme</h2>
       </motion.div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
         {services_data.map((service, index) => {
@@ -355,24 +374,25 @@ const ServicesSection = ({ services_data, settings }) => (
           
           return (
             <motion.div key={service.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="h-full">
-              <div className="service-card group overflow-hidden h-full flex flex-col">
+              <article className="service-card group overflow-hidden h-full flex flex-col">
                 {service.image_url && (
                   <div className="aspect-[16/10] overflow-hidden -mx-6 md:-mx-8 -mt-6 md:-mt-8 mb-4 md:mb-6">
                     <img 
                       src={service.image_url} 
-                      alt={`${service.title} - Ammattitaitoista ${service.title.toLowerCase()}a Helsingissä ja Uudellamaalla`}
-                      title={service.title}
+                      alt={getServiceAltText(service.title)}
+                      title={`${service.title} - J&B Tasoitus ja Maalaus Oy`}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                       loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 )}
                 <div className="flex items-center gap-3 mb-3 md:mb-4">
-                  <div className="icon-box"><Icon size={18} className="text-primary" /></div>
+                  <div className="icon-box"><Icon size={18} className="text-primary" aria-hidden="true" /></div>
                   <h3 className="card-title line-clamp-2">{service.title}</h3>
                 </div>
                 <p className="card-text flex-grow">{service.description}</p>
-              </div>
+              </article>
             </motion.div>
           );
         })}
@@ -386,11 +406,17 @@ const AboutSection = ({ settings }) => {
   const s = { ...defaultSettings, ...settings };
   const aboutImage = s.about_image_url || defaultSettings.about_image_url;
   return (
-    <section id="meista" data-testid="about-section" className="section-padding">
+    <section id="meista" data-testid="about-section" className="section-padding" aria-labelledby="about-heading">
       <div className="container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="relative order-2 lg:order-1">
-            <img src={aboutImage} alt="Työ" className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover" />
+            <img 
+              src={aboutImage} 
+              alt="Maalaustyöt Helsinki - J&B Tasoitus ja Maalaus Oy ammattilaiset työssä" 
+              className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover"
+              loading="lazy"
+              decoding="async"
+            />
             <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-primary text-white p-4 md:p-6 hidden sm:block">
               <p className="font-bold text-2xl md:text-3xl">{s.about_year}</p>
               <p className="text-xs md:text-sm opacity-80">vuodesta alkaen</p>
@@ -398,7 +424,7 @@ const AboutSection = ({ settings }) => {
           </motion.div>
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="order-1 lg:order-2">
             <Subtitle settings={s} className="mb-2 md:mb-3">{s.about_subtitle}</Subtitle>
-            <h2 className="section-title mb-4 md:mb-6">{s.about_title}</h2>
+            <h2 id="about-heading" className="section-title mb-4 md:mb-6">{s.about_title}</h2>
             <div className="space-y-3 md:space-y-4 text-sm md:text-base text-[#64748B] leading-relaxed">
               <p>{s.about_text_1}</p>
               <p>{s.about_text_2}</p>
@@ -407,7 +433,7 @@ const AboutSection = ({ settings }) => {
             <div className="mt-6 md:mt-8 p-4 md:p-6 bg-primary-light border-l-4 border-primary">
               <p className="font-medium text-[#0F172A] mb-2 text-sm md:text-base">{s.about_info_title}</p>
               <p className="text-xs md:text-sm text-[#64748B]">{s.about_info_text}</p>
-              <a href="https://www.vero.fi/henkiloasiakkaat/verokortti-ja-veroilmoitus/tulot-ja-vahennykset/kotitalousvahennys/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-primary text-xs md:text-sm font-medium mt-2 hover:underline">Lue lisää<ArrowRight size={12} /></a>
+              <a href="https://www.vero.fi/henkiloasiakkaat/verokortti-ja-veroilmoitus/tulot-ja-vahennykset/kotitalousvahennys/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-primary text-xs md:text-sm font-medium mt-2 hover:underline">Lue lisää<ArrowRight size={12} aria-hidden="true" /></a>
             </div>
           </motion.div>
         </div>
@@ -418,11 +444,11 @@ const AboutSection = ({ settings }) => {
 
 // ========== REFERENCES ==========
 const ReferencesSection = ({ settings, references }) => (
-  <section id="referenssit" data-testid="references-section" className="section-padding bg-white">
+  <section id="referenssit" data-testid="references-section" className="section-padding bg-white" aria-labelledby="references-heading">
     <div className="container-custom">
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10 md:mb-16">
         <Subtitle settings={settings} className="mb-2 md:mb-3">TYÖNÄYTTEITÄ</Subtitle>
-        <h2 className="section-title">Referenssit</h2>
+        <h2 id="references-heading" className="section-title">Referenssit</h2>
         <p className="text-sm md:text-base text-[#64748B] mt-3 md:mt-4 max-w-2xl mx-auto">Olemme toteuttaneet lukuisia projekteja yrityksille, taloyhtiöille ja yksityisille asiakkaille.</p>
       </motion.div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -447,11 +473,11 @@ const ReferencesSection = ({ settings, references }) => (
 
 // ========== LOCATION (GOOGLE MAPS) ==========
 const LocationSection = ({ settings }) => (
-  <section data-testid="location-section" className="section-padding bg-primary">
+  <section data-testid="location-section" className="section-padding bg-primary" aria-labelledby="location-heading">
     <div className="container-custom">
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
         <Subtitle settings={settings} white className="mb-2 md:mb-3">SIJAINTI</Subtitle>
-        <h2 className="text-2xl md:text-4xl font-bold text-white mb-8 md:mb-12">Löydät meidät</h2>
+        <h2 id="location-heading" className="text-2xl md:text-4xl font-bold text-white mb-8 md:mb-12">Löydät meidät</h2>
         
         <motion.div 
           initial={{ opacity: 0, y: 20 }} 
@@ -468,7 +494,7 @@ const LocationSection = ({ settings }) => (
             allowFullScreen=""
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            title="J&B Tasoitus ja Maalaus sijainti"
+            title="J&B Tasoitus ja Maalaus Oy sijainti - Sienitie 25, Helsinki"
             className="w-full"
           />
         </motion.div>
@@ -508,24 +534,24 @@ const ContactSection = ({ settings }) => {
   };
 
   return (
-    <section id="yhteystiedot" data-testid="contact-section" className="section-padding">
+    <section id="yhteystiedot" data-testid="contact-section" className="section-padding" aria-labelledby="contact-heading">
       <div className="container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
             <Subtitle settings={s} className="mb-2 md:mb-3">{s.contact_subtitle}</Subtitle>
-            <h2 className="section-title mb-4 md:mb-6">{s.contact_title}</h2>
+            <h2 id="contact-heading" className="section-title mb-4 md:mb-6">{s.contact_title}</h2>
             <p className="text-sm md:text-base text-[#64748B] mb-6 md:mb-8">{s.contact_description}</p>
-            <div className="space-y-4 md:space-y-6">
+            <address className="space-y-4 md:space-y-6 not-italic">
               <div className="flex items-start gap-3 md:gap-4">
-                <div className="icon-box flex-shrink-0"><MapPin size={18} className="text-primary" /></div>
+                <div className="icon-box flex-shrink-0"><MapPin size={18} className="text-primary" aria-hidden="true" /></div>
                 <div><p className="font-medium text-[#0F172A] text-sm md:text-base">Päätoimisto</p><p className="text-[#64748B] text-sm">{s.contact_address}</p></div>
               </div>
               <div className="flex items-start gap-3 md:gap-4">
-                <div className="icon-box flex-shrink-0"><Mail size={18} className="text-primary" /></div>
+                <div className="icon-box flex-shrink-0"><Mail size={18} className="text-primary" aria-hidden="true" /></div>
                 <div><p className="font-medium text-[#0F172A] text-sm md:text-base">Sähköposti</p><a href={`mailto:${s.contact_email}`} className="text-primary hover:underline text-sm">{s.contact_email}</a></div>
               </div>
               <div className="flex items-start gap-3 md:gap-4">
-                <div className="icon-box flex-shrink-0"><Phone size={18} className="text-primary" /></div>
+                <div className="icon-box flex-shrink-0"><Phone size={18} className="text-primary" aria-hidden="true" /></div>
                 <div>
                   <p className="font-medium text-[#0F172A] text-sm md:text-base">Puhelin</p>
                   <div className="text-[#64748B] space-y-1 text-sm">
@@ -534,7 +560,7 @@ const ContactSection = ({ settings }) => {
                   </div>
                 </div>
               </div>
-            </div>
+            </address>
             <div className="mt-6 md:mt-10 p-4 md:p-6 bg-[#FAFAFA] border border-[#E2E8F0]">
               <p className="font-medium text-[#0F172A] mb-2 text-sm md:text-base">{s.contact_jobs_title}</p>
               <p className="text-xs md:text-sm text-[#64748B]">{s.contact_jobs_text}</p>
