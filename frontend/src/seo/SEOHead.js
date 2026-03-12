@@ -1,10 +1,10 @@
-import { Helmet } from 'react-helmet-async';
+import { useEffect } from 'react';
 
 // Company info for schema
 const COMPANY = {
   name: "J&B Tasoitus ja Maalaus Oy",
-  url: "https://jbtasoitusmaalaus.fi",
-  logo: "https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png",
+  url: "https://www.jbtasoitusmaalaus.fi",
+  logo: "https://www.jbtasoitusmaalaus.fi/logo.png",
   phone: "+358 40 054 7270",
   email: "info@jbtasoitusmaalaus.fi",
   address: {
@@ -25,7 +25,7 @@ const COMPANY = {
 // LocalBusiness Schema
 const getLocalBusinessSchema = () => ({
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
+  "@type": ["LocalBusiness", "PaintingContractor"],
   "@id": COMPANY.url,
   "name": COMPANY.name,
   "image": COMPANY.logo,
@@ -55,8 +55,7 @@ const getLocalBusinessSchema = () => ({
     "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
     "opens": "07:00",
     "closes": "17:00"
-  },
-  "sameAs": []
+  }
 });
 
 // Service Schema
@@ -97,38 +96,65 @@ export const SEOHead = ({
   breadcrumbs
 }) => {
   const pageTitle = title || "J&B Tasoitus ja Maalaus - Ammattitaitoista maalausta ja tasoitusta Helsinki";
-  const pageDescription = description || "Ammattitaitoista tasoitus- ja maalaustyötä Helsingissä ja Uudellamaalla vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset, tasoitustyöt. Pyydä ilmainen arvio!";
+  const pageDescription = description || "Ammattitaitoista tasoitus- ja maalaustyötä Helsingissä ja Uudellamaalla.";
   const pageCanonical = canonical || COMPANY.url;
 
-  const localBusinessSchema = JSON.stringify(getLocalBusinessSchema());
-  const serviceSchema = service ? JSON.stringify(getServiceSchema(service)) : null;
-  const breadcrumbSchema = breadcrumbs ? JSON.stringify(getBreadcrumbSchema(breadcrumbs)) : null;
+  useEffect(() => {
+    // Set document title
+    document.title = pageTitle;
+    
+    // Update meta tags
+    const updateMeta = (name, content, isProperty = false) => {
+      const attr = isProperty ? 'property' : 'name';
+      let meta = document.querySelector(`meta[${attr}="${name}"]`);
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute(attr, name);
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', content);
+    };
+    
+    updateMeta('description', pageDescription);
+    if (keywords) updateMeta('keywords', keywords);
+    updateMeta('og:title', pageTitle, true);
+    updateMeta('og:description', pageDescription, true);
+    updateMeta('og:url', pageCanonical, true);
+    updateMeta('twitter:title', pageTitle);
+    updateMeta('twitter:description', pageDescription);
+    
+    // Update canonical
+    let link = document.querySelector('link[rel="canonical"]');
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
+    }
+    link.setAttribute('href', pageCanonical);
+    
+    // Add schemas
+    const addSchema = (id, schema) => {
+      let script = document.getElementById(id);
+      if (!script) {
+        script = document.createElement('script');
+        script.id = id;
+        script.type = 'application/ld+json';
+        document.head.appendChild(script);
+      }
+      script.textContent = JSON.stringify(schema);
+    };
+    
+    addSchema('schema-localbusiness', getLocalBusinessSchema());
+    if (service) {
+      addSchema('schema-service', getServiceSchema(service));
+    }
+    if (breadcrumbs) {
+      addSchema('schema-breadcrumb', getBreadcrumbSchema(breadcrumbs));
+    }
+    
+  }, [pageTitle, pageDescription, pageCanonical, keywords, service, breadcrumbs]);
 
-  return (
-    <Helmet>
-      <title>{pageTitle}</title>
-      <meta name="description" content={pageDescription} />
-      {keywords && <meta name="keywords" content={keywords} />}
-      <link rel="canonical" href={pageCanonical} />
-      <meta name="language" content="Finnish" />
-      <meta name="geo.region" content="FI-18" />
-      <meta name="geo.placename" content="Helsinki" />
-      <meta property="og:title" content={pageTitle} />
-      <meta property="og:description" content={pageDescription} />
-      <meta property="og:type" content="website" />
-      <meta property="og:url" content={pageCanonical} />
-      <meta property="og:image" content={COMPANY.logo} />
-      <meta property="og:site_name" content="J&B Tasoitus ja Maalaus" />
-      <meta property="og:locale" content="fi_FI" />
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={pageTitle} />
-      <meta name="twitter:description" content={pageDescription} />
-      <meta name="twitter:image" content={COMPANY.logo} />
-      <script type="application/ld+json">{localBusinessSchema}</script>
-      {serviceSchema && <script type="application/ld+json">{serviceSchema}</script>}
-      {breadcrumbSchema && <script type="application/ld+json">{breadcrumbSchema}</script>}
-    </Helmet>
-  );
+  return null; // No JSX, just side effects
 };
 
 export { COMPANY };

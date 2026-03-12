@@ -74,7 +74,6 @@ const ServicePage = () => {
         description={seoContent.metaDescription}
         keywords={seoContent.keywords}
         canonical={`${COMPANY.url}/palvelut/${slug}`}
-        type="article"
         service={{ name: seoContent.h1, description: seoContent.metaDescription, slug }}
         breadcrumbs={breadcrumbs}
       />
