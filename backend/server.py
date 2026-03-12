@@ -356,7 +356,7 @@ async def submit_contact_form(input: ContactFormCreate):
         """
         
         params = {
-            "from": "J&B Tarjouspyynnöt <onboarding@resend.dev>",
+            "from": "J&B Tarjouspyynnöt <noreply@jbtasoitusmaalaus.fi>",
             "to": [NOTIFICATION_EMAIL],
             "subject": f"Uusi tarjouspyyntö: {contact_obj.subject or 'Ei aihetta'}",
             "html": html_content,
