@@ -3,7 +3,7 @@
 ## Original Problem Statement
 Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
-## Latest Update: February 23, 2026
+## Latest Update: March 12, 2026
 
 ### Completed Features
 
@@ -29,6 +29,20 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 - ✅ Reference management
 - ✅ Partner/Logo management (simplified)
 - ✅ Contact messages viewer
+
+#### SEO-Optimized Service Pages (March 12, 2026)
+- ✅ All 6 services have "Lue lisää" links to dedicated pages
+- ✅ Service pages at /palvelut/{slug}:
+  - /palvelut/tasoitustyo
+  - /palvelut/maalaustyot
+  - /palvelut/mikrosementti
+  - /palvelut/julkisivurappaus
+  - /palvelut/kattomaalaus
+  - /palvelut/julkisivumaalaus
+- ✅ Professional service page layout with hero, trust badges, process timeline, contact form
+- ✅ serviceSlugMap supports both old and new service naming conventions from database
+- ✅ Resend email integration for contact form notifications
+- ✅ Location section with Google Maps ("Löydät meidät")
 
 #### SEO Optimization (Latest Session)
 - ✅ Updated meta tags with target keywords:
@@ -89,19 +103,21 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 ### Pending/Future Tasks
 
 #### P0 (High Priority)
-- **Dynamic Per-Page SEO** - Create separate URLs for each service with unique meta tags (deferred until final domain deployment)
+- **Google Analytics** - Blocked: waiting for user's Measurement ID (G-XXXXXXXXXX)
 
 #### P1 (Medium Priority)
+- **Dynamic meta descriptions per service page** - Currently using document.title only, should implement full react-helmet-async
 - Backend refactoring (split server.py into modules)
-- Refactor image URL storage to use relative paths
+- Refactor image URL storage to use relative paths (prevents "data loss" on domain changes)
+- Move service page content from serviceContent.js to database for CMS editing
 
 #### P2 (Low Priority)
 - Google Analytics integration (user will add on own domain)
 - Additional schema types (FAQ, Review)
 
 ### Known Issues
-- react-helmet-async implementation deferred - using static index.html SEO instead
-- Image URLs stored as absolute paths - need to re-upload after domain change
+- Image URLs stored as absolute paths - causes apparent "data loss" when preview URL changes
+- react-helmet-async for dynamic per-page meta descriptions not fully implemented
 
 ### Deployment Notes
 - Ready for deployment
