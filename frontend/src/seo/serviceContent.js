@@ -260,14 +260,17 @@ export const servicesSEO = {
   }
 };
 
-// Service slugs mapped to database titles
+// Service slugs mapped to database titles (supports both old and new naming)
 export const serviceSlugMap = {
   "Tasoitustyöt": "tasoitustyo",
   "Maalaustyöt": "maalaustyot",
   "Mikrosementti": "mikrosementti",
   "Julkisivurappaus": "julkisivurappaus",
+  // Support both naming conventions
   "Kattojen maalaukset": "kattomaalaus",
-  "Julkisivujen maalaukset": "julkisivumaalaus"
+  "Kattojen pesut ja maalaukset": "kattomaalaus",
+  "Julkisivujen maalaukset": "julkisivumaalaus",
+  "Julkisivujen pesut ja maalaukset": "julkisivumaalaus"
 };
 
 export const getServiceSEO = (slug) => servicesSEO[slug] || null;
