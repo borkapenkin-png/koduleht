@@ -178,60 +178,58 @@ export const servicesSEO = {
   
   "kattomaalaus": {
     slug: "kattomaalaus",
-    title: "Kattojen Pesut ja Maalaukset Helsinki - Kattomaalaus Uusimaa",
-    metaDescription: "Kattojen pesu ja maalaus Helsingissä. Ammattitaitoista kattojenmaalauspalvelua taloyhtiöille ja omakotitaloille. Pyydä ilmainen arvio!",
-    keywords: "kattomaalaus helsinki, katon maalaus, katon pesu helsinki, katon huoltomaalaus, peltikaton maalaus",
-    h1: "Kattojen Pesut ja Maalaukset Helsingissä",
+    title: "Kattojen Maalaukset Helsinki | Kattomaalaus | J&B Tasoitus ja Maalaus Oy",
+    metaDescription: "Kattojen maalaus Helsingissä ja Uudellamaalla. Ammattitaitoista kattomaalauspalvelua - peltikaton maalaus, huoltomaalaus. Pyydä ilmainen arvio!",
+    keywords: "kattomaalaus helsinki, katon maalaus, katon huoltomaalaus, peltikaton maalaus, kattomaalaus uusimaa",
+    h1: "Kattojen Maalaukset Helsingissä",
     content: `
       <section>
-        <h2>Ammattitaitoista Katon Huoltoa</h2>
-        <p>J&B Tasoitus ja Maalaus Oy tarjoaa kattavat kattojen pesu- ja maalauspalvelut Helsingissä ja Uudellamaalla. Katon säännöllinen huoltomaalaus pidentää katon käyttöikää merkittävästi ja pitää rakennuksen ulkonäön siistinä.</p>
+        <h2>Ammattitaitoista Kattomaalauspalvelua</h2>
+        <p>J&B Tasoitus ja Maalaus Oy tarjoaa kattavat kattojen maalauspalvelut Helsingissä ja Uudellamaalla. Katon säännöllinen huoltomaalaus ehkäisee ruostumista, sammaloitumista ja ennenaikaista kulumista. Pesemme katon ammattikalustolla turvallisesti ja tehokkaasti, minkä jälkeen suoritamme tarvittavat pohjatyöt ja maalauksen.</p>
         
-        <h2>Kattopalvelumme</h2>
+        <h2>Kattomaalauspalvelumme</h2>
         <ul>
-          <li><strong>Katon pesu</strong> - Sammaleen, lian ja jäkälän poisto</li>
-          <li><strong>Katon huoltomaalaus</strong> - Suojaa kattoa ja pidentää käyttöikää</li>
-          <li><strong>Peltikaton maalaus</strong> - Peltikattojen erikoismaalaus</li>
+          <li><strong>Katon pesu</strong> - Sammaleen, lian ja jäkälän poisto ammattikalustolla</li>
+          <li><strong>Katon huoltomaalaus</strong> - Suojaa kattoa ja pidentää käyttöikää merkittävästi</li>
+          <li><strong>Peltikaton maalaus</strong> - Peltikattojen erikoismaalaus laadukkailla maaleilla</li>
           <li><strong>Tiilikaton käsittely</strong> - Tiilikattojen suojaus ja kunnostus</li>
-          <li><strong>Katon korjaukset</strong> - Pienet kattovaurioiden korjaukset</li>
+          <li><strong>Ruosteenpoisto</strong> - Ruostuneiden kohtien käsittely ennen maalausta</li>
         </ul>
         
-        <h2>Miksi Katon Huolto on Tärkeää?</h2>
+        <h2>Miksi Katon Huoltomaalaus on Tärkeää?</h2>
         <p>Katto on rakennuksen tärkein suoja säätä vastaan. Huoltamaton katto alkaa haurastua, ja siihen voi tulla vuotoja. Säännöllinen pesu poistaa sammalen ja lian, jotka keräävät kosteutta ja vahingoittavat kattomateriaaleja.</p>
         
-        <h3>Katon Huollon Hyödyt:</h3>
+        <h3>Kattomaalauksen Hyödyt:</h3>
         <ul>
           <li>Pidentää katon käyttöikää jopa 10-15 vuotta</li>
-          <li>Ehkäisee kalliita korjauksia</li>
-          <li>Parantaa rakennuksen ulkonäköä</li>
-          <li>Nostaa kiinteistön arvoa</li>
-          <li>Estää kosteusvaurioiden syntymistä</li>
+          <li>Ehkäisee kalliita korjauksia ja vesivahinkoja</li>
+          <li>Parantaa rakennuksen ulkonäköä ja arvoa</li>
+          <li>Suojaa kattoa UV-säteilyltä ja kosteudelta</li>
+          <li>Estää ruosteen ja sammalen leviämistä</li>
         </ul>
         
-        <h2>Kattomaalauksen Hinta</h2>
-        <p>Kattomaalauksen hinta riippuu katon koosta, materiaalista ja kunnosta. Tyypillinen omakotitalon kattomaalaus maksaa 2000-5000 euroa sisältäen pesun ja maalauksen. Annamme aina tarkan tarjouksen kattokatselmuksen jälkeen.</p>
-        
-        <h2>Turvallista Työskentelyä</h2>
-        <p>Kattotyöt vaativat erikoisosaamista ja turvallisuustoimenpiteitä. Ammattilaisemme ovat koulutettuja työskentelemään turvallisesti korkealla. Käytämme asianmukaisia turvavarusteita ja työmenetelmiä.</p>
+        <h2>Turvallista ja Ammattitaitoista Työskentelyä</h2>
+        <p>Kattotyöt vaativat erikoisosaamista ja turvallisuustoimenpiteitä. Ammattilaisemme ovat koulutettuja työskentelemään turvallisesti korkealla. Käytämme asianmukaisia turvavarusteita ja nykyaikaisia työmenetelmiä.</p>
         
         <h2>Palvelualue</h2>
-        <p>Teemme kattojen pesuja ja maalauksia Helsingissä, Espoossa, Vantaalla, Kauniaisissa ja koko Uudellamaalla. Pyydä ilmainen kattokartoitus ja tarjous!</p>
+        <p>Teemme kattomaalauksia Helsingissä, Espoossa, Vantaalla ja koko Uudellamaalla. Palvelemme niin omakotitalojen omistajia kuin taloyhtiöitäkin. Pyydä ilmainen kattokartoitus ja tarjous!</p>
       </section>
     `
   },
   
   "julkisivumaalaus": {
     slug: "julkisivumaalaus",
-    title: "Julkisivujen Pesut ja Maalaukset Helsinki - Julkisivumaalaus Uusimaa",
-    metaDescription: "Julkisivujen pesu ja maalaus Helsingissä. Talojen ulkomaalaus ammattitaidolla. Puu- ja kivitalojen julkisivumaalaus. Pyydä ilmainen arvio!",
-    keywords: "julkisivumaalaus helsinki, julkisivumaalaus uusimaa, ulkomaalaus helsinki, talon maalaus ulkoa, julkisivun pesu",
-    h1: "Julkisivujen Pesut ja Maalaukset Helsingissä",
+    title: "Julkisivujen Maalaukset Helsinki | Julkisivumaalaus | J&B Tasoitus ja Maalaus Oy",
+    metaDescription: "Julkisivujen maalaus Helsingissä ja Uudellamaalla. Puu- ja kivitalojen ulkomaalaus ammattitaidolla. Pyydä ilmainen arvio!",
+    keywords: "julkisivumaalaus helsinki, julkisivumaalaus uusimaa, ulkomaalaus helsinki, talon maalaus ulkoa, julkisivun maalaus",
+    h1: "Julkisivujen Maalaukset Helsingissä",
     content: `
       <section>
         <h2>Ammattitaitoista Julkisivumaalausta</h2>
-        <p>J&B Tasoitus ja Maalaus Oy tarjoaa korkealaatuisia julkisivujen pesu- ja maalauspalveluita Helsingissä ja Uudellamaalla. Huolellisesti toteutettu julkisivumaalaus suojaa rakennusta sään rasituksilta ja parantaa sen ulkonäköä merkittävästi.</p>
+        <p>J&B Tasoitus ja Maalaus Oy tarjoaa korkealaatuisia julkisivujen maalauspalveluita Helsingissä ja Uudellamaalla. Huolellisesti toteutettu julkisivumaalaus suojaa rakennusta sään rasituksilta ja parantaa sen ulkonäköä merkittävästi.</p>
+        <p>Ennen maalausta teemme perusteellisen pesun, poistamme lian, homeen ja irtoavan maalin sekä tarkistamme alustan kunnon. Näin varmistamme laadukkaan ja pitkäikäisen lopputuloksen.</p>
         
-        <h2>Julkisivupalvelumme</h2>
+        <h2>Julkisivumaalauspalvelumme</h2>
         <ul>
           <li><strong>Julkisivun pesu</strong> - Painepesulla lian ja sammaleen poisto</li>
           <li><strong>Puutalon maalaus</strong> - Puujulkisivujen maalaus ja kunnostus</li>
@@ -247,19 +245,16 @@ export const servicesSEO = {
         <ul>
           <li>Suojaa puuta lahoamiselta ja kosteudelta</li>
           <li>Estää betonin rapautumisen</li>
-          <li>Parantaa energiatehokkuutta</li>
-          <li>Nostaa kiinteistön arvoa</li>
-          <li>Piristää rakennuksen ulkonäköä</li>
+          <li>Parantaa rakennuksen ulkonäköä ja arvoa</li>
+          <li>Pidentää julkisivun käyttöikää merkittävästi</li>
+          <li>Suojaa rakennusta sään rasituksilta</li>
         </ul>
-        
-        <h2>Julkisivumaalauksen Hinta</h2>
-        <p>Julkisivumaalauksen hinta riippuu rakennuksen koosta, materiaalista ja maalattavien pintojen kunnosta. Tyypillinen omakotitalon julkisivumaalaus maksaa 5000-15000 euroa. Kerrostalojen julkisivumaalaukset ovat laajempia projekteja, joiden hinta määräytyy kohdekohtaisesti.</p>
         
         <h2>Työmenetelmämme</h2>
         <p>Aloitamme julkisivutyön aina huolellisella pesulla ja pohjatyöllä. Käytämme säänkestäviä, laadukkaita julkisivumaaleja. Työ tehdään järjestelmällisesti ja siististi, suojaten ympäristön huolellisesti.</p>
         
-        <h2>Ota Yhteyttä</h2>
-        <p>Tarvitseeko julkisivusi huoltoa? Teemme julkisivumaalauksia Helsingissä, Espoossa, Vantaalla ja koko Uudellamaalla. Pyydä ilmainen julkisivukartoitus ja tarjous!</p>
+        <h2>Palvelualue</h2>
+        <p>Teemme julkisivumaalauksia Helsingissä, Espoossa, Vantaalla ja koko Uudellamaalla. Palvelemme rakennusliikkeitä, taloyhtiöitä ja yksityisasiakkaita. Pyydä ilmainen julkisivukartoitus ja tarjous!</p>
       </section>
     `
   }
@@ -271,8 +266,8 @@ export const serviceSlugMap = {
   "Maalaustyöt": "maalaustyot",
   "Mikrosementti": "mikrosementti",
   "Julkisivurappaus": "julkisivurappaus",
-  "Kattojen pesut ja maalaukset": "kattomaalaus",
-  "Julkisivujen pesut ja maalaukset": "julkisivumaalaus"
+  "Kattojen maalaukset": "kattomaalaus",
+  "Julkisivujen maalaukset": "julkisivumaalaus"
 };
 
 export const getServiceSEO = (slug) => servicesSEO[slug] || null;

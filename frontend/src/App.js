@@ -355,8 +355,8 @@ const getServiceAltText = (title) => {
     'Maalaustyöt': 'Maalaustyöt Helsinki - sisä- ja ulkomaalaukset',
     'Mikrosementti': 'Mikrosementti pinnoitus Helsinki - moderni sisustus',
     'Julkisivurappaus': 'Julkisivurappaus Helsinki - julkisivujen kunnostus',
-    'Julkisivujen pesut ja maalaukset': 'Julkisivumaalaus Helsinki - ulkomaalaustyöt',
-    'Kattojen pesut ja maalaukset': 'Kattomaalaus Helsinki - kattojen kunnostus'
+    'Julkisivujen maalaukset': 'Julkisivujen maalaukset Helsinki - ulkomaalaustyöt',
+    'Kattojen maalaukset': 'Kattojen maalaukset Helsinki - kattomaalaus'
   };
   return altMap[title] || `${title} Helsinki - J&B Tasoitus ja Maalaus`;
 };
