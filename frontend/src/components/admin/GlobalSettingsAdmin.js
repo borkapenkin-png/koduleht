@@ -160,12 +160,12 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
       <div className="bg-white border rounded-lg p-6 space-y-4">
         <h3 className="font-bold text-[#0F172A] border-b pb-2 flex items-center gap-2">
           <MapPin size={18} className="text-primary" />
-          Palvelualueet
+          Palvelualueet (Toimialue-osio)
         </h3>
         <p className="text-sm text-[#64748B]">
-          Alueet, joilla tarjoatte palveluita (näkyy kaikilla sivuilla)
+          Alueet, joilla tarjoatte palveluita (näkyy kaikilla palvelusivuilla)
         </p>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 mb-4">
           {(localSettings.service_areas || []).map((area, index) => (
             <div 
               key={index}
@@ -192,6 +192,21 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
             <Plus size={14} />
             Lisää alue
           </button>
+        </div>
+        {/* Toimialue section description template */}
+        <div className="pt-4 border-t">
+          <label className="block text-sm font-medium mb-2">
+            Toimialue-osion kuvaus
+            <span className="text-[#64748B] font-normal ml-2">(käytä {'{palvelu}'} palvelun nimelle)</span>
+          </label>
+          <textarea
+            value={localSettings.areas_description_template || ''}
+            onChange={(e) => handleChange('areas_description_template', e.target.value)}
+            placeholder="Tarjoamme ammattitaitoisia {palvelu} Helsingissä, Espoossa, Vantaalla, Kauniaisissa ja koko Uudenmaan alueella."
+            className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg text-sm"
+            rows={2}
+          />
+          <p className="text-xs text-[#94A3B8] mt-1">Esim: "Tarjoamme ammattitaitoisia {'{palvelu}'} Helsingissä..."</p>
         </div>
       </div>
 

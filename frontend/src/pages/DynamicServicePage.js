@@ -433,6 +433,11 @@ const ServiceAreasSection = ({ page, settings }) => {
   const areas = settings?.service_areas || ['Helsinki', 'Espoo', 'Vantaa', 'Kauniainen', 'Uusimaa'];
   const phone = settings?.company_phone_primary || settings?.contact_phone_1 || '+358 40 054 7270';
   const serviceTitle = page.hero_title || 'Tasoitustyöt';
+  
+  // Use global template or generate default description
+  const defaultText = `Tarjoamme ammattitaitoisia ${serviceTitle.toLowerCase()} Helsingissä, Espoossa, Vantaalla, Kauniaisissa ja koko Uudenmaan alueella.`;
+  const descriptionTemplate = settings?.areas_description_template || defaultText;
+  const description = descriptionTemplate.replace(/{palvelu}/gi, serviceTitle.toLowerCase());
 
   return (
     <section className="service-area-themed">
@@ -448,7 +453,7 @@ const ServiceAreasSection = ({ page, settings }) => {
           
           {/* Description */}
           <p className="text-white/80 text-sm md:text-base mb-8 leading-relaxed max-w-xl mx-auto">
-            {page.areas_text || `Tarjoamme ammattitaitoisia ${serviceTitle.toLowerCase()} Helsingissä, Espoossa, Vantaalla, Kauniaisissa ja koko Uudenmaan alueella.`}
+            {description}
           </p>
           
           {/* Area badges */}
