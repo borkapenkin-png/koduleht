@@ -26,6 +26,16 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 - ✅ **Backend model extended** - New fields: cover_image_url, main_contractor, location, year, gallery_images, full_description, slug, is_published
 - ✅ **Production-safe migration** - Existing data preserved with backward-compatible defaults
 
+### Service Page Visual Rhythm Improvements (December 2025) - LATEST
+- ✅ **Alternating section backgrounds** - White → Grey (#f7fafb) → White → Grey → Themed
+- ✅ **Premium feature cards** - Improved styling with 28px padding, 12px border-radius, hover lift effect
+- ✅ **Larger description image** - 420px height on desktop for better visual impact
+- ✅ **Redesigned Service Areas** - Centered layout with themed background, inline badges with MapPin icons, dual CTAs
+- ✅ **Standardized section spacing** - 80px (5rem) padding on desktop
+- ✅ **Icon background styling** - 48px icons with 10px border-radius
+- ✅ **Process step numbers** - Enhanced with shadow (rgba(0, 86, 210, 0.25))
+- ✅ **Admin compatibility** - All content remains editable from admin panel
+
 ---
 
 ## Previous Updates: March 13, 2026
