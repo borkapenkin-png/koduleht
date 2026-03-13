@@ -10,6 +10,7 @@ import {
   Paintbrush, Building2, Layers, Wrench, Droplets, Square, Sparkles, Frame
 } from 'lucide-react';
 import QuoteRequestForm from '../components/QuoteRequestForm';
+import { Footer } from '../App';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png";
@@ -578,34 +579,6 @@ const StrongCTA = ({ settings }) => {
   );
 };
 
-// ========== FOOTER ==========
-const Footer = ({ settings }) => {
-  const logo = settings?.logo_url || LOGO_URL;
-  const footerText = settings?.footer_text || 'Laatujohtajat vuodesta 2018';
-  
-  return (
-    <footer className="footer-bg text-white py-8 md:py-10">
-      <div className="container-custom">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-3">
-            <img src={logo} alt="J&B" className="h-8 md:h-10 w-auto max-w-[150px] object-contain" />
-            <p className="text-white/60 text-xs md:text-sm">{footerText}</p>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-xs md:text-sm text-white/60">
-            <Link to="/#palvelut" className="hover:text-white">Palvelut</Link>
-            <Link to="/#meista" className="hover:text-white">Meistä</Link>
-            <Link to="/#referenssit" className="hover:text-white">Referenssit</Link>
-            <Link to="/#yhteystiedot" className="hover:text-white">Yhteystiedot</Link>
-          </div>
-        </div>
-        <div className="border-t border-white/10 mt-6 pt-6 text-center text-xs text-white/40">
-          <p>© {new Date().getFullYear()} {settings?.company_name || 'J&B Tasoitus ja Maalaus Oy'}</p>
-        </div>
-      </div>
-    </footer>
-  );
-};
-
 // ========== SERVICE FAQ SECTION ==========
 const ServiceFAQSection = ({ faqs, settings, serviceName }) => {
   const [openFaqs, setOpenFaqs] = useState({});
@@ -793,7 +766,7 @@ const DynamicServicePage = () => {
       <ContactFormSection page={page} settings={settings} />
       <RelatedServices allPages={allPages} currentSlug={slug} settings={settings} />
       <StrongCTA settings={settings} />
-      <Footer settings={settings} />
+      <Footer logoUrl={settings?.logo_url} />
     </div>
   );
 };
