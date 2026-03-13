@@ -1301,6 +1301,13 @@ html {
   background-color: var(--color-primary);
 }
 
+.quote-option-button-selected:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  filter: brightness(0.8);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 .quote-option-button-selected .quote-option-label {
   color: white;
 }
