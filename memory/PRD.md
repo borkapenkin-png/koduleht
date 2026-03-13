@@ -7,6 +7,23 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
 ### Completed Features
 
+#### Service Pages Redesign (March 13, 2026) - MAJOR UPDATE
+- ✅ **Complete visual overhaul** - Service pages now match homepage design system
+- ✅ **Identical navbar** - Logo, menu links, "Pyydä tarjous" CTA button
+- ✅ **Hero section** - Same gradient overlay, left-aligned text, background images
+- ✅ **Trust badges** - 4 badges (Vuodesta 2018, Ammattitaitoinen työ, Kotitalousvähennys, Tyytyväisyystakuu)
+- ✅ **Breadcrumbs navigation** - Etusivu > Palvelut > Service Title
+- ✅ **Professional landing page sections:**
+  - PALVELUN KUVAUS (two-column layout)
+  - MITÄ PALVELU SISÄLTÄÄ (4 feature cards)
+  - MIKSI VALITA MEIDÄT (checklist with icons)
+  - NÄIN PROJEKTI ETENEE (4 numbered steps)
+  - PALVELUALUEET (area tags + contact info)
+  - OTA YHTEYTTÄ (CTA with contact form)
+  - MUUT PALVELUT (3 related service cards)
+- ✅ **Identical footer** - Logo, tagline, nav links, copyright
+- ✅ **Consistent styling** - Same fonts, colors, spacing, card styles, button styles
+
 #### Core Website
 - ✅ Modern responsive design with React + TailwindCSS
 - ✅ Hero section with customizable content
