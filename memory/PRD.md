@@ -46,6 +46,17 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 - ✅ **Admin synchronization** - Theme color changes immediately reflect across entire site
 - ✅ **Focus rings** - Accessible focus states using theme color with 30% opacity
 
+### References System - Image + Text Cards (December 2025) - LATEST
+- ✅ **Full card structure** - Image at top, all text content below
+- ✅ **Visible fields** - Title, work type, description, Pääurakoitsija (with Building2 icon), location (MapPin), year (Calendar)
+- ✅ **Description always shown** - No longer hidden when contractor/location exists
+- ✅ **2-column grid** - Desktop shows 2 cards per row, mobile 1 per row
+- ✅ **Initial count: 4 cards** - 2 rows on desktop, expandable with "Näytä lisää"
+- ✅ **Toggle button** - "Näytä lisää" / "Näytä vähemmän" toggle functionality
+- ✅ **4:3 aspect ratio** - Consistent image sizing with reference-card-image-container
+- ✅ **Hover effects** - Card lift (-6px), image zoom (1.05x), border highlight
+- ✅ **SEO-friendly alt text** - Generated from title, type, and location
+
 ---
 
 ## Previous Updates: March 13, 2026
