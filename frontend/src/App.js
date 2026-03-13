@@ -5,11 +5,13 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { SEOHead, COMPANY } from "./seo/SEOHead";
 import { serviceSlugMap } from "./seo/serviceContent";
-import ServicePage from "./pages/ServicePage";
+import DynamicServicePage from "./pages/DynamicServicePage";
+import ServicePagesAdmin from "./components/admin/ServicePagesAdmin";
+import GlobalSettingsAdmin from "./components/admin/GlobalSettingsAdmin";
 import { 
   Phone, Mail, MapPin, Menu, X, ChevronDown, Paintbrush, Building2, Layers,
   CheckCircle, ArrowRight, Send, Settings, LogOut, Plus, Trash2, Edit2, Save,
-  MessageSquare, Briefcase, Upload, Award, Image as ImageIcon, Home, FileText, Users, Lock, Shield, Palette,
+  MessageSquare, Briefcase, Upload, Award, Image as ImageIcon, Home, FileText, Users, Lock, Shield, Palette, Globe,
   // Additional service icons
   Hammer, Wrench, PaintBucket, Brush, Ruler, HardHat, Construction, Warehouse,
   DoorOpen, DoorClosed, Sofa, Lamp, Frame, Square, CircleDot, Sparkles,
@@ -403,7 +405,7 @@ const ServicesSection = ({ services_data, settings }) => (
           return (
             <motion.div key={service.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="h-full">
               {serviceSlug ? (
-                <Link to={`/palvelut/${serviceSlug}`} className="block h-full hover:shadow-lg transition-shadow">
+                <Link to={`/${serviceSlug}`} className="block h-full hover:shadow-lg transition-shadow">
                   {CardContent}
                 </Link>
               ) : (
@@ -882,7 +884,9 @@ const AdminPanel = () => {
 
   const tabs = [
     { id: "theme", label: "Teema", icon: Palette },
-    { id: "settings", label: "Sivusto", icon: Home },
+    { id: "global", label: "Yleiset", icon: Globe },
+    { id: "settings", label: "Etusivu", icon: Home },
+    { id: "servicepages", label: "Palvelusivut", icon: FileText },
     { id: "services", label: "Palvelut", icon: Briefcase },
     { id: "references", label: "Referenssit", icon: Building2 },
     { id: "partners", label: "Laatutakuu", icon: Award },
@@ -1118,6 +1122,24 @@ const AdminPanel = () => {
                   </div>
                 </div>
               </div>
+            )}
+
+            {/* GLOBAL SETTINGS TAB */}
+            {activeTab === "global" && (
+              <GlobalSettingsAdmin 
+                settings={settings}
+                onChange={setSettings}
+                onSave={saveSettings}
+                saving={saving}
+              />
+            )}
+
+            {/* SERVICE PAGES TAB */}
+            {activeTab === "servicepages" && (
+              <ServicePagesAdmin 
+                token={token}
+                onRefresh={loadData}
+              />
             )}
 
             {/* SETTINGS TAB */}
@@ -1537,7 +1559,11 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/palvelut/:slug" element={<ServicePage />} />
+          {/* Legacy route for old service URLs */}
+          <Route path="/palvelut/:slug" element={<DynamicServicePage />} />
+          {/* New SEO-friendly Finnish URLs */}
+          <Route path="/:slug" element={<DynamicServicePage />} />
+          {/* Admin panel */}
           <Route path="/admin" element={<AdminPanel />} />
         </Routes>
       </BrowserRouter>

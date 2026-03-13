@@ -72,7 +72,7 @@ const getServiceSchema = (service) => ({
     "name": area
   })),
   "description": service.description,
-  "url": COMPANY.url + "/palvelut/" + service.slug
+  "url": COMPANY.url + "/" + service.slug
 });
 
 // BreadcrumbList Schema

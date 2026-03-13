@@ -261,16 +261,17 @@ export const servicesSEO = {
 };
 
 // Service slugs mapped to database titles (supports both old and new naming)
+// These slugs now match the CMS service pages
 export const serviceSlugMap = {
-  "Tasoitustyöt": "tasoitustyo",
-  "Maalaustyöt": "maalaustyot",
-  "Mikrosementti": "mikrosementti",
-  "Julkisivurappaus": "julkisivurappaus",
+  "Tasoitustyöt": "tasoitustyot-helsinki",
+  "Maalaustyöt": "maalaustyot-helsinki",
+  "Mikrosementti": "mikrosementti-helsinki",
+  "Julkisivurappaus": "julkisivurappaus-helsinki",
   // Support both naming conventions
-  "Kattojen maalaukset": "kattomaalaus",
-  "Kattojen pesut ja maalaukset": "kattomaalaus",
-  "Julkisivujen maalaukset": "julkisivumaalaus",
-  "Julkisivujen pesut ja maalaukset": "julkisivumaalaus"
+  "Kattojen maalaukset": "kattomaalaus-helsinki",
+  "Kattojen pesut ja maalaukset": "kattomaalaus-helsinki",
+  "Julkisivujen maalaukset": "julkisivumaalaus-helsinki",
+  "Julkisivujen pesut ja maalaukset": "julkisivumaalaus-helsinki"
 };
 
 export const getServiceSEO = (slug) => servicesSEO[slug] || null;

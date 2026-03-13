@@ -145,7 +145,54 @@ async def init_admin_user():
 class SiteSettings(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = "site_settings"
-    # Hero Section
+    
+    # ========== GLOBAL COMPANY INFO ==========
+    company_name: str = "J&B Tasoitus ja Maalaus Oy"
+    company_phone_primary: str = "+358 40 054 7270"
+    company_phone_secondary: str = "+358 40 029 8247"
+    company_email: str = "info@jbtasoitusmaalaus.fi"
+    company_address: str = "Sienitie 25, 00760 Helsinki"
+    company_city: str = "Helsinki"
+    company_founded_year: str = "2018"
+    company_vat_id: str = "3101220-1"
+    # Service Areas
+    service_areas: List[str] = ["Helsinki", "Espoo", "Vantaa", "Kauniainen", "Uusimaa"]
+    # Global CTA
+    cta_primary_text: str = "Pyydä ilmainen arvio"
+    cta_secondary_text: str = "Soita nyt"
+    cta_phone_text: str = "Pyydä tarjous"
+    
+    # ========== TRUST BADGES ==========
+    trust_badge_1_title: str = "Vuodesta 2018"
+    trust_badge_1_subtitle: str = "Luotettava kokemus"
+    trust_badge_2_title: str = "Ammattitaitoinen työ"
+    trust_badge_2_subtitle: str = "Laadukas lopputulos"
+    trust_badge_3_title: str = "Kotitalousvähennys"
+    trust_badge_3_subtitle: str = "Hyödynnä veroetu"
+    trust_badge_4_title: str = "Tyytyväisyystakuu"
+    trust_badge_4_subtitle: str = "100% tyytyväisyys"
+    
+    # ========== WHY CHOOSE US ==========
+    why_choose_us: List[str] = [
+        "Ammattitaitoiset ja kokeneet tekijät",
+        "Laadukkaat materiaalit ja työvälineet",
+        "Selkeä ja läpinäkyvä hinnoittelu",
+        "Nopea aikataulu ja joustava palvelu",
+        "Siisti ja huolellinen työnjälki",
+        "Kotitalousvähennys kelpaa"
+    ]
+    
+    # ========== PROCESS STEPS ==========
+    process_step_1_title: str = "Ilmainen arvio"
+    process_step_1_desc: str = "Kartoitamme kohteen ja tarpeet"
+    process_step_2_title: str = "Tarjous"
+    process_step_2_desc: str = "Saat selkeän kirjallisen tarjouksen"
+    process_step_3_title: str = "Työn toteutus"
+    process_step_3_desc: str = "Ammattitaitoinen toteutus sovitusti"
+    process_step_4_title: str = "Valmis lopputulos"
+    process_step_4_desc: str = "Tarkistamme yhdessä työn laadun"
+    
+    # ========== HERO SECTION ==========
     hero_slogan: str = "LAATUJOHTAJAT"
     hero_title_1: str = "Ammattitaitoista"
     hero_title_2: str = "maalausta"
@@ -154,7 +201,8 @@ class SiteSettings(BaseModel):
     hero_image_url: Optional[str] = "https://images.pexels.com/photos/5493669/pexels-photo-5493669.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
     hero_badge_1: str = "Kotitalousvähennys"
     hero_badge_2: str = "Tyytyväisyystakuu"
-    # About Section
+    
+    # ========== ABOUT SECTION ==========
     about_subtitle: str = "TIETOA MEISTÄ"
     about_title: str = "Luotettava kumppani pintaremontteihin"
     about_text_1: str = "J&B Tasoitus Ja Maalaus Oy on Uudellamaalla toimiva luotettava maalaustöiden ammattilainen. Olemme tehneet sisä- ja ulkomaalauksia vuodesta 2018."
@@ -164,11 +212,12 @@ class SiteSettings(BaseModel):
     about_year: str = "2018"
     about_info_title: str = "Muista kotitalousvähennys!"
     about_info_text: str = "Maalaus luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen."
-    # Contact Section
+    
+    # ========== CONTACT SECTION ==========
     contact_subtitle: str = "OTA YHTEYTTÄ"
     contact_title: str = "Yhteystiedot"
     contact_description: str = "Lähetä tarjouspyyntö tai pyydä meidät ilmaiselle arviokäynnille."
-    contact_address: str = "Sienitie 52, 00760 Helsinki"
+    contact_address: str = "Sienitie 25, 00760 Helsinki"
     contact_email: str = "info@jbtasoitusmaalaus.fi"
     contact_phone_1_name: str = "Boris Penkin"
     contact_phone_1: str = "+358 40 054 7270"
@@ -176,7 +225,12 @@ class SiteSettings(BaseModel):
     contact_phone_2: str = "+358 40 029 8247"
     contact_jobs_title: str = "Työpaikkahaku"
     contact_jobs_text: str = "Haluatko töihin? Lähetä CV ja saatekirje: info@jbtasoitusmaalaus.fi"
-    # Theme Settings
+    
+    # ========== FOOTER ==========
+    footer_text: str = "Laatujohtajat vuodesta 2018"
+    footer_copyright: str = "Kaikki oikeudet pidätetään."
+    
+    # ========== THEME SETTINGS ==========
     theme_font: str = "Inter"
     theme_color: str = "#0056D2"
     theme_size: str = "medium"  # small, medium, large
@@ -189,6 +243,40 @@ class SiteSettings(BaseModel):
     subtitle_spacing: str = "normal"  # normal, wide, wider, widest
 
 class SiteSettingsUpdate(BaseModel):
+    # Global Company Info
+    company_name: Optional[str] = None
+    company_phone_primary: Optional[str] = None
+    company_phone_secondary: Optional[str] = None
+    company_email: Optional[str] = None
+    company_address: Optional[str] = None
+    company_city: Optional[str] = None
+    company_founded_year: Optional[str] = None
+    company_vat_id: Optional[str] = None
+    service_areas: Optional[List[str]] = None
+    cta_primary_text: Optional[str] = None
+    cta_secondary_text: Optional[str] = None
+    cta_phone_text: Optional[str] = None
+    # Trust Badges
+    trust_badge_1_title: Optional[str] = None
+    trust_badge_1_subtitle: Optional[str] = None
+    trust_badge_2_title: Optional[str] = None
+    trust_badge_2_subtitle: Optional[str] = None
+    trust_badge_3_title: Optional[str] = None
+    trust_badge_3_subtitle: Optional[str] = None
+    trust_badge_4_title: Optional[str] = None
+    trust_badge_4_subtitle: Optional[str] = None
+    # Why Choose Us
+    why_choose_us: Optional[List[str]] = None
+    # Process Steps
+    process_step_1_title: Optional[str] = None
+    process_step_1_desc: Optional[str] = None
+    process_step_2_title: Optional[str] = None
+    process_step_2_desc: Optional[str] = None
+    process_step_3_title: Optional[str] = None
+    process_step_3_desc: Optional[str] = None
+    process_step_4_title: Optional[str] = None
+    process_step_4_desc: Optional[str] = None
+    # Hero
     hero_slogan: Optional[str] = None
     hero_title_1: Optional[str] = None
     hero_title_2: Optional[str] = None
@@ -197,6 +285,7 @@ class SiteSettingsUpdate(BaseModel):
     hero_image_url: Optional[str] = None
     hero_badge_1: Optional[str] = None
     hero_badge_2: Optional[str] = None
+    # About
     about_subtitle: Optional[str] = None
     about_title: Optional[str] = None
     about_text_1: Optional[str] = None
@@ -206,6 +295,7 @@ class SiteSettingsUpdate(BaseModel):
     about_year: Optional[str] = None
     about_info_title: Optional[str] = None
     about_info_text: Optional[str] = None
+    # Contact
     contact_subtitle: Optional[str] = None
     contact_title: Optional[str] = None
     contact_description: Optional[str] = None
@@ -217,6 +307,9 @@ class SiteSettingsUpdate(BaseModel):
     contact_phone_2: Optional[str] = None
     contact_jobs_title: Optional[str] = None
     contact_jobs_text: Optional[str] = None
+    # Footer
+    footer_text: Optional[str] = None
+    footer_copyright: Optional[str] = None
     # Theme Settings
     theme_font: Optional[str] = None
     theme_color: Optional[str] = None
@@ -274,6 +367,107 @@ class Service(BaseModel):
     image_url: Optional[str] = None
     order: int = 0
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+# ========== SERVICE PAGE (Full CMS) ==========
+class ServiceFeature(BaseModel):
+    title: str
+    description: str
+    icon: str = "Wrench"
+
+class ServicePageCreate(BaseModel):
+    # Basic Info
+    service_id: str  # Links to Service
+    slug: str  # URL slug, e.g., "tasoitustyot-helsinki"
+    is_published: bool = True
+    # SEO
+    seo_title: str
+    seo_description: str
+    seo_keywords: str = ""
+    # Hero Section
+    hero_title: str  # H1
+    hero_subtitle: str = ""  # Short intro
+    hero_image_url: Optional[str] = None
+    # Content Sections
+    description_title: str = "Palvelun kuvaus"
+    description_text: str = ""  # Rich text / HTML
+    description_image_url: Optional[str] = None
+    # Features
+    features_title: str = "Mitä palvelu sisältää"
+    features: List[ServiceFeature] = []
+    # Why Choose Us (can override global)
+    why_title: str = "Miksi valita J&B Tasoitus ja Maalaus"
+    why_items: List[str] = []  # Empty = use global
+    # Process (can override global)
+    process_title: str = "Näin projekti etenee"
+    use_global_process: bool = True
+    # Service Areas
+    areas_title: str = "Palvelualueet"
+    areas_text: str = ""  # SEO text about areas
+    use_global_areas: bool = True
+    # Related Services
+    related_service_ids: List[str] = []
+    # CTA
+    cta_title: str = ""
+    cta_text: str = ""
+
+class ServicePageUpdate(BaseModel):
+    slug: Optional[str] = None
+    is_published: Optional[bool] = None
+    seo_title: Optional[str] = None
+    seo_description: Optional[str] = None
+    seo_keywords: Optional[str] = None
+    hero_title: Optional[str] = None
+    hero_subtitle: Optional[str] = None
+    hero_image_url: Optional[str] = None
+    description_title: Optional[str] = None
+    description_text: Optional[str] = None
+    description_image_url: Optional[str] = None
+    features_title: Optional[str] = None
+    features: Optional[List[ServiceFeature]] = None
+    why_title: Optional[str] = None
+    why_items: Optional[List[str]] = None
+    process_title: Optional[str] = None
+    use_global_process: Optional[bool] = None
+    areas_title: Optional[str] = None
+    areas_text: Optional[str] = None
+    use_global_areas: Optional[bool] = None
+    related_service_ids: Optional[List[str]] = None
+    cta_title: Optional[str] = None
+    cta_text: Optional[str] = None
+
+class ServicePage(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    service_id: str
+    slug: str
+    is_published: bool = True
+    # SEO
+    seo_title: str
+    seo_description: str
+    seo_keywords: str = ""
+    # Hero
+    hero_title: str
+    hero_subtitle: str = ""
+    hero_image_url: Optional[str] = None
+    # Content
+    description_title: str = "Palvelun kuvaus"
+    description_text: str = ""
+    description_image_url: Optional[str] = None
+    features_title: str = "Mitä palvelu sisältää"
+    features: List[ServiceFeature] = []
+    why_title: str = "Miksi valita J&B Tasoitus ja Maalaus"
+    why_items: List[str] = []
+    process_title: str = "Näin projekti etenee"
+    use_global_process: bool = True
+    areas_title: str = "Palvelualueet"
+    areas_text: str = ""
+    use_global_areas: bool = True
+    related_service_ids: List[str] = []
+    cta_title: str = ""
+    cta_text: str = ""
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 # Reference
 class ReferenceCreate(BaseModel):
@@ -406,6 +600,32 @@ async def get_image(image_id: str):
         raise HTTPException(status_code=404, detail="Image not found")
     image_data = base64.b64decode(image['data'])
     return Response(content=image_data, media_type=image['content_type'])
+
+
+# ========== SERVICE PAGES - PUBLIC ==========
+
+@api_router.get("/service-pages", response_model=List[ServicePage])
+async def get_service_pages():
+    """Get all published service pages."""
+    pages = await db.service_pages.find({"is_published": True}, {"_id": 0}).to_list(100)
+    for p in pages:
+        if isinstance(p.get('created_at'), str):
+            p['created_at'] = datetime.fromisoformat(p['created_at'])
+        if isinstance(p.get('updated_at'), str):
+            p['updated_at'] = datetime.fromisoformat(p['updated_at'])
+    return pages
+
+@api_router.get("/service-pages/{slug}", response_model=ServicePage)
+async def get_service_page_by_slug(slug: str):
+    """Get a single service page by its slug."""
+    page = await db.service_pages.find_one({"slug": slug, "is_published": True}, {"_id": 0})
+    if not page:
+        raise HTTPException(status_code=404, detail="Palvelusivua ei löytynyt")
+    if isinstance(page.get('created_at'), str):
+        page['created_at'] = datetime.fromisoformat(page['created_at'])
+    if isinstance(page.get('updated_at'), str):
+        page['updated_at'] = datetime.fromisoformat(page['updated_at'])
+    return ServicePage(**page)
 
 
 # ========== AUTH MODELS ==========
@@ -636,6 +856,78 @@ async def admin_update_partner(partner_id: str, input: PartnerUpdate, username: 
 @api_router.delete("/admin/partners/{partner_id}")
 async def admin_delete_partner(partner_id: str, username: str = Depends(get_current_admin)):
     result = await db.partners.delete_one({"id": partner_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    return {"message": "Deleted"}
+
+
+# ========== Admin - Service Pages CRUD ==========
+
+@api_router.get("/admin/service-pages", response_model=List[ServicePage])
+async def admin_get_service_pages(username: str = Depends(get_current_admin)):
+    """Get all service pages (including unpublished)."""
+    pages = await db.service_pages.find({}, {"_id": 0}).to_list(100)
+    for p in pages:
+        if isinstance(p.get('created_at'), str):
+            p['created_at'] = datetime.fromisoformat(p['created_at'])
+        if isinstance(p.get('updated_at'), str):
+            p['updated_at'] = datetime.fromisoformat(p['updated_at'])
+    return pages
+
+@api_router.post("/admin/service-pages", response_model=ServicePage)
+async def admin_create_service_page(input: ServicePageCreate, username: str = Depends(get_current_admin)):
+    """Create a new service page."""
+    # Check if slug already exists
+    existing = await db.service_pages.find_one({"slug": input.slug})
+    if existing:
+        raise HTTPException(status_code=400, detail="URL-slug on jo käytössä")
+    
+    page_obj = ServicePage(**input.model_dump())
+    doc = page_obj.model_dump()
+    doc['created_at'] = doc['created_at'].isoformat()
+    doc['updated_at'] = doc['updated_at'].isoformat()
+    # Convert features to dicts
+    doc['features'] = [f.model_dump() if hasattr(f, 'model_dump') else f for f in doc.get('features', [])]
+    await db.service_pages.insert_one(doc)
+    return page_obj
+
+@api_router.put("/admin/service-pages/{page_id}", response_model=ServicePage)
+async def admin_update_service_page(page_id: str, input: ServicePageUpdate, username: str = Depends(get_current_admin)):
+    """Update a service page."""
+    update_data = {}
+    for k, v in input.model_dump().items():
+        if v is not None:
+            if k == 'features' and v:
+                update_data[k] = [f.model_dump() if hasattr(f, 'model_dump') else f for f in v]
+            else:
+                update_data[k] = v
+    
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No data")
+    
+    # Check slug uniqueness if changing
+    if 'slug' in update_data:
+        existing = await db.service_pages.find_one({"slug": update_data['slug'], "id": {"$ne": page_id}})
+        if existing:
+            raise HTTPException(status_code=400, detail="URL-slug on jo käytössä")
+    
+    update_data['updated_at'] = datetime.now(timezone.utc).isoformat()
+    
+    result = await db.service_pages.update_one({"id": page_id}, {"$set": update_data})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    
+    page = await db.service_pages.find_one({"id": page_id}, {"_id": 0})
+    if isinstance(page.get('created_at'), str):
+        page['created_at'] = datetime.fromisoformat(page['created_at'])
+    if isinstance(page.get('updated_at'), str):
+        page['updated_at'] = datetime.fromisoformat(page['updated_at'])
+    return ServicePage(**page)
+
+@api_router.delete("/admin/service-pages/{page_id}")
+async def admin_delete_service_page(page_id: str, username: str = Depends(get_current_admin)):
+    """Delete a service page."""
+    result = await db.service_pages.delete_one({"id": page_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Not found")
     return {"message": "Deleted"}
