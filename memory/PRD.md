@@ -7,6 +7,16 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
 ### Completed Features
 
+#### SEO Content Optimization (March 13, 2026) - LATEST
+- ✅ **Full SEO content rewrite** for all 6 service pages
+- ✅ **Keyword-optimized titles:** "Tasoitustyöt Helsinki", "Maalaustyöt Helsinki", etc.
+- ✅ **Local SEO:** Every page mentions Helsinki, Espoo, Vantaa, Uusimaa naturally
+- ✅ **Proper H1/H2 structure:** Each page has one H1 and multiple H2 sections
+- ✅ **Service-specific "Miksi valita" lists:** Unique for each service
+- ✅ **Updated meta descriptions** with keywords
+- ✅ **Updated sitemap.xml** with new Finnish URLs
+- ✅ **Global settings updated** with SEO-rich content
+
 #### Service Pages Redesign (March 13, 2026) - MAJOR UPDATE
 - ✅ **Complete visual overhaul** - Service pages now match homepage design system
 - ✅ **Identical navbar** - Logo, menu links, "Pyydä tarjous" CTA button
