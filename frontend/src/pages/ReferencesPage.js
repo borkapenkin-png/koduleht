@@ -6,6 +6,14 @@ import { Navbar, Footer } from '../App';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 
+// Helper to get full image URL
+const getImageUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  if (url.startsWith('/')) return `${API_URL}${url}`;
+  return url;
+};
+
 // SEO Head Component
 const ReferencesPageSEO = () => {
   useEffect(() => {
@@ -153,7 +161,7 @@ const ReferencesPage = () => {
                     {/* Cover Image */}
                     <div className="reference-card-image-container">
                       <img
-                        src={ref.cover_image_url || placeholderImage}
+                        src={getImageUrl(ref.cover_image_url) || placeholderImage}
                         alt={`${ref.name} - ${ref.type}${ref.location ? ` ${ref.location}` : ''}`}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"

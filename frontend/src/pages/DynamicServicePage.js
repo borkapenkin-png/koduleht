@@ -14,6 +14,14 @@ import QuoteRequestForm from '../components/QuoteRequestForm';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png";
 
+// Helper to get full image URL
+const getImageUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  if (url.startsWith('/')) return `${API_URL}${url}`;
+  return url;
+};
+
 // Icon map
 const iconMap = {
   Paintbrush, Building2, Layers, Wrench, Droplets, Square, Sparkles, Frame,
@@ -186,7 +194,7 @@ const DescriptionSection = ({ page, settings }) => (
         {/* Image - 55% larger */}
         <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="lg:col-span-7">
           <div className="relative overflow-hidden rounded-2xl shadow-xl">
-            <img src={page.description_image_url || page.hero_image_url} alt={page.hero_title} className="w-full h-72 md:h-96 lg:h-[420px] object-cover" />
+            <img src={getImageUrl(page.description_image_url || page.hero_image_url)} alt={page.hero_title} className="w-full h-72 md:h-96 lg:h-[420px] object-cover" />
           </div>
         </motion.div>
       </div>
@@ -430,7 +438,7 @@ const RelatedServices = ({ allPages, currentSlug, settings }) => {
             <motion.div key={relPage.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }}>
               <Link to={`/${relPage.slug}`} className="project-card block h-full group">
                 <div className="overflow-hidden">
-                  <img src={relPage.hero_image_url || 'https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg'} alt={relPage.hero_title} />
+                  <img src={getImageUrl(relPage.hero_image_url) || 'https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg'} alt={relPage.hero_title} />
                 </div>
                 <div className="p-5">
                   <p className="text-xs text-primary font-medium uppercase tracking-wide mb-2">Palvelu</p>

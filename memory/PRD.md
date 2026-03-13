@@ -5,7 +5,13 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
 ## Latest Update: March 13, 2026
 
-### Anchor Link Scroll Fix (March 13, 2026) - LATEST
+### Image URL Fix (March 13, 2026) - LATEST
+- ✅ **Created `getImageUrl` helper** - Converts relative paths to full URLs
+- ✅ **Updated ImageUpload component** - Now stores relative URLs (`/api/images/123`)
+- ✅ **Updated all display components** - App.js, ReferencesPage, DynamicServicePage, ServicePage
+- ✅ **Cross-environment compatible** - Images work regardless of preview URL changes
+
+### Anchor Link Scroll Fix (March 13, 2026)
 - ✅ **Fixed scroll-margin-top** - Added CSS rule for sections with id attributes
 - ✅ **Header compensation** - 70px mobile, 88px desktop offset for sticky header
 - ✅ **All anchor links working** - #palvelut, #meista, #referenssit, #yhteystiedot

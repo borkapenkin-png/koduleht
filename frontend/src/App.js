@@ -29,6 +29,18 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png";
 
+// Helper function to get full image URL from relative or absolute path
+// Use this everywhere images are displayed
+const getImageUrl = (url) => {
+  if (!url) return null;
+  // If already absolute URL, return as-is
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  // If relative URL (starts with /), prepend backend URL
+  if (url.startsWith('/')) return `${BACKEND_URL}${url}`;
+  // Otherwise return as-is
+  return url;
+};
+
 // Extended icon map with more service icons
 const iconMap = { 
   // Original icons
@@ -223,6 +235,13 @@ const ImageUpload = ({ currentImage, onImageChange, token }) => {
 
   useEffect(() => { setPreview(currentImage || ""); }, [currentImage]);
 
+  // Helper to get display URL (adds BACKEND_URL if relative path)
+  const getDisplayUrl = (url) => {
+    if (!url) return "";
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    return `${BACKEND_URL}${url}`;
+  };
+
   const handleFileSelect = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -241,9 +260,10 @@ const ImageUpload = ({ currentImage, onImageChange, token }) => {
           "Authorization": `Bearer ${token}`
         }
       });
-      const imageUrl = `${BACKEND_URL}${response.data.url}`;
-      setPreview(imageUrl);
-      onImageChange(imageUrl);
+      // Store only relative URL (e.g., /api/images/123)
+      const relativeUrl = response.data.url;
+      setPreview(relativeUrl);
+      onImageChange(relativeUrl);
     } catch (error) { alert("Lataus epäonnistui"); }
     setUploading(false);
   };
@@ -252,7 +272,7 @@ const ImageUpload = ({ currentImage, onImageChange, token }) => {
     <div className="space-y-2">
       <div className="flex items-center gap-3 flex-wrap">
         {preview ? (
-          <img src={preview} alt="Preview" className="w-16 h-12 object-cover border border-[#E2E8F0]" />
+          <img src={getDisplayUrl(preview)} alt="Preview" className="w-16 h-12 object-cover border border-[#E2E8F0]" />
         ) : (
           <div className="w-16 h-12 bg-[#FAFAFA] border border-[#E2E8F0] flex items-center justify-center">
             <ImageIcon size={16} className="text-[#94A3B8]" />
@@ -405,7 +425,7 @@ const ServicesSection = ({ services_data, settings }) => (
               {service.image_url && (
                 <div className="aspect-[16/10] overflow-hidden -mx-6 md:-mx-8 -mt-6 md:-mt-8 mb-4 md:mb-6">
                   <img 
-                    src={service.image_url} 
+                    src={getImageUrl(service.image_url)} 
                     alt={getServiceAltText(service.title)}
                     title={`${service.title} - J&B Tasoitus ja Maalaus Oy`}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
@@ -539,7 +559,7 @@ const ReferencesSection = ({ settings, references }) => {
               {/* Cover Image */}
               <div className="reference-card-image-container">
                 <img 
-                  src={ref.cover_image_url || placeholderImage} 
+                  src={getImageUrl(ref.cover_image_url) || placeholderImage} 
                   alt={`${ref.name} - ${ref.type}${ref.location ? ` ${ref.location}` : ''}`}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
@@ -1423,7 +1443,7 @@ const AdminPanel = () => {
                       {editingItem?.id === s.id ? <ServiceForm service={editingItem} onChange={setEditingItem} onSave={() => saveService(editingItem)} onCancel={() => setEditingItem(null)} token={token} /> : (
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex items-start gap-3">
-                            {s.image_url && <img src={s.image_url} alt={s.title} className="w-16 md:w-24 h-12 md:h-16 object-cover" />}
+                            {s.image_url && <img src={getImageUrl(s.image_url)} alt={s.title} className="w-16 md:w-24 h-12 md:h-16 object-cover" />}
                             <div><h3 className="font-bold text-sm md:text-base">{s.title}</h3><p className="text-xs md:text-sm text-[#64748B] mt-1 line-clamp-2">{s.description}</p></div>
                           </div>
                           <div className="flex gap-1"><button onClick={() => setEditingItem(s)} className="p-2 text-[#64748B] hover:text-primary"><Edit2 size={16} /></button><button onClick={() => deleteService(s.id)} className="p-2 text-[#64748B] hover:text-red-600"><Trash2 size={16} /></button></div>
@@ -1454,7 +1474,7 @@ const AdminPanel = () => {
                           {/* Thumbnail */}
                           <div className="w-24 h-20 flex-shrink-0 bg-[#FAFAFA] rounded-lg overflow-hidden">
                             {r.cover_image_url ? (
-                              <img src={r.cover_image_url} alt={r.name} className="w-full h-full object-cover" />
+                              <img src={getImageUrl(r.cover_image_url)} alt={r.name} className="w-full h-full object-cover" />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
                                 <Building2 size={24} className="text-[#94A3B8]" />
@@ -1605,7 +1625,7 @@ const AdminPanel = () => {
                     <div key={p.id} className="bg-white border p-4 md:p-6">
                       {editingItem?.id === p.id ? <PartnerForm partner={editingItem} onChange={setEditingItem} onSave={() => savePartner(editingItem)} onCancel={() => setEditingItem(null)} token={token} /> : (
                         <div className="flex flex-col items-center gap-3">
-                          {p.image_url ? <img src={p.image_url} alt="Logo" className="w-20 h-16 object-contain" /> : <div className="w-20 h-16 bg-primary-light flex items-center justify-center"><Award size={24} className="text-primary" /></div>}
+                          {p.image_url ? <img src={getImageUrl(p.image_url)} alt="Logo" className="w-20 h-16 object-contain" /> : <div className="w-20 h-16 bg-primary-light flex items-center justify-center"><Award size={24} className="text-primary" /></div>}
                           <div className="flex gap-1"><button onClick={() => setEditingItem(p)} className="p-2 text-[#64748B] hover:text-primary"><Edit2 size={16} /></button><button onClick={() => deletePartner(p.id)} className="p-2 text-[#64748B] hover:text-red-600"><Trash2 size={16} /></button></div>
                         </div>
                       )}

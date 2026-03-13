@@ -22,6 +22,14 @@ import { getServiceSEO } from '../seo/serviceContent';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
+// Helper to get full image URL
+const getImageUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  if (url.startsWith('/')) return `${API_URL}${url}`;
+  return url;
+};
+
 // Trust badges
 const trustBadges = [
   { icon: Clock, text: 'Vuodesta 2018', subtext: 'Luotettava kokemus' },
@@ -239,7 +247,7 @@ const ServicePage = () => {
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center gap-2">
               {settings.logo_url ? (
-                <img src={settings.logo_url} alt="J&B Tasoitus ja Maalaus" className="h-10 w-auto" />
+                <img src={getImageUrl(settings.logo_url)} alt="J&B Tasoitus ja Maalaus" className="h-10 w-auto" />
               ) : (
                 <span className="text-xl font-bold text-primary">J&B tasoitusmaalaus</span>
               )}
