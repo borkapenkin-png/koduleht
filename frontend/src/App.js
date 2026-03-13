@@ -15,7 +15,7 @@ import FAQSection from "./components/FAQSection";
 import QuoteRequestForm from "./components/QuoteRequestForm";
 import { 
   Phone, Mail, MapPin, Menu, X, ChevronDown, Paintbrush, Building2, Layers,
-  CheckCircle, ArrowRight, Send, Settings, LogOut, Plus, Trash2, Edit2, Save,
+  CheckCircle, ArrowRight, Send, Settings, LogOut, Plus, Trash2, Edit2, Save, Download,
   MessageSquare, Briefcase, Upload, Award, Image as ImageIcon, Home, FileText, Users, Lock, Shield, Palette, Globe, Calendar, HelpCircle,
   // Additional service icons
   Hammer, Wrench, PaintBucket, Brush, Ruler, HardHat, Construction, Warehouse,
@@ -1142,6 +1142,49 @@ const AdminPanel = () => {
     }
   };
 
+  // Data Export/Import functions
+  const exportAllData = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/export-all-data`, getAuthHeaders());
+      const dataStr = JSON.stringify(response.data, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `jb-site-backup-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      alert('Data exportattu onnistuneesti!');
+    } catch (error) {
+      console.error('Export error:', error);
+      alert(`Export epäonnistui: ${error.message}`);
+    }
+  };
+
+  const importAllData = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    if (!window.confirm('VAROITUS: Tämä korvaa kaikki nykyiset tiedot! Haluatko jatkaa?')) {
+      event.target.value = '';
+      return;
+    }
+    
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      await axios.post(`${API}/admin/import-all-data`, data, getAuthHeaders());
+      alert('Data importattu onnistuneesti! Sivu päivittyy...');
+      loadData();
+    } catch (error) {
+      console.error('Import error:', error);
+      alert(`Import epäonnistui: ${error.message}`);
+    }
+    event.target.value = '';
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center p-4">
@@ -1182,6 +1225,13 @@ const AdminPanel = () => {
             <button onClick={seedData} className="text-xs md:text-sm text-[#64748B] hover:text-green-600 flex items-center gap-1" title="Palauta oletusdata jos tietokanta on tyhjä">
               <Plus size={14} />Palauta data
             </button>
+            <button onClick={exportAllData} className="text-xs md:text-sm text-[#64748B] hover:text-blue-600 flex items-center gap-1" title="Lataa kaikki sivuston data JSON-tiedostona">
+              <Download size={14} />Export
+            </button>
+            <label className="text-xs md:text-sm text-[#64748B] hover:text-green-600 flex items-center gap-1 cursor-pointer" title="Lataa data JSON-tiedostosta">
+              <Upload size={14} />Import
+              <input type="file" accept=".json" onChange={importAllData} className="hidden" />
+            </label>
             <Link to="/" className="text-xs md:text-sm text-[#64748B] hover:text-primary">Sivusto</Link>
             <button onClick={handleLogout} className="flex items-center gap-1 text-xs md:text-sm text-[#64748B] hover:text-red-600"><LogOut size={14} />Ulos</button>
           </div>

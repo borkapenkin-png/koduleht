@@ -1331,6 +1331,163 @@ async def seed_initial_data(username: str = Depends(get_current_admin)):
     return {"message": "Seed complete", "seeded": seeded}
 
 
+# ========== DATA EXPORT/IMPORT FOR SYNC ==========
+
+@api_router.get("/admin/export-all-data")
+async def export_all_data(username: str = Depends(get_current_admin)):
+    """Export all site data as JSON for backup or sync to another environment."""
+    try:
+        data = {
+            "exported_at": datetime.now(timezone.utc).isoformat(),
+            "settings": await db.settings.find_one({}, {"_id": 0}) or {},
+            "services": await db.services.find({}, {"_id": 0}).to_list(1000),
+            "references": await db.references.find({}, {"_id": 0}).to_list(1000),
+            "partners": await db.partners.find({}, {"_id": 0}).to_list(1000),
+            "faqs": await db.faqs.find({}, {"_id": 0}).to_list(1000),
+            "service_pages": await db.service_pages.find({}, {"_id": 0}).to_list(1000),
+        }
+        return data
+    except Exception as e:
+        logging.error(f"Export error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/admin/import-all-data")
+async def import_all_data(request: Request, username: str = Depends(get_current_admin)):
+    """Import all site data from JSON. WARNING: This replaces all existing data!"""
+    try:
+        data = await request.json()
+        
+        # Validate data structure
+        if not isinstance(data, dict):
+            raise HTTPException(status_code=400, detail="Invalid data format")
+        
+        imported = []
+        
+        # Import settings
+        if "settings" in data and data["settings"]:
+            await db.settings.delete_many({})
+            await db.settings.insert_one(data["settings"])
+            imported.append("settings")
+        
+        # Import services
+        if "services" in data and data["services"]:
+            await db.services.delete_many({})
+            if data["services"]:
+                await db.services.insert_many(data["services"])
+            imported.append(f"services ({len(data['services'])})")
+        
+        # Import references
+        if "references" in data and data["references"]:
+            await db.references.delete_many({})
+            if data["references"]:
+                await db.references.insert_many(data["references"])
+            imported.append(f"references ({len(data['references'])})")
+        
+        # Import partners
+        if "partners" in data and data["partners"]:
+            await db.partners.delete_many({})
+            if data["partners"]:
+                await db.partners.insert_many(data["partners"])
+            imported.append(f"partners ({len(data['partners'])})")
+        
+        # Import FAQs
+        if "faqs" in data and data["faqs"]:
+            await db.faqs.delete_many({})
+            if data["faqs"]:
+                await db.faqs.insert_many(data["faqs"])
+            imported.append(f"faqs ({len(data['faqs'])})")
+        
+        # Import service pages
+        if "service_pages" in data and data["service_pages"]:
+            await db.service_pages.delete_many({})
+            if data["service_pages"]:
+                await db.service_pages.insert_many(data["service_pages"])
+            imported.append(f"service_pages ({len(data['service_pages'])})")
+        
+        logging.info(f"Data imported: {imported}")
+        return {"success": True, "imported": imported}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Import error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Public export endpoint (no auth required, for easy sync)
+@api_router.get("/export-public-data")
+async def export_public_data():
+    """Export public site data (no admin required) - for syncing between environments."""
+    sync_key = os.environ.get('DATA_SYNC_KEY', 'jb-sync-2024')
+    try:
+        data = {
+            "exported_at": datetime.now(timezone.utc).isoformat(),
+            "sync_key_required": sync_key,
+            "settings": await db.settings.find_one({}, {"_id": 0}) or {},
+            "services": await db.services.find({}, {"_id": 0}).to_list(1000),
+            "references": await db.references.find({}, {"_id": 0}).to_list(1000),
+            "partners": await db.partners.find({}, {"_id": 0}).to_list(1000),
+            "faqs": await db.faqs.find({}, {"_id": 0}).to_list(1000),
+            "service_pages": await db.service_pages.find({}, {"_id": 0}).to_list(1000),
+        }
+        return data
+    except Exception as e:
+        return {"error": str(e)}
+
+@api_router.post("/import-with-key")
+async def import_with_sync_key(request: Request):
+    """Import data with sync key (no admin login required)."""
+    try:
+        body = await request.json()
+        sync_key = body.get('sync_key', '')
+        data = body.get('data', {})
+        
+        expected_key = os.environ.get('DATA_SYNC_KEY', 'jb-sync-2024')
+        if sync_key != expected_key:
+            raise HTTPException(status_code=403, detail="Invalid sync key")
+        
+        imported = []
+        
+        if "settings" in data and data["settings"]:
+            await db.settings.delete_many({})
+            await db.settings.insert_one(data["settings"])
+            imported.append("settings")
+        
+        if "services" in data:
+            await db.services.delete_many({})
+            if data["services"]:
+                await db.services.insert_many(data["services"])
+            imported.append(f"services ({len(data.get('services', []))})")
+        
+        if "references" in data:
+            await db.references.delete_many({})
+            if data["references"]:
+                await db.references.insert_many(data["references"])
+            imported.append(f"references ({len(data.get('references', []))})")
+        
+        if "partners" in data:
+            await db.partners.delete_many({})
+            if data["partners"]:
+                await db.partners.insert_many(data["partners"])
+            imported.append(f"partners ({len(data.get('partners', []))})")
+        
+        if "faqs" in data:
+            await db.faqs.delete_many({})
+            if data["faqs"]:
+                await db.faqs.insert_many(data["faqs"])
+            imported.append(f"faqs ({len(data.get('faqs', []))})")
+        
+        if "service_pages" in data:
+            await db.service_pages.delete_many({})
+            if data["service_pages"]:
+                await db.service_pages.insert_many(data["service_pages"])
+            imported.append(f"service_pages ({len(data.get('service_pages', []))})")
+        
+        return {"success": True, "imported": imported}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Import with key error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include router
 app.include_router(api_router)
 
