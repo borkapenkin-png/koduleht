@@ -403,7 +403,7 @@ const ContactFormSection = ({ page, settings }) => {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
             <div className="bg-white p-6 md:p-10 rounded-2xl shadow-xl max-w-4xl mx-auto">
               <h3 className="text-xl md:text-2xl font-bold text-[#0F172A] mb-6 text-center">Lähetä tarjouspyyntö</h3>
-              <QuoteRequestForm variant="compact" />
+              <QuoteRequestForm />
             </div>
           </motion.div>
           
