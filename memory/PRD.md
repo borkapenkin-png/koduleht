@@ -5,32 +5,29 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
 ## Latest Update: March 13, 2026
 
-### FAQ Hub & Service-Specific FAQs (March 13, 2026) - LATEST
-- ✅ **FAQ removed from homepage** - Per user request
-- ✅ **/ukk - FAQ hub page** - Central FAQ page grouping questions by service
-- ✅ **Service-specific FAQs** - Each service page shows its own FAQs
-- ✅ **FAQ service_id field** - FAQs can be linked to specific services
-- ✅ **FAQPage JSON-LD schema** - On both /ukk and service pages
-- ✅ **Admin FAQ service selector** - Dropdown to assign FAQ to a service
-- ✅ **Backend /api/faqs/grouped** - New endpoint for grouped FAQ data
-- ✅ **Backend /api/faqs?service_id=** - Filter FAQs by service
-- ✅ **/referenssit page** - Displays references with name, description, location, images
-- ✅ **sitemap.xml** - Updated to include /ukk route
+### Quote Request Form UX Upgrade (March 13, 2026) - LATEST
+- ✅ **Multi-select services** - 9 service checkboxes (Tasoitustyöt, Sisämaalaus, Julkisivumaalaus, etc.)
+- ✅ **Two-column layout** - Desktop: 2 columns, Mobile: single column
+- ✅ **Grouped sections** - YHTEYSTIEDOT, PROJEKTIN TIEDOT, PROJEKTIN KUVAUS
+- ✅ **New dropdowns** - Kohde, Pinta-ala, Aikataulu
+- ✅ **UX improvements** - Larger inputs, focus states, inline validation, loading state, success message
+- ✅ **QuoteRequestForm component** - Reusable component used everywhere
+- ✅ **Backend updated** - ContactFormCreate model accepts new optional fields
+- ✅ **Compact variant** - Service pages use compact version without dropdowns
 
 ### Test Results (March 13, 2026)
-- Backend: 100% (11/11 tests passed)
-- Frontend: 100% - All features working
-- /ukk grouped FAQs: PASS
-- Service page FAQs: PASS
-- JSON-LD schemas: PASS
-- Admin service selector: PASS
+- Backend: 100% (12/12 tests passed)
+- Frontend: 100% - All form features working
+- Multi-select services: PASS
+- Form validation: PASS
+- Mobile responsiveness: PASS
 
-### Previous: SEO & FAQ System (March 13, 2026)
-- ✅ **FAQ System** - Full CRUD admin panel for managing FAQs
-- ✅ **robots.txt** - Created at frontend/public/robots.txt
-- ✅ **sitemap.xml** - Updated with all routes
-- ✅ **StructuredData component** - LocalBusiness, Organization, Service schemas
-- ✅ **Backend FAQ API** - GET /api/faqs (public), POST/PUT/DELETE /api/admin/faqs (protected)
+### Previous: FAQ Hub & Service-Specific FAQs (March 13, 2026)
+- ✅ **FAQ removed from homepage**
+- ✅ **/ukk - FAQ hub page** - FAQs grouped by service
+- ✅ **Service-specific FAQs** - Each service page shows its own FAQs
+- ✅ **FAQPage JSON-LD schema** - On both /ukk and service pages
+- ✅ **UKK in navigation** - Added to main nav and footer
 
 ## Previous Update: December 2025
 
