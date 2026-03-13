@@ -6,12 +6,15 @@ import { HelmetProvider } from "react-helmet-async";
 import { SEOHead, COMPANY } from "./seo/SEOHead";
 import { serviceSlugMap } from "./seo/serviceContent";
 import DynamicServicePage from "./pages/DynamicServicePage";
+import ReferencesPage from "./pages/ReferencesPage";
 import ServicePagesAdmin from "./components/admin/ServicePagesAdmin";
 import GlobalSettingsAdmin from "./components/admin/GlobalSettingsAdmin";
+import StructuredData from "./components/StructuredData";
+import FAQSection from "./components/FAQSection";
 import { 
   Phone, Mail, MapPin, Menu, X, ChevronDown, Paintbrush, Building2, Layers,
   CheckCircle, ArrowRight, Send, Settings, LogOut, Plus, Trash2, Edit2, Save,
-  MessageSquare, Briefcase, Upload, Award, Image as ImageIcon, Home, FileText, Users, Lock, Shield, Palette, Globe, Calendar,
+  MessageSquare, Briefcase, Upload, Award, Image as ImageIcon, Home, FileText, Users, Lock, Shield, Palette, Globe, Calendar, HelpCircle,
   // Additional service icons
   Hammer, Wrench, PaintBucket, Brush, Ruler, HardHat, Construction, Warehouse,
   DoorOpen, DoorClosed, Sofa, Lamp, Frame, Square, CircleDot, Sparkles,
@@ -754,6 +757,7 @@ const AdminPanel = () => {
   const [references, setReferences] = useState([]);
   const [partners, setPartners] = useState([]);
   const [contacts, setContacts] = useState([]);
+  const [faqs, setFaqs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [newItem, setNewItem] = useState(null);
@@ -864,6 +868,15 @@ const AdminPanel = () => {
       setServices(servicesRes.data);
       setReferences(refsRes.data);
       setPartners(partnersRes.data);
+      
+      // Load FAQs (public)
+      try {
+        const faqsRes = await axios.get(`${API}/admin/faqs`, headers);
+        setFaqs(faqsRes.data);
+      } catch (faqError) {
+        console.error('Failed to load FAQs:', faqError);
+        setFaqs([]);
+      }
       
       // Load protected data separately
       try {
@@ -982,6 +995,37 @@ const AdminPanel = () => {
 
   const deleteContact = async (id) => { if (window.confirm("Poista?")) { try { await axios.delete(`${API}/admin/contacts/${id}`, getAuthHeaders()); loadData(); } catch (error) { if (error.response?.status === 401) handleLogout(); } } };
 
+  // FAQ CRUD
+  const saveFaq = async (faq) => {
+    try {
+      if (faq.id && !faq.isNew) {
+        await axios.put(`${API}/admin/faqs/${faq.id}`, faq, getAuthHeaders());
+      } else {
+        const { isNew, ...data } = faq;
+        await axios.post(`${API}/admin/faqs`, data, getAuthHeaders());
+      }
+      loadData();
+      setEditingItem(null);
+      setNewItem(null);
+    } catch (error) {
+      console.error('Save FAQ error:', error);
+      if (error.response?.status === 401) handleLogout();
+      else alert(`Virhe: ${error.response?.data?.detail || error.message}`);
+    }
+  };
+  const deleteFaq = async (id) => {
+    if (window.confirm("Poista kysymys?")) {
+      try {
+        await axios.delete(`${API}/admin/faqs/${id}`, getAuthHeaders());
+        loadData();
+      } catch (error) {
+        console.error('Delete FAQ error:', error);
+        if (error.response?.status === 401) handleLogout();
+        else alert(`Virhe: ${error.response?.data?.detail || error.message}`);
+      }
+    }
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center p-4">
@@ -1007,6 +1051,7 @@ const AdminPanel = () => {
     { id: "servicepages", label: "Palvelusivut", icon: FileText },
     { id: "services", label: "Palvelut", icon: Briefcase },
     { id: "references", label: "Referenssit", icon: Building2 },
+    { id: "faqs", label: "UKK", icon: HelpCircle },
     { id: "partners", label: "Laatutakuu", icon: Award },
     { id: "contacts", label: "Viestit", icon: MessageSquare },
     { id: "security", label: "Turvallisuus", icon: Shield },
@@ -1402,6 +1447,103 @@ const AdminPanel = () => {
               </div>
             )}
 
+            {/* FAQ TAB */}
+            {activeTab === "faqs" && (
+              <div>
+                <div className="flex justify-between items-center mb-4 md:mb-6">
+                  <div>
+                    <h2 className="text-lg md:text-xl font-bold flex items-center gap-2">
+                      <HelpCircle size={20} className="text-primary" />
+                      Usein kysytyt kysymykset ({faqs.length})
+                    </h2>
+                    <p className="text-xs md:text-sm text-[#64748B] mt-1">
+                      Hallitse UKK-osion sisältöä. Nämä näytetään etusivulla ja palvelusivuilla.
+                    </p>
+                  </div>
+                  <button 
+                    onClick={() => setNewItem({ question: "", answer: "", order: faqs.length + 1, is_published: true, isNew: true })} 
+                    className="btn-primary text-xs md:text-sm flex items-center gap-1"
+                  >
+                    <Plus size={14} />Lisää kysymys
+                  </button>
+                </div>
+
+                {/* New FAQ Form */}
+                {newItem && (
+                  <div className="bg-white border border-primary p-4 md:p-6 mb-4">
+                    <h3 className="font-bold mb-4">Uusi kysymys</h3>
+                    <FaqForm 
+                      faq={newItem} 
+                      onChange={setNewItem} 
+                      onSave={() => saveFaq(newItem)} 
+                      onCancel={() => setNewItem(null)} 
+                    />
+                  </div>
+                )}
+
+                {/* FAQ List */}
+                {faqs.length === 0 ? (
+                  <div className="text-center py-12 text-[#64748B]">
+                    <HelpCircle size={48} className="mx-auto mb-4 opacity-30" />
+                    <p>Ei kysymyksiä vielä. Lisää ensimmäinen UKK!</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {faqs.map((faq, index) => (
+                      <div key={faq.id} className="bg-white border p-4 md:p-6">
+                        {editingItem?.id === faq.id ? (
+                          <FaqForm 
+                            faq={editingItem} 
+                            onChange={setEditingItem} 
+                            onSave={() => saveFaq(editingItem)} 
+                            onCancel={() => setEditingItem(null)} 
+                          />
+                        ) : (
+                          <div>
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="text-xs text-[#64748B] bg-[#F1F5F9] px-2 py-1 rounded">#{index + 1}</span>
+                                  {!faq.is_published && (
+                                    <span className="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded">Piilotettu</span>
+                                  )}
+                                </div>
+                                <h4 className="font-bold text-[#0F172A] text-sm md:text-base mb-2">{faq.question}</h4>
+                                <p className="text-sm text-[#64748B] line-clamp-2">{faq.answer}</p>
+                              </div>
+                              <div className="flex gap-1 flex-shrink-0">
+                                <button 
+                                  onClick={() => setEditingItem(faq)} 
+                                  className="p-2 text-[#64748B] hover:text-primary"
+                                >
+                                  <Edit2 size={16} />
+                                </button>
+                                <button 
+                                  onClick={() => deleteFaq(faq.id)} 
+                                  className="p-2 text-[#64748B] hover:text-red-600"
+                                >
+                                  <Trash2 size={16} />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* SEO Info Box */}
+                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded">
+                  <p className="text-sm text-blue-800 font-medium mb-1">SEO-vinkki</p>
+                  <p className="text-xs text-blue-700">
+                    UKK-osio luo automaattisesti FAQPage-skeeman (JSON-LD), joka parantaa sivuston näkyvyyttä Google-haussa.
+                    Hyvin muotoillut kysymykset ja vastaukset voivat näkyä suoraan hakutuloksissa "Usein kysyttyä" -osiossa.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* PARTNERS TAB */}
             {activeTab === "partners" && (
               <div>
@@ -1628,6 +1770,64 @@ const PartnerForm = ({ partner, onChange, onSave, onCancel, token }) => (
   </div>
 );
 
+// FAQ Form Component
+const FaqForm = ({ faq, onChange, onSave, onCancel }) => (
+  <div className="space-y-3 md:space-y-4">
+    <div>
+      <label className="block text-sm font-medium mb-1">Kysymys *</label>
+      <input 
+        value={faq.question} 
+        onChange={(e) => onChange({ ...faq, question: e.target.value })} 
+        className="form-input text-sm" 
+        placeholder="Esim: Mitä kotitalousvähennys tarkoittaa?" 
+      />
+    </div>
+    <div>
+      <label className="block text-sm font-medium mb-1">Vastaus *</label>
+      <textarea 
+        value={faq.answer} 
+        onChange={(e) => onChange({ ...faq, answer: e.target.value })} 
+        className="form-input text-sm" 
+        rows={4}
+        placeholder="Kirjoita selkeä ja informatiivinen vastaus..."
+      />
+    </div>
+    <div className="grid grid-cols-2 gap-3">
+      <div>
+        <label className="block text-sm font-medium mb-1">Järjestys</label>
+        <input 
+          type="number" 
+          value={faq.order || 0} 
+          onChange={(e) => onChange({ ...faq, order: parseInt(e.target.value) || 0 })} 
+          className="form-input text-sm" 
+          min="0"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium mb-1">Tila</label>
+        <select 
+          value={faq.is_published !== false ? "true" : "false"} 
+          onChange={(e) => onChange({ ...faq, is_published: e.target.value === "true" })}
+          className="form-input text-sm"
+        >
+          <option value="true">Julkaistu</option>
+          <option value="false">Piilotettu</option>
+        </select>
+      </div>
+    </div>
+    <div className="flex gap-2">
+      <button 
+        onClick={onSave} 
+        disabled={!faq.question || !faq.answer} 
+        className="btn-primary text-xs md:text-sm flex items-center gap-1 disabled:opacity-50"
+      >
+        <Save size={14} />Tallenna
+      </button>
+      <button onClick={onCancel} className="btn-secondary text-xs md:text-sm">Peruuta</button>
+    </div>
+  </div>
+);
+
 // ========== HOME PAGE ==========
 const HomePage = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -1636,22 +1836,25 @@ const HomePage = () => {
   const [services, setServices] = useState([]);
   const [references, setReferences] = useState([]);
   const [partners, setPartners] = useState([]);
+  const [faqs, setFaqs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [settingsRes, servicesRes, refsRes, partnersRes] = await Promise.all([
+        const [settingsRes, servicesRes, refsRes, partnersRes, faqsRes] = await Promise.all([
           axios.get(`${API}/settings`),
           axios.get(`${API}/services`),
           axios.get(`${API}/references`),
-          axios.get(`${API}/partners`)
+          axios.get(`${API}/partners`),
+          axios.get(`${API}/faqs`)
         ]);
         const mergedSettings = { ...defaultSettings, ...settingsRes.data };
         setSettings(mergedSettings);
         setServices(servicesRes.data);
         setReferences(refsRes.data);
         setPartners(partnersRes.data);
+        setFaqs(faqsRes.data);
         // Apply theme
         applyTheme(mergedSettings);
       } catch {
@@ -1699,12 +1902,17 @@ const HomePage = () => {
 
   return (
     <>
+      {/* JSON-LD Structured Data for SEO */}
+      <StructuredData settings={settings} />
+      
       <Navbar isScrolled={isScrolled} activeSection={activeSection} logoUrl={settings.logo_url} />
       <main>
         <HeroSection settings={settings} />
         <ServicesSection settings={settings} services_data={services} />
         <AboutSection settings={settings} />
         <ReferencesSection settings={settings} references={references} />
+        {/* FAQ Section - shows if there are FAQs */}
+        {faqs.length > 0 && <FAQSection faqs={faqs} settings={settings} />}
         <LocationSection settings={settings} />
         <ContactSection settings={settings} />
       </main>
@@ -1722,6 +1930,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           {/* Admin panel - MUST be before catch-all route */}
           <Route path="/admin" element={<AdminPanel />} />
+          {/* References page - SEO dedicated page */}
+          <Route path="/referenssit" element={<ReferencesPage />} />
           {/* Legacy route for old service URLs */}
           <Route path="/palvelut/:slug" element={<DynamicServicePage />} />
           {/* New SEO-friendly Finnish URLs - catch-all for service pages */}

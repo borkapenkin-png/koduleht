@@ -900,6 +900,24 @@ html {
   width: 100%;
 }
 
+/* FAQ Item */
+.faq-item {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.faq-item:hover {
+  border-color: var(--color-primary-light);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.faq-item[aria-expanded="true"] {
+  border-color: var(--color-primary);
+}
+
 /* ========== GLOBAL THEME UTILITY CLASSES ========== */
 /* Use these instead of hardcoded colors */
 

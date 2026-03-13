@@ -6,7 +6,7 @@ import pytest
 import requests
 import os
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://design-tweak-3.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://seo-faq-refs.preview.emergentagent.com')
 
 # Expected service page slugs (Finnish SEO-friendly URLs)
 EXPECTED_SLUGS = [

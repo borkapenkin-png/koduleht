@@ -537,6 +537,31 @@ class Reference(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 # Partner
+# FAQ System for SEO
+class FAQItem(BaseModel):
+    question: str
+    answer: str
+    order: int = 0
+
+class FAQCreate(BaseModel):
+    question: str
+    answer: str
+    order: int = 0
+
+class FAQUpdate(BaseModel):
+    question: Optional[str] = None
+    answer: Optional[str] = None
+    order: Optional[int] = None
+
+class FAQ(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    question: str
+    answer: str
+    order: int = 0
+    is_published: bool = True
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
 class PartnerCreate(BaseModel):
     name: str
     image_url: Optional[str] = None
@@ -664,6 +689,17 @@ async def get_partners():
         if isinstance(p.get('created_at'), str):
             p['created_at'] = datetime.fromisoformat(p['created_at'])
     return partners
+
+# FAQ - Public (for SEO)
+@api_router.get("/faqs", response_model=List[FAQ])
+async def get_faqs():
+    """Get all published FAQs for display and schema markup."""
+    faqs = await db.faqs.find({"$or": [{"is_published": True}, {"is_published": {"$exists": False}}]}, {"_id": 0}).sort("order", 1).to_list(100)
+    for f in faqs:
+        if isinstance(f.get('created_at'), str):
+            f['created_at'] = datetime.fromisoformat(f['created_at'])
+        f.setdefault('is_published', True)
+    return faqs
 
 # Images - Public
 @api_router.get("/images/{image_id}")
@@ -956,6 +992,51 @@ async def admin_update_partner(partner_id: str, input: PartnerUpdate, username: 
 @api_router.delete("/admin/partners/{partner_id}")
 async def admin_delete_partner(partner_id: str, username: str = Depends(get_current_admin)):
     result = await db.partners.delete_one({"id": partner_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    return {"message": "Deleted"}
+
+
+# ========== Admin - FAQ CRUD ==========
+
+@api_router.get("/admin/faqs", response_model=List[FAQ])
+async def admin_get_faqs(username: str = Depends(get_current_admin)):
+    """Get all FAQs including unpublished."""
+    faqs = await db.faqs.find({}, {"_id": 0}).sort("order", 1).to_list(100)
+    for f in faqs:
+        if isinstance(f.get('created_at'), str):
+            f['created_at'] = datetime.fromisoformat(f['created_at'])
+        f.setdefault('is_published', True)
+    return faqs
+
+@api_router.post("/admin/faqs", response_model=FAQ)
+async def admin_create_faq(input: FAQCreate, username: str = Depends(get_current_admin)):
+    """Create a new FAQ."""
+    faq_obj = FAQ(**input.model_dump())
+    doc = faq_obj.model_dump()
+    doc['created_at'] = doc['created_at'].isoformat()
+    await db.faqs.insert_one(doc)
+    return faq_obj
+
+@api_router.put("/admin/faqs/{faq_id}", response_model=FAQ)
+async def admin_update_faq(faq_id: str, input: FAQUpdate, username: str = Depends(get_current_admin)):
+    """Update an existing FAQ."""
+    update_data = {k: v for k, v in input.model_dump().items() if v is not None}
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No data")
+    result = await db.faqs.update_one({"id": faq_id}, {"$set": update_data})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    faq = await db.faqs.find_one({"id": faq_id}, {"_id": 0})
+    if isinstance(faq.get('created_at'), str):
+        faq['created_at'] = datetime.fromisoformat(faq['created_at'])
+    faq.setdefault('is_published', True)
+    return FAQ(**faq)
+
+@api_router.delete("/admin/faqs/{faq_id}")
+async def admin_delete_faq(faq_id: str, username: str = Depends(get_current_admin)):
+    """Delete a FAQ."""
+    result = await db.faqs.delete_one({"id": faq_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Not found")
     return {"message": "Deleted"}
