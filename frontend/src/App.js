@@ -7,6 +7,7 @@ import { SEOHead, COMPANY } from "./seo/SEOHead";
 import { serviceSlugMap } from "./seo/serviceContent";
 import DynamicServicePage from "./pages/DynamicServicePage";
 import ReferencesPage from "./pages/ReferencesPage";
+import FaqHubPage from "./pages/FaqHubPage";
 import ServicePagesAdmin from "./components/admin/ServicePagesAdmin";
 import GlobalSettingsAdmin from "./components/admin/GlobalSettingsAdmin";
 import StructuredData from "./components/StructuredData";
@@ -1460,11 +1461,11 @@ const AdminPanel = () => {
                       Usein kysytyt kysymykset ({faqs.length})
                     </h2>
                     <p className="text-xs md:text-sm text-[#64748B] mt-1">
-                      Hallitse UKK-osion sisältöä. Nämä näytetään etusivulla ja palvelusivuilla.
+                      Hallitse UKK-osion sisältöä. Kysymykset näytetään /ukk -sivulla ja palvelukohtaiset kysymykset palvelusivuilla.
                     </p>
                   </div>
                   <button 
-                    onClick={() => setNewItem({ question: "", answer: "", order: faqs.length + 1, is_published: true, isNew: true })} 
+                    onClick={() => setNewItem({ question: "", answer: "", service_id: null, order: faqs.length + 1, is_published: true, isNew: true })} 
                     className="btn-primary text-xs md:text-sm flex items-center gap-1"
                   >
                     <Plus size={14} />Lisää kysymys
@@ -1479,7 +1480,8 @@ const AdminPanel = () => {
                       faq={newItem} 
                       onChange={setNewItem} 
                       onSave={() => saveFaq(newItem)} 
-                      onCancel={() => setNewItem(null)} 
+                      onCancel={() => setNewItem(null)}
+                      services={services}
                     />
                   </div>
                 )}
@@ -1492,47 +1494,56 @@ const AdminPanel = () => {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {faqs.map((faq, index) => (
-                      <div key={faq.id} className="bg-white border p-4 md:p-6">
-                        {editingItem?.id === faq.id ? (
-                          <FaqForm 
-                            faq={editingItem} 
-                            onChange={setEditingItem} 
-                            onSave={() => saveFaq(editingItem)} 
-                            onCancel={() => setEditingItem(null)} 
-                          />
-                        ) : (
-                          <div>
-                            <div className="flex items-start justify-between gap-4">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <span className="text-xs text-[#64748B] bg-[#F1F5F9] px-2 py-1 rounded">#{index + 1}</span>
-                                  {!faq.is_published && (
-                                    <span className="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded">Piilotettu</span>
-                                  )}
+                    {faqs.map((faq, index) => {
+                      const linkedService = services.find(s => s.id === faq.service_id);
+                      return (
+                        <div key={faq.id} className="bg-white border p-4 md:p-6">
+                          {editingItem?.id === faq.id ? (
+                            <FaqForm 
+                              faq={editingItem} 
+                              onChange={setEditingItem} 
+                              onSave={() => saveFaq(editingItem)} 
+                              onCancel={() => setEditingItem(null)}
+                              services={services}
+                            />
+                          ) : (
+                            <div>
+                              <div className="flex items-start justify-between gap-4">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                                    <span className="text-xs text-[#64748B] bg-[#F1F5F9] px-2 py-1 rounded">#{index + 1}</span>
+                                    {linkedService ? (
+                                      <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded">{linkedService.title}</span>
+                                    ) : (
+                                      <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">Yleinen</span>
+                                    )}
+                                    {!faq.is_published && (
+                                      <span className="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded">Piilotettu</span>
+                                    )}
+                                  </div>
+                                  <h4 className="font-bold text-[#0F172A] text-sm md:text-base mb-2">{faq.question}</h4>
+                                  <p className="text-sm text-[#64748B] line-clamp-2">{faq.answer}</p>
                                 </div>
-                                <h4 className="font-bold text-[#0F172A] text-sm md:text-base mb-2">{faq.question}</h4>
-                                <p className="text-sm text-[#64748B] line-clamp-2">{faq.answer}</p>
-                              </div>
-                              <div className="flex gap-1 flex-shrink-0">
-                                <button 
-                                  onClick={() => setEditingItem(faq)} 
-                                  className="p-2 text-[#64748B] hover:text-primary"
-                                >
-                                  <Edit2 size={16} />
-                                </button>
-                                <button 
-                                  onClick={() => deleteFaq(faq.id)} 
-                                  className="p-2 text-[#64748B] hover:text-red-600"
-                                >
-                                  <Trash2 size={16} />
-                                </button>
+                                <div className="flex gap-1 flex-shrink-0">
+                                  <button 
+                                    onClick={() => setEditingItem(faq)} 
+                                    className="p-2 text-[#64748B] hover:text-primary"
+                                  >
+                                    <Edit2 size={16} />
+                                  </button>
+                                  <button 
+                                    onClick={() => deleteFaq(faq.id)} 
+                                    className="p-2 text-[#64748B] hover:text-red-600"
+                                  >
+                                    <Trash2 size={16} />
+                                  </button>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
 
@@ -1541,7 +1552,7 @@ const AdminPanel = () => {
                   <p className="text-sm text-blue-800 font-medium mb-1">SEO-vinkki</p>
                   <p className="text-xs text-blue-700">
                     UKK-osio luo automaattisesti FAQPage-skeeman (JSON-LD), joka parantaa sivuston näkyvyyttä Google-haussa.
-                    Hyvin muotoillut kysymykset ja vastaukset voivat näkyä suoraan hakutuloksissa "Usein kysyttyä" -osiossa.
+                    Palvelukohtaiset FAQ:t näytetään palvelusivuilla ja /ukk -sivulla ryhmiteltyinä palvelun mukaan.
                   </p>
                 </div>
               </div>
@@ -1774,7 +1785,7 @@ const PartnerForm = ({ partner, onChange, onSave, onCancel, token }) => (
 );
 
 // FAQ Form Component
-const FaqForm = ({ faq, onChange, onSave, onCancel }) => (
+const FaqForm = ({ faq, onChange, onSave, onCancel, services = [] }) => (
   <div className="space-y-3 md:space-y-4">
     <div>
       <label className="block text-sm font-medium mb-1">Kysymys *</label>
@@ -1794,6 +1805,20 @@ const FaqForm = ({ faq, onChange, onSave, onCancel }) => (
         rows={4}
         placeholder="Kirjoita selkeä ja informatiivinen vastaus..."
       />
+    </div>
+    <div>
+      <label className="block text-sm font-medium mb-1">Palvelu (valinnainen)</label>
+      <select 
+        value={faq.service_id || ""} 
+        onChange={(e) => onChange({ ...faq, service_id: e.target.value || null })}
+        className="form-input text-sm"
+      >
+        <option value="">Yleinen (näkyy kaikilla sivuilla)</option>
+        {services.map(s => (
+          <option key={s.id} value={s.id}>{s.title}</option>
+        ))}
+      </select>
+      <p className="text-xs text-[#64748B] mt-1">Valitse palvelu, jos tämä FAQ liittyy tiettyyn palveluun</p>
     </div>
     <div className="grid grid-cols-2 gap-3">
       <div>
@@ -1839,25 +1864,22 @@ const HomePage = () => {
   const [services, setServices] = useState([]);
   const [references, setReferences] = useState([]);
   const [partners, setPartners] = useState([]);
-  const [faqs, setFaqs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [settingsRes, servicesRes, refsRes, partnersRes, faqsRes] = await Promise.all([
+        const [settingsRes, servicesRes, refsRes, partnersRes] = await Promise.all([
           axios.get(`${API}/settings`),
           axios.get(`${API}/services`),
           axios.get(`${API}/references`),
-          axios.get(`${API}/partners`),
-          axios.get(`${API}/faqs`)
+          axios.get(`${API}/partners`)
         ]);
         const mergedSettings = { ...defaultSettings, ...settingsRes.data };
         setSettings(mergedSettings);
         setServices(servicesRes.data);
         setReferences(refsRes.data);
         setPartners(partnersRes.data);
-        setFaqs(faqsRes.data);
         // Apply theme
         applyTheme(mergedSettings);
       } catch {
@@ -1914,8 +1936,6 @@ const HomePage = () => {
         <ServicesSection settings={settings} services_data={services} />
         <AboutSection settings={settings} />
         <ReferencesSection settings={settings} references={references} />
-        {/* FAQ Section - shows if there are FAQs */}
-        {faqs.length > 0 && <FAQSection faqs={faqs} settings={settings} />}
         <LocationSection settings={settings} />
         <ContactSection settings={settings} />
       </main>
@@ -1933,6 +1953,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           {/* Admin panel - MUST be before catch-all route */}
           <Route path="/admin" element={<AdminPanel />} />
+          {/* FAQ hub page */}
+          <Route path="/ukk" element={<FaqHubPage />} />
           {/* References page - SEO dedicated page */}
           <Route path="/referenssit" element={<ReferencesPage />} />
           {/* Legacy route for old service URLs */}

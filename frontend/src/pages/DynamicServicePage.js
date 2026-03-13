@@ -6,7 +6,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Phone, Mail, MapPin, Menu, X, ChevronRight, ArrowRight, Send,
-  CheckCircle, Clock, Shield, Award, Star,
+  CheckCircle, Clock, Shield, Award, Star, ChevronDown, HelpCircle,
   Paintbrush, Building2, Layers, Wrench, Droplets, Square, Sparkles, Frame
 } from 'lucide-react';
 
@@ -525,12 +525,114 @@ const Footer = ({ settings }) => {
   );
 };
 
+// ========== SERVICE FAQ SECTION ==========
+const ServiceFAQSection = ({ faqs, settings, serviceName }) => {
+  const [openFaqs, setOpenFaqs] = useState({});
+  
+  if (!faqs || faqs.length === 0) return null;
+  
+  const toggleFaq = (faqId) => {
+    setOpenFaqs(prev => ({ ...prev, [faqId]: !prev[faqId] }));
+  };
+  
+  // Generate FAQPage schema
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+  
+  return (
+    <section className="section-padding bg-[#FAFAFA]">
+      {/* JSON-LD Schema for SEO */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      
+      <div className="container-custom">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-8 md:mb-12"
+        >
+          <p className="uppercase text-xs font-medium tracking-wider text-primary mb-2">Usein kysytyt kysymykset</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#0F172A]">
+            {serviceName ? `UKK - ${serviceName}` : 'Usein kysyttyä'}
+          </h2>
+        </motion.div>
+        
+        <div className="max-w-3xl mx-auto space-y-3">
+          {faqs.map((faq, index) => (
+            <motion.div
+              key={faq.id}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.05 }}
+              className="bg-white border border-[#E2E8F0] rounded-lg overflow-hidden"
+            >
+              <button
+                onClick={() => toggleFaq(faq.id)}
+                className="w-full flex items-center justify-between p-4 md:p-5 text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
+                aria-expanded={openFaqs[faq.id]}
+              >
+                <div className="flex items-center gap-3">
+                  <HelpCircle size={18} className="text-primary flex-shrink-0" />
+                  <span className="font-semibold text-[#0F172A] text-sm md:text-base pr-4">{faq.question}</span>
+                </div>
+                <ChevronDown 
+                  size={18} 
+                  className={`text-primary flex-shrink-0 transition-transform duration-300 ${openFaqs[faq.id] ? 'rotate-180' : ''}`} 
+                />
+              </button>
+              <AnimatePresence>
+                {openFaqs[faq.id] && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="px-4 md:px-5 pb-4 md:pb-5 pl-12 md:pl-14">
+                      <p className="text-[#64748B] text-sm md:text-base leading-relaxed">{faq.answer}</p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+        
+        {/* Link to full FAQ page */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="text-center mt-8"
+        >
+          <Link to="/ukk" className="text-primary hover:underline text-sm inline-flex items-center gap-2">
+            Katso kaikki kysymykset <ArrowRight size={14} />
+          </Link>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
 // ========== MAIN ==========
 const DynamicServicePage = () => {
   const { slug } = useParams();
   const [settings, setSettings] = useState(null);
   const [page, setPage] = useState(null);
   const [allPages, setAllPages] = useState([]);
+  const [serviceFaqs, setServiceFaqs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -562,6 +664,19 @@ const DynamicServicePage = () => {
         setPage(pageData);
         document.title = pageData.seo_title || 'J&B Tasoitus ja Maalaus';
         if (allPagesRes.ok) setAllPages(await allPagesRes.json());
+        
+        // Fetch service-specific FAQs if page has linked service
+        if (pageData.service_id) {
+          try {
+            const faqsRes = await fetch(`${API_URL}/api/faqs?service_id=${pageData.service_id}`);
+            if (faqsRes.ok) {
+              const faqsData = await faqsRes.json();
+              setServiceFaqs(faqsData);
+            }
+          } catch (faqErr) {
+            console.error('Error fetching FAQs:', faqErr);
+          }
+        }
       } catch (err) { setError('error'); }
       setLoading(false);
     };
@@ -589,6 +704,8 @@ const DynamicServicePage = () => {
       <WhyChooseSection page={page} settings={settings} />
       {page.use_global_process !== false && <ProcessSection page={page} settings={settings} />}
       <ServiceAreasSection page={page} settings={settings} />
+      {/* Service-specific FAQ Section */}
+      <ServiceFAQSection faqs={serviceFaqs} settings={settings} serviceName={page.hero_title || page.seo_title} />
       <ContactFormSection page={page} settings={settings} />
       <RelatedServices allPages={allPages} currentSlug={slug} settings={settings} />
       <StrongCTA settings={settings} />

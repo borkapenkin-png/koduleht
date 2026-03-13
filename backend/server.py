@@ -537,7 +537,7 @@ class Reference(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 # Partner
-# FAQ System for SEO
+# FAQ System for SEO - Service-specific FAQs
 class FAQItem(BaseModel):
     question: str
     answer: str
@@ -546,18 +546,22 @@ class FAQItem(BaseModel):
 class FAQCreate(BaseModel):
     question: str
     answer: str
+    service_id: Optional[str] = None  # None = general FAQ, ID = service-specific
     order: int = 0
 
 class FAQUpdate(BaseModel):
     question: Optional[str] = None
     answer: Optional[str] = None
+    service_id: Optional[str] = None
     order: Optional[int] = None
+    is_published: Optional[bool] = None
 
 class FAQ(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     question: str
     answer: str
+    service_id: Optional[str] = None  # None = general FAQ, ID = service-specific
     order: int = 0
     is_published: bool = True
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -692,14 +696,52 @@ async def get_partners():
 
 # FAQ - Public (for SEO)
 @api_router.get("/faqs", response_model=List[FAQ])
-async def get_faqs():
-    """Get all published FAQs for display and schema markup."""
-    faqs = await db.faqs.find({"$or": [{"is_published": True}, {"is_published": {"$exists": False}}]}, {"_id": 0}).sort("order", 1).to_list(100)
+async def get_faqs(service_id: Optional[str] = None):
+    """Get published FAQs. Optional service_id filter for service-specific FAQs."""
+    query = {"$or": [{"is_published": True}, {"is_published": {"$exists": False}}]}
+    if service_id:
+        query["service_id"] = service_id
+    faqs = await db.faqs.find(query, {"_id": 0}).sort("order", 1).to_list(100)
     for f in faqs:
         if isinstance(f.get('created_at'), str):
             f['created_at'] = datetime.fromisoformat(f['created_at'])
         f.setdefault('is_published', True)
+        f.setdefault('service_id', None)
     return faqs
+
+@api_router.get("/faqs/grouped")
+async def get_faqs_grouped():
+    """Get all published FAQs grouped by service for the FAQ hub page."""
+    # Get all published FAQs
+    faqs = await db.faqs.find(
+        {"$or": [{"is_published": True}, {"is_published": {"$exists": False}}]}, 
+        {"_id": 0}
+    ).sort("order", 1).to_list(200)
+    
+    # Get all services for names
+    services = await db.services.find({}, {"_id": 0, "id": 1, "title": 1}).to_list(100)
+    service_map = {s["id"]: s["title"] for s in services}
+    
+    # Group FAQs
+    grouped = {"general": [], "by_service": {}}
+    for f in faqs:
+        if isinstance(f.get('created_at'), str):
+            f['created_at'] = datetime.fromisoformat(f['created_at'])
+        f.setdefault('is_published', True)
+        f.setdefault('service_id', None)
+        
+        service_id = f.get('service_id')
+        if not service_id:
+            grouped["general"].append(f)
+        else:
+            if service_id not in grouped["by_service"]:
+                grouped["by_service"][service_id] = {
+                    "service_title": service_map.get(service_id, "Tuntematon palvelu"),
+                    "faqs": []
+                }
+            grouped["by_service"][service_id]["faqs"].append(f)
+    
+    return grouped
 
 # Images - Public
 @api_router.get("/images/{image_id}")
@@ -1007,6 +1049,7 @@ async def admin_get_faqs(username: str = Depends(get_current_admin)):
         if isinstance(f.get('created_at'), str):
             f['created_at'] = datetime.fromisoformat(f['created_at'])
         f.setdefault('is_published', True)
+        f.setdefault('service_id', None)
     return faqs
 
 @api_router.post("/admin/faqs", response_model=FAQ)
@@ -1022,6 +1065,9 @@ async def admin_create_faq(input: FAQCreate, username: str = Depends(get_current
 async def admin_update_faq(faq_id: str, input: FAQUpdate, username: str = Depends(get_current_admin)):
     """Update an existing FAQ."""
     update_data = {k: v for k, v in input.model_dump().items() if v is not None}
+    # Allow setting service_id to null explicitly
+    if 'service_id' in input.model_dump():
+        update_data['service_id'] = input.service_id
     if not update_data:
         raise HTTPException(status_code=400, detail="No data")
     result = await db.faqs.update_one({"id": faq_id}, {"$set": update_data})
@@ -1031,6 +1077,7 @@ async def admin_update_faq(faq_id: str, input: FAQUpdate, username: str = Depend
     if isinstance(faq.get('created_at'), str):
         faq['created_at'] = datetime.fromisoformat(faq['created_at'])
     faq.setdefault('is_published', True)
+    faq.setdefault('service_id', None)
     return FAQ(**faq)
 
 @api_router.delete("/admin/faqs/{faq_id}")
