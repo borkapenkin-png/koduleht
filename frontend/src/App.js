@@ -743,8 +743,16 @@ const ContactSection = ({ settings }) => {
 };
 
 // ========== FOOTER ==========
-const Footer = ({ logoUrl }) => {
-  const logo = logoUrl || LOGO_URL;
+const Footer = ({ logoUrl, settings }) => {
+  const logo = logoUrl || settings?.logo_url || LOGO_URL;
+  const companyName = settings?.company_name || 'J&B Tasoitus ja Maalaus Oy';
+  const footerDescription = settings?.footer_description || 'Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla.';
+  const footerServices = settings?.footer_services || 'Tasoitustyöt,Sisämaalaus,Julkisivumaalaus,Julkisivurappaus,Mikrosementti,Kattomaalaus,Huoltomaalaus,Parvekemaalaus';
+  const footerServiceArea = settings?.footer_service_area || 'Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella.';
+  const city = settings?.company_city || 'Helsinki';
+  
+  const servicesList = footerServices.split(',').map(s => s.trim()).filter(s => s);
+  
   return (
     <footer data-testid="footer" className="footer-bg text-white py-10 md:py-14">
       <div className="container-custom">
@@ -753,10 +761,10 @@ const Footer = ({ logoUrl }) => {
           
           {/* Company info + SEO description */}
           <div>
-            <img src={logo} alt="J&B Tasoitus ja Maalaus" className="h-10 md:h-12 w-auto max-w-[180px] object-contain mb-4" />
-            <p className="text-white/80 text-sm font-medium mb-2">J&B Tasoitus ja Maalaus Oy</p>
+            <img src={logo} alt={companyName} className="h-10 md:h-12 w-auto max-w-[180px] object-contain mb-4" />
+            <p className="text-white/80 text-sm font-medium mb-2">{companyName}</p>
             <p className="text-white/60 text-xs md:text-sm leading-relaxed">
-              Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla.
+              {footerDescription}
             </p>
           </div>
           
@@ -764,14 +772,9 @@ const Footer = ({ logoUrl }) => {
           <div>
             <p className="text-white/80 text-sm font-medium mb-3">Tarjoamme:</p>
             <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs md:text-sm text-white/60">
-              <li>Tasoitustyöt</li>
-              <li>Sisämaalaus</li>
-              <li>Julkisivumaalaus</li>
-              <li>Julkisivurappaus</li>
-              <li>Mikrosementti</li>
-              <li>Kattomaalaus</li>
-              <li>Huoltomaalaus</li>
-              <li>Parvekemaalaus</li>
+              {servicesList.map((service, idx) => (
+                <li key={idx}>{service}</li>
+              ))}
             </ul>
           </div>
           
@@ -786,7 +789,7 @@ const Footer = ({ logoUrl }) => {
               <a href="#yhteystiedot" className="hover:text-white transition-colors">Yhteystiedot</a>
             </div>
             <p className="text-white/50 text-xs mt-4 leading-relaxed">
-              Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella.
+              {footerServiceArea}
             </p>
           </div>
           
@@ -794,7 +797,7 @@ const Footer = ({ logoUrl }) => {
         
         {/* Copyright */}
         <div className="border-t border-white/10 mt-8 md:mt-10 pt-6 md:pt-8 text-center text-xs text-white/40">
-          <p>© {new Date().getFullYear()} J&B Tasoitus ja Maalaus Oy · Helsinki, Finland</p>
+          <p>© {new Date().getFullYear()} {companyName} · {city}, Finland</p>
         </div>
       </div>
     </footer>
@@ -1424,6 +1427,14 @@ const AdminPanel = () => {
                     <div><label className="block text-sm font-medium mb-1">Työpaikat teksti</label><input value={settings.contact_jobs_text} onChange={(e) => setSettings({...settings, contact_jobs_text: e.target.value})} className="form-input text-sm" /></div>
                   </div>
                 </div>
+
+                {/* Footer */}
+                <div className="bg-white border p-4 md:p-6 space-y-4">
+                  <h3 className="font-bold text-[#0F172A] border-b pb-2">Alatunniste (Footer)</h3>
+                  <div><label className="block text-sm font-medium mb-1">Yrityksen kuvaus</label><input value={settings.footer_description || ''} onChange={(e) => setSettings({...settings, footer_description: e.target.value})} className="form-input text-sm" placeholder="Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla." /></div>
+                  <div><label className="block text-sm font-medium mb-1">Palvelut (pilkulla erotettuna)</label><input value={settings.footer_services || ''} onChange={(e) => setSettings({...settings, footer_services: e.target.value})} className="form-input text-sm" placeholder="Tasoitustyöt,Sisämaalaus,Julkisivumaalaus..." /></div>
+                  <div><label className="block text-sm font-medium mb-1">Palvelualue teksti</label><input value={settings.footer_service_area || ''} onChange={(e) => setSettings({...settings, footer_service_area: e.target.value})} className="form-input text-sm" placeholder="Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella." /></div>
+                </div>
               </div>
             )}
 
@@ -2027,7 +2038,7 @@ const HomePage = () => {
         <LocationSection settings={settings} />
         <ContactSection settings={settings} />
       </main>
-      <Footer logoUrl={settings.logo_url} />
+      <Footer logoUrl={settings.logo_url} settings={settings} />
     </>
   );
 };

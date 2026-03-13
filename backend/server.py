@@ -229,6 +229,9 @@ class SiteSettings(BaseModel):
     # ========== FOOTER ==========
     footer_text: str = "Laatujohtajat vuodesta 2018"
     footer_copyright: str = "Kaikki oikeudet pidätetään."
+    footer_description: str = "Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla."
+    footer_services: str = "Tasoitustyöt,Sisämaalaus,Julkisivumaalaus,Julkisivurappaus,Mikrosementti,Kattomaalaus,Huoltomaalaus,Parvekemaalaus"
+    footer_service_area: str = "Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella."
     
     # ========== REFERENCES SECTION SETTINGS ==========
     references_subtitle: str = "TYÖNÄYTTEITÄ"
@@ -321,6 +324,9 @@ class SiteSettingsUpdate(BaseModel):
     # Footer
     footer_text: Optional[str] = None
     footer_copyright: Optional[str] = None
+    footer_description: Optional[str] = None
+    footer_services: Optional[str] = None
+    footer_service_area: Optional[str] = None
     # References Section Settings
     references_subtitle: Optional[str] = None
     references_title: Optional[str] = None

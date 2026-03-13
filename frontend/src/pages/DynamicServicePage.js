@@ -766,7 +766,7 @@ const DynamicServicePage = () => {
       <ContactFormSection page={page} settings={settings} />
       <RelatedServices allPages={allPages} currentSlug={slug} settings={settings} />
       <StrongCTA settings={settings} />
-      <Footer logoUrl={settings?.logo_url} />
+      <Footer logoUrl={settings?.logo_url} settings={settings} />
     </div>
   );
 };
