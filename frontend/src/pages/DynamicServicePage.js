@@ -9,6 +9,7 @@ import {
   CheckCircle, Clock, Shield, Award, Star, ChevronDown, HelpCircle,
   Paintbrush, Building2, Layers, Wrench, Droplets, Square, Sparkles, Frame
 } from 'lucide-react';
+import QuoteRequestForm from '../components/QuoteRequestForm';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png";
@@ -370,26 +371,6 @@ const ServiceAreasSection = ({ page, settings }) => {
 
 // ========== CONTACT FORM SECTION ==========
 const ContactFormSection = ({ page, settings }) => {
-  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', phone: '', message: '' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      await fetch(`${API_URL}/api/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, subject: `Tarjouspyyntö: ${page.hero_title}` })
-      });
-      setSubmitStatus('success');
-      setFormData({ firstName: '', lastName: '', email: '', phone: '', message: '' });
-    } catch { setSubmitStatus('error'); }
-    setIsSubmitting(false);
-    setTimeout(() => setSubmitStatus(null), 5000);
-  };
-
   const phone = settings?.company_phone_primary || '+358 40 054 7270';
   const email = settings?.company_email || 'info@jbtasoitusmaalaus.fi';
 
@@ -417,20 +398,7 @@ const ContactFormSection = ({ page, settings }) => {
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
             <div className="bg-white p-5 md:p-6 rounded-2xl shadow-xl">
               <h3 className="text-base font-bold text-[#0F172A] mb-4">Lähetä tarjouspyyntö</h3>
-              <form onSubmit={handleSubmit} className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <input type="text" placeholder="Etunimi *" required value={formData.firstName} onChange={(e) => setFormData({...formData, firstName: e.target.value})} className="form-input text-sm py-2.5" />
-                  <input type="text" placeholder="Sukunimi *" required value={formData.lastName} onChange={(e) => setFormData({...formData, lastName: e.target.value})} className="form-input text-sm py-2.5" />
-                </div>
-                <input type="email" placeholder="Sähköposti *" required value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="form-input text-sm py-2.5" />
-                <input type="tel" placeholder="Puhelin" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="form-input text-sm py-2.5" />
-                <textarea placeholder="Kerro projektistasi *" required rows={3} value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} className="form-input text-sm resize-none py-2.5" />
-                <button type="submit" disabled={isSubmitting} className="btn-primary w-full flex items-center justify-center gap-2 text-sm py-2.5">
-                  {isSubmitting ? 'Lähetetään...' : (<>Lähetä viesti <Send size={14} /></>)}
-                </button>
-                {submitStatus === 'success' && <div className="p-2.5 bg-green-50 border border-green-200 rounded-lg text-green-800 text-xs">Kiitos! Otamme yhteyttä pian.</div>}
-                {submitStatus === 'error' && <div className="p-2.5 bg-red-50 border border-red-200 rounded-lg text-red-800 text-xs">Virhe. Yritä uudelleen.</div>}
-              </form>
+              <QuoteRequestForm variant="compact" />
             </div>
           </motion.div>
         </div>

@@ -351,6 +351,12 @@ class ContactFormCreate(BaseModel):
     phone: Optional[str] = None
     subject: Optional[str] = None
     message: str
+    # New optional fields for improved form
+    services: Optional[List[str]] = None  # Multi-select services
+    propertyType: Optional[str] = None  # Kohde
+    areaSize: Optional[str] = None  # Pinta-ala
+    location: Optional[str] = None  # Sijainti
+    timeline: Optional[str] = None  # Aikataulu
 
 class ContactForm(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -361,6 +367,12 @@ class ContactForm(BaseModel):
     phone: Optional[str] = None
     subject: Optional[str] = None
     message: str
+    # New optional fields
+    services: Optional[List[str]] = None
+    propertyType: Optional[str] = None
+    areaSize: Optional[str] = None
+    location: Optional[str] = None
+    timeline: Optional[str] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     status: str = "new"
 

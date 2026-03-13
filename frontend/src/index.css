@@ -1046,3 +1046,239 @@ html {
   background-color: var(--color-primary-light);
   color: var(--color-primary);
 }
+
+
+/* ========== QUOTE REQUEST FORM ========== */
+
+.quote-form-container {
+  width: 100%;
+}
+
+.quote-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Section styling */
+.quote-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.quote-form-section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-primary);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #E2E8F0;
+  margin-bottom: 0.25rem;
+}
+
+/* Field styling */
+.quote-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.quote-form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #0F172A;
+}
+
+.quote-form-error {
+  font-size: 0.75rem;
+  color: #DC2626;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Input styling - larger, better focus */
+.quote-form-input,
+.quote-form-select,
+.quote-form-textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 0.9375rem;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 0.5rem;
+  background-color: white;
+  color: #0F172A;
+  transition: all 0.2s ease;
+}
+
+.quote-form-input:hover,
+.quote-form-select:hover,
+.quote-form-textarea:hover {
+  border-color: #CBD5E1;
+}
+
+.quote-form-input:focus,
+.quote-form-select:focus,
+.quote-form-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-lighter);
+}
+
+.quote-form-input::placeholder,
+.quote-form-textarea::placeholder {
+  color: #94A3B8;
+}
+
+.quote-form-input-error {
+  border-color: #DC2626;
+}
+
+.quote-form-input-error:focus {
+  border-color: #DC2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.quote-form-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.quote-form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+/* Grid layouts */
+.quote-form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .quote-form-grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Service multi-select grid */
+.quote-services-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .quote-services-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Service checkbox styling */
+.quote-service-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: white;
+}
+
+.quote-service-checkbox:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-lighter);
+}
+
+.quote-service-checkbox-checked {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-lighter);
+}
+
+.quote-checkbox-indicator {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #CBD5E1;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.quote-checkbox-indicator-checked {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.quote-checkbox-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #334155;
+  user-select: none;
+}
+
+/* Submit button */
+.quote-form-submit {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.quote-form-submit:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.quote-form-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.quote-form-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Success/Error messages */
+.quote-form-success {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background-color: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  border-radius: 0.5rem;
+}
+
+.quote-form-error-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background-color: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 0.5rem;
+}

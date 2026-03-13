@@ -12,6 +12,7 @@ import ServicePagesAdmin from "./components/admin/ServicePagesAdmin";
 import GlobalSettingsAdmin from "./components/admin/GlobalSettingsAdmin";
 import StructuredData from "./components/StructuredData";
 import FAQSection from "./components/FAQSection";
+import QuoteRequestForm from "./components/QuoteRequestForm";
 import { 
   Phone, Mail, MapPin, Menu, X, ChevronDown, Paintbrush, Building2, Layers,
   CheckCircle, ArrowRight, Send, Settings, LogOut, Plus, Trash2, Edit2, Save,
@@ -655,21 +656,6 @@ const LocationSection = ({ settings }) => (
 // ========== CONTACT ==========
 const ContactSection = ({ settings }) => {
   const s = { ...defaultSettings, ...settings };
-  const [formData, setFormData] = useState({ firstName: "", lastName: "", email: "", phone: "", subject: "", message: "" });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      await axios.post(`${API}/contact`, formData);
-      setSubmitStatus("success");
-      setFormData({ firstName: "", lastName: "", email: "", phone: "", subject: "", message: "" });
-    } catch { setSubmitStatus("error"); }
-    setIsSubmitting(false);
-    setTimeout(() => setSubmitStatus(null), 5000);
-  };
 
   return (
     <section id="yhteystiedot" data-testid="contact-section" className="section-padding" aria-labelledby="contact-heading">
@@ -705,21 +691,9 @@ const ContactSection = ({ settings }) => {
             </div>
           </motion.div>
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-            <div className="bg-[#FAFAFA] p-5 md:p-8 border border-[#E2E8F0]">
+            <div className="bg-[#FAFAFA] p-5 md:p-8 border border-[#E2E8F0] rounded-lg">
               <h3 className="text-lg md:text-xl font-bold text-[#0F172A] mb-4 md:mb-6">Lähetä tarjouspyyntö</h3>
-              <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-                  <div><label className="block text-xs md:text-sm font-medium text-[#0F172A] mb-1 md:mb-2">Etunimi *</label><input type="text" name="firstName" value={formData.firstName} onChange={(e) => setFormData({...formData, firstName: e.target.value})} required className="form-input text-sm" placeholder="Etunimi" /></div>
-                  <div><label className="block text-xs md:text-sm font-medium text-[#0F172A] mb-1 md:mb-2">Sukunimi *</label><input type="text" name="lastName" value={formData.lastName} onChange={(e) => setFormData({...formData, lastName: e.target.value})} required className="form-input text-sm" placeholder="Sukunimi" /></div>
-                </div>
-                <div><label className="block text-xs md:text-sm font-medium text-[#0F172A] mb-1 md:mb-2">Sähköposti *</label><input type="email" name="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required className="form-input text-sm" placeholder="email@esimerkki.fi" /></div>
-                <div><label className="block text-xs md:text-sm font-medium text-[#0F172A] mb-1 md:mb-2">Puhelin</label><input type="tel" name="phone" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="form-input text-sm" placeholder="+358 40 123 4567" /></div>
-                <div><label className="block text-xs md:text-sm font-medium text-[#0F172A] mb-1 md:mb-2">Aihe</label><input type="text" name="subject" value={formData.subject} onChange={(e) => setFormData({...formData, subject: e.target.value})} className="form-input text-sm" placeholder="Tarjouspyyntö" /></div>
-                <div><label className="block text-xs md:text-sm font-medium text-[#0F172A] mb-1 md:mb-2">Viesti *</label><textarea name="message" value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} required rows={4} className="form-input text-sm resize-none" placeholder="Kerro projektistasi..." /></div>
-                <button type="submit" disabled={isSubmitting} className="btn-primary w-full flex items-center justify-center gap-2 text-sm disabled:opacity-60">{isSubmitting ? "Lähetetään..." : (<>Lähetä viesti<Send size={16} /></>)}</button>
-                {submitStatus === "success" && <div className="p-3 md:p-4 bg-green-50 border border-green-200 text-green-800 text-xs md:text-sm">Kiitos viestistäsi!</div>}
-                {submitStatus === "error" && <div className="p-3 md:p-4 bg-red-50 border border-red-200 text-red-800 text-xs md:text-sm">Lähetys epäonnistui.</div>}
-              </form>
+              <QuoteRequestForm />
             </div>
           </motion.div>
         </div>
