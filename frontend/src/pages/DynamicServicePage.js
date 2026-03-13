@@ -377,14 +377,17 @@ const ContactFormSection = ({ page, settings }) => {
   return (
     <section id="tarjouspyynto" className="cta-section py-10 md:py-14">
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
-          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="text-white">
+        {/* Stacked layout - full width blocks */}
+        <div className="space-y-8 md:space-y-10">
+          
+          {/* Contact info block - full width, centered */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-white text-center">
             <Subtitle settings={settings} white className="mb-2">OTA YHTEYTTÄ</Subtitle>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3">{page.cta_title || 'Pyydä ilmainen arvio'}</h2>
-            <p className="text-white/80 mb-5 text-sm max-w-md leading-relaxed">
+            <p className="text-white/80 mb-6 text-sm max-w-lg mx-auto leading-relaxed">
               {page.cta_text || 'Lähetä tarjouspyyntö ja vastaamme 24 tunnin sisällä.'}
             </p>
-            <div className="space-y-2.5">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
               <a href={`tel:${phone.replace(/\s/g, '')}`} className="flex items-center gap-3 text-white/90 hover:text-white transition-colors">
                 <div className="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center"><Phone size={16} /></div>
                 <span className="font-medium text-sm">{phone}</span>
@@ -395,12 +398,15 @@ const ContactFormSection = ({ page, settings }) => {
               </a>
             </div>
           </motion.div>
-          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-            <div className="bg-white p-5 md:p-6 rounded-2xl shadow-xl">
-              <h3 className="text-base font-bold text-[#0F172A] mb-4">Lähetä tarjouspyyntö</h3>
+          
+          {/* Form block - full width */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
+            <div className="bg-white p-6 md:p-10 rounded-2xl shadow-xl max-w-4xl mx-auto">
+              <h3 className="text-xl md:text-2xl font-bold text-[#0F172A] mb-6 text-center">Lähetä tarjouspyyntö</h3>
               <QuoteRequestForm variant="compact" />
             </div>
           </motion.div>
+          
         </div>
       </div>
     </section>
