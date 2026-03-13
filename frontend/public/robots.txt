@@ -7,14 +7,13 @@ Allow: /
 # Block internal and admin routes
 Disallow: /admin
 Disallow: /admin/
-Disallow: /api
 Disallow: /api/
 Disallow: /login
 Disallow: /preview
 Disallow: /dashboard
 
-# Sitemap location
-Sitemap: https://jbtasoitusmaalaus.fi/sitemap.xml
+# Sitemap location (dynamic, generated from database)
+Sitemap: https://jbtasoitusmaalaus.fi/api/sitemap.xml
 
 # Crawl delay (polite crawling)
 Crawl-delay: 1

@@ -603,6 +603,56 @@ class Partner(BaseModel):
 async def root():
     return {"message": "J&B Tasoitus ja Maalaus API"}
 
+# Dynamic Sitemap - generates XML from database
+@api_router.get("/sitemap.xml")
+async def get_sitemap():
+    from fastapi.responses import Response
+    
+    base_url = "https://jbtasoitusmaalaus.fi"
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    
+    # Start XML
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    
+    # Homepage
+    xml += f'''  <url>
+    <loc>{base_url}/</loc>
+    <lastmod>{today}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>\n'''
+    
+    # Service pages from database
+    service_pages = await db.service_pages.find({}, {"_id": 0, "slug": 1}).to_list(100)
+    for page in service_pages:
+        xml += f'''  <url>
+    <loc>{base_url}/{page["slug"]}</loc>
+    <lastmod>{today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>\n'''
+    
+    # References page
+    xml += f'''  <url>
+    <loc>{base_url}/referenssit</loc>
+    <lastmod>{today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>\n'''
+    
+    # FAQ page
+    xml += f'''  <url>
+    <loc>{base_url}/ukk</loc>
+    <lastmod>{today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>\n'''
+    
+    xml += '</urlset>'
+    
+    return Response(content=xml, media_type="application/xml")
+
 # Site Settings - Public
 @api_router.get("/settings", response_model=SiteSettings)
 async def get_site_settings():
