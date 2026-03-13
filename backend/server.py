@@ -382,6 +382,7 @@ class ServiceCreate(BaseModel):
     description: str
     icon: str = "Building2"
     image_url: Optional[str] = None
+    link_url: Optional[str] = None  # Link to service page, e.g., "tasoitustyot-helsinki"
     order: int = 0
 
 class ServiceUpdate(BaseModel):
@@ -389,6 +390,7 @@ class ServiceUpdate(BaseModel):
     description: Optional[str] = None
     icon: Optional[str] = None
     image_url: Optional[str] = None
+    link_url: Optional[str] = None
     order: Optional[int] = None
 
 class Service(BaseModel):
@@ -398,6 +400,7 @@ class Service(BaseModel):
     description: str
     icon: str = "Building2"
     image_url: Optional[str] = None
+    link_url: Optional[str] = None  # Link to service page, e.g., "tasoitustyot-helsinki"
     order: int = 0
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 

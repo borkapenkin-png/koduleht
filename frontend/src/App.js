@@ -418,7 +418,8 @@ const ServicesSection = ({ services_data, settings }) => (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
         {services_data.map((service, index) => {
           const Icon = iconMap[service.icon] || Building2;
-          const serviceSlug = serviceSlugMap[service.title];
+          // Use link_url from service if available, otherwise fall back to static map
+          const serviceSlug = service.link_url || serviceSlugMap[service.title];
           
           const CardContent = (
             <article className="service-card group overflow-hidden h-full flex flex-col">
@@ -1752,6 +1753,13 @@ const ServiceForm = ({ service, onChange, onSave, onCancel, token }) => (
   <div className="space-y-3 md:space-y-4">
     <div><label className="block text-sm font-medium mb-1">Otsikko</label><input value={service.title} onChange={(e) => onChange({ ...service, title: e.target.value })} className="form-input text-sm" placeholder="Nimi" /></div>
     <div><label className="block text-sm font-medium mb-1">Kuvaus</label><textarea value={service.description} onChange={(e) => onChange({ ...service, description: e.target.value })} className="form-input text-sm" rows={3} /></div>
+    <div><label className="block text-sm font-medium mb-1">Linkki palvelusivulle</label>
+      <div className="flex items-center gap-2">
+        <span className="text-sm text-gray-500">/</span>
+        <input value={service.link_url || ''} onChange={(e) => onChange({ ...service, link_url: e.target.value })} className="form-input text-sm flex-1" placeholder="tasoitustyot-helsinki" />
+      </div>
+      <p className="text-xs text-gray-500 mt-1">Palvelusivun slug (esim. tasoitustyot-helsinki)</p>
+    </div>
     <div className="grid grid-cols-2 gap-3">
       <div><label className="block text-sm font-medium mb-1">Ikoni</label>
         <select value={service.icon} onChange={(e) => onChange({ ...service, icon: e.target.value })} className="form-input text-sm">
