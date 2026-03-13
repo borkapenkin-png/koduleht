@@ -1253,6 +1253,66 @@ html {
   user-select: none;
 }
 
+/* Single-select option buttons */
+.quote-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .quote-options-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .quote-options-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.quote-options-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.quote-option-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 0.75rem;
+  border: 2px solid #E2E8F0;
+  border-radius: 0.5rem;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.quote-option-button:hover {
+  border-color: var(--color-primary);
+  background-color: #F8FAFC;
+}
+
+.quote-option-button-selected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+}
+
+.quote-option-button-selected .quote-option-label {
+  color: white;
+}
+
+.quote-option-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #334155;
+  user-select: none;
+  white-space: nowrap;
+}
+
 /* Submit button */
 .quote-form-submit {
   width: 100%;

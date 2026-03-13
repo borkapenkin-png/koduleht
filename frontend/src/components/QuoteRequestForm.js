@@ -85,6 +85,21 @@ const ServiceCheckbox = ({ service, checked, onChange }) => (
   </label>
 );
 
+// Single-select option button (radio-like behavior)
+const OptionButton = ({ option, selected, onChange }) => (
+  <label
+    className={`quote-option-button ${selected ? 'quote-option-button-selected' : ''}`}
+  >
+    <input
+      type="radio"
+      checked={selected}
+      onChange={onChange}
+      className="sr-only"
+    />
+    <span className="quote-option-label">{option.label}</span>
+  </label>
+);
+
 // Main form component
 const QuoteRequestForm = ({ 
   variant = 'default', // 'default' | 'compact' | 'service-page'
@@ -336,31 +351,35 @@ const QuoteRequestForm = ({
                 </div>
               </FormField>
 
-              {/* Dropdowns - always visible */}
-              <div className="quote-form-grid-2">
-                <FormField label="Kohde">
-                  <select
-                    value={formData.propertyType}
-                    onChange={(e) => handleChange('propertyType', e.target.value)}
-                    className="quote-form-select"
-                  >
-                    {PROPERTY_TYPES.map(opt => (
-                      <option key={opt.value} value={opt.value}>{opt.label}</option>
-                    ))}
-                  </select>
-                </FormField>
-                <FormField label="Pinta-ala">
-                  <select
-                    value={formData.areaSize}
-                    onChange={(e) => handleChange('areaSize', e.target.value)}
-                    className="quote-form-select"
-                  >
-                    {AREA_SIZES.map(opt => (
-                      <option key={opt.value} value={opt.value}>{opt.label}</option>
-                    ))}
-                  </select>
-                </FormField>
-              </div>
+              {/* Kohde - Single select buttons */}
+              <FormField label="Kohde">
+                <div className="quote-options-grid">
+                  {PROPERTY_TYPES.filter(opt => opt.value !== '').map(opt => (
+                    <OptionButton
+                      key={opt.value}
+                      option={opt}
+                      selected={formData.propertyType === opt.value}
+                      onChange={() => handleChange('propertyType', opt.value)}
+                    />
+                  ))}
+                </div>
+              </FormField>
+
+              {/* Pinta-ala - Single select buttons */}
+              <FormField label="Pinta-ala">
+                <div className="quote-options-grid">
+                  {AREA_SIZES.filter(opt => opt.value !== '').map(opt => (
+                    <OptionButton
+                      key={opt.value}
+                      option={opt}
+                      selected={formData.areaSize === opt.value}
+                      onChange={() => handleChange('areaSize', opt.value)}
+                    />
+                  ))}
+                </div>
+              </FormField>
+
+              {/* Sijainti & Aikataulu row */}
               <div className="quote-form-grid-2">
                 <FormField label="Sijainti">
                   <input
@@ -372,15 +391,16 @@ const QuoteRequestForm = ({
                   />
                 </FormField>
                 <FormField label="Aikataulu">
-                  <select
-                    value={formData.timeline}
-                    onChange={(e) => handleChange('timeline', e.target.value)}
-                    className="quote-form-select"
-                  >
-                    {TIMELINES.map(opt => (
-                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  <div className="quote-options-grid-compact">
+                    {TIMELINES.filter(opt => opt.value !== '').map(opt => (
+                      <OptionButton
+                        key={opt.value}
+                        option={opt}
+                        selected={formData.timeline === opt.value}
+                        onChange={() => handleChange('timeline', opt.value)}
+                      />
                     ))}
-                  </select>
+                  </div>
                 </FormField>
               </div>
             </div>
