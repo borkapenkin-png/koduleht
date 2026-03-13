@@ -16,6 +16,16 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 - ✅ **Reduced section padding** - more compact layout (2.5rem / 4rem)
 - ✅ **Bug fix** - Fixed critical bug where pageRes.json() was called twice causing page load failure
 
+### References Section Overhaul (December 2025) - LATEST
+- ✅ **Image-based cards** - Professional card layout with 4:3 cover images
+- ✅ **2-column desktop grid** - Clean responsive grid (md:grid-cols-2)
+- ✅ **Pääurakoitsija support** - Main contractor field displayed on each card
+- ✅ **"Näytä lisää" functionality** - Shows 4 initially, expands to show all
+- ✅ **Full admin panel support** - Edit references with images, contractor, location, year
+- ✅ **Reference section settings** - Admin can configure initial count, button texts
+- ✅ **Backend model extended** - New fields: cover_image_url, main_contractor, location, year, gallery_images, full_description, slug, is_published
+- ✅ **Production-safe migration** - Existing data preserved with backward-compatible defaults
+
 ---
 
 ## Previous Updates: March 13, 2026
