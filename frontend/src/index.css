@@ -1431,3 +1431,24 @@ html {
     margin-bottom: 1.5rem;
   }
 }
+
+/* ========== DESCRIPTION FLOAT LAYOUT ========== */
+/* Image floats right, text wraps and continues full-width below */
+.description-float-layout {
+  overflow: hidden; /* clearfix */
+}
+
+.description-float-image {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .description-float-image {
+    float: right;
+    width: 42%;
+    max-width: 480px;
+    margin-left: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+}

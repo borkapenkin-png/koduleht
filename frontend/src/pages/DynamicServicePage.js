@@ -279,25 +279,29 @@ const TrustBadges = ({ settings }) => {
   );
 };
 
-// ========== DESCRIPTION - 45/55 split, white background ==========
+// ========== DESCRIPTION - Float layout: text wraps around image, continues full-width ==========
 const DescriptionSection = ({ page, settings }) => (
   <section className="service-section-white">
     <div className="container-custom">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-        {/* Text - 60% on desktop, full width on mobile/tablet */}
-        <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="lg:col-span-7 order-1">
-          <Subtitle settings={settings} className="mb-3">PALVELUN KUVAUS</Subtitle>
-          <h2 className="section-title mb-6">{page.description_title || 'Mitä tarjoamme'}</h2>
+      {/* Header */}
+      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6">
+        <Subtitle settings={settings} className="mb-3">PALVELUN KUVAUS</Subtitle>
+        <h2 className="section-title">{page.description_title || 'Mitä tarjoamme'}</h2>
+      </motion.div>
+      {/* Content with floated image */}
+      <div className="description-float-layout">
+        {/* Image floats right on desktop */}
+        <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="description-float-image">
+          <div className="relative overflow-hidden rounded-2xl shadow-xl">
+            <img src={getImageUrl(page.description_image_url || page.hero_image_url)} alt={page.hero_title} className="w-full h-64 md:h-80 lg:h-[360px] object-cover" />
+          </div>
+        </motion.div>
+        {/* Text wraps around image, continues full-width below */}
+        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
           <div 
             className="service-description-content"
             dangerouslySetInnerHTML={{ __html: page.description_text || '<p>Ammattitaitoista palvelua.</p>' }} 
           />
-        </motion.div>
-        {/* Image - 40% on desktop, full width on mobile/tablet, aligned to top */}
-        <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="lg:col-span-5 order-2">
-          <div className="relative overflow-hidden rounded-2xl shadow-xl lg:sticky lg:top-24">
-            <img src={getImageUrl(page.description_image_url || page.hero_image_url)} alt={page.hero_title} className="w-full h-64 md:h-80 lg:h-[360px] object-cover" />
-          </div>
         </motion.div>
       </div>
     </div>
