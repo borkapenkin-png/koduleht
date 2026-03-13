@@ -176,7 +176,7 @@ const ReferencesPage = () => {
                       <p className="text-sm text-primary font-medium mb-3">{ref.type}</p>
                       
                       {ref.description && (
-                        <p className="text-sm text-[#64748B] mb-3 line-clamp-2">{ref.description}</p>
+                        <p className="text-sm text-[#64748B] mb-3">{ref.description}</p>
                       )}
                       
                       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[#64748B]">
