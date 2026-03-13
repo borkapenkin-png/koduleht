@@ -5,25 +5,32 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
 ## Latest Update: March 13, 2026
 
-### SEO & FAQ System Implementation (March 13, 2026) - LATEST
-- ✅ **FAQ System** - Full CRUD admin panel for managing FAQs
-- ✅ **FAQSection component** - Collapsible accordion with SEO-optimized JSON-LD FAQPage schema
-- ✅ **Admin UKK tab** - View, create, edit, delete FAQs from admin panel
-- ✅ **Homepage FAQ section** - Displays after References section
-- ✅ **/referenssit page** - Dedicated references page with ItemList JSON-LD schema
-- ✅ **robots.txt** - Created at frontend/public/robots.txt
-- ✅ **sitemap.xml** - Updated to include /referenssit route
-- ✅ **StructuredData component** - LocalBusiness, Organization, Service schemas
-- ✅ **Backend FAQ API** - GET /api/faqs (public), POST/PUT/DELETE /api/admin/faqs (protected)
-- ✅ **4 sample FAQs seeded** - Kotitalousvähennys, projektien aikataulu, takuu, palvelualueet
+### FAQ Hub & Service-Specific FAQs (March 13, 2026) - LATEST
+- ✅ **FAQ removed from homepage** - Per user request
+- ✅ **/ukk - FAQ hub page** - Central FAQ page grouping questions by service
+- ✅ **Service-specific FAQs** - Each service page shows its own FAQs
+- ✅ **FAQ service_id field** - FAQs can be linked to specific services
+- ✅ **FAQPage JSON-LD schema** - On both /ukk and service pages
+- ✅ **Admin FAQ service selector** - Dropdown to assign FAQ to a service
+- ✅ **Backend /api/faqs/grouped** - New endpoint for grouped FAQ data
+- ✅ **Backend /api/faqs?service_id=** - Filter FAQs by service
+- ✅ **/referenssit page** - Displays references with name, description, location, images
+- ✅ **sitemap.xml** - Updated to include /ukk route
 
 ### Test Results (March 13, 2026)
-- Backend: 100% (12/12 tests passed)
+- Backend: 100% (11/11 tests passed)
 - Frontend: 100% - All features working
-- FAQ homepage display: PASS
-- FAQ admin CRUD: PASS
-- /referenssit page: PASS
+- /ukk grouped FAQs: PASS
+- Service page FAQs: PASS
 - JSON-LD schemas: PASS
+- Admin service selector: PASS
+
+### Previous: SEO & FAQ System (March 13, 2026)
+- ✅ **FAQ System** - Full CRUD admin panel for managing FAQs
+- ✅ **robots.txt** - Created at frontend/public/robots.txt
+- ✅ **sitemap.xml** - Updated with all routes
+- ✅ **StructuredData component** - LocalBusiness, Organization, Service schemas
+- ✅ **Backend FAQ API** - GET /api/faqs (public), POST/PUT/DELETE /api/admin/faqs (protected)
 
 ## Previous Update: December 2025
 
