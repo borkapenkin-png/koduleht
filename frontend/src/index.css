@@ -382,3 +382,8 @@ html {
 .hero-overlay {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.4) 100%);
 }
+
+/* CTA Section */
+.cta-section {
+  background-color: var(--color-primary);
+}
