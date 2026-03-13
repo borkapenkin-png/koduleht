@@ -476,33 +476,15 @@ const AboutSection = ({ settings }) => {
 
 // ========== REFERENCES - Image + Text cards with "Näytä lisää" ==========
 const ReferencesSection = ({ settings, references }) => {
-  const [showAll, setShowAll] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  
   // Get settings with defaults
   const refSettings = {
     subtitle: settings?.references_subtitle || "TYÖNÄYTTEITÄ",
     title: settings?.references_title || "Referenssit",
     description: settings?.references_description || "Olemme toteuttaneet lukuisia projekteja yrityksille, taloyhtiöille ja yksityisille asiakkaille.",
-    initialDesktop: settings?.references_initial_count_desktop || 4,
-    initialMobile: settings?.references_initial_count_mobile || 2,
-    loadMoreEnabled: settings?.references_load_more_enabled !== false,
-    showMoreText: settings?.references_show_more_text || "Näytä lisää",
-    showLessText: settings?.references_show_less_text || "Näytä vähemmän"
   };
   
-  // Check if mobile
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-  
-  // Calculate visible references
-  const initialCount = isMobile ? refSettings.initialMobile : refSettings.initialDesktop;
-  const visibleRefs = showAll ? references : references.slice(0, initialCount);
-  const hasMore = references.length > initialCount;
+  // Show only first 2 references on homepage
+  const visibleRefs = references.slice(0, 2);
   
   // Default placeholder image
   const placeholderImage = "https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&w=600";
@@ -587,22 +569,22 @@ const ReferencesSection = ({ settings, references }) => {
           ))}
         </div>
         
-        {/* "Näytä lisää" Button */}
-        {refSettings.loadMoreEnabled && hasMore && (
+        {/* Link to all references page */}
+        {references.length > 2 && (
           <motion.div 
             initial={{ opacity: 0 }} 
             whileInView={{ opacity: 1 }} 
             viewport={{ once: true }}
             className="text-center mt-8 md:mt-10"
           >
-            <button 
-              onClick={() => setShowAll(!showAll)}
+            <Link 
+              to="/referenssit"
               className="btn-secondary inline-flex items-center gap-2 px-6 py-3"
-              data-testid="references-show-more-btn"
+              data-testid="references-view-all-btn"
             >
-              {showAll ? refSettings.showLessText : refSettings.showMoreText}
-              <ChevronDown size={18} className={`transition-transform duration-300 ${showAll ? 'rotate-180' : ''}`} />
-            </button>
+              Katso kaikki referenssit ({references.length})
+              <ArrowRight size={18} />
+            </Link>
           </motion.div>
         )}
       </div>
