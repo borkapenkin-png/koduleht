@@ -493,10 +493,24 @@ const ReferencesSection = ({ settings, references }) => {
     <section id="referenssit" data-testid="references-section" className="section-padding bg-white" aria-labelledby="references-heading">
       <div className="container-custom">
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-8 md:mb-12">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-6 md:mb-8">
           <Subtitle settings={settings} className="mb-2 md:mb-3">{refSettings.subtitle}</Subtitle>
           <h2 id="references-heading" className="section-title">{refSettings.title}</h2>
           <p className="text-sm md:text-base text-[#64748B] mt-3 md:mt-4 max-w-2xl mx-auto">{refSettings.description}</p>
+          
+          {/* Link to all references - ABOVE images */}
+          {references.length > 2 && (
+            <div className="mt-6">
+              <Link 
+                to="/referenssit"
+                className="btn-secondary inline-flex items-center gap-2 px-6 py-3"
+                data-testid="references-view-all-btn"
+              >
+                Katso kaikki referenssit ({references.length})
+                <ArrowRight size={18} />
+              </Link>
+            </div>
+          )}
         </motion.div>
         
         {/* Reference Cards Grid - 2 columns on desktop */}
@@ -568,25 +582,6 @@ const ReferencesSection = ({ settings, references }) => {
             </motion.div>
           ))}
         </div>
-        
-        {/* Link to all references page */}
-        {references.length > 2 && (
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            whileInView={{ opacity: 1 }} 
-            viewport={{ once: true }}
-            className="text-center mt-8 md:mt-10"
-          >
-            <Link 
-              to="/referenssit"
-              className="btn-secondary inline-flex items-center gap-2 px-6 py-3"
-              data-testid="references-view-all-btn"
-            >
-              Katso kaikki referenssit ({references.length})
-              <ArrowRight size={18} />
-            </Link>
-          </motion.div>
-        )}
       </div>
     </section>
   );
@@ -1995,4 +1990,5 @@ function App() {
   );
 }
 
+export { Navbar, Footer };
 export default App;

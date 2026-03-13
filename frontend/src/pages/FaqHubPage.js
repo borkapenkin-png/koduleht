@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ChevronDown, HelpCircle, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Navbar, Footer } from '../App';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 
@@ -77,6 +78,13 @@ const FaqHubPage = () => {
   const [settings, setSettings] = useState({});
   const [loading, setLoading] = useState(true);
   const [openFaqs, setOpenFaqs] = useState({});
+  const [isScrolled, setIsScrolled] = useState(false);
+  
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -165,6 +173,7 @@ const FaqHubPage = () => {
   
   return (
     <>
+      <Navbar isScrolled={isScrolled} logoUrl={settings?.logo_url} />
       <FaqPageSEO />
       
       {/* JSON-LD Schema */}
@@ -311,6 +320,8 @@ const FaqHubPage = () => {
           </motion.div>
         </div>
       </section>
+      
+      <Footer logoUrl={settings?.logo_url} />
     </>
   );
 };

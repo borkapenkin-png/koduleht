@@ -336,56 +336,53 @@ const QuoteRequestForm = ({
                 </div>
               </FormField>
 
-              {!isCompact && (
-                <>
-                  <div className="quote-form-grid-2">
-                    <FormField label="Kohde">
-                      <select
-                        value={formData.propertyType}
-                        onChange={(e) => handleChange('propertyType', e.target.value)}
-                        className="quote-form-select"
-                      >
-                        {PROPERTY_TYPES.map(opt => (
-                          <option key={opt.value} value={opt.value}>{opt.label}</option>
-                        ))}
-                      </select>
-                    </FormField>
-                    <FormField label="Pinta-ala">
-                      <select
-                        value={formData.areaSize}
-                        onChange={(e) => handleChange('areaSize', e.target.value)}
-                        className="quote-form-select"
-                      >
-                        {AREA_SIZES.map(opt => (
-                          <option key={opt.value} value={opt.value}>{opt.label}</option>
-                        ))}
-                      </select>
-                    </FormField>
-                  </div>
-                  <div className="quote-form-grid-2">
-                    <FormField label="Sijainti">
-                      <input
-                        type="text"
-                        value={formData.location}
-                        onChange={(e) => handleChange('location', e.target.value)}
-                        className="quote-form-input"
-                        placeholder="Esim. Helsinki, Espoo"
-                      />
-                    </FormField>
-                    <FormField label="Aikataulu">
-                      <select
-                        value={formData.timeline}
-                        onChange={(e) => handleChange('timeline', e.target.value)}
-                        className="quote-form-select"
-                      >
-                        {TIMELINES.map(opt => (
-                          <option key={opt.value} value={opt.value}>{opt.label}</option>
-                        ))}
-                      </select>
-                    </FormField>
-                  </div>
-                </>
-              )}
+              {/* Dropdowns - always visible */}
+              <div className="quote-form-grid-2">
+                <FormField label="Kohde">
+                  <select
+                    value={formData.propertyType}
+                    onChange={(e) => handleChange('propertyType', e.target.value)}
+                    className="quote-form-select"
+                  >
+                    {PROPERTY_TYPES.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                </FormField>
+                <FormField label="Pinta-ala">
+                  <select
+                    value={formData.areaSize}
+                    onChange={(e) => handleChange('areaSize', e.target.value)}
+                    className="quote-form-select"
+                  >
+                    {AREA_SIZES.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                </FormField>
+              </div>
+              <div className="quote-form-grid-2">
+                <FormField label="Sijainti">
+                  <input
+                    type="text"
+                    value={formData.location}
+                    onChange={(e) => handleChange('location', e.target.value)}
+                    className="quote-form-input"
+                    placeholder="Esim. Helsinki, Espoo"
+                  />
+                </FormField>
+                <FormField label="Aikataulu">
+                  <select
+                    value={formData.timeline}
+                    onChange={(e) => handleChange('timeline', e.target.value)}
+                    className="quote-form-select"
+                  >
+                    {TIMELINES.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                </FormField>
+              </div>
             </div>
 
             {/* PROJECT DESCRIPTION */}

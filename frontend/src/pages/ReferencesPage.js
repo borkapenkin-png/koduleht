@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { MapPin, Building2, Calendar, ArrowLeft, ChevronDown } from 'lucide-react';
+import { Navbar, Footer } from '../App';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 
@@ -26,8 +27,15 @@ const ReferencesPage = () => {
   const [settings, setSettings] = useState({});
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   
   const initialCount = 6; // Show 6 initially (3 rows of 2)
+  
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -94,6 +102,7 @@ const ReferencesPage = () => {
   
   return (
     <>
+      <Navbar isScrolled={isScrolled} logoUrl={settings?.logo_url} />
       <ReferencesPageSEO />
       
       {/* JSON-LD Structured Data */}
@@ -234,6 +243,8 @@ const ReferencesPage = () => {
           </motion.div>
         </div>
       </section>
+      
+      <Footer logoUrl={settings?.logo_url} />
     </>
   );
 };
