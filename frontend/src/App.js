@@ -274,6 +274,7 @@ const Navbar = ({ isScrolled, activeSection, logoUrl }) => {
     { href: "#palvelut", label: "Palvelut" },
     { href: "#meista", label: "Meistä" },
     { href: "#referenssit", label: "Referenssit" },
+    { href: "/ukk", label: "UKK", isPage: true },
     { href: "#yhteystiedot", label: "Yhteystiedot" },
   ];
   const logo = logoUrl || LOGO_URL;
@@ -285,7 +286,11 @@ const Navbar = ({ isScrolled, activeSection, logoUrl }) => {
           <a href="#" data-testid="logo-link"><img src={logo} alt="J&B" className="h-10 md:h-12 w-auto max-w-[180px] object-contain" /></a>
           <div className="hidden md:flex items-center gap-6 lg:gap-8">
             {navLinks.map((link) => (
-              <a key={link.href} href={link.href} className={`nav-link text-sm font-medium transition-colors ${activeSection === link.href.substring(1) ? "nav-link-active" : ""}`}>{link.label}</a>
+              link.isPage ? (
+                <Link key={link.href} to={link.href} className="nav-link text-sm font-medium transition-colors">{link.label}</Link>
+              ) : (
+                <a key={link.href} href={link.href} className={`nav-link text-sm font-medium transition-colors ${activeSection === link.href.substring(1) ? "nav-link-active" : ""}`}>{link.label}</a>
+              )
             ))}
             <a href="#yhteystiedot" className="btn-primary text-sm py-2 px-4">Pyydä tarjous</a>
           </div>
@@ -298,7 +303,11 @@ const Navbar = ({ isScrolled, activeSection, logoUrl }) => {
             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="md:hidden bg-white border-t">
               <div className="py-4 space-y-1">
                 {navLinks.map((link) => (
-                  <a key={link.href} href={link.href} className="block px-4 py-3 nav-link-mobile" onClick={() => setIsMobileMenuOpen(false)}>{link.label}</a>
+                  link.isPage ? (
+                    <Link key={link.href} to={link.href} className="block px-4 py-3 nav-link-mobile" onClick={() => setIsMobileMenuOpen(false)}>{link.label}</Link>
+                  ) : (
+                    <a key={link.href} href={link.href} className="block px-4 py-3 nav-link-mobile" onClick={() => setIsMobileMenuOpen(false)}>{link.label}</a>
+                  )
                 ))}
                 <div className="px-4 pt-2"><a href="#yhteystiedot" className="btn-primary block text-center text-sm" onClick={() => setIsMobileMenuOpen(false)}>Pyydä tarjous</a></div>
               </div>
@@ -734,6 +743,7 @@ const Footer = ({ logoUrl }) => {
             <a href="#palvelut" className="hover:text-white">Palvelut</a>
             <a href="#meista" className="hover:text-white">Meistä</a>
             <a href="#referenssit" className="hover:text-white">Referenssit</a>
+            <Link to="/ukk" className="hover:text-white">UKK</Link>
             <a href="#yhteystiedot" className="hover:text-white">Yhteystiedot</a>
             <Link to="/admin" className="hover:text-white flex items-center gap-1"><Settings size={12} />Admin</Link>
           </div>
