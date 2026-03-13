@@ -170,22 +170,22 @@ const TrustBadges = ({ settings }) => {
   );
 };
 
-// ========== DESCRIPTION - 45/55 split ==========
+// ========== DESCRIPTION - 45/55 split, white background ==========
 const DescriptionSection = ({ page, settings }) => (
-  <section className="section-padding">
+  <section className="service-section-white">
     <div className="container-custom">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-        {/* Text - 45% (roughly 5/12) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+        {/* Text - 45% with max-width 600px */}
         <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="lg:col-span-5">
-          <Subtitle settings={settings} className="mb-2">PALVELUN KUVAUS</Subtitle>
-          <h2 className="section-title mb-4">{page.description_title || 'Mitä tarjoamme'}</h2>
-          <div className="text-sm md:text-base text-[#64748B] leading-relaxed space-y-4 prose prose-p:text-[#64748B] max-w-none"
+          <Subtitle settings={settings} className="mb-3">PALVELUN KUVAUS</Subtitle>
+          <h2 className="section-title mb-5">{page.description_title || 'Mitä tarjoamme'}</h2>
+          <div className="text-sm md:text-base text-[#64748B] leading-relaxed space-y-4 prose prose-p:text-[#64748B] max-w-[600px]"
                dangerouslySetInnerHTML={{ __html: page.description_text || '<p>Ammattitaitoista palvelua.</p>' }} />
         </motion.div>
-        {/* Image - 55% (roughly 7/12) */}
+        {/* Image - 55% larger */}
         <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="lg:col-span-7">
-          <div className="relative overflow-hidden rounded-2xl shadow-lg">
-            <img src={page.description_image_url || page.hero_image_url} alt={page.hero_title} className="w-full h-64 md:h-80 lg:h-96 object-cover" />
+          <div className="relative overflow-hidden rounded-2xl shadow-xl">
+            <img src={page.description_image_url || page.hero_image_url} alt={page.hero_title} className="w-full h-72 md:h-96 lg:h-[420px] object-cover" />
           </div>
         </motion.div>
       </div>
@@ -193,29 +193,29 @@ const DescriptionSection = ({ page, settings }) => (
   </section>
 );
 
-// ========== FEATURES - Polished cards ==========
+// ========== FEATURES - Premium cards on light grey background ==========
 const FeaturesSection = ({ page, settings }) => {
   const features = page.features || [];
   if (features.length === 0) return null;
 
   return (
-    <section className="section-padding section-bg-alt">
+    <section className="service-section-grey">
       <div className="container-custom">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-6 md:mb-10">
-          <Subtitle settings={settings} className="mb-2">PALVELUN SISÄLTÖ</Subtitle>
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10 md:mb-14">
+          <Subtitle settings={settings} className="mb-3">PALVELUN SISÄLTÖ</Subtitle>
           <h2 className="section-title">{page.features_title || 'Mitä palvelu sisältää'}</h2>
         </motion.div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
           {features.map((feature, index) => {
             const Icon = iconMap[feature.icon] || CheckCircle;
             return (
               <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }}
-                className="feature-card">
-                <div className="w-11 h-11 bg-primary/10 rounded-xl flex items-center justify-center mb-3">
+                className="service-feature-card group">
+                <div className="icon-bg-primary mb-4">
                   <Icon size={22} className="text-primary" />
                 </div>
-                <h3 className="font-semibold text-[#0F172A] mb-1.5 text-sm md:text-base">{feature.title}</h3>
-                <p className="text-[#64748B] text-xs md:text-sm leading-relaxed">{feature.description}</p>
+                <h3 className="font-semibold text-[#0F172A] mb-2 text-base group-hover:text-primary transition-colors">{feature.title}</h3>
+                <p className="text-[#64748B] text-sm leading-relaxed">{feature.description}</p>
               </motion.div>
             );
           })}
@@ -225,7 +225,7 @@ const FeaturesSection = ({ page, settings }) => {
   );
 };
 
-// ========== WHY CHOOSE - Soft benefits box ==========
+// ========== WHY CHOOSE - White background section ==========
 const WhyChooseSection = ({ page, settings }) => {
   const defaultItems = settings?.why_choose_us || [
     'Ammattitaitoiset tekijät', 'Laadukkaat materiaalit', 'Selkeä hinnoittelu',
@@ -234,37 +234,37 @@ const WhyChooseSection = ({ page, settings }) => {
   const items = page.why_items?.length > 0 ? page.why_items : defaultItems;
 
   return (
-    <section className="section-padding">
+    <section className="service-section-white">
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-start">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-            <Subtitle settings={settings} className="mb-2">MIKSI MEIDÄT</Subtitle>
-            <h2 className="section-title mb-5">{page.why_title || 'Miksi valita J&B Tasoitus ja Maalaus'}</h2>
-            <div className="space-y-2.5">
+            <Subtitle settings={settings} className="mb-3">MIKSI MEIDÄT</Subtitle>
+            <h2 className="section-title mb-6">{page.why_title || 'Miksi valita J&B Tasoitus ja Maalaus'}</h2>
+            <div className="space-y-3">
               {items.map((item, index) => (
                 <motion.div key={index} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.06 }}
-                  className="why-item">
-                  <div className="w-7 h-7 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                  className="why-choose-item">
+                  <div className="icon-bg-primary-sm">
                     <CheckCircle size={14} className="text-primary" />
                   </div>
-                  <span className="text-[#0F172A] text-sm">{item}</span>
+                  <span className="text-[#0F172A] text-sm md:text-base">{item}</span>
                 </motion.div>
               ))}
             </div>
           </motion.div>
           {/* Soft benefits box */}
-          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="benefits-box">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-11 h-11 bg-primary/20 rounded-xl flex items-center justify-center">
-                <Shield size={22} className="text-primary" />
+          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="benefits-box-premium">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="icon-bg-primary">
+                <Shield size={24} className="text-primary" />
               </div>
-              <h3 className="text-lg font-bold text-[#0F172A]">{settings?.trust_badge_3_title || 'Kotitalousvähennys'}</h3>
+              <h3 className="text-xl font-bold text-[#0F172A]">{settings?.trust_badge_3_title || 'Kotitalousvähennys'}</h3>
             </div>
-            <p className="text-[#64748B] text-sm mb-4 leading-relaxed">
+            <p className="text-[#64748B] text-sm md:text-base mb-5 leading-relaxed">
               Maalaus- ja tasoitustyöt luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen.
             </p>
-            <div className="bg-white/90 rounded-xl p-4 border border-primary/10 shadow-sm">
-              <p className="text-[#0F172A] font-bold text-lg mb-0.5">Jopa 40% vähennys</p>
+            <div className="bg-white rounded-xl p-5 border border-primary/15 shadow-sm">
+              <p className="text-[#0F172A] font-bold text-xl mb-1">Jopa 40% vähennys</p>
               <p className="text-[#64748B] text-sm">Työn osuudesta, max 2 250 €/vuosi</p>
             </div>
           </motion.div>
@@ -274,7 +274,7 @@ const WhyChooseSection = ({ page, settings }) => {
   );
 };
 
-// ========== PROCESS - With connector lines ==========
+// ========== PROCESS - Light grey background with connector lines ==========
 const ProcessSection = ({ page, settings }) => {
   const steps = [
     { num: 1, title: settings?.process_step_1_title || 'Ilmainen arvio', desc: settings?.process_step_1_desc || 'Kartoitamme kohteen' },
@@ -284,26 +284,26 @@ const ProcessSection = ({ page, settings }) => {
   ];
 
   return (
-    <section className="section-padding section-bg-alt">
+    <section className="service-section-grey">
       <div className="container-custom">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-6 md:mb-10">
-          <Subtitle settings={settings} className="mb-2">TYÖVAIHEET</Subtitle>
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10 md:mb-14">
+          <Subtitle settings={settings} className="mb-3">TYÖVAIHEET</Subtitle>
           <h2 className="section-title">{page.process_title || 'Näin projekti etenee'}</h2>
         </motion.div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {steps.map((step, index) => (
             <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.12 }}
               className="text-center relative group">
               {/* Connector line (hidden on mobile, visible on lg) */}
               {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-7 left-[55%] w-[90%] h-0.5 bg-gradient-to-r from-primary/30 to-primary/10"></div>
+                <div className="hidden lg:block absolute top-8 left-[55%] w-[90%] h-0.5 bg-gradient-to-r from-primary/30 to-primary/10"></div>
               )}
               <div className="relative z-10">
-                <div className="w-14 h-14 bg-primary text-white rounded-2xl flex items-center justify-center mx-auto mb-3 text-xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div className="process-step-number group-hover:scale-110 transition-transform duration-300">
                   {step.num}
                 </div>
-                <h3 className="font-semibold text-[#0F172A] mb-1 text-sm md:text-base">{step.title}</h3>
-                <p className="text-[#64748B] text-xs md:text-sm">{step.desc}</p>
+                <h3 className="font-semibold text-[#0F172A] mb-2 text-sm md:text-base">{step.title}</h3>
+                <p className="text-[#64748B] text-xs md:text-sm max-w-[180px] mx-auto">{step.desc}</p>
               </div>
             </motion.div>
           ))}
@@ -313,78 +313,56 @@ const ProcessSection = ({ page, settings }) => {
   );
 };
 
-// ========== SERVICE AREAS - 60/40 split ==========
+// ========== SERVICE AREAS - Centered, themed background with impact ==========
 const ServiceAreasSection = ({ page, settings }) => {
   const areas = settings?.service_areas || ['Helsinki', 'Espoo', 'Vantaa', 'Kauniainen', 'Uusimaa'];
   const phone = settings?.company_phone_primary || settings?.contact_phone_1 || '+358 40 054 7270';
-  const phone2 = settings?.company_phone_secondary || settings?.contact_phone_2 || '+358 40 029 8247';
-  const email = settings?.company_email || settings?.contact_email || 'info@jbtasoitusmaalaus.fi';
-  const address = settings?.company_address || settings?.contact_address || 'Sienitie 25, 00760 Helsinki';
+  const serviceTitle = page.hero_title || 'Tasoitustyöt';
 
   return (
-    <section className="section-padding">
+    <section className="service-area-themed">
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
-          {/* Areas - 60% (7/12) */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="lg:col-span-7">
-            <Subtitle settings={settings} className="mb-2">TOIMIALUE</Subtitle>
-            <h2 className="section-title mb-3">{page.areas_title || 'Palvelualueet'}</h2>
-            <p className="text-[#64748B] text-sm mb-5">
-              {page.areas_text || 'Palvelemme koko Uudenmaan alueella.'}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {areas.map((area, index) => (
-                <span key={index} className="area-tag">
-                  {area}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-          {/* Contact card - 40% (5/12) */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="lg:col-span-5">
-            <div className="contact-card">
-              <h3 className="font-bold text-[#0F172A] mb-4 text-base">Yhteystiedot</h3>
-              <div className="space-y-3">
-                <a href={`tel:${phone.replace(/\s/g, '')}`} className="flex items-center gap-3 text-[#64748B] hover:text-primary transition-colors group">
-                  <div className="w-9 h-9 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Phone size={16} className="text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-[#94A3B8]">Puhelin</p>
-                    <p className="font-medium text-[#0F172A] text-sm">{phone}</p>
-                  </div>
-                </a>
-                <a href={`tel:${phone2.replace(/\s/g, '')}`} className="flex items-center gap-3 text-[#64748B] hover:text-primary transition-colors group">
-                  <div className="w-9 h-9 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Phone size={16} className="text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-[#94A3B8]">Puhelin 2</p>
-                    <p className="font-medium text-[#0F172A] text-sm">{phone2}</p>
-                  </div>
-                </a>
-                <a href={`mailto:${email}`} className="flex items-center gap-3 text-[#64748B] hover:text-primary transition-colors group">
-                  <div className="w-9 h-9 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Mail size={16} className="text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-[#94A3B8]">Sähköposti</p>
-                    <p className="font-medium text-[#0F172A] text-sm">{email}</p>
-                  </div>
-                </a>
-                <div className="flex items-start gap-3 text-[#64748B]">
-                  <div className="w-9 h-9 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <MapPin size={16} className="text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-[#94A3B8]">Osoite</p>
-                    <p className="font-medium text-[#0F172A] text-sm">{address}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center max-w-3xl mx-auto">
+          {/* Label */}
+          <p className="text-white/60 uppercase text-sm font-medium tracking-wider mb-3">TOIMIALUE</p>
+          
+          {/* Main heading */}
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
+            {serviceTitle} Uudellamaalla
+          </h2>
+          
+          {/* Description */}
+          <p className="text-white/80 text-sm md:text-base mb-8 leading-relaxed max-w-xl mx-auto">
+            {page.areas_text || `Tarjoamme ammattitaitoisia ${serviceTitle.toLowerCase()} Helsingissä, Espoossa, Vantaalla, Kauniaisissa ja koko Uudenmaan alueella.`}
+          </p>
+          
+          {/* Area badges */}
+          <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-10">
+            {areas.map((area, index) => (
+              <motion.span 
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.05 }}
+                className="service-area-badge"
+              >
+                <MapPin size={14} className="opacity-70" />
+                {area}
+              </motion.span>
+            ))}
+          </div>
+          
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="#tarjouspyynto" className="inline-flex items-center justify-center gap-2 bg-white text-[#0F172A] px-6 py-3 rounded-lg font-semibold text-sm hover:bg-white/90 transition-all hover:scale-105 shadow-lg">
+              Pyydä ilmainen arvio <ArrowRight size={16} />
+            </a>
+            <a href={`tel:${phone.replace(/\s/g, '')}`} className="inline-flex items-center justify-center gap-2 bg-white/10 text-white px-6 py-3 rounded-lg font-semibold text-sm hover:bg-white/20 transition-all border border-white/20">
+              <Phone size={16} /> Soita nyt
+            </a>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -461,30 +439,30 @@ const ContactFormSection = ({ page, settings }) => {
   );
 };
 
-// ========== RELATED SERVICES - Project cards with images ==========
+// ========== RELATED SERVICES - Project cards on light grey ==========
 const RelatedServices = ({ allPages, currentSlug, settings }) => {
   const otherPages = allPages.filter(p => p.slug !== currentSlug).slice(0, 3);
   if (otherPages.length === 0) return null;
 
   return (
-    <section className="section-padding section-bg-alt">
+    <section className="service-section-grey">
       <div className="container-custom">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-6 md:mb-10">
-          <Subtitle settings={settings} className="mb-2">MUUT PALVELUT</Subtitle>
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10 md:mb-14">
+          <Subtitle settings={settings} className="mb-3">MUUT PALVELUT</Subtitle>
           <h2 className="section-title">Tutustu myös muihin palveluihimme</h2>
         </motion.div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
           {otherPages.map((relPage, index) => (
             <motion.div key={relPage.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }}>
               <Link to={`/${relPage.slug}`} className="project-card block h-full group">
                 <div className="overflow-hidden">
                   <img src={relPage.hero_image_url || 'https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg'} alt={relPage.hero_title} />
                 </div>
-                <div className="p-4">
-                  <p className="text-xs text-primary font-medium uppercase tracking-wide mb-1">Palvelu</p>
-                  <h3 className="font-semibold text-[#0F172A] mb-1.5 text-sm md:text-base group-hover:text-primary transition-colors">{relPage.hero_title}</h3>
-                  <p className="text-[#64748B] text-xs md:text-sm line-clamp-2 mb-2">{relPage.hero_subtitle}</p>
-                  <span className="inline-flex items-center text-primary text-xs md:text-sm font-medium link-underline">Lue lisää <ArrowRight size={12} className="ml-1" /></span>
+                <div className="p-5">
+                  <p className="text-xs text-primary font-medium uppercase tracking-wide mb-2">Palvelu</p>
+                  <h3 className="font-semibold text-[#0F172A] mb-2 text-base group-hover:text-primary transition-colors">{relPage.hero_title}</h3>
+                  <p className="text-[#64748B] text-sm line-clamp-2 mb-3">{relPage.hero_subtitle}</p>
+                  <span className="inline-flex items-center text-primary text-sm font-medium link-underline">Lue lisää <ArrowRight size={14} className="ml-1" /></span>
                 </div>
               </Link>
             </motion.div>
