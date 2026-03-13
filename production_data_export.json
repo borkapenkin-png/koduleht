@@ -1,0 +1,511 @@
+{
+  "site_settings": [
+    {
+      "id": "site_settings",
+      "hero_slogan": "LAATUJOHTAJAT",
+      "hero_title_1": "Ammattitaitoista",
+      "hero_title_2": "maalausta",
+      "hero_title_3": "ja tasoitusta",
+      "hero_description": "Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella.",
+      "hero_image_url": "https://images.pexels.com/photos/5493669/pexels-photo-5493669.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "hero_badge_1": "Kotitalousvähennys",
+      "hero_badge_2": "Tyytyväisyystakuu",
+      "about_subtitle": "TIETOA MEISTÄ",
+      "about_title": "Luotettava kumppani pintaremontteihin",
+      "about_text_1": "J&B Tasoitus Ja Maalaus Oy on Uudellamaalla toimiva luotettava maalaustöiden ammattilainen. Olemme tehneet sisä- ja ulkomaalauksia vuodesta 2018.",
+      "about_text_2": "Meiltä sujuu myös katto- ja julkisivumaalaukset, julkisivurappaukset sekä sisäpintojen tapetoinnit. Toiminnassa panostamme asiakaslähtöisyyteen, joustavuuteen ja ensiluokkaiseen työnlaatuun.",
+      "about_text_3": "Teemme työt avaimet käteen -periaatteella ja tarjoamme asiakkaillemme tyytyväisyystakuun.",
+      "about_image_url": "https://images.pexels.com/photos/7941435/pexels-photo-7941435.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "about_year": "2018",
+      "about_info_title": "Muista kotitalousvähennys!",
+      "about_info_text": "Maalaus luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen.",
+      "contact_subtitle": "OTA YHTEYTTÄ",
+      "contact_title": "Yhteystiedot",
+      "contact_description": "Lähetä tarjouspyyntö tai pyydä meidät ilmaiselle arviokäynnille. Saat sähköpostiisi tarjouksen, jossa kerromme tarkasti urakan eri vaiheet.",
+      "contact_address": "Sienitie 25, 00760 Helsinki",
+      "contact_email": "info@jbtasoitusmaalaus.fi",
+      "contact_phone_1_name": "Boris Penkin",
+      "contact_phone_1": "+358 40 054 7270",
+      "contact_phone_2_name": "Joosep Rohusaar",
+      "contact_phone_2": "+358 40 029 8247",
+      "contact_jobs_title": "Työpaikkahaku",
+      "contact_jobs_text": "Haluatko töihin? Lähetä CV ja saatekirje osoitteeseen: info@jbtasoitusmaalaus.fi",
+      "theme_color": "#0891B2",
+      "theme_font": "Open Sans",
+      "theme_size": "medium",
+      "subtitle_font": "Inter",
+      "subtitle_size": "large",
+      "subtitle_spacing": "normal",
+      "subtitle_weight": "medium"
+    }
+  ],
+  "services": [
+    {
+      "id": "1ebcb766-8fab-46ca-a8b1-9dd3c0b63382",
+      "title": "Julkisivurappaus",
+      "description": "Julkisivun rappaus antaa tasalaatuisen sadetta ja muita sään rasituksia suojaavan pinnan rakenteille. Teemme kokonaisvaltaisia julkisivurappauksia sekä osarappauksia.",
+      "icon": "Building2",
+      "image_url": "https://images.pexels.com/photos/5691622/pexels-photo-5691622.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "order": 4,
+      "created_at": "2026-02-22T09:09:15.047982+00:00"
+    },
+    {
+      "id": "bda34d42-4c64-42b1-b459-f13f7a4aa4d4",
+      "title": "Tasoitustyöt",
+      "description": "Tasoitetyöt tulee tehdä huolella ennen uutta pintamateriaalia. Kokenut ammattilainen takaa tasaisen ja siistin lopputuloksen oikeilla välineillä.",
+      "icon": "Layers",
+      "image_url": "https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "order": 1,
+      "created_at": "2026-02-22T09:09:15.048009+00:00"
+    },
+    {
+      "id": "e58b8d25-20f5-4dcd-93b0-18359de6a56c",
+      "title": "Maalaustyöt",
+      "description": "Maalaustyöt sisätiloihin ja ulkopinnoille huolellisesti toiveidenne mukaan. Palvelemme yrityksiä, yksityisasiakkaita ja taloyhtiöitä.",
+      "icon": "Paintbrush",
+      "image_url": "https://images.pexels.com/photos/5691629/pexels-photo-5691629.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "order": 2,
+      "created_at": "2026-02-22T09:09:15.048027+00:00"
+    },
+    {
+      "id": "97f36eec-dd76-4c18-9b00-3e24508435ef",
+      "title": "Mikrosementti",
+      "description": "Mikrosementti on 2–3 mm paksu, erittäin kestävä ja saumaton pinnoite, joka soveltuu seinille, lattioille ja märkätiloihin.",
+      "icon": "Droplets",
+      "image_url": "https://images.pexels.com/photos/6474471/pexels-photo-6474471.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "order": 3,
+      "created_at": "2026-02-22T17:26:27.328996+00:00"
+    },
+    {
+      "id": "555f0a86-3280-49e6-9173-9569a030964f",
+      "title": "Kattojen pesut ja maalaukset",
+      "description": "Katon säännöllinen pesu ja huoltomaalaus ehkäisevät ruostumista, sammaloitumista ja ennenaikaista kulumista. Pesemme katon ammattikalustolla turvallisesti ja tehokkaasti, minkä jälkeen suoritamme tarvittavat pohjatyöt ja maalauksen.",
+      "icon": "Building2",
+      "image_url": "https://images.pexels.com/photos/8961438/pexels-photo-8961438.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "order": 5,
+      "created_at": "2026-02-22T17:36:53.171764+00:00"
+    },
+    {
+      "id": "b0558e2c-9ecc-484d-8e68-72be648ea971",
+      "title": "Julkisivujen pesut ja maalaukset",
+      "description": "Huolellisesti toteutettu julkisivupesu ja maalaus pidentävät rakennuksen käyttöikää ja parantavat sen ulkonäköä merkittävästi. Ennen maalausta teemme perusteellisen pesun, poistamme lian, homeen ja irtoavan maalin sekä tarkistamme alustan kunnon.",
+      "icon": "Building2",
+      "image_url": "https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "order": 6,
+      "created_at": "2026-02-22T17:38:32.050618+00:00"
+    }
+  ],
+  "service_pages": [
+    {
+      "id": "4bb45a4e-702a-4532-b2cf-e3f83867bba7",
+      "service_id": "bda34d42-4c64-42b1-b459-f13f7a4aa4d4",
+      "slug": "tasoitustyot-helsinki",
+      "is_published": true,
+      "seo_title": "Tasoitustyöt Helsinki | J&B Tasoitus ja Maalaus",
+      "seo_description": "Ammattitaitoista tasoitustyötta Helsingissä ja Uudellamaalla. Pyydä maksuton arvio! Kotitalousvähennys kelpaa.",
+      "seo_keywords": "tasoitustyöt, tasoitustyöt helsinki, tasoitustyöt hinta",
+      "hero_title": "Tasoitustyöt Helsingissä",
+      "hero_subtitle": "Tasoitetyöt tulee tehdä huolella ennen uutta pintamateriaalia. Kokenut ammattilainen takaa tasaisen ja siistin lopputuloksen oikeilla välineillä.",
+      "hero_image_url": "https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "description_title": "Palvelun kuvaus",
+      "description_text": "<p>Tasoitetyöt tulee tehdä huolella ennen uutta pintamateriaalia. Kokenut ammattilainen takaa tasaisen ja siistin lopputuloksen oikeilla välineillä.</p><p>Palvelemme yksityisasiakkaita, yrityksiä ja taloyhtiöitä koko Uudenmaan alueella.</p>",
+      "description_image_url": "",
+      "features_title": "Mitä palvelu sisältää",
+      "features": [
+        {
+          "title": "Ammattitaitoinen työ",
+          "description": "Kokeneet tekijät varmistavat laadukkaan lopputuloksen",
+          "icon": "Award"
+        },
+        {
+          "title": "Laadukkaat materiaalit",
+          "description": "Käytämme vain parhaita materiaaleja",
+          "icon": "Shield"
+        },
+        {
+          "title": "Nopea aikataulu",
+          "description": "Sovittu aikataulu pitää aina",
+          "icon": "Clock"
+        },
+        {
+          "title": "Siisti työnjälki",
+          "description": "Siivous ja suojaukset kuuluvat hintaan",
+          "icon": "CheckCircle"
+        }
+      ],
+      "why_title": "Miksi valita J&B Tasoitus ja Maalaus",
+      "why_items": [],
+      "process_title": "Näin projekti etenee",
+      "use_global_process": true,
+      "areas_title": "Palvelualueet",
+      "areas_text": "Tarjoamme tasoitustyötta seuraavilla alueilla: Helsinki, Espoo, Vantaa, Kauniainen ja muu Uusimaa.",
+      "use_global_areas": true,
+      "related_service_ids": [],
+      "cta_title": "",
+      "cta_text": "",
+      "created_at": "2026-03-13T04:49:41.574735+00:00",
+      "updated_at": "2026-03-13T04:49:41.574740+00:00"
+    },
+    {
+      "id": "0f01d8a3-f41b-4ac5-96a7-0bccd26ce17e",
+      "service_id": "e58b8d25-20f5-4dcd-93b0-18359de6a56c",
+      "slug": "maalaustyot-helsinki",
+      "is_published": true,
+      "seo_title": "Maalaustyöt Helsinki | J&B Tasoitus ja Maalaus",
+      "seo_description": "Ammattitaitoista maalaustyötä Helsingissä ja Uudellamaalla. Sisä- ja ulkomaalaukset, julkisivumaalaukset. Pyydä maksuton arvio!",
+      "seo_keywords": "maalaustyöt, maalaus helsinki, sisämaalaus, ulkomaalaus, maalari helsinki",
+      "hero_title": "Maalaustyöt Helsingissä",
+      "hero_subtitle": "Maalaustyöt sisätiloihin ja ulkopinnoille huolellisesti toiveidenne mukaan. Palvelemme yrityksiä, yksityisasiakkaita ja taloyhtiöitä.",
+      "hero_image_url": "https://images.pexels.com/photos/5691629/pexels-photo-5691629.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "description_title": "Palvelun kuvaus",
+      "description_text": "<p>Tarjoamme kattavat maalauspalvelut sisätiloihin ja ulkopinnoille. Kokeneet maalarimme suorittavat työt huolellisesti ja ammattitaidolla.</p><p>Palvelemme yksityisasiakkaita, yrityksiä ja taloyhtiöitä koko Uudenmaan alueella.</p>",
+      "description_image_url": null,
+      "features_title": "Mitä palvelu sisältää",
+      "features": [
+        {
+          "title": "Sisämaalaus",
+          "description": "Seinien, kattojen ja ovien maalaus",
+          "icon": "Paintbrush"
+        },
+        {
+          "title": "Ulkomaalaus",
+          "description": "Julkisivujen ja puupintojen maalaus",
+          "icon": "Building2"
+        },
+        {
+          "title": "Lattioiden maalaus",
+          "description": "Betonilattioiden pinnoitus ja maalaus",
+          "icon": "Square"
+        },
+        {
+          "title": "Erikoismaalaukset",
+          "description": "Struktuurimaalaukset ja efektipinnat",
+          "icon": "Sparkles"
+        }
+      ],
+      "why_title": "Miksi valita J&B Tasoitus ja Maalaus",
+      "why_items": [],
+      "process_title": "Näin projekti etenee",
+      "use_global_process": true,
+      "areas_title": "Palvelualueet",
+      "areas_text": "Tarjoamme maalaustyötä seuraavilla alueilla: Helsinki, Espoo, Vantaa, Kauniainen ja muu Uusimaa.",
+      "use_global_areas": true,
+      "related_service_ids": [],
+      "cta_title": "",
+      "cta_text": "",
+      "created_at": "2026-03-13T04:51:27.619658+00:00",
+      "updated_at": "2026-03-13T04:51:27.619662+00:00"
+    },
+    {
+      "id": "cd246216-9c3d-474d-a391-626cb40009c4",
+      "service_id": "97f36eec-dd76-4c18-9b00-3e24508435ef",
+      "slug": "mikrosementti-helsinki",
+      "is_published": true,
+      "seo_title": "Mikrosementti Helsinki | J&B Tasoitus ja Maalaus",
+      "seo_description": "Mikrosementtipinnat ammattitaidolla Helsingissä. Moderni ja kestävä pintaratkaisu lattioihin ja seiniin. Pyydä maksuton arvio!",
+      "seo_keywords": "mikrosementti, mikrosementti helsinki, mikrosementtilattia, mikrosementtiseinä",
+      "hero_title": "Mikrosementti Helsingissä",
+      "hero_subtitle": "Mikrosementti on moderni ja kestävä pintaratkaisu lattioihin ja seiniin. Luomme saumattomia pintoja, jotka näyttävät upealta ja kestävät käyttöä.",
+      "hero_image_url": "https://images.pexels.com/photos/6492403/pexels-photo-6492403.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "description_title": "Palvelun kuvaus",
+      "description_text": "<p>Mikrosementti on ohut, kovettuva pinnoite, joka luo yhtenäisen ja saumattoman pinnan. Se soveltuu erinomaisesti lattioihin, seiniin ja jopa kylpyhuoneisiin.</p><p>Mikrosementtipinnat ovat helppohoitoisia, kestäviä ja tyylikkäitä.</p>",
+      "description_image_url": null,
+      "features_title": "Mikrosementin edut",
+      "features": [
+        {
+          "title": "Saumaton pinta",
+          "description": "Yhtenäinen ja moderni ilme",
+          "icon": "Square"
+        },
+        {
+          "title": "Kestävä materiaali",
+          "description": "Kestää kovaakin kulutusta",
+          "icon": "Shield"
+        },
+        {
+          "title": "Helppohoitoinen",
+          "description": "Helppo pitää puhtaana",
+          "icon": "Sparkles"
+        },
+        {
+          "title": "Monipuolinen",
+          "description": "Sopii lattioihin ja seiniin",
+          "icon": "Layers"
+        }
+      ],
+      "why_title": "Miksi valita J&B Tasoitus ja Maalaus",
+      "why_items": [],
+      "process_title": "Näin projekti etenee",
+      "use_global_process": true,
+      "areas_title": "Palvelualueet",
+      "areas_text": "",
+      "use_global_areas": true,
+      "related_service_ids": [],
+      "cta_title": "",
+      "cta_text": "",
+      "created_at": "2026-03-13T04:51:50.430586+00:00",
+      "updated_at": "2026-03-13T04:51:50.430592+00:00"
+    },
+    {
+      "id": "d3a65ca9-7d02-4803-8096-22273ef8ef9e",
+      "service_id": "1ebcb766-8fab-46ca-a8b1-9dd3c0b63382",
+      "slug": "julkisivurappaus-helsinki",
+      "is_published": true,
+      "seo_title": "Julkisivurappaus Helsinki | J&B Tasoitus ja Maalaus",
+      "seo_description": "Ammattitaitoista julkisivurappausta Helsingissä. Rappaus suojaa rakennustasi ja antaa uuden ilmeen. Pyydä maksuton arvio!",
+      "seo_keywords": "julkisivurappaus, rappaus helsinki, julkisivun rappaus, rappaustyöt",
+      "hero_title": "Julkisivurappaus Helsingissä",
+      "hero_subtitle": "Julkisivun rappaus antaa tasalaatuisen sadetta ja muita sään rasituksia suojaavan pinnan rakenteille. Teemme kokonaisvaltaisia julkisivurappauksia sekä osarappauksia.",
+      "hero_image_url": "https://images.pexels.com/photos/5691622/pexels-photo-5691622.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "description_title": "Palvelun kuvaus",
+      "description_text": "<p>Julkisivurappaus on tehokas tapa suojata rakennusta sään rasituksilta ja parantaa sen ulkonäköä.</p><p>Tarjoamme kokonaisvaltaisia julkisivurappauksia sekä korjausrappauksia vaurioituneille pinnoille.</p>",
+      "description_image_url": null,
+      "features_title": "Mitä palvelu sisältää",
+      "features": [
+        {
+          "title": "Rappauksen uusiminen",
+          "description": "Vanhan rappauksen poisto ja uusiminen",
+          "icon": "Wrench"
+        },
+        {
+          "title": "Korjausrappaus",
+          "description": "Vaurioituneiden alueiden korjaus",
+          "icon": "CheckCircle"
+        },
+        {
+          "title": "Lisäeristys",
+          "description": "Rappaus lisäeristyksen päälle",
+          "icon": "Shield"
+        },
+        {
+          "title": "Pinnoitus",
+          "description": "Kestävä pintakäsittely",
+          "icon": "Paintbrush"
+        }
+      ],
+      "why_title": "Miksi valita J&B Tasoitus ja Maalaus",
+      "why_items": [],
+      "process_title": "Näin projekti etenee",
+      "use_global_process": true,
+      "areas_title": "Palvelualueet",
+      "areas_text": "",
+      "use_global_areas": true,
+      "related_service_ids": [],
+      "cta_title": "",
+      "cta_text": "",
+      "created_at": "2026-03-13T04:51:50.629021+00:00",
+      "updated_at": "2026-03-13T04:51:50.629027+00:00"
+    },
+    {
+      "id": "4c7e89bd-ffb3-4565-bd50-9d01133ccda5",
+      "service_id": "555f0a86-3280-49e6-9173-9569a030964f",
+      "slug": "kattomaalaus-helsinki",
+      "is_published": true,
+      "seo_title": "Kattomaalaus Helsinki | J&B Tasoitus ja Maalaus",
+      "seo_description": "Kattojen pesut ja maalaukset ammattitaidolla Helsingissä. Pidentää katon käyttöikää ja parantaa ulkonäköä. Pyydä maksuton arvio!",
+      "seo_keywords": "kattomaalaus, katon pesu, katon maalaus helsinki, kattoremontti",
+      "hero_title": "Kattojen Maalaukset Helsingissä",
+      "hero_subtitle": "Katon huolto pidentää katon käyttöikää merkittävästi. Teemme sekä pesu- että maalaustyöt ammattitaidolla.",
+      "hero_image_url": "https://images.pexels.com/photos/8961074/pexels-photo-8961074.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "description_title": "Palvelun kuvaus",
+      "description_text": "<p>Kattojen säännöllinen huolto pidentää katon käyttöikää ja parantaa kiinteistön yleisilmettä.</p><p>Teemme kattomaalaukset sekä peltikatto- että tiilikattopinnoille.</p>",
+      "description_image_url": null,
+      "features_title": "Mitä palvelu sisältää",
+      "features": [
+        {
+          "title": "Katon pesu",
+          "description": "Painepesulla sammal ja lika pois",
+          "icon": "Droplets"
+        },
+        {
+          "title": "Pohjatyöt",
+          "description": "Ruosteenesto ja pohjamaali",
+          "icon": "Layers"
+        },
+        {
+          "title": "Pintamaalaus",
+          "description": "Kestävällä kattomaalilla",
+          "icon": "Paintbrush"
+        },
+        {
+          "title": "Tarkistus",
+          "description": "Läpivientien ja pellitysten tarkistus",
+          "icon": "CheckCircle"
+        }
+      ],
+      "why_title": "Miksi valita J&B Tasoitus ja Maalaus",
+      "why_items": [],
+      "process_title": "Näin projekti etenee",
+      "use_global_process": true,
+      "areas_title": "Palvelualueet",
+      "areas_text": "",
+      "use_global_areas": true,
+      "related_service_ids": [],
+      "cta_title": "",
+      "cta_text": "",
+      "created_at": "2026-03-13T04:52:10.566248+00:00",
+      "updated_at": "2026-03-13T04:52:10.566253+00:00"
+    },
+    {
+      "id": "7932d145-0195-45c7-ad5c-4e4b200a047f",
+      "service_id": "b0558e2c-9ecc-484d-8e68-72be648ea971",
+      "slug": "julkisivumaalaus-helsinki",
+      "is_published": true,
+      "seo_title": "Julkisivumaalaus Helsinki | J&B Tasoitus ja Maalaus",
+      "seo_description": "Julkisivujen pesut ja maalaukset ammattitaidolla Helsingissä. Suojaa rakennusta ja parantaa ulkonäköä. Pyydä maksuton arvio!",
+      "seo_keywords": "julkisivumaalaus, julkisivun pesu, julkisivun maalaus helsinki",
+      "hero_title": "Julkisivujen Maalaukset Helsingissä",
+      "hero_subtitle": "Julkisivun maalaus suojaa rakennusta sään rasituksilta ja antaa kiinteistölle uuden ilmeen. Teemme sekä pesu- että maalaustyöt.",
+      "hero_image_url": "https://images.pexels.com/photos/5691592/pexels-photo-5691592.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "description_title": "Palvelun kuvaus",
+      "description_text": "<p>Julkisivun säännöllinen huolto on tärkeää rakennuksen suojaamiseksi ja arvon säilyttämiseksi.</p><p>Teemme julkisivumaalaukset puupinnoille, rappaus- ja betonipinnoille.</p>",
+      "description_image_url": null,
+      "features_title": "Mitä palvelu sisältää",
+      "features": [
+        {
+          "title": "Julkisivun pesu",
+          "description": "Lian ja sammalen poisto",
+          "icon": "Droplets"
+        },
+        {
+          "title": "Pohjatyöt",
+          "description": "Hionta, tasoitus ja pohjamaalaus",
+          "icon": "Layers"
+        },
+        {
+          "title": "Pintamaalaus",
+          "description": "Kestävällä julkisivumaalilla",
+          "icon": "Paintbrush"
+        },
+        {
+          "title": "Detaljityöt",
+          "description": "Ikkunanpuitteet ja listat",
+          "icon": "Frame"
+        }
+      ],
+      "why_title": "Miksi valita J&B Tasoitus ja Maalaus",
+      "why_items": [],
+      "process_title": "Näin projekti etenee",
+      "use_global_process": true,
+      "areas_title": "Palvelualueet",
+      "areas_text": "",
+      "use_global_areas": true,
+      "related_service_ids": [],
+      "cta_title": "",
+      "cta_text": "",
+      "created_at": "2026-03-13T04:52:10.745226+00:00",
+      "updated_at": "2026-03-13T04:52:10.745234+00:00"
+    }
+  ],
+  "references": [
+    {
+      "id": "bc24d97f-edcc-4d22-a829-e7ba5ab34d72",
+      "name": "Mehiläinen Ympyrätalo",
+      "type": "Tasoitus- ja maalaustyöt",
+      "description": "Laaja sisätilojen pintakäsittely terveydenhuollon tiloissa. - päivitetty",
+      "order": 1,
+      "created_at": "2026-02-22T09:09:15.063379+00:00",
+      "cover_image_url": "https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "location": "Helsinki",
+      "main_contractor": "NCC"
+    },
+    {
+      "id": "52274870-68be-4561-b7b3-913a62c09158",
+      "name": "Crowne Plaza Hotel",
+      "type": "Tasoitus- ja maalaustyöt",
+      "description": "Test description",
+      "order": 2,
+      "created_at": "2026-02-22T09:09:15.063405+00:00",
+      "cover_image_url": "https://images.pexels.com/photos/6444256/pexels-photo-6444256.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "location": "Helsinki",
+      "main_contractor": "Skanska"
+    },
+    {
+      "id": "c6539768-58f3-4e26-b778-824121b8a1b4",
+      "name": "Ressun lukio",
+      "type": "Tasoitus- ja maalaustyöt",
+      "description": "Koulun sisätilojen kunnostus ja maalaus.",
+      "order": 3,
+      "created_at": "2026-02-22T09:09:15.063417+00:00",
+      "cover_image_url": "https://images.pexels.com/photos/6474471/pexels-photo-6474471.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "location": "Espoo",
+      "main_contractor": "YIT"
+    },
+    {
+      "id": "dc6dccc0-bd73-405c-bf3e-b2ec44b260a0",
+      "name": "Jumbo Stockmann",
+      "type": "Tasoitus- ja maalaustyöt",
+      "description": "Liiketilan pintakäsittely ja viimeistely.",
+      "order": 4,
+      "created_at": "2026-02-22T09:09:15.063427+00:00",
+      "cover_image_url": "https://images.pexels.com/photos/6444268/pexels-photo-6444268.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "location": "Vantaa",
+      "main_contractor": "Hartela"
+    },
+    {
+      "id": "98ab31ae-da95-4077-a84d-ee615d7f4599",
+      "name": "Myllypuro koulu",
+      "type": "Tasoitus- ja maalaustyöt",
+      "description": "Uuden koulun sisäpintojen tasoitus ja maalaus.",
+      "order": 5,
+      "created_at": "2026-02-22T09:09:15.063439+00:00",
+      "cover_image_url": "https://images.pexels.com/photos/5691604/pexels-photo-5691604.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "location": "Helsinki",
+      "main_contractor": "Lehto"
+    },
+    {
+      "id": "f0e0b45f-4d66-4a33-ac18-1ba154782666",
+      "name": "Ester1",
+      "type": "Tasoitus- ja maalaustyöt",
+      "description": "Asuinrakennuksen sisäpintojen käsittely.",
+      "order": 6,
+      "created_at": "2026-02-22T09:09:15.063448+00:00",
+      "cover_image_url": "https://images.pexels.com/photos/6444260/pexels-photo-6444260.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "location": "Helsinki",
+      "main_contractor": "Peab"
+    }
+  ],
+  "partners": [
+    {
+      "id": "6a925c8d-8c34-46aa-832c-3fc51b816098",
+      "name": "Logo",
+      "image_url": "https://helsea-build.preview.emergentagent.com/api/images/6207e70d-58d7-4f40-8a90-c75988abf52e",
+      "order": 1,
+      "created_at": "2026-02-24T15:56:19.716281+00:00"
+    }
+  ],
+  "faqs": [
+    {
+      "id": "753cb7ca-a82c-4598-b01a-c3193f0e2f91",
+      "question": "Mitä kotitalousvähennys tarkoittaa maalaustyössä?",
+      "answer": "Maalaustyöt luokitellaan kunnossapitotyöksi, josta voit saada kotitalousvähennystä. Vähennys on 40% työn osuudesta, enintään 2250€ vuodessa. Materiaalikustannukset eivät kuulu vähennykseen.",
+      "order": 1,
+      "is_published": true,
+      "created_at": "2026-03-13T12:56:42.153370+00:00"
+    },
+    {
+      "id": "3b53f2c1-d0a2-4c32-9a16-e85d738f6361",
+      "question": "Kuinka nopeasti voitte aloittaa projektin?",
+      "answer": "Yleensä pystymme aloittamaan työt 1-2 viikon kuluessa yhteydenotosta. Kiireellisissä tapauksissa voimme usein järjestää nopeammankin aikataulun. Ota yhteyttä niin sovitaan teille sopiva ajankohta.",
+      "order": 2,
+      "is_published": true,
+      "created_at": "2026-03-13T12:56:42.354268+00:00"
+    },
+    {
+      "id": "11bfd591-d4e4-4d68-9480-ccffd6f2aa89",
+      "question": "Annatteko takuun työlle?",
+      "answer": "Kyllä, tarjoamme kaikille töillemme tyytyväisyystakuun. Käytämme laadukkaita materiaaleja ja huolellista työtapaa varmistaaksemme kestävän lopputuloksen. Jos huomaat ongelmia, korjaamme ne veloituksetta.",
+      "order": 3,
+      "is_published": true,
+      "created_at": "2026-03-13T12:56:42.544702+00:00"
+    },
+    {
+      "id": "6b3edcfa-8c1b-4eee-92f3-e44d905ce854",
+      "question": "Millä alueilla toimitte?",
+      "answer": "Palvelemme asiakkaita koko Uudenmaan alueella: Helsinki, Espoo, Vantaa, Kauniainen ja lähikunnat. Isommissa projekteissa toimimme myös muualla Etelä-Suomessa.",
+      "order": 4,
+      "is_published": true,
+      "created_at": "2026-03-13T12:56:42.749717+00:00"
+    }
+  ]
+}

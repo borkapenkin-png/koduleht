@@ -1159,6 +1159,17 @@ async def seed_initial_data(username: str = Depends(get_current_admin)):
         await db.partners.insert_many(partners)
         seeded["partners"] = 4
     
+    # Seed FAQs
+    if await db.faqs.count_documents({}) == 0:
+        faqs = [
+            {"id": str(uuid.uuid4()), "question": "Mitä kotitalousvähennys tarkoittaa maalaustyössä?", "answer": "Maalaustyöt luokitellaan kunnossapitotyöksi, josta voit saada kotitalousvähennystä. Vähennys on 40% työn osuudesta, enintään 2250€ vuodessa. Materiaalikustannukset eivät kuulu vähennykseen.", "order": 1, "is_published": True, "created_at": datetime.now(timezone.utc).isoformat()},
+            {"id": str(uuid.uuid4()), "question": "Kuinka nopeasti voitte aloittaa projektin?", "answer": "Yleensä pystymme aloittamaan työt 1-2 viikon kuluessa yhteydenotosta. Kiireellisissä tapauksissa voimme usein järjestää nopeammankin aikataulun. Ota yhteyttä niin sovitaan teille sopiva ajankohta.", "order": 2, "is_published": True, "created_at": datetime.now(timezone.utc).isoformat()},
+            {"id": str(uuid.uuid4()), "question": "Annatteko takuun työlle?", "answer": "Kyllä, tarjoamme kaikille töillemme tyytyväisyystakuun. Käytämme laadukkaita materiaaleja ja huolellista työtapaa varmistaaksemme kestävän lopputuloksen. Jos huomaat ongelmia, korjaamme ne veloituksetta.", "order": 3, "is_published": True, "created_at": datetime.now(timezone.utc).isoformat()},
+            {"id": str(uuid.uuid4()), "question": "Millä alueilla toimitte?", "answer": "Palvelemme asiakkaita koko Uudenmaan alueella: Helsinki, Espoo, Vantaa, Kauniainen ja lähikunnat. Isommissa projekteissa toimimme myös muualla Etelä-Suomessa.", "order": 4, "is_published": True, "created_at": datetime.now(timezone.utc).isoformat()}
+        ]
+        await db.faqs.insert_many(faqs)
+        seeded["faqs"] = 4
+    
     return {"message": "Seed complete", "seeded": seeded}
 
 

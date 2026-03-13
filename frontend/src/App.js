@@ -1063,6 +1063,9 @@ const AdminPanel = () => {
         <div className="container-custom flex items-center justify-between h-14 md:h-16">
           <div className="flex items-center gap-3"><img src={LOGO_URL} alt="J&B" className="h-8 md:h-10" /><span className="font-bold text-[#0F172A] text-sm md:text-base">Admin</span></div>
           <div className="flex items-center gap-3 md:gap-4">
+            <button onClick={seedData} className="text-xs md:text-sm text-[#64748B] hover:text-green-600 flex items-center gap-1" title="Palauta oletusdata jos tietokanta on tyhjä">
+              <Plus size={14} />Palauta data
+            </button>
             <Link to="/" className="text-xs md:text-sm text-[#64748B] hover:text-primary">Sivusto</Link>
             <button onClick={handleLogout} className="flex items-center gap-1 text-xs md:text-sm text-[#64748B] hover:text-red-600"><LogOut size={14} />Ulos</button>
           </div>
