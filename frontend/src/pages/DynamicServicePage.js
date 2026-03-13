@@ -22,6 +22,105 @@ const getImageUrl = (url) => {
   return url;
 };
 
+// Dynamic SEO for Service Pages using useEffect
+const useServicePageSEO = (page, settings, faqs) => {
+  useEffect(() => {
+    if (!page) return;
+    
+    const companyName = settings?.company_name || 'J&B Tasoitus ja Maalaus Oy';
+    const phone = settings?.company_phone_primary || '+358 40 054 7270';
+    const address = settings?.company_address || 'Sienitie 25, 00760 Helsinki';
+    const city = settings?.company_city || 'Helsinki';
+    
+    // Set page title
+    document.title = `${page.seo_title} | ${companyName}`;
+    
+    // Update meta description
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+      metaDesc = document.createElement('meta');
+      metaDesc.name = 'description';
+      document.head.appendChild(metaDesc);
+    }
+    metaDesc.content = page.seo_description;
+    
+    // Update meta keywords
+    if (page.seo_keywords) {
+      let metaKeywords = document.querySelector('meta[name="keywords"]');
+      if (!metaKeywords) {
+        metaKeywords = document.createElement('meta');
+        metaKeywords.name = 'keywords';
+        document.head.appendChild(metaKeywords);
+      }
+      metaKeywords.content = page.seo_keywords;
+    }
+    
+    // Service structured data (JSON-LD)
+    const serviceSchema = {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": page.hero_title || page.seo_title,
+      "description": page.seo_description,
+      "provider": {
+        "@type": "LocalBusiness",
+        "name": companyName,
+        "telephone": phone,
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": address,
+          "addressLocality": city,
+          "addressCountry": "FI"
+        }
+      },
+      "areaServed": settings?.service_areas || ["Helsinki", "Espoo", "Vantaa", "Uusimaa"],
+      "serviceType": page.hero_title
+    };
+    
+    // Add service schema
+    let serviceSchemaScript = document.querySelector('#service-schema');
+    if (!serviceSchemaScript) {
+      serviceSchemaScript = document.createElement('script');
+      serviceSchemaScript.id = 'service-schema';
+      serviceSchemaScript.type = 'application/ld+json';
+      document.head.appendChild(serviceSchemaScript);
+    }
+    serviceSchemaScript.textContent = JSON.stringify(serviceSchema);
+    
+    // FAQ structured data if there are FAQs
+    if (faqs && faqs.length > 0) {
+      const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": faqs.map(faq => ({
+          "@type": "Question",
+          "name": faq.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": faq.answer
+          }
+        }))
+      };
+      
+      let faqSchemaScript = document.querySelector('#faq-schema');
+      if (!faqSchemaScript) {
+        faqSchemaScript = document.createElement('script');
+        faqSchemaScript.id = 'faq-schema';
+        faqSchemaScript.type = 'application/ld+json';
+        document.head.appendChild(faqSchemaScript);
+      }
+      faqSchemaScript.textContent = JSON.stringify(faqSchema);
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      const serviceScript = document.querySelector('#service-schema');
+      const faqScript = document.querySelector('#faq-schema');
+      if (serviceScript) serviceScript.remove();
+      if (faqScript) faqScript.remove();
+    };
+  }, [page, settings, faqs]);
+};
+
 // Icon map
 const iconMap = {
   Paintbrush, Building2, Layers, Wrench, Droplets, Square, Sparkles, Frame,
@@ -644,7 +743,7 @@ const DynamicServicePage = () => {
         if (!pageRes.ok) { setError('not_found'); setLoading(false); return; }
         const pageData = await pageRes.json();
         setPage(pageData);
-        document.title = pageData.seo_title || 'J&B Tasoitus ja Maalaus';
+        // Title is now set by useServicePageSEO hook
         if (allPagesRes.ok) setAllPages(await allPagesRes.json());
         
         // Fetch service-specific FAQs if page has linked service
@@ -665,6 +764,9 @@ const DynamicServicePage = () => {
     fetchData();
     window.scrollTo(0, 0);
   }, [slug]);
+
+  // Apply SEO
+  useServicePageSEO(page, settings, serviceFaqs);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>;
   if (error || !page) return (
