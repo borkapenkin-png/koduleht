@@ -672,10 +672,13 @@ const AdminPanel = () => {
       await axios.get(`${API}/admin/verify`, { headers: { Authorization: `Bearer ${tokenToVerify}` } });
       setIsAuthenticated(true);
       setToken(tokenToVerify);
+      // Pass token directly to loadData to avoid state timing issues
       loadData(tokenToVerify);
-    } catch {
+    } catch (err) {
+      console.error('Token verification failed:', err);
       localStorage.removeItem('admin_token');
       setToken("");
+      setIsAuthenticated(false);
     }
   };
 
@@ -735,6 +738,11 @@ const AdminPanel = () => {
   };
 
   const loadData = async (tokenToUse = token) => {
+    if (!tokenToUse) {
+      console.warn('loadData called without token');
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     const headers = { headers: { Authorization: `Bearer ${tokenToUse}` } };
     try {
@@ -757,6 +765,8 @@ const AdminPanel = () => {
       } catch (contactError) {
         console.error('Failed to load contacts:', contactError);
         if (contactError.response?.status === 401) {
+          // Only logout on authentication error, not on other errors
+          console.warn('Contacts 401 - token may be invalid');
           handleLogout();
           return;
         }
@@ -765,6 +775,7 @@ const AdminPanel = () => {
       }
     } catch (e) { 
       console.error('Failed to load data:', e);
+      // Only logout on 401, not on network errors etc
       if (e.response?.status === 401) {
         handleLogout();
       }
@@ -1559,12 +1570,12 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          {/* Admin panel - MUST be before catch-all route */}
+          <Route path="/admin" element={<AdminPanel />} />
           {/* Legacy route for old service URLs */}
           <Route path="/palvelut/:slug" element={<DynamicServicePage />} />
-          {/* New SEO-friendly Finnish URLs */}
+          {/* New SEO-friendly Finnish URLs - catch-all for service pages */}
           <Route path="/:slug" element={<DynamicServicePage />} />
-          {/* Admin panel */}
-          <Route path="/admin" element={<AdminPanel />} />
         </Routes>
       </BrowserRouter>
     </div>

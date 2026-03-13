@@ -94,6 +94,14 @@ const DynamicServicePage = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Don't try to load reserved routes as service pages
+    const reservedSlugs = ['admin', 'api', 'static', 'assets'];
+    if (reservedSlugs.includes(slug?.toLowerCase())) {
+      setError('not_found');
+      setLoading(false);
+      return;
+    }
+
     const fetchData = async () => {
       setLoading(true);
       setError(null);
