@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
-const LOGO_URL = "https://jbtasoitusmaalaus.fi/wp-content/uploads/2024/12/jb-tasoitusmaalaus-horizontal-logo2.png";
+const LOGO_URL = "https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png";
 
 // Icon map for features
 const iconMap = {
