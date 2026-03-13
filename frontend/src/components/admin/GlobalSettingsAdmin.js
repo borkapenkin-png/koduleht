@@ -366,6 +366,106 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
           </div>
         </div>
       </div>
+
+      {/* References Section Settings */}
+      <div className="bg-white border rounded-lg p-6 space-y-4">
+        <h3 className="font-bold text-[#0F172A] border-b pb-2">
+          Referenssiosion asetukset
+        </h3>
+        <p className="text-sm text-[#64748B]">
+          Hallitse referenssiosion näyttölogiikkaa ja tekstejä
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Alaotsikko</label>
+            <input
+              type="text"
+              value={localSettings.references_subtitle || ''}
+              onChange={(e) => handleChange('references_subtitle', e.target.value)}
+              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
+              placeholder="TYÖNÄYTTEITÄ"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Otsikko</label>
+            <input
+              type="text"
+              value={localSettings.references_title || ''}
+              onChange={(e) => handleChange('references_title', e.target.value)}
+              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
+              placeholder="Referenssit"
+            />
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Kuvaus</label>
+          <textarea
+            value={localSettings.references_description || ''}
+            onChange={(e) => handleChange('references_description', e.target.value)}
+            className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
+            rows={2}
+            placeholder="Olemme toteuttaneet lukuisia projekteja..."
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Näytä aluksi (desktop)</label>
+            <input
+              type="number"
+              min="1"
+              max="20"
+              value={localSettings.references_initial_count_desktop || 4}
+              onChange={(e) => handleChange('references_initial_count_desktop', parseInt(e.target.value) || 4)}
+              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
+            />
+            <p className="text-xs text-[#94A3B8] mt-1">2 riviä = 4 korttia</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Näytä aluksi (mobiili)</label>
+            <input
+              type="number"
+              min="1"
+              max="10"
+              value={localSettings.references_initial_count_mobile || 2}
+              onChange={(e) => handleChange('references_initial_count_mobile', parseInt(e.target.value) || 2)}
+              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
+            />
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={localSettings.references_load_more_enabled !== false}
+              onChange={(e) => handleChange('references_load_more_enabled', e.target.checked)}
+              className="w-4 h-4"
+            />
+            <span className="text-sm">Näytä "Näytä lisää" -nappi</span>
+          </label>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">"Näytä lisää" -teksti</label>
+            <input
+              type="text"
+              value={localSettings.references_show_more_text || ''}
+              onChange={(e) => handleChange('references_show_more_text', e.target.value)}
+              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
+              placeholder="Näytä lisää"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">"Näytä vähemmän" -teksti</label>
+            <input
+              type="text"
+              value={localSettings.references_show_less_text || ''}
+              onChange={(e) => handleChange('references_show_less_text', e.target.value)}
+              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
+              placeholder="Näytä vähemmän"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

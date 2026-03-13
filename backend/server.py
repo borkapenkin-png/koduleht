@@ -230,6 +230,17 @@ class SiteSettings(BaseModel):
     footer_text: str = "Laatujohtajat vuodesta 2018"
     footer_copyright: str = "Kaikki oikeudet pidätetään."
     
+    # ========== REFERENCES SECTION SETTINGS ==========
+    references_subtitle: str = "TYÖNÄYTTEITÄ"
+    references_title: str = "Referenssit"
+    references_description: str = "Olemme toteuttaneet lukuisia projekteja yrityksille, taloyhtiöille ja yksityisille asiakkaille."
+    references_initial_count_desktop: int = 4  # How many to show initially on desktop
+    references_initial_count_mobile: int = 2  # How many to show initially on mobile
+    references_load_more_enabled: bool = True  # Enable "Näytä lisää" button
+    references_load_more_mode: str = "all"  # "all" = show all remaining, "batch" = load 4 more
+    references_show_more_text: str = "Näytä lisää"
+    references_show_less_text: str = "Näytä vähemmän"
+    
     # ========== THEME SETTINGS ==========
     theme_font: str = "Inter"
     theme_color: str = "#0056D2"
@@ -310,6 +321,16 @@ class SiteSettingsUpdate(BaseModel):
     # Footer
     footer_text: Optional[str] = None
     footer_copyright: Optional[str] = None
+    # References Section Settings
+    references_subtitle: Optional[str] = None
+    references_title: Optional[str] = None
+    references_description: Optional[str] = None
+    references_initial_count_desktop: Optional[int] = None
+    references_initial_count_mobile: Optional[int] = None
+    references_load_more_enabled: Optional[bool] = None
+    references_load_more_mode: Optional[str] = None
+    references_show_more_text: Optional[str] = None
+    references_show_less_text: Optional[str] = None
     # Theme Settings
     theme_font: Optional[str] = None
     theme_color: Optional[str] = None
@@ -469,17 +490,33 @@ class ServicePage(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-# Reference
+# Reference - Enhanced with images and contractor support
 class ReferenceCreate(BaseModel):
-    name: str
-    type: str
-    description: Optional[str] = None
+    name: str  # Project title
+    type: str  # Service type/category
+    description: Optional[str] = None  # Short description
+    main_contractor: Optional[str] = None  # Pääurakoitsija / Peatöövötja
+    location: Optional[str] = None  # City/location
+    year: Optional[str] = None  # Year of project
+    cover_image_url: Optional[str] = None  # Main image for card
+    gallery_images: List[str] = []  # Gallery images for detail page
+    full_description: Optional[str] = None  # Full text for detail page
+    slug: Optional[str] = None  # URL slug for detail page
+    is_published: bool = True  # Show/hide
     order: int = 0
 
 class ReferenceUpdate(BaseModel):
     name: Optional[str] = None
     type: Optional[str] = None
     description: Optional[str] = None
+    main_contractor: Optional[str] = None
+    location: Optional[str] = None
+    year: Optional[str] = None
+    cover_image_url: Optional[str] = None
+    gallery_images: Optional[List[str]] = None
+    full_description: Optional[str] = None
+    slug: Optional[str] = None
+    is_published: Optional[bool] = None
     order: Optional[int] = None
 
 class Reference(BaseModel):
@@ -488,6 +525,14 @@ class Reference(BaseModel):
     name: str
     type: str
     description: Optional[str] = None
+    main_contractor: Optional[str] = None  # Pääurakoitsija
+    location: Optional[str] = None
+    year: Optional[str] = None
+    cover_image_url: Optional[str] = None
+    gallery_images: List[str] = []
+    full_description: Optional[str] = None
+    slug: Optional[str] = None
+    is_published: bool = True
     order: int = 0
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -577,11 +622,39 @@ async def get_services():
 # References - Public
 @api_router.get("/references", response_model=List[Reference])
 async def get_references():
-    refs = await db.references.find({}, {"_id": 0}).sort("order", 1).to_list(100)
+    refs = await db.references.find({"$or": [{"is_published": True}, {"is_published": {"$exists": False}}]}, {"_id": 0}).sort("order", 1).to_list(100)
     for r in refs:
         if isinstance(r.get('created_at'), str):
             r['created_at'] = datetime.fromisoformat(r['created_at'])
+        # Ensure new fields have defaults for backward compatibility
+        r.setdefault('main_contractor', None)
+        r.setdefault('location', None)
+        r.setdefault('year', None)
+        r.setdefault('cover_image_url', None)
+        r.setdefault('gallery_images', [])
+        r.setdefault('full_description', None)
+        r.setdefault('slug', None)
+        r.setdefault('is_published', True)
     return refs
+
+@api_router.get("/references/{slug}")
+async def get_reference_by_slug(slug: str):
+    """Get a single reference by its slug for detail page."""
+    ref = await db.references.find_one({"slug": slug, "$or": [{"is_published": True}, {"is_published": {"$exists": False}}]}, {"_id": 0})
+    if not ref:
+        raise HTTPException(status_code=404, detail="Referenssiä ei löytynyt")
+    if isinstance(ref.get('created_at'), str):
+        ref['created_at'] = datetime.fromisoformat(ref['created_at'])
+    # Ensure new fields have defaults
+    ref.setdefault('main_contractor', None)
+    ref.setdefault('location', None)
+    ref.setdefault('year', None)
+    ref.setdefault('cover_image_url', None)
+    ref.setdefault('gallery_images', [])
+    ref.setdefault('full_description', None)
+    ref.setdefault('slug', None)
+    ref.setdefault('is_published', True)
+    return Reference(**ref)
 
 # Partners - Public
 @api_router.get("/partners", response_model=List[Partner])
@@ -811,6 +884,24 @@ async def admin_create_reference(input: ReferenceCreate, username: str = Depends
     await db.references.insert_one(doc)
     return ref_obj
 
+@api_router.get("/admin/references", response_model=List[Reference])
+async def admin_get_references(username: str = Depends(get_current_admin)):
+    """Get all references including unpublished (for admin)."""
+    refs = await db.references.find({}, {"_id": 0}).sort("order", 1).to_list(100)
+    for r in refs:
+        if isinstance(r.get('created_at'), str):
+            r['created_at'] = datetime.fromisoformat(r['created_at'])
+        # Ensure new fields have defaults
+        r.setdefault('main_contractor', None)
+        r.setdefault('location', None)
+        r.setdefault('year', None)
+        r.setdefault('cover_image_url', None)
+        r.setdefault('gallery_images', [])
+        r.setdefault('full_description', None)
+        r.setdefault('slug', None)
+        r.setdefault('is_published', True)
+    return refs
+
 @api_router.put("/admin/references/{reference_id}", response_model=Reference)
 async def admin_update_reference(reference_id: str, input: ReferenceUpdate, username: str = Depends(get_current_admin)):
     update_data = {k: v for k, v in input.model_dump().items() if v is not None}
@@ -822,6 +913,15 @@ async def admin_update_reference(reference_id: str, input: ReferenceUpdate, user
     ref = await db.references.find_one({"id": reference_id}, {"_id": 0})
     if isinstance(ref.get('created_at'), str):
         ref['created_at'] = datetime.fromisoformat(ref['created_at'])
+    # Ensure new fields have defaults
+    ref.setdefault('main_contractor', None)
+    ref.setdefault('location', None)
+    ref.setdefault('year', None)
+    ref.setdefault('cover_image_url', None)
+    ref.setdefault('gallery_images', [])
+    ref.setdefault('full_description', None)
+    ref.setdefault('slug', None)
+    ref.setdefault('is_published', True)
     return Reference(**ref)
 
 @api_router.delete("/admin/references/{reference_id}")

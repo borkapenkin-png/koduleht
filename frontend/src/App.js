@@ -460,34 +460,126 @@ const AboutSection = ({ settings }) => {
   );
 };
 
-// ========== REFERENCES ==========
-const ReferencesSection = ({ settings, references }) => (
-  <section id="referenssit" data-testid="references-section" className="section-padding bg-white" aria-labelledby="references-heading">
-    <div className="container-custom">
-      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10 md:mb-16">
-        <Subtitle settings={settings} className="mb-2 md:mb-3">TYÖNÄYTTEITÄ</Subtitle>
-        <h2 id="references-heading" className="section-title">Referenssit</h2>
-        <p className="text-sm md:text-base text-[#64748B] mt-3 md:mt-4 max-w-2xl mx-auto">Olemme toteuttaneet lukuisia projekteja yrityksille, taloyhtiöille ja yksityisille asiakkaille.</p>
-      </motion.div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        {references.map((ref, index) => (
-          <motion.div key={ref.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="bg-[#FAFAFA] border border-[#E2E8F0] p-4 md:p-6 hover:border-primary/30 hover:shadow-md transition-all group">
-            <div className="flex items-start gap-3 md:gap-4">
-              <div className="icon-box flex-shrink-0 group-hover:bg-primary transition-colors">
-                <Building2 size={18} className="text-primary group-hover:text-white transition-colors" />
+// ========== REFERENCES - Image-based card grid with "Näytä lisää" ==========
+const ReferencesSection = ({ settings, references }) => {
+  const [showAll, setShowAll] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Get settings with defaults
+  const refSettings = {
+    subtitle: settings?.references_subtitle || "TYÖNÄYTTEITÄ",
+    title: settings?.references_title || "Referenssit",
+    description: settings?.references_description || "Olemme toteuttaneet lukuisia projekteja yrityksille, taloyhtiöille ja yksityisille asiakkaille.",
+    initialDesktop: settings?.references_initial_count_desktop || 4,
+    initialMobile: settings?.references_initial_count_mobile || 2,
+    loadMoreEnabled: settings?.references_load_more_enabled !== false,
+    showMoreText: settings?.references_show_more_text || "Näytä lisää",
+    showLessText: settings?.references_show_less_text || "Näytä vähemmän"
+  };
+  
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  // Calculate visible references
+  const initialCount = isMobile ? refSettings.initialMobile : refSettings.initialDesktop;
+  const visibleRefs = showAll ? references : references.slice(0, initialCount);
+  const hasMore = references.length > initialCount;
+  
+  // Default placeholder image
+  const placeholderImage = "https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&w=600";
+  
+  return (
+    <section id="referenssit" data-testid="references-section" className="section-padding bg-white" aria-labelledby="references-heading">
+      <div className="container-custom">
+        {/* Header */}
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-8 md:mb-12">
+          <Subtitle settings={settings} className="mb-2 md:mb-3">{refSettings.subtitle}</Subtitle>
+          <h2 id="references-heading" className="section-title">{refSettings.title}</h2>
+          <p className="text-sm md:text-base text-[#64748B] mt-3 md:mt-4 max-w-2xl mx-auto">{refSettings.description}</p>
+        </motion.div>
+        
+        {/* Reference Cards Grid - 2 columns on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          {visibleRefs.map((ref, index) => (
+            <motion.div 
+              key={ref.id} 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              viewport={{ once: true }} 
+              transition={{ delay: index * 0.08 }}
+              className="reference-card group"
+              data-testid={`reference-card-${index}`}
+            >
+              {/* Image */}
+              <div className="reference-card-image">
+                <img 
+                  src={ref.cover_image_url || placeholderImage} 
+                  alt={`${ref.name} - ${ref.type} ${ref.location || ''}`}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+                {/* Overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
-              <div>
-                <h3 className="text-base md:text-lg font-bold text-[#0F172A] group-hover:text-[#0056D2] transition-colors">{ref.name}</h3>
-                <p className="text-xs md:text-sm text-[#0056D2] font-medium mt-1">{ref.type}</p>
-                {ref.description && <p className="text-xs md:text-sm text-[#64748B] mt-2">{ref.description}</p>}
+              
+              {/* Content */}
+              <div className="p-4 md:p-5">
+                <h3 className="text-base md:text-lg font-bold text-[#0F172A] group-hover:text-primary transition-colors mb-1">
+                  {ref.name}
+                </h3>
+                <p className="text-xs md:text-sm text-primary font-medium mb-2">{ref.type}</p>
+                
+                {/* Main Contractor - Pääurakoitsija */}
+                {ref.main_contractor && (
+                  <p className="text-xs md:text-sm text-[#64748B] mb-1">
+                    <span className="font-medium">Pääurakoitsija:</span> {ref.main_contractor}
+                  </p>
+                )}
+                
+                {/* Location */}
+                {ref.location && (
+                  <p className="text-xs md:text-sm text-[#64748B] flex items-center gap-1">
+                    <MapPin size={12} className="text-[#94A3B8]" />
+                    {ref.location}
+                  </p>
+                )}
+                
+                {/* Description (if no contractor/location shown) */}
+                {!ref.main_contractor && !ref.location && ref.description && (
+                  <p className="text-xs md:text-sm text-[#64748B] line-clamp-2">{ref.description}</p>
+                )}
               </div>
-            </div>
+            </motion.div>
+          ))}
+        </div>
+        
+        {/* "Näytä lisää" Button */}
+        {refSettings.loadMoreEnabled && hasMore && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            whileInView={{ opacity: 1 }} 
+            viewport={{ once: true }}
+            className="text-center mt-8 md:mt-10"
+          >
+            <button 
+              onClick={() => setShowAll(!showAll)}
+              className="btn-secondary inline-flex items-center gap-2 px-6 py-3"
+              data-testid="references-show-more-btn"
+            >
+              {showAll ? refSettings.showLessText : refSettings.showMoreText}
+              <ChevronDown size={18} className={`transition-transform duration-300 ${showAll ? 'rotate-180' : ''}`} />
+            </button>
           </motion.div>
-        ))}
+        )}
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 // ========== LOCATION (GOOGLE MAPS) ==========
 const LocationSection = ({ settings }) => (
@@ -1249,17 +1341,44 @@ const AdminPanel = () => {
             {activeTab === "references" && (
               <div>
                 <div className="flex justify-between items-center mb-4 md:mb-6">
-                  <h2 className="text-lg md:text-xl font-bold">Referenssit ({references.length})</h2>
-                  <button onClick={() => setNewItem({ name: "", type: "Tasoitus- ja maalaustyöt", description: "", order: references.length + 1, isNew: true })} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Plus size={14} />Lisää</button>
+                  <div>
+                    <h2 className="text-lg md:text-xl font-bold">Referenssit ({references.length})</h2>
+                    <p className="text-xs md:text-sm text-[#64748B] mt-1">Hallitse projektireferenssejä kuvilla ja tiedoilla</p>
+                  </div>
+                  <button onClick={() => setNewItem({ name: "", type: "Tasoitus- ja maalaustyöt", description: "", main_contractor: "", location: "", cover_image_url: "", year: "", is_published: true, order: references.length + 1, isNew: true })} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Plus size={14} />Lisää referenssi</button>
                 </div>
-                {newItem && <div className="bg-white border border-[#0056D2] p-4 md:p-6 mb-4"><h3 className="font-bold mb-4">Uusi referenssi</h3><ReferenceForm reference={newItem} onChange={setNewItem} onSave={() => saveReference(newItem)} onCancel={() => setNewItem(null)} /></div>}
+                {newItem && <div className="bg-white border border-[#0056D2] p-4 md:p-6 mb-4"><h3 className="font-bold mb-4">Uusi referenssi</h3><ReferenceForm reference={newItem} onChange={setNewItem} onSave={() => saveReference(newItem)} onCancel={() => setNewItem(null)} token={token} /></div>}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                   {references.map((r) => (
-                    <div key={r.id} className="bg-white border p-4 md:p-6">
-                      {editingItem?.id === r.id ? <ReferenceForm reference={editingItem} onChange={setEditingItem} onSave={() => saveReference(editingItem)} onCancel={() => setEditingItem(null)} /> : (
-                        <div className="flex justify-between items-start">
-                          <div><h3 className="font-bold text-sm md:text-base">{r.name}</h3><p className="text-xs md:text-sm text-[#0056D2]">{r.type}</p>{r.description && <p className="text-xs text-[#64748B] mt-1">{r.description}</p>}</div>
-                          <div className="flex gap-1"><button onClick={() => setEditingItem(r)} className="p-2 text-[#64748B] hover:text-[#0056D2]"><Edit2 size={16} /></button><button onClick={() => deleteReference(r.id)} className="p-2 text-[#64748B] hover:text-red-600"><Trash2 size={16} /></button></div>
+                    <div key={r.id} className={`bg-white border p-4 md:p-5 ${r.is_published === false ? 'opacity-60' : ''}`}>
+                      {editingItem?.id === r.id ? <ReferenceForm reference={editingItem} onChange={setEditingItem} onSave={() => saveReference(editingItem)} onCancel={() => setEditingItem(null)} token={token} /> : (
+                        <div className="flex gap-4">
+                          {/* Thumbnail */}
+                          <div className="w-24 h-20 flex-shrink-0 bg-[#FAFAFA] rounded-lg overflow-hidden">
+                            {r.cover_image_url ? (
+                              <img src={r.cover_image_url} alt={r.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Building2 size={24} className="text-[#94A3B8]" />
+                              </div>
+                            )}
+                          </div>
+                          {/* Info */}
+                          <div className="flex-grow min-w-0">
+                            <div className="flex items-start justify-between">
+                              <div className="min-w-0">
+                                <h3 className="font-bold text-sm md:text-base truncate">{r.name}</h3>
+                                <p className="text-xs md:text-sm text-primary">{r.type}</p>
+                                {r.main_contractor && <p className="text-xs text-[#64748B]">Pääurakoitsija: {r.main_contractor}</p>}
+                                {r.location && <p className="text-xs text-[#64748B] flex items-center gap-1"><MapPin size={10} />{r.location}</p>}
+                                {r.is_published === false && <span className="text-xs text-orange-600 font-medium">Piilotettu</span>}
+                              </div>
+                              <div className="flex gap-1 flex-shrink-0">
+                                <button onClick={() => setEditingItem(r)} className="p-2 text-[#64748B] hover:text-[#0056D2]"><Edit2 size={16} /></button>
+                                <button onClick={() => deleteReference(r.id)} className="p-2 text-[#64748B] hover:text-red-600"><Trash2 size={16} /></button>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -1460,13 +1579,29 @@ const ServiceForm = ({ service, onChange, onSave, onCancel, token }) => (
   </div>
 );
 
-const ReferenceForm = ({ reference, onChange, onSave, onCancel }) => (
+const ReferenceForm = ({ reference, onChange, onSave, onCancel, token }) => (
   <div className="space-y-3 md:space-y-4">
-    <div><label className="block text-sm font-medium mb-1">Nimi</label><input value={reference.name} onChange={(e) => onChange({ ...reference, name: e.target.value })} className="form-input text-sm" /></div>
-    <div><label className="block text-sm font-medium mb-1">Tyyppi</label><input value={reference.type} onChange={(e) => onChange({ ...reference, type: e.target.value })} className="form-input text-sm" /></div>
-    <div><label className="block text-sm font-medium mb-1">Kuvaus</label><textarea value={reference.description || ""} onChange={(e) => onChange({ ...reference, description: e.target.value })} className="form-input text-sm" rows={2} /></div>
-    <div><label className="block text-sm font-medium mb-1">Järjestys</label><input type="number" value={reference.order} onChange={(e) => onChange({ ...reference, order: parseInt(e.target.value) || 0 })} className="form-input text-sm" /></div>
-    <div className="flex gap-2"><button onClick={onSave} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Save size={14} />Tallenna</button><button onClick={onCancel} className="btn-secondary text-xs md:text-sm">Peruuta</button></div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div><label className="block text-sm font-medium mb-1">Projektin nimi *</label><input value={reference.name} onChange={(e) => onChange({ ...reference, name: e.target.value })} className="form-input text-sm" placeholder="Esim. Mehiläinen Ympyrätalo" /></div>
+      <div><label className="block text-sm font-medium mb-1">Palvelutyyppi *</label><input value={reference.type} onChange={(e) => onChange({ ...reference, type: e.target.value })} className="form-input text-sm" placeholder="Esim. Tasoitus- ja maalaustyöt" /></div>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div><label className="block text-sm font-medium mb-1">Pääurakoitsija</label><input value={reference.main_contractor || ""} onChange={(e) => onChange({ ...reference, main_contractor: e.target.value })} className="form-input text-sm" placeholder="Esim. NCC, Skanska, YIT" /></div>
+      <div><label className="block text-sm font-medium mb-1">Sijainti</label><input value={reference.location || ""} onChange={(e) => onChange({ ...reference, location: e.target.value })} className="form-input text-sm" placeholder="Esim. Helsinki" /></div>
+    </div>
+    <div><label className="block text-sm font-medium mb-1">Kuvakuva (Kansi)</label><ImageUpload currentImage={reference.cover_image_url} onImageChange={(url) => onChange({ ...reference, cover_image_url: url })} token={token} /></div>
+    <div><label className="block text-sm font-medium mb-1">Lyhyt kuvaus</label><textarea value={reference.description || ""} onChange={(e) => onChange({ ...reference, description: e.target.value })} className="form-input text-sm" rows={2} placeholder="Lyhyt kuvaus projektista..." /></div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div><label className="block text-sm font-medium mb-1">Vuosi</label><input value={reference.year || ""} onChange={(e) => onChange({ ...reference, year: e.target.value })} className="form-input text-sm" placeholder="2024" /></div>
+      <div><label className="block text-sm font-medium mb-1">Järjestys</label><input type="number" value={reference.order} onChange={(e) => onChange({ ...reference, order: parseInt(e.target.value) || 0 })} className="form-input text-sm" /></div>
+      <div className="flex items-center pt-6">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" checked={reference.is_published !== false} onChange={(e) => onChange({ ...reference, is_published: e.target.checked })} className="w-4 h-4" />
+          <span className="text-sm">Julkaistu</span>
+        </label>
+      </div>
+    </div>
+    <div className="flex gap-2 pt-2"><button onClick={onSave} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Save size={14} />Tallenna</button><button onClick={onCancel} className="btn-secondary text-xs md:text-sm">Peruuta</button></div>
   </div>
 );
 
