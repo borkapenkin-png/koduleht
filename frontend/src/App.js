@@ -139,9 +139,9 @@ const SIZE_OPTIONS = [
 const lightenColor = (hex, percent) => {
   const num = parseInt(hex.replace('#', ''), 16);
   const amt = Math.round(2.55 * percent);
-  const R = Math.min(255, (num >> 16) + amt);
-  const G = Math.min(255, ((num >> 8) & 0x00FF) + amt);
-  const B = Math.min(255, (num & 0x0000FF) + amt);
+  const R = Math.max(0, Math.min(255, (num >> 16) + amt));
+  const G = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + amt));
+  const B = Math.max(0, Math.min(255, (num & 0x0000FF) + amt));
   return `#${(0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1)}`;
 };
 
@@ -751,7 +751,6 @@ const Footer = ({ logoUrl }) => {
               <a href="#referenssit" className="hover:text-white transition-colors">Referenssit</a>
               <Link to="/ukk" className="hover:text-white transition-colors">UKK</Link>
               <a href="#yhteystiedot" className="hover:text-white transition-colors">Yhteystiedot</a>
-              <Link to="/admin" className="hover:text-white transition-colors flex items-center gap-1"><Settings size={12} />Admin</Link>
             </div>
             <p className="text-white/50 text-xs mt-4 leading-relaxed">
               Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella.
