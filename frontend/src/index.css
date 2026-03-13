@@ -25,20 +25,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Barlow+Condensed:wght@700;800;900&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Lato:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@400;500;600;700&display=swap');
 
 :root {
+  /* Primary theme color - controlled by admin panel */
   --color-primary: #0056D2;
-  --color-primary-hover: #0044A8;
-  --color-primary-light: #EBF3FF;
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 85%, black);
+  --color-primary-active: color-mix(in srgb, var(--color-primary) 75%, black);
+  --color-primary-light: color-mix(in srgb, var(--color-primary) 10%, white);
+  --color-primary-lighter: color-mix(in srgb, var(--color-primary) 5%, white);
+  
+  /* Legacy aliases for backward compatibility */
+  --primary: var(--color-primary);
+  --primary-hover: var(--color-primary-hover);
+  --primary-light: var(--color-primary-light);
+  
+  /* Font */
   --font-main: "Inter", sans-serif;
   --size-multiplier: 1;
-  --primary: #0056D2;
-  --primary-hover: #0044A8;
-  --primary-light: #EBF3FF;
+  
+  /* Backgrounds */
   --background: #FFFFFF;
   --surface: #FAFAFA;
+  --surface-grey: #f7fafb;
+  
+  /* Text colors */
   --text-primary: #0F172A;
   --text-secondary: #64748B;
   --text-tertiary: #94A3B8;
+  
+  /* Border */
   --border: #E2E8F0;
+  --border-hover: var(--color-primary-light);
+  --border-active: var(--color-primary);
 }
 
 * {
@@ -399,7 +415,7 @@ html {
 .icon-bg-primary {
   width: 3rem;
   height: 3rem;
-  background: rgba(0, 86, 210, 0.1);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -410,7 +426,7 @@ html {
 .icon-bg-primary-sm {
   width: 2rem;
   height: 2rem;
-  background: rgba(0, 86, 210, 0.1);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -442,7 +458,7 @@ html {
   border: 1px solid var(--color-primary-light);
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 86, 210, 0.08);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 /* Process step number - enhanced */
@@ -458,7 +474,7 @@ html {
   margin: 0 auto 1rem;
   font-size: 1.5rem;
   font-weight: 700;
-  box-shadow: 0 4px 14px rgba(0, 86, 210, 0.3);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--color-primary) 30%, transparent);
 }
 
 /* Benefits box - soft style with depth */
@@ -467,7 +483,7 @@ html {
   border: 1px solid var(--color-primary-light);
   border-radius: 18px;
   padding: 1.25rem;
-  box-shadow: 0 4px 16px rgba(0, 86, 210, 0.08);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 @media (min-width: 768px) {
@@ -604,40 +620,82 @@ html {
   background-color: var(--color-primary-light);
 }
 
-/* Buttons - theme aware */
+/* Buttons - Global theme-aware system with all states */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1.5rem;
-  background-color: var(--color-primary) !important;
-  color: white !important;
+  background-color: var(--color-primary);
+  color: white;
   font-weight: 600;
   font-size: calc(0.875rem * var(--size-multiplier));
-  transition: all 0.2s;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-primary:hover {
-  background-color: var(--color-primary-hover) !important;
+  background-color: var(--color-primary-hover);
+  color: white;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primary) 30%, transparent);
 }
 
+.btn-primary:active {
+  background-color: var(--color-primary-active);
+  color: white;
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Secondary button - outline style */
 .btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1.5rem;
   background-color: white;
-  color: var(--text-primary);
+  color: var(--color-primary);
   font-weight: 600;
   font-size: calc(0.875rem * var(--size-multiplier));
-  border: 1px solid var(--border);
-  transition: all 0.2s;
+  border: 2px solid var(--color-primary);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .btn-secondary:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  background-color: var(--color-primary);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active {
+  background-color: var(--color-primary-active);
+  color: white;
+  transform: translateY(0);
+}
+
+.btn-secondary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 /* Service card */
@@ -721,23 +779,24 @@ html {
 
 /* Process step number - enhanced */
 .process-step-number {
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 4rem;
+  height: 4rem;
   background: var(--color-primary);
   color: white;
-  border-radius: 14px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto 1rem;
   font-size: 1.5rem;
   font-weight: 700;
-  box-shadow: 0 4px 14px rgba(0, 86, 210, 0.25);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--color-primary) 30%, transparent);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .process-step-number:hover {
   transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(0, 86, 210, 0.35);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--color-primary) 40%, transparent);
 }
 
 /* Why-choose list item - enhanced */
@@ -804,4 +863,133 @@ html {
 
 .link-underline:hover::after {
   width: 100%;
+}
+
+/* ========== GLOBAL THEME UTILITY CLASSES ========== */
+/* Use these instead of hardcoded colors */
+
+/* Text colors */
+.text-theme {
+  color: var(--color-primary);
+}
+
+.text-theme-hover:hover {
+  color: var(--color-primary);
+}
+
+/* Background colors */
+.bg-theme {
+  background-color: var(--color-primary);
+}
+
+.bg-theme-light {
+  background-color: var(--color-primary-light);
+}
+
+.bg-theme-hover:hover {
+  background-color: var(--color-primary);
+}
+
+/* Border colors */
+.border-theme {
+  border-color: var(--color-primary);
+}
+
+.border-theme-hover:hover {
+  border-color: var(--color-primary);
+}
+
+.border-theme-light {
+  border-color: var(--color-primary-light);
+}
+
+/* Admin panel tab styles - theme aware */
+.admin-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.admin-tab:hover {
+  color: var(--color-primary);
+}
+
+.admin-tab.active {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* Selection card - theme aware */
+.selection-card {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  transition: border-color 0.2s, background-color 0.2s;
+  cursor: pointer;
+}
+
+.selection-card:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
+}
+
+.selection-card.selected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+/* Badge - theme aware */
+.badge-theme {
+  background-color: var(--color-primary);
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+}
+
+/* Spinner - theme aware */
+.spinner-theme {
+  border-color: transparent;
+  border-top-color: var(--color-primary);
+  border-right-color: var(--color-primary);
+}
+
+/* Focus ring - theme aware */
+.focus-ring-theme:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+/* Link - theme aware */
+.link-theme {
+  color: var(--color-primary);
+  transition: color 0.2s;
+}
+
+.link-theme:hover {
+  color: var(--color-primary-hover);
+  text-decoration: underline;
+}
+
+/* Card active state - theme aware */
+.card-active {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+/* Icon container - theme aware */
+.icon-theme {
+  color: var(--color-primary);
+}
+
+.icon-bg-theme {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
 }

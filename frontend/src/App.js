@@ -979,7 +979,7 @@ const AdminPanel = () => {
             {authError && <p className="text-red-600 text-sm">{authError}</p>}
             <button type="submit" className="btn-primary w-full">Kirjaudu</button>
           </form>
-          <Link to="/" className="block text-center text-sm text-[#64748B] mt-4 hover:text-[#0056D2]">← Etusivulle</Link>
+          <Link to="/" className="block text-center text-sm text-[#64748B] mt-4 hover:text-primary">← Etusivulle</Link>
         </div>
       </div>
     );
@@ -1003,7 +1003,7 @@ const AdminPanel = () => {
         <div className="container-custom flex items-center justify-between h-14 md:h-16">
           <div className="flex items-center gap-3"><img src={LOGO_URL} alt="J&B" className="h-8 md:h-10" /><span className="font-bold text-[#0F172A] text-sm md:text-base">Admin</span></div>
           <div className="flex items-center gap-3 md:gap-4">
-            <Link to="/" className="text-xs md:text-sm text-[#64748B] hover:text-[#0056D2]">Sivusto</Link>
+            <Link to="/" className="text-xs md:text-sm text-[#64748B] hover:text-primary">Sivusto</Link>
             <button onClick={handleLogout} className="flex items-center gap-1 text-xs md:text-sm text-[#64748B] hover:text-red-600"><LogOut size={14} />Ulos</button>
           </div>
         </div>
@@ -1012,22 +1012,22 @@ const AdminPanel = () => {
       <div className="container-custom py-4 md:py-8">
         <div className="flex gap-1 md:gap-2 mb-6 md:mb-8 border-b overflow-x-auto">
           {tabs.map((tab) => (
-            <button key={tab.id} onClick={() => { setActiveTab(tab.id); setEditingItem(null); setNewItem(null); }} className={`flex items-center gap-1 md:gap-2 px-3 md:px-4 py-2 md:py-3 font-medium text-xs md:text-sm border-b-2 -mb-px whitespace-nowrap ${activeTab === tab.id ? "border-[#0056D2] text-[#0056D2]" : "border-transparent text-[#64748B]"}`}>
+            <button key={tab.id} onClick={() => { setActiveTab(tab.id); setEditingItem(null); setNewItem(null); }} className={`flex items-center gap-1 md:gap-2 px-3 md:px-4 py-2 md:py-3 font-medium text-xs md:text-sm border-b-2 -mb-px whitespace-nowrap transition-colors ${activeTab === tab.id ? "border-primary text-primary" : "border-transparent text-[#64748B] hover:text-primary"}`}>
               <tab.icon size={16} />{tab.label}
-              {tab.id === "contacts" && contacts.length > 0 && <span className="bg-[#0056D2] text-white text-xs px-1.5 py-0.5 rounded-full">{contacts.length}</span>}
+              {tab.id === "contacts" && contacts.length > 0 && <span className="bg-primary text-white text-xs px-1.5 py-0.5 rounded-full">{contacts.length}</span>}
             </button>
           ))}
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-12"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0056D2]"></div></div>
+          <div className="flex justify-center py-12"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div></div>
         ) : (
           <>
             {/* THEME TAB */}
             {activeTab === "theme" && (
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-lg md:text-xl font-bold flex items-center gap-2"><Palette size={20} className="text-[#0056D2]" />Teema-asetukset</h2>
+                  <h2 className="text-lg md:text-xl font-bold flex items-center gap-2"><Palette size={20} className="text-primary" />Teema-asetukset</h2>
                   <button onClick={saveSettings} disabled={saving} className="btn-primary text-sm flex items-center gap-2"><Save size={16} />{saving ? "..." : "Tallenna"}</button>
                 </div>
 
@@ -1087,7 +1087,7 @@ const AdminPanel = () => {
                       <button
                         key={font.value}
                         onClick={() => setSettings({...settings, theme_font: font.value})}
-                        className={`p-4 border rounded-lg text-left transition-all ${settings.theme_font === font.value ? 'border-[#0056D2] bg-[#EBF3FF]' : 'border-[#E2E8F0] hover:border-[#0056D2]/50'}`}
+                        className={`p-4 border rounded-lg text-left transition-all ${settings.theme_font === font.value ? 'border-primary bg-primary-light' : 'border-[#E2E8F0] hover:border-primary/50'}`}
                         style={{ fontFamily: `"${font.value}", sans-serif` }}
                       >
                         <span className="block text-lg font-bold">Aa</span>
@@ -1105,7 +1105,7 @@ const AdminPanel = () => {
                       <button
                         key={size.value}
                         onClick={() => setSettings({...settings, theme_size: size.value})}
-                        className={`p-4 border rounded-lg text-center transition-all ${settings.theme_size === size.value ? 'border-[#0056D2] bg-[#EBF3FF]' : 'border-[#E2E8F0] hover:border-[#0056D2]/50'}`}
+                        className={`p-4 border rounded-lg text-center transition-all ${settings.theme_size === size.value ? 'border-primary bg-primary-light' : 'border-[#E2E8F0] hover:border-primary/50'}`}
                       >
                         <span className={`block font-bold ${size.value === 'small' ? 'text-lg' : size.value === 'large' ? 'text-3xl' : 'text-2xl'}`}>Aa</span>
                         <span className="text-sm text-[#64748B]">{size.label}</span>
@@ -1141,7 +1141,7 @@ const AdminPanel = () => {
                         <button
                           key={opt.value}
                           onClick={() => setSettings({...settings, subtitle_size: opt.value})}
-                          className={`p-2 border rounded text-center transition-all ${settings.subtitle_size === opt.value ? 'border-[#0056D2] bg-[#EBF3FF]' : 'border-[#E2E8F0] hover:border-[#0056D2]/50'}`}
+                          className={`p-2 border rounded text-center transition-all ${settings.subtitle_size === opt.value ? 'border-primary bg-primary-light' : 'border-[#E2E8F0] hover:border-primary/50'}`}
                         >
                           <span className={`block ${opt.class}`}>ABC</span>
                           <span className="text-xs text-[#64748B]">{opt.label}</span>
@@ -1158,7 +1158,7 @@ const AdminPanel = () => {
                         <button
                           key={opt.value}
                           onClick={() => setSettings({...settings, subtitle_weight: opt.value})}
-                          className={`p-2 border rounded text-center transition-all ${settings.subtitle_weight === opt.value ? 'border-[#0056D2] bg-[#EBF3FF]' : 'border-[#E2E8F0] hover:border-[#0056D2]/50'}`}
+                          className={`p-2 border rounded text-center transition-all ${settings.subtitle_weight === opt.value ? 'border-primary bg-primary-light' : 'border-[#E2E8F0] hover:border-primary/50'}`}
                         >
                           <span className={`block ${opt.class}`}>Aa</span>
                           <span className="text-xs text-[#64748B]">{opt.label}</span>
@@ -1175,7 +1175,7 @@ const AdminPanel = () => {
                         <button
                           key={opt.value}
                           onClick={() => setSettings({...settings, subtitle_spacing: opt.value})}
-                          className={`p-2 border rounded text-center transition-all ${settings.subtitle_spacing === opt.value ? 'border-[#0056D2] bg-[#EBF3FF]' : 'border-[#E2E8F0] hover:border-[#0056D2]/50'}`}
+                          className={`p-2 border rounded text-center transition-all ${settings.subtitle_spacing === opt.value ? 'border-primary bg-primary-light' : 'border-[#E2E8F0] hover:border-primary/50'}`}
                         >
                           <span className={`block text-xs ${opt.class}`}>ABC</span>
                           <span className="text-xs text-[#64748B]">{opt.label}</span>
@@ -1318,7 +1318,7 @@ const AdminPanel = () => {
                     <button onClick={() => setNewItem({ title: "", description: "", icon: "Building2", image_url: "", order: services.length + 1, isNew: true })} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Plus size={14} />Lisää</button>
                   </div>
                 </div>
-                {newItem && <div className="bg-white border border-[#0056D2] p-4 md:p-6 mb-4"><h3 className="font-bold mb-4">Uusi palvelu</h3><ServiceForm service={newItem} onChange={setNewItem} onSave={() => saveService(newItem)} onCancel={() => setNewItem(null)} token={token} /></div>}
+                {newItem && <div className="bg-white border border-primary p-4 md:p-6 mb-4"><h3 className="font-bold mb-4">Uusi palvelu</h3><ServiceForm service={newItem} onChange={setNewItem} onSave={() => saveService(newItem)} onCancel={() => setNewItem(null)} token={token} /></div>}
                 <div className="space-y-3 md:space-y-4">
                   {services.map((s) => (
                     <div key={s.id} className="bg-white border p-4 md:p-6">
@@ -1328,7 +1328,7 @@ const AdminPanel = () => {
                             {s.image_url && <img src={s.image_url} alt={s.title} className="w-16 md:w-24 h-12 md:h-16 object-cover" />}
                             <div><h3 className="font-bold text-sm md:text-base">{s.title}</h3><p className="text-xs md:text-sm text-[#64748B] mt-1 line-clamp-2">{s.description}</p></div>
                           </div>
-                          <div className="flex gap-1"><button onClick={() => setEditingItem(s)} className="p-2 text-[#64748B] hover:text-[#0056D2]"><Edit2 size={16} /></button><button onClick={() => deleteService(s.id)} className="p-2 text-[#64748B] hover:text-red-600"><Trash2 size={16} /></button></div>
+                          <div className="flex gap-1"><button onClick={() => setEditingItem(s)} className="p-2 text-[#64748B] hover:text-primary"><Edit2 size={16} /></button><button onClick={() => deleteService(s.id)} className="p-2 text-[#64748B] hover:text-red-600"><Trash2 size={16} /></button></div>
                         </div>
                       )}
                     </div>
@@ -1347,7 +1347,7 @@ const AdminPanel = () => {
                   </div>
                   <button onClick={() => setNewItem({ name: "", type: "Tasoitus- ja maalaustyöt", description: "", main_contractor: "", location: "", cover_image_url: "", year: "", is_published: true, order: references.length + 1, isNew: true })} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Plus size={14} />Lisää referenssi</button>
                 </div>
-                {newItem && <div className="bg-white border border-[#0056D2] p-4 md:p-6 mb-4"><h3 className="font-bold mb-4">Uusi referenssi</h3><ReferenceForm reference={newItem} onChange={setNewItem} onSave={() => saveReference(newItem)} onCancel={() => setNewItem(null)} token={token} /></div>}
+                {newItem && <div className="bg-white border border-primary p-4 md:p-6 mb-4"><h3 className="font-bold mb-4">Uusi referenssi</h3><ReferenceForm reference={newItem} onChange={setNewItem} onSave={() => saveReference(newItem)} onCancel={() => setNewItem(null)} token={token} /></div>}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                   {references.map((r) => (
                     <div key={r.id} className={`bg-white border p-4 md:p-5 ${r.is_published === false ? 'opacity-60' : ''}`}>
@@ -1374,7 +1374,7 @@ const AdminPanel = () => {
                                 {r.is_published === false && <span className="text-xs text-orange-600 font-medium">Piilotettu</span>}
                               </div>
                               <div className="flex gap-1 flex-shrink-0">
-                                <button onClick={() => setEditingItem(r)} className="p-2 text-[#64748B] hover:text-[#0056D2]"><Edit2 size={16} /></button>
+                                <button onClick={() => setEditingItem(r)} className="p-2 text-[#64748B] hover:text-primary"><Edit2 size={16} /></button>
                                 <button onClick={() => deleteReference(r.id)} className="p-2 text-[#64748B] hover:text-red-600"><Trash2 size={16} /></button>
                               </div>
                             </div>
@@ -1394,14 +1394,14 @@ const AdminPanel = () => {
                   <div><h2 className="text-lg md:text-xl font-bold">Laatutakuu - Logot ({partners.length})</h2><p className="text-xs md:text-sm text-[#64748B] mt-1">Lisää kumppaneiden ja sertifikaattien logoja</p></div>
                   <button onClick={() => setNewItem({ name: "Logo", image_url: "", order: partners.length + 1, isNew: true })} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Plus size={14} />Lisää logo</button>
                 </div>
-                {newItem && <div className="bg-white border border-[#0056D2] p-4 md:p-6 mb-4"><h3 className="font-bold mb-4">Uusi logo</h3><PartnerForm partner={newItem} onChange={setNewItem} onSave={() => savePartner(newItem)} onCancel={() => setNewItem(null)} token={token} /></div>}
+                {newItem && <div className="bg-white border border-primary p-4 md:p-6 mb-4"><h3 className="font-bold mb-4">Uusi logo</h3><PartnerForm partner={newItem} onChange={setNewItem} onSave={() => savePartner(newItem)} onCancel={() => setNewItem(null)} token={token} /></div>}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                   {partners.map((p) => (
                     <div key={p.id} className="bg-white border p-4 md:p-6">
                       {editingItem?.id === p.id ? <PartnerForm partner={editingItem} onChange={setEditingItem} onSave={() => savePartner(editingItem)} onCancel={() => setEditingItem(null)} token={token} /> : (
                         <div className="flex flex-col items-center gap-3">
-                          {p.image_url ? <img src={p.image_url} alt="Logo" className="w-20 h-16 object-contain" /> : <div className="w-20 h-16 bg-[#EBF3FF] flex items-center justify-center"><Award size={24} className="text-[#0056D2]" /></div>}
-                          <div className="flex gap-1"><button onClick={() => setEditingItem(p)} className="p-2 text-[#64748B] hover:text-[#0056D2]"><Edit2 size={16} /></button><button onClick={() => deletePartner(p.id)} className="p-2 text-[#64748B] hover:text-red-600"><Trash2 size={16} /></button></div>
+                          {p.image_url ? <img src={p.image_url} alt="Logo" className="w-20 h-16 object-contain" /> : <div className="w-20 h-16 bg-primary-light flex items-center justify-center"><Award size={24} className="text-primary" /></div>}
+                          <div className="flex gap-1"><button onClick={() => setEditingItem(p)} className="p-2 text-[#64748B] hover:text-primary"><Edit2 size={16} /></button><button onClick={() => deletePartner(p.id)} className="p-2 text-[#64748B] hover:text-red-600"><Trash2 size={16} /></button></div>
                         </div>
                       )}
                     </div>
@@ -1421,7 +1421,7 @@ const AdminPanel = () => {
                         <div className="flex justify-between items-start">
                           <div>
                             <h3 className="font-bold text-sm md:text-base">{c.firstName} {c.lastName}</h3>
-                            <p className="text-xs md:text-sm text-[#0056D2]">{c.email}</p>
+                            <p className="text-xs md:text-sm text-primary">{c.email}</p>
                             {c.phone && <p className="text-xs text-[#64748B]">{c.phone}</p>}
                             {c.subject && <p className="text-xs md:text-sm font-medium mt-2">Aihe: {c.subject}</p>}
                             <p className="text-xs md:text-sm text-[#64748B] mt-2">{c.message}</p>
@@ -1439,7 +1439,7 @@ const AdminPanel = () => {
             {/* SECURITY TAB */}
             {activeTab === "security" && (
               <div className="max-w-md">
-                <h2 className="text-lg md:text-xl font-bold mb-4 md:mb-6 flex items-center gap-2"><Shield size={20} className="text-[#0056D2]" />Turvallisuusasetukset</h2>
+                <h2 className="text-lg md:text-xl font-bold mb-4 md:mb-6 flex items-center gap-2"><Shield size={20} className="text-primary" />Turvallisuusasetukset</h2>
                 
                 <div className="bg-white border p-4 md:p-6 mb-6">
                   <div className="flex items-center gap-3 mb-4">
@@ -1676,7 +1676,7 @@ const HomePage = () => {
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
           <img src={LOGO_URL} alt="J&B" className="h-16 mx-auto mb-4 animate-pulse" />
-          <div className="w-8 h-8 border-2 border-[#0056D2] border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
         </div>
       </div>
     );

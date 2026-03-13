@@ -185,7 +185,7 @@ const ServicePagesAdmin = ({ token, onRefresh }) => {
   if (loading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0056D2]"></div>
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -214,7 +214,7 @@ const ServicePagesAdmin = ({ token, onRefresh }) => {
             <button
               onClick={savePage}
               disabled={saving}
-              className="px-4 py-2 bg-[#0056D2] text-white rounded-lg hover:bg-[#0045A8] flex items-center gap-2"
+              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover flex items-center gap-2"
             >
               <Save size={16} />
               {saving ? 'Tallennetaan...' : 'Tallenna'}
@@ -225,7 +225,7 @@ const ServicePagesAdmin = ({ token, onRefresh }) => {
         {/* URL & Status */}
         <div className="bg-white border rounded-lg p-6 space-y-4">
           <h3 className="font-bold text-[#0F172A] flex items-center gap-2">
-            <LinkIcon size={18} className="text-[#0056D2]" />
+            <LinkIcon size={18} className="text-primary" />
             URL ja julkaisutila
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -237,7 +237,7 @@ const ServicePagesAdmin = ({ token, onRefresh }) => {
                   type="text"
                   value={editingPage.slug}
                   onChange={(e) => updateField('slug', e.target.value)}
-                  className="flex-1 px-3 py-2 border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-[#0056D2] focus:border-transparent"
+                  className="flex-1 px-3 py-2 border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="tasoitustyot-helsinki"
                 />
               </div>
@@ -269,7 +269,7 @@ const ServicePagesAdmin = ({ token, onRefresh }) => {
             className="w-full flex items-center justify-between p-4 hover:bg-gray-50"
           >
             <h3 className="font-bold text-[#0F172A] flex items-center gap-2">
-              <FileText size={18} className="text-[#0056D2]" />
+              <FileText size={18} className="text-primary" />
               SEO-asetukset (hakukoneoptimointi)
             </h3>
             {expandedSections.seo ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -319,7 +319,7 @@ const ServicePagesAdmin = ({ token, onRefresh }) => {
             className="w-full flex items-center justify-between p-4 hover:bg-gray-50"
           >
             <h3 className="font-bold text-[#0F172A] flex items-center gap-2">
-              <ImageIcon size={18} className="text-[#0056D2]" />
+              <ImageIcon size={18} className="text-primary" />
               Hero-osio (sivun yläosa)
             </h3>
             {expandedSections.hero ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -374,7 +374,7 @@ const ServicePagesAdmin = ({ token, onRefresh }) => {
             className="w-full flex items-center justify-between p-4 hover:bg-gray-50"
           >
             <h3 className="font-bold text-[#0F172A] flex items-center gap-2">
-              <FileText size={18} className="text-[#0056D2]" />
+              <FileText size={18} className="text-primary" />
               Palvelun kuvaus
             </h3>
             {expandedSections.description ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -411,7 +411,7 @@ const ServicePagesAdmin = ({ token, onRefresh }) => {
             className="w-full flex items-center justify-between p-4 hover:bg-gray-50"
           >
             <h3 className="font-bold text-[#0F172A] flex items-center gap-2">
-              <CheckCircle size={18} className="text-[#0056D2]" />
+              <CheckCircle size={18} className="text-primary" />
               Palvelun ominaisuudet ({editingPage.features?.length || 0})
             </h3>
             {expandedSections.features ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -457,7 +457,7 @@ const ServicePagesAdmin = ({ token, onRefresh }) => {
               </div>
               <button
                 onClick={addFeature}
-                className="flex items-center gap-2 text-[#0056D2] hover:underline text-sm"
+                className="flex items-center gap-2 text-primary hover:underline text-sm"
               >
                 <Plus size={16} />
                 Lisää ominaisuus
@@ -518,7 +518,7 @@ const ServicePagesAdmin = ({ token, onRefresh }) => {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl font-bold text-[#0F172A] flex items-center gap-2">
-            <FileText size={20} className="text-[#0056D2]" />
+            <FileText size={20} className="text-primary" />
             Palvelusivut
           </h2>
           <p className="text-sm text-[#64748B]">
@@ -580,7 +580,7 @@ const ServicePagesAdmin = ({ token, onRefresh }) => {
               </a>
               <button
                 onClick={() => setEditingPage(page)}
-                className="p-2 hover:bg-gray-100 rounded-lg text-[#0056D2]"
+                className="p-2 hover:bg-gray-100 rounded-lg text-primary"
               >
                 <Edit2 size={18} />
               </button>

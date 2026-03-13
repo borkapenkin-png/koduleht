@@ -40,7 +40,7 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl font-bold text-[#0F172A] flex items-center gap-2">
-            <Building2 size={20} className="text-[#0056D2]" />
+            <Building2 size={20} className="text-primary" />
             Yleiset asetukset
           </h2>
           <p className="text-sm text-[#64748B]">
@@ -50,7 +50,7 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
         <button 
           onClick={onSave} 
           disabled={saving}
-          className="px-4 py-2 bg-[#0056D2] text-white rounded-lg hover:bg-[#0045A8] flex items-center gap-2"
+          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover flex items-center gap-2"
         >
           <Save size={16} />
           {saving ? 'Tallennetaan...' : 'Tallenna'}
@@ -60,7 +60,7 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
       {/* Company Info */}
       <div className="bg-white border rounded-lg p-6 space-y-4">
         <h3 className="font-bold text-[#0F172A] border-b pb-2 flex items-center gap-2">
-          <Building2 size={18} className="text-[#0056D2]" />
+          <Building2 size={18} className="text-primary" />
           Yrityksen tiedot
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -70,7 +70,7 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
               type="text"
               value={localSettings.company_name || ''}
               onChange={(e) => handleChange('company_name', e.target.value)}
-              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-[#0056D2] focus:border-transparent"
+              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
           <div>
@@ -106,7 +106,7 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
       {/* Contact Info */}
       <div className="bg-white border rounded-lg p-6 space-y-4">
         <h3 className="font-bold text-[#0F172A] border-b pb-2 flex items-center gap-2">
-          <Phone size={18} className="text-[#0056D2]" />
+          <Phone size={18} className="text-primary" />
           Yhteystiedot
         </h3>
         <p className="text-sm text-[#64748B]">
@@ -159,7 +159,7 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
       {/* Service Areas */}
       <div className="bg-white border rounded-lg p-6 space-y-4">
         <h3 className="font-bold text-[#0F172A] border-b pb-2 flex items-center gap-2">
-          <MapPin size={18} className="text-[#0056D2]" />
+          <MapPin size={18} className="text-primary" />
           Palvelualueet
         </h3>
         <p className="text-sm text-[#64748B]">
@@ -187,7 +187,7 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
           ))}
           <button
             onClick={() => addArrayItem('service_areas', 'Uusi alue')}
-            className="flex items-center gap-1 px-3 py-1.5 border-2 border-dashed border-[#E2E8F0] rounded-lg text-sm text-[#64748B] hover:border-[#0056D2] hover:text-[#0056D2]"
+            className="flex items-center gap-1 px-3 py-1.5 border-2 border-dashed border-[#E2E8F0] rounded-lg text-sm text-[#64748B] hover:border-primary hover:text-primary"
           >
             <Plus size={14} />
             Lisää alue
@@ -268,7 +268,7 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
       {/* Why Choose Us */}
       <div className="bg-white border rounded-lg p-6 space-y-4">
         <h3 className="font-bold text-[#0F172A] border-b pb-2 flex items-center gap-2">
-          <CheckCircle size={18} className="text-[#0056D2]" />
+          <CheckCircle size={18} className="text-primary" />
           Miksi valita meidät -lista
         </h3>
         <p className="text-sm text-[#64748B]">
@@ -277,7 +277,7 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
         <div className="space-y-2">
           {(localSettings.why_choose_us || []).map((item, index) => (
             <div key={index} className="flex items-center gap-2">
-              <CheckCircle size={16} className="text-[#0056D2] flex-shrink-0" />
+              <CheckCircle size={16} className="text-primary flex-shrink-0" />
               <input
                 type="text"
                 value={item}
@@ -294,7 +294,7 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
           ))}
           <button
             onClick={() => addArrayItem('why_choose_us', 'Uusi kohta')}
-            className="flex items-center gap-1 text-sm text-[#0056D2] hover:underline"
+            className="flex items-center gap-1 text-sm text-primary hover:underline"
           >
             <Plus size={14} />
             Lisää kohta
@@ -314,7 +314,7 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
           {[1, 2, 3, 4].map(num => (
             <div key={num} className="bg-gray-50 p-4 rounded-lg space-y-2">
               <div className="flex items-center gap-2">
-                <span className="w-6 h-6 bg-[#0056D2] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                <span className="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">
                   {num}
                 </span>
                 <p className="text-xs font-medium text-[#64748B]">Vaihe {num}</p>

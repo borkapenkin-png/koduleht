@@ -1,0 +1,87 @@
+{
+  "summary": "Frontend testing for global color and button state system. Most theme color features work correctly (primary colors, icons, process steps). Found hardcoded blue colors in App.css overriding theme-aware styles in index.css for btn-secondary border, btn-primary box-shadow, and reference-card hover border.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "btn-secondary",
+        "issue": "Border uses hardcoded rgba(0, 86, 210, 0.2) instead of theme color",
+        "file": "/app/frontend/src/App.css line 33",
+        "priority": "HIGH"
+      },
+      {
+        "component": "btn-primary",
+        "issue": "box-shadow uses hardcoded rgba(0, 86, 210, 0.1) and hover shadow uses rgba(0, 86, 210, 0.25)",
+        "file": "/app/frontend/src/App.css lines 18, 23",
+        "priority": "MEDIUM"
+      },
+      {
+        "component": "reference-card:hover",
+        "issue": "Border uses hardcoded rgba(0, 86, 210, 0.3) instead of theme color",
+        "file": "/app/frontend/src/App.css line 87",
+        "priority": "MEDIUM"
+      },
+      {
+        "component": "service-card:hover",
+        "issue": "Border uses hardcoded rgba(0, 86, 210, 0.2) instead of theme color",
+        "file": "/app/frontend/src/App.css line 70",
+        "priority": "MEDIUM"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "CSS variable --color-primary correctly set to #0891B2 (teal from admin)",
+    "CSS variable --color-primary-hover correctly computed",
+    "CSS variable --color-primary-light correctly computed",
+    "btn-primary background uses theme color rgb(8, 145, 178)",
+    "btn-primary text is white (rgb(255, 255, 255)) - good visibility",
+    "btn-primary has correct font-weight 600 and border-radius 8px",
+    "btn-secondary background is white",
+    "btn-secondary text uses theme color rgb(8, 145, 178)",
+    "text-primary elements use theme color rgb(8, 145, 178)",
+    "icon-bg-primary uses theme color with 10% transparency",
+    "process-step-number background uses theme color rgb(8, 145, 178)",
+    "process-step-number box-shadow uses theme color with 30% transparency",
+    "Admin panel theme picker shows #0891B2 as selected color",
+    "Admin panel color picker buttons work correctly",
+    "Theme color changes saved in admin panel",
+    "Service page /tasoitustyot-helsinki uses correct theme color throughout",
+    "Spinners use .spinner-theme class with theme color (verified in CSS)",
+    "Selection cards use theme color for selected state border"
+  ],
+  "test_report_links": [
+    "/app/test_reports/iteration_11.json"
+  ],
+  "action_items": [
+    "Remove or update conflicting styles in /app/frontend/src/App.css that override theme-aware styles in index.css",
+    "Replace hardcoded rgba(0, 86, 210, X) colors with color-mix(in srgb, var(--color-primary) X%, transparent)",
+    "Specifically fix: btn-secondary border (line 33), btn-primary box-shadow (lines 18, 23), service-card:hover border (line 70), reference-card:hover border (line 87)"
+  ],
+  "critical_code_review_comments": [
+    "App.css contains legacy hardcoded blue (#0056D2) colors that override the proper theme-aware styles in index.css",
+    "CSS specificity/order issue: App.css is imported after index.css so its styles take precedence",
+    "Consider removing duplicate btn-primary and btn-secondary definitions from App.css since index.css has the correct theme-aware versions",
+    "The box-shadow colors for buttons should use color-mix() or CSS variables instead of hardcoded RGBA values"
+  ],
+  "updated_files": [],
+  "success_rate": {
+    "backend": "N/A (frontend only testing)",
+    "frontend": "85% - Most theme features work, but 4 style issues with hardcoded colors"
+  },
+  "test_credentials": "Admin: admin / jbadmin2024",
+  "seed_data_creation": "None - used existing data",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "The theme color system (--color-primary CSS variable) works correctly. Issues are in App.css which has legacy hardcoded blue colors that override the theme-aware styles in index.css. Main fixes needed in App.css lines 18, 23, 33, 70, 87. After fix, verify btn-secondary border, btn-primary box-shadow, service-card:hover border, and reference-card:hover border all use theme color.",
+  "root_cause_analysis": {
+    "issue": "Hardcoded blue colors in UI elements",
+    "root_cause": "App.css contains legacy styles with hardcoded rgba(0, 86, 210, X) values that were not updated when the theme system was implemented in index.css",
+    "affected_files": ["/app/frontend/src/App.css"],
+    "fix_approach": "Either remove conflicting styles from App.css (since index.css has correct versions) or update App.css to use color-mix(in srgb, var(--color-primary) X%, transparent)"
+  }
+}
