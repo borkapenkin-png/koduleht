@@ -11,7 +11,7 @@ import GlobalSettingsAdmin from "./components/admin/GlobalSettingsAdmin";
 import { 
   Phone, Mail, MapPin, Menu, X, ChevronDown, Paintbrush, Building2, Layers,
   CheckCircle, ArrowRight, Send, Settings, LogOut, Plus, Trash2, Edit2, Save,
-  MessageSquare, Briefcase, Upload, Award, Image as ImageIcon, Home, FileText, Users, Lock, Shield, Palette, Globe,
+  MessageSquare, Briefcase, Upload, Award, Image as ImageIcon, Home, FileText, Users, Lock, Shield, Palette, Globe, Calendar,
   // Additional service icons
   Hammer, Wrench, PaintBucket, Brush, Ruler, HardHat, Construction, Warehouse,
   DoorOpen, DoorClosed, Sofa, Lamp, Frame, Square, CircleDot, Sparkles,
@@ -460,7 +460,7 @@ const AboutSection = ({ settings }) => {
   );
 };
 
-// ========== REFERENCES - Image-based card grid with "Näytä lisää" ==========
+// ========== REFERENCES - Image + Text cards with "Näytä lisää" ==========
 const ReferencesSection = ({ settings, references }) => {
   const [showAll, setShowAll] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -504,7 +504,7 @@ const ReferencesSection = ({ settings, references }) => {
         </motion.div>
         
         {/* Reference Cards Grid - 2 columns on desktop */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
           {visibleRefs.map((ref, index) => (
             <motion.div 
               key={ref.id} 
@@ -512,47 +512,62 @@ const ReferencesSection = ({ settings, references }) => {
               whileInView={{ opacity: 1, y: 0 }} 
               viewport={{ once: true }} 
               transition={{ delay: index * 0.08 }}
-              className="reference-card group"
+              className="reference-card-full group"
               data-testid={`reference-card-${index}`}
             >
-              {/* Image */}
-              <div className="reference-card-image">
+              {/* Cover Image */}
+              <div className="reference-card-image-container">
                 <img 
                   src={ref.cover_image_url || placeholderImage} 
-                  alt={`${ref.name} - ${ref.type} ${ref.location || ''}`}
+                  alt={`${ref.name} - ${ref.type}${ref.location ? ` ${ref.location}` : ''}`}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
-                {/* Overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                {/* Subtle overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
               
-              {/* Content */}
-              <div className="p-4 md:p-5">
-                <h3 className="text-base md:text-lg font-bold text-[#0F172A] group-hover:text-primary transition-colors mb-1">
+              {/* Text Content - Always visible below image */}
+              <div className="p-5 md:p-6">
+                {/* Project Title */}
+                <h3 className="text-base md:text-lg font-bold text-[#0F172A] group-hover:text-primary transition-colors mb-2">
                   {ref.name}
                 </h3>
-                <p className="text-xs md:text-sm text-primary font-medium mb-2">{ref.type}</p>
                 
-                {/* Main Contractor - Pääurakoitsija */}
-                {ref.main_contractor && (
-                  <p className="text-xs md:text-sm text-[#64748B] mb-1">
-                    <span className="font-medium">Pääurakoitsija:</span> {ref.main_contractor}
-                  </p>
+                {/* Work Type / Description */}
+                <p className="text-sm text-primary font-medium mb-3">{ref.type}</p>
+                
+                {/* Description - Always show if exists */}
+                {ref.description && (
+                  <p className="text-sm text-[#64748B] mb-3 leading-relaxed line-clamp-2">{ref.description}</p>
                 )}
                 
-                {/* Location */}
-                {ref.location && (
-                  <p className="text-xs md:text-sm text-[#64748B] flex items-center gap-1">
-                    <MapPin size={12} className="text-[#94A3B8]" />
-                    {ref.location}
-                  </p>
-                )}
-                
-                {/* Description (if no contractor/location shown) */}
-                {!ref.main_contractor && !ref.location && ref.description && (
-                  <p className="text-xs md:text-sm text-[#64748B] line-clamp-2">{ref.description}</p>
-                )}
+                {/* Meta info row */}
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[#64748B]">
+                  {/* Main Contractor - Pääurakoitsija */}
+                  {ref.main_contractor && (
+                    <div className="flex items-center gap-1.5">
+                      <Building2 size={14} className="text-primary" />
+                      <span><span className="font-medium">Pääurakoitsija:</span> {ref.main_contractor}</span>
+                    </div>
+                  )}
+                  
+                  {/* Location */}
+                  {ref.location && (
+                    <div className="flex items-center gap-1.5">
+                      <MapPin size={14} className="text-primary" />
+                      <span>{ref.location}</span>
+                    </div>
+                  )}
+                  
+                  {/* Year if available */}
+                  {ref.year && (
+                    <div className="flex items-center gap-1.5">
+                      <Calendar size={14} className="text-primary" />
+                      <span>{ref.year}</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </motion.div>
           ))}

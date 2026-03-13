@@ -584,6 +584,41 @@ html {
   transform: scale(1.05);
 }
 
+/* Reference card FULL - Image + structured text content */
+.reference-card-full {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  border: 1px solid var(--border);
+}
+
+.reference-card-full:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1), 0 20px 48px rgba(0, 0, 0, 0.06);
+  border-color: var(--color-primary);
+}
+
+/* Reference card image container - 4:3 aspect ratio */
+.reference-card-image-container {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--surface-grey);
+}
+
+.reference-card-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.reference-card-full:hover .reference-card-image-container img {
+  transform: scale(1.05);
+}
+
 /* Strong CTA section */
 .cta-strong {
   background: linear-gradient(135deg, var(--color-primary) 0%, color-mix(in srgb, var(--color-primary) 80%, black) 100%);
