@@ -713,24 +713,56 @@ const ContactSection = ({ settings }) => {
 const Footer = ({ logoUrl }) => {
   const logo = logoUrl || LOGO_URL;
   return (
-    <footer data-testid="footer" className="footer-bg text-white py-8 md:py-12">
+    <footer data-testid="footer" className="footer-bg text-white py-10 md:py-14">
       <div className="container-custom">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6">
-          <div className="flex items-center gap-3 md:gap-4">
-            <img src={logo} alt="J&B" className="h-8 md:h-10 w-auto max-w-[150px] object-contain" />
-            <p className="text-white/60 text-xs md:text-sm">Laatujohtajat vuodesta 2018</p>
+        {/* Main footer content */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+          
+          {/* Company info + SEO description */}
+          <div>
+            <img src={logo} alt="J&B Tasoitus ja Maalaus" className="h-10 md:h-12 w-auto max-w-[180px] object-contain mb-4" />
+            <p className="text-white/80 text-sm font-medium mb-2">J&B Tasoitus ja Maalaus Oy</p>
+            <p className="text-white/60 text-xs md:text-sm leading-relaxed">
+              Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla.
+            </p>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-xs md:text-sm text-white/60">
-            <a href="#palvelut" className="hover:text-white">Palvelut</a>
-            <a href="#meista" className="hover:text-white">Meistä</a>
-            <a href="#referenssit" className="hover:text-white">Referenssit</a>
-            <Link to="/ukk" className="hover:text-white">UKK</Link>
-            <a href="#yhteystiedot" className="hover:text-white">Yhteystiedot</a>
-            <Link to="/admin" className="hover:text-white flex items-center gap-1"><Settings size={12} />Admin</Link>
+          
+          {/* Services list - SEO keywords */}
+          <div>
+            <p className="text-white/80 text-sm font-medium mb-3">Tarjoamme:</p>
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs md:text-sm text-white/60">
+              <li>Tasoitustyöt</li>
+              <li>Sisämaalaus</li>
+              <li>Julkisivumaalaus</li>
+              <li>Julkisivurappaus</li>
+              <li>Mikrosementti</li>
+              <li>Kattomaalaus</li>
+              <li>Huoltomaalaus</li>
+              <li>Parvekemaalaus</li>
+            </ul>
           </div>
+          
+          {/* Navigation links */}
+          <div>
+            <p className="text-white/80 text-sm font-medium mb-3">Sivusto</p>
+            <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs md:text-sm text-white/60">
+              <a href="#palvelut" className="hover:text-white transition-colors">Palvelut</a>
+              <a href="#meista" className="hover:text-white transition-colors">Meistä</a>
+              <a href="#referenssit" className="hover:text-white transition-colors">Referenssit</a>
+              <Link to="/ukk" className="hover:text-white transition-colors">UKK</Link>
+              <a href="#yhteystiedot" className="hover:text-white transition-colors">Yhteystiedot</a>
+              <Link to="/admin" className="hover:text-white transition-colors flex items-center gap-1"><Settings size={12} />Admin</Link>
+            </div>
+            <p className="text-white/50 text-xs mt-4 leading-relaxed">
+              Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella.
+            </p>
+          </div>
+          
         </div>
-        <div className="border-t border-white/10 mt-6 md:mt-8 pt-6 md:pt-8 text-center text-xs md:text-sm text-white/40">
-          <p>© {new Date().getFullYear()} J&B Tasoitus ja Maalaus Oy</p>
+        
+        {/* Copyright */}
+        <div className="border-t border-white/10 mt-8 md:mt-10 pt-6 md:pt-8 text-center text-xs text-white/40">
+          <p>© {new Date().getFullYear()} J&B Tasoitus ja Maalaus Oy · Helsinki, Finland</p>
         </div>
       </div>
     </footer>
