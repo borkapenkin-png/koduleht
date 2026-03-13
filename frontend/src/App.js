@@ -271,6 +271,9 @@ const ImageUpload = ({ currentImage, onImageChange, token }) => {
 // ========== NAVBAR ==========
 const Navbar = ({ isScrolled, activeSection, logoUrl }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = window.location.pathname;
+  const isHomePage = location === '/' || location === '';
+  
   const navLinks = [
     { href: "#palvelut", label: "Palvelut" },
     { href: "#meista", label: "Meistä" },
@@ -280,20 +283,28 @@ const Navbar = ({ isScrolled, activeSection, logoUrl }) => {
   ];
   const logo = logoUrl || LOGO_URL;
 
+  // Get the correct href - use full path if not on homepage
+  const getHref = (href) => {
+    if (href.startsWith('#')) {
+      return isHomePage ? href : `/${href}`;
+    }
+    return href;
+  };
+
   return (
     <nav data-testid="navbar" className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "navbar-glass shadow-sm" : "bg-transparent"}`}>
       <div className="container-custom">
         <div className="flex items-center justify-between h-16 md:h-20">
-          <a href="#" data-testid="logo-link"><img src={logo} alt="J&B" className="h-10 md:h-12 w-auto max-w-[180px] object-contain" /></a>
+          <a href="/" data-testid="logo-link"><img src={logo} alt="J&B" className="h-10 md:h-12 w-auto max-w-[180px] object-contain" /></a>
           <div className="hidden md:flex items-center gap-6 lg:gap-8">
             {navLinks.map((link) => (
               link.isPage ? (
                 <Link key={link.href} to={link.href} className="nav-link text-sm font-medium transition-colors">{link.label}</Link>
               ) : (
-                <a key={link.href} href={link.href} className={`nav-link text-sm font-medium transition-colors ${activeSection === link.href.substring(1) ? "nav-link-active" : ""}`}>{link.label}</a>
+                <a key={link.href} href={getHref(link.href)} className={`nav-link text-sm font-medium transition-colors ${activeSection === link.href.substring(1) ? "nav-link-active" : ""}`}>{link.label}</a>
               )
             ))}
-            <a href="#yhteystiedot" className="btn-primary text-sm py-2 px-4">Pyydä tarjous</a>
+            <a href={getHref("#yhteystiedot")} className="btn-primary text-sm py-2 px-4">Pyydä tarjous</a>
           </div>
           <button className="md:hidden p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -307,10 +318,10 @@ const Navbar = ({ isScrolled, activeSection, logoUrl }) => {
                   link.isPage ? (
                     <Link key={link.href} to={link.href} className="block px-4 py-3 nav-link-mobile" onClick={() => setIsMobileMenuOpen(false)}>{link.label}</Link>
                   ) : (
-                    <a key={link.href} href={link.href} className="block px-4 py-3 nav-link-mobile" onClick={() => setIsMobileMenuOpen(false)}>{link.label}</a>
+                    <a key={link.href} href={getHref(link.href)} className="block px-4 py-3 nav-link-mobile" onClick={() => setIsMobileMenuOpen(false)}>{link.label}</a>
                   )
                 ))}
-                <div className="px-4 pt-2"><a href="#yhteystiedot" className="btn-primary block text-center text-sm" onClick={() => setIsMobileMenuOpen(false)}>Pyydä tarjous</a></div>
+                <div className="px-4 pt-2"><a href={getHref("#yhteystiedot")} className="btn-primary block text-center text-sm" onClick={() => setIsMobileMenuOpen(false)}>Pyydä tarjous</a></div>
               </div>
             </motion.div>
           )}
