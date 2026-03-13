@@ -36,6 +36,16 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 - ✅ **Process step numbers** - Enhanced with shadow (rgba(0, 86, 210, 0.25))
 - ✅ **Admin compatibility** - All content remains editable from admin panel
 
+### Global Theme Color & Button State System (December 2025) - LATEST
+- ✅ **Single source theme color** - `--color-primary` CSS variable with hover/active/light variants
+- ✅ **Removed hardcoded blue colors** - All `#0056D2` and `rgba(0, 86, 210, X)` replaced with CSS variables
+- ✅ **Button state system** - Normal, hover, active, focus states for btn-primary and btn-secondary
+- ✅ **Button text visibility** - White text always visible in all button states
+- ✅ **Tailwind integration** - Primary color mapped to CSS variable for `text-primary`, `bg-primary`, `border-primary`
+- ✅ **App.css cleanup** - Legacy hardcoded colors replaced with `color-mix(in srgb, var(--color-primary) X%, transparent)`
+- ✅ **Admin synchronization** - Theme color changes immediately reflect across entire site
+- ✅ **Focus rings** - Accessible focus states using theme color with 30% opacity
+
 ---
 
 ## Previous Updates: March 13, 2026
