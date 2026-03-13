@@ -1159,49 +1159,24 @@ html {
 
 .quote-form-select {
   cursor: pointer;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  padding-right: 2.5rem;
-  /* Firefox specific fixes */
-  text-indent: 0.01px;
-  text-overflow: '';
+  -webkit-appearance: menulist;
+  -moz-appearance: menulist;
+  appearance: menulist;
+  background-color: white !important;
+  color: #0F172A !important;
 }
 
-/* Firefox-specific select reset */
-.quote-form-select:-moz-focusring {
-  color: transparent;
-  text-shadow: 0 0 0 #0F172A;
-}
-
-/* Force option elements to be visible - cross-browser */
+/* Ensure select dropdown options are visible */
 .quote-form-select option {
-  background-color: white;
-  color: #0F172A;
-  padding: 12px 16px;
-  font-size: 16px;
-  font-weight: 400;
-  min-height: 40px;
-  line-height: 1.5;
+  background-color: white !important;
+  color: #0F172A !important;
+  padding: 8px 12px !important;
+  font-size: 16px !important;
 }
 
 .quote-form-select option:hover,
-.quote-form-select option:checked,
-.quote-form-select option:focus {
-  background-color: #E0F2FE;
-  color: #0F172A;
-}
-
-/* Firefox specific option styling */
-@-moz-document url-prefix() {
-  .quote-form-select option {
-    background-color: white;
-    color: #0F172A;
-    padding: 8px 12px;
-  }
+.quote-form-select option:checked {
+  background-color: #E0F2FE !important;
 }
 
 /* Grid layouts */
