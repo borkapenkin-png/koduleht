@@ -8,7 +8,7 @@ import os
 import uuid
 from datetime import datetime
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://seo-faq-refs.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://anchor-scroll-fix.preview.emergentagent.com')
 
 # Admin credentials from test request
 ADMIN_USERNAME = "admin"

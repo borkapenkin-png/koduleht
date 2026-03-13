@@ -90,6 +90,26 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Anchor link scroll offset for sticky header */
+/* Compensate for header height + section padding to position title correctly */
+section[id],
+[id="palvelut"],
+[id="meista"],
+[id="referenssit"],
+[id="yhteystiedot"] {
+  scroll-margin-top: 70px;
+}
+
+@media (min-width: 768px) {
+  section[id],
+  [id="palvelut"],
+  [id="meista"],
+  [id="referenssit"],
+  [id="yhteystiedot"] {
+    scroll-margin-top: 88px;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

@@ -5,7 +5,13 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
 ## Latest Update: March 13, 2026
 
-### Quote Request Form UX Upgrade (March 13, 2026) - LATEST
+### Anchor Link Scroll Fix (March 13, 2026) - LATEST
+- ✅ **Fixed scroll-margin-top** - Added CSS rule for sections with id attributes
+- ✅ **Header compensation** - 70px mobile, 88px desktop offset for sticky header
+- ✅ **All anchor links working** - #palvelut, #meista, #referenssit, #yhteystiedot
+- ✅ **Desktop and mobile tested** - Navigation smooth on all viewports
+
+### Quote Request Form UX Upgrade (March 13, 2026)
 - ✅ **Multi-select services** - 9 service checkboxes (Tasoitustyöt, Sisämaalaus, Julkisivumaalaus, etc.)
 - ✅ **Two-column layout** - Desktop: 2 columns, Mobile: single column
 - ✅ **Grouped sections** - YHTEYSTIEDOT, PROJEKTIN TIEDOT, PROJEKTIN KUVAUS
