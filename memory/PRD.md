@@ -3,7 +3,22 @@
 ## Original Problem Statement
 Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
-## Latest Update: March 13, 2026
+## Latest Update: December 2025
+
+### Service Page Layout Polish (December 2025) - LATEST
+- ✅ **CSS improvements** for service pages with enhanced visual balance
+- ✅ **Feature cards** - new shadows (0 2px 8px rgba), hover lift effect (-6px), border-radius (14px)
+- ✅ **Project cards** - enhanced shadows, hover lift (-8px), image zoom on hover (1.08x)
+- ✅ **Benefits box** - gradient background, blue-tinted shadow, rounded corners (18px)
+- ✅ **Why-item list** - hover slide effect (translateX 4px), rounded borders (10px)
+- ✅ **Area tags** - hover color change to primary, rounded corners (8px)
+- ✅ **Contact card** - white background with shadow, elevated appearance
+- ✅ **Reduced section padding** - more compact layout (2.5rem / 4rem)
+- ✅ **Bug fix** - Fixed critical bug where pageRes.json() was called twice causing page load failure
+
+---
+
+## Previous Updates: March 13, 2026
 
 ### Completed Features
 
