@@ -660,42 +660,67 @@ const ContactSection = ({ settings }) => {
   return (
     <section id="yhteystiedot" data-testid="contact-section" className="section-padding" aria-labelledby="contact-heading">
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20">
-          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-            <Subtitle settings={s} className="mb-2 md:mb-3">{s.contact_subtitle}</Subtitle>
-            <h2 id="contact-heading" className="section-title mb-4 md:mb-6">{s.contact_title}</h2>
-            <p className="text-sm md:text-base text-[#64748B] mb-6 md:mb-8">{s.contact_description}</p>
-            <address className="space-y-4 md:space-y-6 not-italic">
-              <div className="flex items-start gap-3 md:gap-4">
-                <div className="icon-box flex-shrink-0"><MapPin size={18} className="text-primary" aria-hidden="true" /></div>
-                <div><p className="font-medium text-[#0F172A] text-sm md:text-base">Päätoimisto</p><p className="text-[#64748B] text-sm">{s.contact_address}</p></div>
-              </div>
-              <div className="flex items-start gap-3 md:gap-4">
-                <div className="icon-box flex-shrink-0"><Mail size={18} className="text-primary" aria-hidden="true" /></div>
-                <div><p className="font-medium text-[#0F172A] text-sm md:text-base">Sähköposti</p><a href={`mailto:${s.contact_email}`} className="text-primary hover:underline text-sm">{s.contact_email}</a></div>
-              </div>
-              <div className="flex items-start gap-3 md:gap-4">
-                <div className="icon-box flex-shrink-0"><Phone size={18} className="text-primary" aria-hidden="true" /></div>
-                <div>
-                  <p className="font-medium text-[#0F172A] text-sm md:text-base">Puhelin</p>
-                  <div className="text-[#64748B] space-y-1 text-sm">
-                    <p>{s.contact_phone_1_name}: <a href={`tel:${s.contact_phone_1.replace(/\s/g, '')}`} className="text-primary hover:underline">{s.contact_phone_1}</a></p>
-                    <p>{s.contact_phone_2_name}: <a href={`tel:${s.contact_phone_2.replace(/\s/g, '')}`} className="text-primary hover:underline">{s.contact_phone_2}</a></p>
+        {/* Stacked layout - full width blocks */}
+        <div className="space-y-10 md:space-y-14">
+          
+          {/* Yhteystiedot block - full width */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <div className="text-center mb-8 md:mb-10">
+              <Subtitle settings={s} className="mb-2 md:mb-3">{s.contact_subtitle}</Subtitle>
+              <h2 id="contact-heading" className="section-title mb-4 md:mb-6">{s.contact_title}</h2>
+              <p className="text-sm md:text-base text-[#64748B] max-w-2xl mx-auto">{s.contact_description}</p>
+            </div>
+            
+            {/* Contact info grid - responsive */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+              <address className="not-italic bg-white p-4 md:p-6 border border-[#E2E8F0] rounded-lg">
+                <div className="flex items-start gap-3">
+                  <div className="icon-box flex-shrink-0"><MapPin size={18} className="text-primary" aria-hidden="true" /></div>
+                  <div>
+                    <p className="font-medium text-[#0F172A] text-sm md:text-base">Päätoimisto</p>
+                    <p className="text-[#64748B] text-sm mt-1">{s.contact_address}</p>
+                  </div>
+                </div>
+              </address>
+              
+              <div className="bg-white p-4 md:p-6 border border-[#E2E8F0] rounded-lg">
+                <div className="flex items-start gap-3">
+                  <div className="icon-box flex-shrink-0"><Mail size={18} className="text-primary" aria-hidden="true" /></div>
+                  <div>
+                    <p className="font-medium text-[#0F172A] text-sm md:text-base">Sähköposti</p>
+                    <a href={`mailto:${s.contact_email}`} className="text-primary hover:underline text-sm mt-1 block">{s.contact_email}</a>
                   </div>
                 </div>
               </div>
-            </address>
-            <div className="mt-6 md:mt-10 p-4 md:p-6 bg-[#FAFAFA] border border-[#E2E8F0]">
-              <p className="font-medium text-[#0F172A] mb-2 text-sm md:text-base">{s.contact_jobs_title}</p>
-              <p className="text-xs md:text-sm text-[#64748B]">{s.contact_jobs_text}</p>
+              
+              <div className="bg-white p-4 md:p-6 border border-[#E2E8F0] rounded-lg">
+                <div className="flex items-start gap-3">
+                  <div className="icon-box flex-shrink-0"><Phone size={18} className="text-primary" aria-hidden="true" /></div>
+                  <div>
+                    <p className="font-medium text-[#0F172A] text-sm md:text-base">Puhelin</p>
+                    <div className="text-[#64748B] space-y-1 text-sm mt-1">
+                      <p>{s.contact_phone_1_name}: <a href={`tel:${s.contact_phone_1.replace(/\s/g, '')}`} className="text-primary hover:underline">{s.contact_phone_1}</a></p>
+                      <p>{s.contact_phone_2_name}: <a href={`tel:${s.contact_phone_2.replace(/\s/g, '')}`} className="text-primary hover:underline">{s.contact_phone_2}</a></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-[#FAFAFA] p-4 md:p-6 border border-[#E2E8F0] rounded-lg">
+                <p className="font-medium text-[#0F172A] mb-2 text-sm md:text-base">{s.contact_jobs_title}</p>
+                <p className="text-xs md:text-sm text-[#64748B]">{s.contact_jobs_text}</p>
+              </div>
             </div>
           </motion.div>
-          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-            <div className="bg-[#FAFAFA] p-5 md:p-8 border border-[#E2E8F0] rounded-lg">
-              <h3 className="text-lg md:text-xl font-bold text-[#0F172A] mb-4 md:mb-6">Lähetä tarjouspyyntö</h3>
+          
+          {/* Tarjouspyyntö form - full width */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
+            <div className="bg-[#FAFAFA] p-6 md:p-10 border border-[#E2E8F0] rounded-lg max-w-4xl mx-auto">
+              <h3 className="text-xl md:text-2xl font-bold text-[#0F172A] mb-6 md:mb-8 text-center">Lähetä tarjouspyyntö</h3>
               <QuoteRequestForm />
             </div>
           </motion.div>
+          
         </div>
       </div>
     </section>
