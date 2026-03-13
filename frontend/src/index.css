@@ -90,24 +90,26 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Anchor link scroll offset for sticky header */
-/* Compensate for header height + section padding to position title correctly */
-section[id],
-[id="palvelut"],
-[id="meista"],
-[id="referenssit"],
-[id="yhteystiedot"] {
-  scroll-margin-top: 70px;
+/* Anchor link offset using pseudo-element technique for cross-browser support */
+/* This creates an invisible anchor point above the section */
+#palvelut::before,
+#meista::before,
+#referenssit::before,
+#yhteystiedot::before {
+  content: "";
+  display: block;
+  height: 80px;
+  margin-top: -80px;
+  visibility: hidden;
+  pointer-events: none;
 }
 
-@media (min-width: 768px) {
-  section[id],
-  [id="palvelut"],
-  [id="meista"],
-  [id="referenssit"],
-  [id="yhteystiedot"] {
-    scroll-margin-top: 88px;
-  }
+/* Also add scroll-margin as fallback for modern browsers */
+#palvelut,
+#meista,
+#referenssit,
+#yhteystiedot {
+  scroll-margin-top: 80px;
 }
 
 /* Custom scrollbar */
@@ -298,13 +300,13 @@ section[id],
 
 /* Section padding - compact for service pages */
 .section-padding {
-  padding-top: 2.5rem;
+  padding-top: 1.5rem;
   padding-bottom: 2.5rem;
 }
 
 @media (min-width: 768px) {
   .section-padding {
-    padding-top: 4rem;
+    padding-top: 2.5rem;
     padding-bottom: 4rem;
   }
 }
@@ -772,17 +774,6 @@ section[id],
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
-/* Section padding */
-.section-padding {
-  padding: 3rem 0;
-}
-
-@media (min-width: 768px) {
-  .section-padding {
-    padding: 5rem 0;
-  }
-}
-
 /* Form inputs */
 .form-input {
   width: 100%;
@@ -1175,21 +1166,42 @@ section[id],
   background-repeat: no-repeat;
   background-position: right 1rem center;
   padding-right: 2.5rem;
+  /* Firefox specific fixes */
+  text-indent: 0.01px;
+  text-overflow: '';
 }
 
-/* Force option elements to be visible with strong styles */
+/* Firefox-specific select reset */
+.quote-form-select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #0F172A;
+}
+
+/* Force option elements to be visible - cross-browser */
 .quote-form-select option {
-  background-color: white !important;
-  color: #0F172A !important;
-  padding: 0.75rem 1rem !important;
-  font-size: 1rem !important;
-  font-weight: 400 !important;
+  background-color: white;
+  color: #0F172A;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: 400;
+  min-height: 40px;
+  line-height: 1.5;
 }
 
 .quote-form-select option:hover,
-.quote-form-select option:checked {
-  background-color: #E0F2FE !important;
-  color: #0F172A !important;
+.quote-form-select option:checked,
+.quote-form-select option:focus {
+  background-color: #E0F2FE;
+  color: #0F172A;
+}
+
+/* Firefox specific option styling */
+@-moz-document url-prefix() {
+  .quote-form-select option {
+    background-color: white;
+    color: #0F172A;
+    padding: 8px 12px;
+  }
 }
 
 /* Grid layouts */
