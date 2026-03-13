@@ -4,7 +4,7 @@ from datetime import datetime
 import base64
 
 class JBMaalausAPITester:
-    def __init__(self, base_url="https://anchor-scroll-fix.preview.emergentagent.com"):
+    def __init__(self, base_url="https://construction-cms-2.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.tests_run = 0

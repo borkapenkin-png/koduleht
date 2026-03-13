@@ -1373,3 +1373,54 @@ html {
   border: 1px solid #FECACA;
   border-radius: 0.5rem;
 }
+
+/* ========== SERVICE DESCRIPTION CONTENT ========== */
+/* Improved typography for long-form service descriptions */
+.service-description-content {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+.service-description-content p {
+  margin-bottom: 1.25rem;
+}
+
+.service-description-content p:last-child {
+  margin-bottom: 0;
+}
+
+.service-description-content h3,
+.service-description-content h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.service-description-content ul,
+.service-description-content ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.service-description-content li {
+  margin-bottom: 0.5rem;
+}
+
+.service-description-content strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .service-description-content {
+    font-size: 1.0625rem;
+    line-height: 1.85;
+  }
+  
+  .service-description-content p {
+    margin-bottom: 1.5rem;
+  }
+}

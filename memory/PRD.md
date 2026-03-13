@@ -5,6 +5,13 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
 ## Latest Update: March 13, 2026
 
+### Service Page Description Layout Patch (March 13, 2026) - LATEST
+- ✅ **60/40 text/image split** - Desktop layout with lg:col-span-7 (text) and lg:col-span-5 (image)
+- ✅ **Improved typography** - `.service-description-content` class with optimized line-height (1.8), font-size, paragraph spacing
+- ✅ **Mobile responsive** - Stacked layout on mobile with text first, image below
+- ✅ **Sticky image alignment** - Image aligns to top with `lg:sticky lg:top-24`
+- ✅ **Rich text support** - Proper styling for headings, lists, strong text within descriptions
+
 ### Image URL Fix (March 13, 2026) - LATEST
 - ✅ **Created `getImageUrl` helper** - Converts relative paths to full URLs
 - ✅ **Updated ImageUpload component** - Now stores relative URLs (`/api/images/123`)
