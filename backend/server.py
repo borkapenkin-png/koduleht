@@ -138,6 +138,40 @@ async def init_admin_user():
         })
         logging.info("Default admin user created")
 
+# Password reset endpoint with secret key
+@api_router.post("/admin/reset-password-emergency")
+async def emergency_password_reset(request: Request):
+    """Emergency password reset - requires ADMIN_RESET_KEY environment variable."""
+    try:
+        body = await request.json()
+        reset_key = body.get('reset_key', '')
+        new_password = body.get('new_password', 'jbadmin2024')
+        
+        # Check reset key from environment
+        expected_key = os.environ.get('ADMIN_RESET_KEY', 'jb-emergency-reset-2024')
+        
+        if reset_key != expected_key:
+            raise HTTPException(status_code=403, detail="Invalid reset key")
+        
+        # Update or create admin user
+        hashed = hash_password(new_password)
+        result = await db.admin_users.update_one(
+            {"username": "admin"},
+            {"$set": {
+                "password_hash": hashed,
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }},
+            upsert=True
+        )
+        
+        logging.info("Admin password reset via emergency endpoint")
+        return {"success": True, "message": "Password reset successful"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Password reset error: {e}")
+        raise HTTPException(status_code=500, detail="Reset failed")
+
 
 # ========== MODELS ==========
 
