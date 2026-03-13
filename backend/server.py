@@ -388,6 +388,7 @@ class ServiceCreate(BaseModel):
     description: str
     icon: str = "Building2"
     image_url: Optional[str] = None
+    image_alt: Optional[str] = None  # ALT text for image
     link_url: Optional[str] = None  # Link to service page, e.g., "tasoitustyot-helsinki"
     order: int = 0
 
@@ -396,6 +397,7 @@ class ServiceUpdate(BaseModel):
     description: Optional[str] = None
     icon: Optional[str] = None
     image_url: Optional[str] = None
+    image_alt: Optional[str] = None
     link_url: Optional[str] = None
     order: Optional[int] = None
 
@@ -406,6 +408,7 @@ class Service(BaseModel):
     description: str
     icon: str = "Building2"
     image_url: Optional[str] = None
+    image_alt: Optional[str] = None  # ALT text for image
     link_url: Optional[str] = None  # Link to service page, e.g., "tasoitustyot-helsinki"
     order: int = 0
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -520,6 +523,7 @@ class ReferenceCreate(BaseModel):
     location: Optional[str] = None  # City/location
     year: Optional[str] = None  # Year of project
     cover_image_url: Optional[str] = None  # Main image for card
+    cover_image_alt: Optional[str] = None  # ALT text for cover image
     gallery_images: List[str] = []  # Gallery images for detail page
     full_description: Optional[str] = None  # Full text for detail page
     slug: Optional[str] = None  # URL slug for detail page
@@ -534,6 +538,7 @@ class ReferenceUpdate(BaseModel):
     location: Optional[str] = None
     year: Optional[str] = None
     cover_image_url: Optional[str] = None
+    cover_image_alt: Optional[str] = None
     gallery_images: Optional[List[str]] = None
     full_description: Optional[str] = None
     slug: Optional[str] = None
@@ -550,6 +555,7 @@ class Reference(BaseModel):
     location: Optional[str] = None
     year: Optional[str] = None
     cover_image_url: Optional[str] = None
+    cover_image_alt: Optional[str] = None  # ALT text for cover image
     gallery_images: List[str] = []
     full_description: Optional[str] = None
     slug: Optional[str] = None

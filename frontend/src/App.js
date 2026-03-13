@@ -288,6 +288,63 @@ const ImageUpload = ({ currentImage, onImageChange, token }) => {
   );
 };
 
+// Image Upload with ALT text support
+const ImageUploadWithAlt = ({ currentImage, currentAlt, onImageChange, onAltChange, token, altPlaceholder }) => {
+  const fileInputRef = useRef(null);
+  const [uploading, setUploading] = useState(false);
+  const [preview, setPreview] = useState(currentImage || "");
+
+  useEffect(() => { setPreview(currentImage || ""); }, [currentImage]);
+
+  const getDisplayUrl = (url) => {
+    if (!url) return "";
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    return `${BACKEND_URL}${url}`;
+  };
+
+  const handleFileSelect = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!["image/jpeg", "image/png", "image/gif", "image/webp"].includes(file.type)) {
+      alert("Sallitut: JPEG, PNG, GIF, WEBP"); return;
+    }
+    if (file.size > 5 * 1024 * 1024) { alert("Max 5MB"); return; }
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await axios.post(`${API}/admin/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data", "Authorization": `Bearer ${token}` }
+      });
+      const relativeUrl = response.data.url;
+      setPreview(relativeUrl);
+      onImageChange(relativeUrl);
+    } catch (error) { alert("Lataus epäonnistui"); }
+    setUploading(false);
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-3 flex-wrap">
+        {preview ? (
+          <img src={getDisplayUrl(preview)} alt={currentAlt || "Preview"} className="w-16 h-12 object-cover border border-[#E2E8F0]" />
+        ) : (
+          <div className="w-16 h-12 bg-[#FAFAFA] border border-[#E2E8F0] flex items-center justify-center">
+            <ImageIcon size={16} className="text-[#94A3B8]" />
+          </div>
+        )}
+        <input type="file" ref={fileInputRef} onChange={handleFileSelect} accept="image/*" className="hidden" />
+        <button type="button" onClick={() => fileInputRef.current?.click()} disabled={uploading} className="btn-secondary text-xs py-2 px-3 flex items-center gap-1">
+          <Upload size={14} />{uploading ? "..." : "Lataa"}
+        </button>
+      </div>
+      <input type="url" value={preview} onChange={(e) => { setPreview(e.target.value); onImageChange(e.target.value); }} placeholder="Tai URL" className="form-input text-sm" />
+      <input type="text" value={currentAlt || ''} onChange={(e) => onAltChange(e.target.value)} placeholder={altPlaceholder || "ALT-teksti (SEO)"} className="form-input text-sm" />
+    </div>
+  );
+};
+
 // ========== NAVBAR ==========
 const Navbar = ({ isScrolled, activeSection, logoUrl }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -427,7 +484,7 @@ const ServicesSection = ({ services_data, settings }) => (
                 <div className="aspect-[16/10] overflow-hidden -mx-6 md:-mx-8 -mt-6 md:-mt-8 mb-4 md:mb-6">
                   <img 
                     src={getImageUrl(service.image_url)} 
-                    alt={getServiceAltText(service.title)}
+                    alt={service.image_alt || getServiceAltText(service.title)}
                     title={`${service.title} - J&B Tasoitus ja Maalaus Oy`}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                     loading="lazy"
@@ -561,7 +618,7 @@ const ReferencesSection = ({ settings, references }) => {
               <div className="reference-card-image-container">
                 <img 
                   src={getImageUrl(ref.cover_image_url) || placeholderImage} 
-                  alt={`${ref.name} - ${ref.type}${ref.location ? ` ${ref.location}` : ''}`}
+                  alt={ref.cover_image_alt || `${ref.name} - ${ref.type}${ref.location ? ` ${ref.location}` : ''}`}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
@@ -1818,7 +1875,7 @@ const ServiceForm = ({ service, onChange, onSave, onCancel, token }) => (
       </div>
       <div><label className="block text-sm font-medium mb-1">Järjestys</label><input type="number" value={service.order} onChange={(e) => onChange({ ...service, order: parseInt(e.target.value) || 0 })} className="form-input text-sm" /></div>
     </div>
-    <div><label className="block text-sm font-medium mb-1">Kuva</label><ImageUpload currentImage={service.image_url} onImageChange={(url) => onChange({ ...service, image_url: url })} token={token} /></div>
+    <div><label className="block text-sm font-medium mb-1">Kuva</label><ImageUploadWithAlt currentImage={service.image_url} currentAlt={service.image_alt} onImageChange={(url) => onChange({ ...service, image_url: url })} onAltChange={(alt) => onChange({ ...service, image_alt: alt })} token={token} altPlaceholder="ALT-teksti (esim. Tasoitustyöt Helsinki)" /></div>
     <div className="flex gap-2"><button onClick={onSave} className="btn-primary text-xs md:text-sm flex items-center gap-1"><Save size={14} />Tallenna</button><button onClick={onCancel} className="btn-secondary text-xs md:text-sm">Peruuta</button></div>
   </div>
 );
@@ -1833,7 +1890,7 @@ const ReferenceForm = ({ reference, onChange, onSave, onCancel, token }) => (
       <div><label className="block text-sm font-medium mb-1">Pääurakoitsija</label><input value={reference.main_contractor || ""} onChange={(e) => onChange({ ...reference, main_contractor: e.target.value })} className="form-input text-sm" placeholder="Esim. NCC, Skanska, YIT" /></div>
       <div><label className="block text-sm font-medium mb-1">Sijainti</label><input value={reference.location || ""} onChange={(e) => onChange({ ...reference, location: e.target.value })} className="form-input text-sm" placeholder="Esim. Helsinki" /></div>
     </div>
-    <div><label className="block text-sm font-medium mb-1">Kuvakuva (Kansi)</label><ImageUpload currentImage={reference.cover_image_url} onImageChange={(url) => onChange({ ...reference, cover_image_url: url })} token={token} /></div>
+    <div><label className="block text-sm font-medium mb-1">Kuvakuva (Kansi)</label><ImageUploadWithAlt currentImage={reference.cover_image_url} currentAlt={reference.cover_image_alt} onImageChange={(url) => onChange({ ...reference, cover_image_url: url })} onAltChange={(alt) => onChange({ ...reference, cover_image_alt: alt })} token={token} altPlaceholder="ALT-teksti (esim. Projektin nimi - Sijainti)" /></div>
     <div><label className="block text-sm font-medium mb-1">Lyhyt kuvaus</label><textarea value={reference.description || ""} onChange={(e) => onChange({ ...reference, description: e.target.value })} className="form-input text-sm" rows={2} placeholder="Lyhyt kuvaus projektista..." /></div>
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div><label className="block text-sm font-medium mb-1">Vuosi</label><input value={reference.year || ""} onChange={(e) => onChange({ ...reference, year: e.target.value })} className="form-input text-sm" placeholder="2024" /></div>
