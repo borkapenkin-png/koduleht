@@ -680,9 +680,15 @@ const ContactSection = ({ settings }) => {
                   <div className="icon-box flex-shrink-0"><Phone size={18} className="text-primary" aria-hidden="true" /></div>
                   <div>
                     <p className="font-medium text-[#0F172A] text-sm md:text-base">Puhelin</p>
-                    <div className="text-[#64748B] space-y-1 text-sm mt-1">
-                      <p>{s.contact_phone_1_name}: <a href={`tel:${s.contact_phone_1.replace(/\s/g, '')}`} className="text-primary hover:underline">{s.contact_phone_1}</a></p>
-                      <p>{s.contact_phone_2_name}: <a href={`tel:${s.contact_phone_2.replace(/\s/g, '')}`} className="text-primary hover:underline">{s.contact_phone_2}</a></p>
+                    <div className="text-[#64748B] space-y-2 text-sm mt-1">
+                      <div>
+                        <p className="text-xs text-[#94A3B8]">{s.contact_phone_1_name}</p>
+                        <a href={`tel:${s.contact_phone_1.replace(/\s/g, '')}`} className="text-primary hover:underline whitespace-nowrap">{s.contact_phone_1}</a>
+                      </div>
+                      <div>
+                        <p className="text-xs text-[#94A3B8]">{s.contact_phone_2_name}</p>
+                        <a href={`tel:${s.contact_phone_2.replace(/\s/g, '')}`} className="text-primary hover:underline whitespace-nowrap">{s.contact_phone_2}</a>
+                      </div>
                     </div>
                   </div>
                 </div>
