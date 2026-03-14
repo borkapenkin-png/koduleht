@@ -281,33 +281,50 @@ const TrustBadges = ({ settings }) => {
 };
 
 // ========== DESCRIPTION - Float layout: text wraps around image, continues full-width ==========
-const DescriptionSection = ({ page, settings }) => (
-  <section className="service-section-white">
-    <div className="container-custom">
-      {/* Header */}
-      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6">
-        <Subtitle settings={settings} className="mb-3">PALVELUN KUVAUS</Subtitle>
-        <h2 className="section-title">{page.description_title || 'Mitä tarjoamme'}</h2>
-      </motion.div>
-      {/* Content with floated image */}
-      <div className="description-float-layout">
-        {/* Image floats right on desktop */}
-        <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="description-float-image">
-          <div className="relative overflow-hidden rounded-2xl shadow-xl">
-            <img src={getImageUrl(page.description_image_url || page.hero_image_url)} alt={page.hero_title} className="w-full h-64 md:h-80 lg:h-[360px] object-cover" />
-          </div>
+const DescriptionSection = ({ page, settings, services }) => {
+  // Find matching service from landing page to get image_url
+  const matchingService = services?.find(s => 
+    s.title?.toLowerCase().includes(page.hero_title?.toLowerCase()?.split(' ')[0]) ||
+    page.hero_title?.toLowerCase().includes(s.title?.toLowerCase()?.split(' ')[0])
+  );
+  
+  // Use service image from landing page, fallback to page's own images, then default
+  const defaultImage = 'https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&w=800';
+  const descriptionImage = matchingService?.image_url || page.description_image_url || page.hero_image_url || defaultImage;
+  
+  return (
+    <section className="service-section-white">
+      <div className="container-custom">
+        {/* Header */}
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6">
+          <Subtitle settings={settings} className="mb-3">PALVELUN KUVAUS</Subtitle>
+          <h2 className="section-title">{page.description_title || 'Mitä tarjoamme'}</h2>
         </motion.div>
-        {/* Text wraps around image, continues full-width below */}
-        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-          <div 
-            className="service-description-content"
-            dangerouslySetInnerHTML={{ __html: page.description_text || '<p>Ammattitaitoista palvelua.</p>' }} 
-          />
-        </motion.div>
+        {/* Content with floated image */}
+        <div className="description-float-layout">
+          {/* Image floats right on desktop */}
+          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="description-float-image">
+            <div className="relative overflow-hidden rounded-2xl shadow-xl">
+              <img 
+                src={getImageUrl(descriptionImage)} 
+                alt={page.hero_title} 
+                className="w-full h-64 md:h-80 lg:h-[360px] object-cover"
+                onError={(e) => { e.target.src = defaultImage; }}
+              />
+            </div>
+          </motion.div>
+          {/* Text wraps around image, continues full-width below */}
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+            <div 
+              className="service-description-content"
+              dangerouslySetInnerHTML={{ __html: page.description_text || '<p>Ammattitaitoista palvelua.</p>' }} 
+            />
+          </motion.div>
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 // ========== FEATURES - Premium cards on light grey background ==========
 const FeaturesSection = ({ page, settings }) => {
@@ -698,6 +715,7 @@ const DynamicServicePage = () => {
   const [settings, setSettings] = useState(null);
   const [page, setPage] = useState(null);
   const [allPages, setAllPages] = useState([]);
+  const [services, setServices] = useState([]);
   const [serviceFaqs, setServiceFaqs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -716,10 +734,11 @@ const DynamicServicePage = () => {
     const fetchData = async () => {
       setLoading(true); setError(null);
       try {
-        const [settingsRes, pageRes, allPagesRes] = await Promise.all([
+        const [settingsRes, pageRes, allPagesRes, servicesRes] = await Promise.all([
           fetch(`${API_URL}/api/settings`),
           fetch(`${API_URL}/api/service-pages/${slug}`),
-          fetch(`${API_URL}/api/service-pages`)
+          fetch(`${API_URL}/api/service-pages`),
+          fetch(`${API_URL}/api/services`)
         ]);
         if (!settingsRes.ok) throw new Error('Settings error');
         const settingsData = await settingsRes.json();
@@ -730,6 +749,7 @@ const DynamicServicePage = () => {
         setPage(pageData);
         // Title is now set by useServicePageSEO hook
         if (allPagesRes.ok) setAllPages(await allPagesRes.json());
+        if (servicesRes.ok) setServices(await servicesRes.json());
         
         // Fetch service-specific FAQs if page has linked service
         if (pageData.service_id) {
@@ -768,7 +788,7 @@ const DynamicServicePage = () => {
       <Navbar isScrolled={isScrolled} settings={settings} />
       <ServiceHero page={page} settings={settings} />
       <TrustBadges settings={settings} />
-      <DescriptionSection page={page} settings={settings} />
+      <DescriptionSection page={page} settings={settings} services={services} />
       <FeaturesSection page={page} settings={settings} />
       <WhyChooseSection page={page} settings={settings} />
       {page.use_global_process !== false && <ProcessSection page={page} settings={settings} />}
