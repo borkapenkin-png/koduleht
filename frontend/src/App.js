@@ -16,7 +16,7 @@ import QuoteRequestForm from "./components/QuoteRequestForm";
 import { 
   Phone, Mail, MapPin, Menu, X, ChevronDown, Paintbrush, Building2, Layers,
   CheckCircle, ArrowRight, Send, Settings, LogOut, Plus, Trash2, Edit2, Save, Download,
-  MessageSquare, Briefcase, Upload, Award, Image as ImageIcon, Home, FileText, Users, Lock, Shield, Palette, Globe, Calendar, HelpCircle,
+  MessageSquare, Briefcase, Upload, Award, Image as ImageIcon, Home, FileText, Users, Lock, Shield, Palette, Globe, Calendar, HelpCircle, RefreshCw,
   // Additional service icons
   Hammer, Wrench, PaintBucket, Brush, Ruler, HardHat, Construction, Warehouse,
   DoorOpen, DoorClosed, Sofa, Lamp, Frame, Square, CircleDot, Sparkles,
@@ -636,9 +636,9 @@ const ReferencesSection = ({ settings, references }) => {
                 {/* Work Type / Description */}
                 <p className="text-sm text-primary font-medium mb-3">{ref.type}</p>
                 
-                {/* Description - Always show if exists */}
+                {/* Description - Always show full text */}
                 {ref.description && (
-                  <p className="text-sm text-[#64748B] mb-3 leading-relaxed line-clamp-2">{ref.description}</p>
+                  <p className="text-sm text-[#64748B] mb-3 leading-relaxed">{ref.description}</p>
                 )}
                 
                 {/* Meta info row */}
@@ -1023,11 +1023,28 @@ const AdminPanel = () => {
     setSaving(true);
     try {
       await axios.put(`${API}/admin/settings`, settings, getAuthHeaders());
-      alert("Tallennettu!");
+      alert("Tallennettu! Staattiset sivut päivitetään taustalla.");
     } catch (error) { 
       console.error('Save settings error:', error);
       if (error.response?.status === 401) handleLogout();
       else alert(`Virhe tallennuksessa: ${error.response?.data?.detail || error.message}`); 
+    }
+    setSaving(false);
+  };
+
+  const regenerateStaticPages = async () => {
+    setSaving(true);
+    try {
+      const response = await axios.post(`${API}/admin/regenerate-static`, {}, getAuthHeaders());
+      if (response.data.success) {
+        alert("Staattiset sivut päivitetty onnistuneesti!");
+      } else {
+        alert(`Virhe: ${response.data.message}`);
+      }
+    } catch (error) {
+      console.error('Regenerate error:', error);
+      if (error.response?.status === 401) handleLogout();
+      else alert(`Virhe: ${error.response?.data?.detail || error.message}`);
     }
     setSaving(false);
   };
@@ -1232,6 +1249,9 @@ const AdminPanel = () => {
               <Upload size={14} />Import
               <input type="file" accept=".json" onChange={importAllData} className="hidden" />
             </label>
+            <button onClick={regenerateStaticPages} disabled={saving} className="flex items-center gap-1 text-xs md:text-sm text-[#64748B] hover:text-primary" title="Päivitä staattiset SEO-sivut">
+              <RefreshCw size={14} className={saving ? "animate-spin" : ""} />SEO
+            </button>
             <Link to="/" className="text-xs md:text-sm text-[#64748B] hover:text-primary">Sivusto</Link>
             <button onClick={handleLogout} className="flex items-center gap-1 text-xs md:text-sm text-[#64748B] hover:text-red-600"><LogOut size={14} />Ulos</button>
           </div>

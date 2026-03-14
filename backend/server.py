@@ -20,6 +20,7 @@ import bcrypt
 from collections import defaultdict
 import time
 import resend
+import subprocess
 
 
 ROOT_DIR = Path(__file__).parent
@@ -36,6 +37,29 @@ db = client[os.environ['DB_NAME']]
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
+
+# Function to regenerate static HTML files
+async def regenerate_static_pages():
+    """Regenerate static HTML pages after content changes."""
+    try:
+        script_path = ROOT_DIR / "generate_static_direct.py"
+        if script_path.exists():
+            result = subprocess.run(
+                ["python", str(script_path)],
+                capture_output=True,
+                text=True,
+                cwd=str(ROOT_DIR),
+                timeout=60
+            )
+            if result.returncode == 0:
+                logging.info("Static pages regenerated successfully")
+                return True
+            else:
+                logging.error(f"Static page generation failed: {result.stderr}")
+                return False
+    except Exception as e:
+        logging.error(f"Error regenerating static pages: {e}")
+        return False
 
 # JWT Configuration
 JWT_SECRET = os.environ.get('JWT_SECRET', secrets.token_hex(32))
@@ -1017,8 +1041,38 @@ async def update_site_settings(input: SiteSettingsUpdate, username: str = Depend
         upsert=True
     )
     
+    # Regenerate static pages in background
+    import sys
+    python_path = sys.executable
+    asyncio.create_task(asyncio.to_thread(lambda: subprocess.run(
+        [python_path, str(ROOT_DIR / "generate_static_direct.py")],
+        capture_output=True, cwd=str(ROOT_DIR), timeout=60
+    )))
+    
     settings = await db.site_settings.find_one({"id": "site_settings"}, {"_id": 0})
     return SiteSettings(**settings)
+
+# Admin - Regenerate Static Pages
+@api_router.post("/admin/regenerate-static")
+async def admin_regenerate_static(username: str = Depends(get_current_admin)):
+    """Manually trigger static page regeneration."""
+    try:
+        # Use the same Python interpreter as the running server
+        import sys
+        python_path = sys.executable
+        result = subprocess.run(
+            [python_path, str(ROOT_DIR / "generate_static_direct.py")],
+            capture_output=True,
+            text=True,
+            cwd=str(ROOT_DIR),
+            timeout=60
+        )
+        if result.returncode == 0:
+            return {"success": True, "message": "Static pages regenerated successfully"}
+        else:
+            return {"success": False, "message": f"Generation failed: {result.stderr[:500]}"}
+    except Exception as e:
+        return {"success": False, "message": str(e)}
 
 # Admin - Contact Forms
 @api_router.get("/admin/contacts", response_model=List[ContactForm])
