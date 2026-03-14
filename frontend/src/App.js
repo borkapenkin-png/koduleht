@@ -565,15 +565,34 @@ const AboutSection = ({ settings }) => {
 
 // ========== REFERENCES - Image + Text cards with "Näytä lisää" ==========
 const ReferencesSection = ({ settings, references }) => {
+  // State for showing more references
+  const [showAll, setShowAll] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Detect mobile screen
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
   // Get settings with defaults
   const refSettings = {
     subtitle: settings?.references_subtitle || "TYÖNÄYTTEITÄ",
     title: settings?.references_title || "Referenssit",
     description: settings?.references_description || "Olemme toteuttaneet lukuisia projekteja yrityksille, taloyhtiöille ja yksityisille asiakkaille.",
+    initialCountDesktop: settings?.references_initial_count_desktop || 4,
+    initialCountMobile: settings?.references_initial_count_mobile || 2,
+    loadMoreEnabled: settings?.references_load_more_enabled !== false,
+    showMoreText: settings?.references_show_more_text || "Näytä lisää",
+    showLessText: settings?.references_show_less_text || "Näytä vähemmän",
   };
   
-  // Show only first 2 references on homepage
-  const visibleRefs = references.slice(0, 2);
+  // Calculate how many to show
+  const initialCount = isMobile ? refSettings.initialCountMobile : refSettings.initialCountDesktop;
+  const visibleRefs = showAll ? references : references.slice(0, initialCount);
+  const hasMore = references.length > initialCount;
   
   // Default placeholder image
   const placeholderImage = "https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&w=600";
@@ -587,19 +606,17 @@ const ReferencesSection = ({ settings, references }) => {
           <h2 id="references-heading" className="section-title">{refSettings.title}</h2>
           <p className="text-sm md:text-base text-[#64748B] mt-3 md:mt-4 max-w-2xl mx-auto">{refSettings.description}</p>
           
-          {/* Link to all references - ABOVE images */}
-          {references.length > 2 && (
-            <div className="mt-6">
-              <Link 
-                to="/referenssit"
-                className="btn-secondary inline-flex items-center gap-2 px-6 py-3"
-                data-testid="references-view-all-btn"
-              >
-                Katso kaikki referenssit ({references.length})
-                <ArrowRight size={18} />
-              </Link>
-            </div>
-          )}
+          {/* Link to all references page */}
+          <div className="mt-6">
+            <Link 
+              to="/referenssit"
+              className="btn-secondary inline-flex items-center gap-2 px-6 py-3"
+              data-testid="references-view-all-btn"
+            >
+              Katso kaikki referenssit ({references.length})
+              <ArrowRight size={18} />
+            </Link>
+          </div>
         </motion.div>
         
         {/* Reference Cards Grid - 2 columns on desktop */}
@@ -671,6 +688,25 @@ const ReferencesSection = ({ settings, references }) => {
             </motion.div>
           ))}
         </div>
+        
+        {/* Show More/Less Button */}
+        {refSettings.loadMoreEnabled && hasMore && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            whileInView={{ opacity: 1 }} 
+            viewport={{ once: true }}
+            className="text-center mt-8"
+          >
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="btn-secondary inline-flex items-center gap-2 px-6 py-3"
+              data-testid="references-show-more-btn"
+            >
+              {showAll ? refSettings.showLessText : refSettings.showMoreText}
+              <ChevronDown size={18} className={`transition-transform ${showAll ? 'rotate-180' : ''}`} />
+            </button>
+          </motion.div>
+        )}
       </div>
     </section>
   );
