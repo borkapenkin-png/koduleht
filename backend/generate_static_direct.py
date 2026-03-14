@@ -20,7 +20,8 @@ load_dotenv(Path(__file__).parent / '.env')
 # Paths
 BACKEND_DIR = Path(__file__).parent
 TEMPLATES_DIR = BACKEND_DIR / "templates"
-OUTPUT_DIR = Path("/app/frontend/build")
+BUILD_DIR = Path("/app/frontend/build")
+PUBLIC_DIR = Path("/app/frontend/public")
 SITE_URL = os.environ.get("SITE_URL", "https://jbtasoitusmaalaus.fi")
 
 # Company defaults
@@ -40,10 +41,10 @@ def get_react_assets():
     css_files = []
     js_files = []
     
-    if not OUTPUT_DIR.exists():
+    if not BUILD_DIR.exists():
         return css_files, js_files
     
-    static_dir = OUTPUT_DIR / "static"
+    static_dir = BUILD_DIR / "static"
     
     css_dir = static_dir / "css"
     if css_dir.exists():
@@ -360,9 +361,16 @@ async def main():
         try:
             html = await generator()
             if html:
-                output_path = OUTPUT_DIR / output_file
-                output_path.parent.mkdir(parents=True, exist_ok=True)
-                output_path.write_text(html, encoding="utf-8")
+                # Write to build directory
+                build_path = BUILD_DIR / output_file
+                build_path.parent.mkdir(parents=True, exist_ok=True)
+                build_path.write_text(html, encoding="utf-8")
+                
+                # Also write to public directory for persistence
+                public_path = PUBLIC_DIR / output_file
+                public_path.parent.mkdir(parents=True, exist_ok=True)
+                public_path.write_text(html, encoding="utf-8")
+                
                 print(f"  ✓ {output_file}")
                 success_count += 1
             else:
@@ -372,7 +380,7 @@ async def main():
     
     client.close()
     
-    # Copy serve.json for proper routing
+    # Copy serve.json for proper routing to both directories
     serve_json_content = '''{
   "rewrites": [
     { "source": "/admin", "destination": "/index.html" },
@@ -380,8 +388,8 @@ async def main():
     { "source": "/login", "destination": "/index.html" }
   ]
 }'''
-    serve_json_path = OUTPUT_DIR / "serve.json"
-    serve_json_path.write_text(serve_json_content, encoding="utf-8")
+    (BUILD_DIR / "serve.json").write_text(serve_json_content, encoding="utf-8")
+    (PUBLIC_DIR / "serve.json").write_text(serve_json_content, encoding="utf-8")
     print(f"  ✓ serve.json")
     
     print()

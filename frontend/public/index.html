@@ -1,566 +1,253 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fi">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#0056D2" />
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <!-- SEO Meta Tags -->
+    <title>J&amp;B Tasoitus ja Maalaus Oy | Maalaus ja tasoituspalvelut Helsinki</title>
+    <meta name="description" content="Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella." />
+    
+    <link rel="canonical" href="https://jbtasoitusmaalaus.fi" />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="J&amp;B Tasoitus ja Maalaus Oy | Maalaus ja tasoituspalvelut" />
+    <meta property="og:description" content="Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://jbtasoitusmaalaus.fi" />
+    <meta property="og:image" content="https://images.pexels.com/photos/5493669/pexels-photo-5493669.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=2&amp;h=650&amp;w=940" />
+    <meta property="og:site_name" content="J&amp;B Tasoitus ja Maalaus Oy" />
+    <meta property="og:locale" content="fi_FI" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="J&amp;B Tasoitus ja Maalaus Oy | Maalaus ja tasoituspalvelut" />
+    <meta name="twitter:description" content="Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella." />
+    <meta name="twitter:image" content="https://images.pexels.com/photos/5493669/pexels-photo-5493669.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=2&amp;h=650&amp;w=940" />
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" />
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZP42XN14NG"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-ZP42XN14NG');
+    </script>
+    
+    <!-- JSON-LD Structured Data -->
+    
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "LocalBusiness", "name": "J&B Tasoitus ja Maalaus Oy", "description": "Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella.", "telephone": "+358 40 054 7270", "email": "info@jbtasoitusmaalaus.fi", "address": {"@type": "PostalAddress", "streetAddress": "Sienitie 25", "addressLocality": "Helsinki", "postalCode": "00760", "addressCountry": "FI"}, "areaServed": ["Helsinki", "Espoo", "Vantaa", "Uusimaa"], "priceRange": "$$"}</script>
+    
+    
+    <!-- React App CSS - loaded from build -->
+    
+    <link rel="stylesheet" href="/static/css/main.89126726.css" />
+    
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+    <!-- Server-rendered visible content - React will hydrate this -->
+    <div id="root">
         
-        <!-- Hide Emergent Badge -->
-        <style>
-            #emergent-badge {
-                display: none !important;
-                visibility: hidden !important;
-                opacity: 0 !important;
-                pointer-events: none !important;
-                width: 0 !important;
-                height: 0 !important;
-                overflow: hidden !important;
-                position: absolute !important;
-                left: -9999px !important;
-            }
-        </style>
-        
-        <!-- SEO Meta Tags - Updated Title Structure -->
-        <title>Maalaustyöt Helsinki | Tasoitus ja Maalaus | J&B Tasoitus ja Maalaus Oy</title>
-        <meta name="description" content="Ammattitaitoiset maalaus- ja tasoitustyöt Helsingissä ja Uudellamaalla. Julkisivumaalaus, sisämaalaukset ja tasoitetyöt – J&B Tasoitus ja Maalaus Oy." />
-        <meta name="keywords" content="maalaustyöt helsinki, tasoitus helsinki, tasoitustyöt helsinki, julkisivumaalaus helsinki, sisämaalaus helsinki, maalari helsinki, tasoittaja helsinki, julkisivumaalaus uusimaa, seinien tasoitus hinta" />
-        <meta name="author" content="J&B Tasoitus ja Maalaus Oy" />
-        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-        <link rel="canonical" href="https://jbtasoitusmaalaus.fi/" />
-        
-        <!-- Open Graph / Facebook -->
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://jbtasoitusmaalaus.fi/" />
-        <meta property="og:title" content="Maalaustyöt Helsinki | Tasoitus ja Maalaus | J&B Tasoitus ja Maalaus Oy" />
-        <meta property="og:description" content="Ammattitaitoiset maalaus- ja tasoitustyöt Helsingissä ja Uudellamaalla. Julkisivumaalaus, sisämaalaukset ja tasoitetyöt." />
-        <meta property="og:image" content="https://www.jbtasoitusmaalaus.fi/og-image.jpg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:locale" content="fi_FI" />
-        <meta property="og:site_name" content="J&B Tasoitus ja Maalaus Oy" />
-        
-        <!-- Twitter -->
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Maalaustyöt Helsinki | J&B Tasoitus ja Maalaus Oy" />
-        <meta name="twitter:description" content="Ammattitaitoiset maalaus- ja tasoitustyöt Helsingissä ja Uudellamaalla vuodesta 2018." />
-        <meta name="twitter:image" content="https://www.jbtasoitusmaalaus.fi/og-image.jpg" />
-        
-        <!-- Geo Tags for Local SEO -->
-        <meta name="geo.region" content="FI-18" />
-        <meta name="geo.placename" content="Helsinki" />
-        <meta name="geo.position" content="60.2367;25.0833" />
-        <meta name="ICBM" content="60.2367, 25.0833" />
-        
-        <!-- Additional SEO -->
-        <meta name="format-detection" content="telephone=yes" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        
-        <!-- Structured Data / JSON-LD - LocalBusiness with PaintingContractor -->
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": ["LocalBusiness", "PaintingContractor"],
-            "@id": "https://www.jbtasoitusmaalaus.fi/#organization",
-            "name": "J&B Tasoitus ja Maalaus Oy",
-            "alternateName": "JB Tasoitusmaalaus",
-            "image": "https://www.jbtasoitusmaalaus.fi/logo.png",
-            "logo": "https://www.jbtasoitusmaalaus.fi/logo.png",
-            "url": "https://www.jbtasoitusmaalaus.fi/",
-            "telephone": "+358400547270",
-            "email": "info@jbtasoitusmaalaus.fi",
-            "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Sienitie 25",
-                "addressLocality": "Helsinki",
-                "postalCode": "00760",
-                "addressRegion": "Uusimaa",
-                "addressCountry": "FI"
-            },
-            "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": 60.2367,
-                "longitude": 25.0833
-            },
-            "areaServed": [
-                {
-                    "@type": "City",
-                    "name": "Helsinki"
-                },
-                {
-                    "@type": "State",
-                    "name": "Uusimaa"
-                }
-            ],
-            "priceRange": "$$",
-            "openingHoursSpecification": {
-                "@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-                "opens": "07:00",
-                "closes": "17:00"
-            },
-            "foundingDate": "2018",
-            "description": "Ammattitaitoiset maalaus- ja tasoitustyöt Helsingissä ja Uudellamaalla. Julkisivumaalaus, sisämaalaukset ja tasoitetyöt.",
-            "knowsLanguage": ["fi", "et"],
-            "paymentAccepted": ["Cash", "Credit Card", "Invoice"],
-            "currenciesAccepted": "EUR"
-        }
-        </script>
-        
-        <!-- Service Schema - Tasoitustyöt -->
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Service",
-            "serviceType": "Tasoitustyöt",
-            "name": "Tasoitustyöt Helsinki",
-            "description": "Ammattitaitoiset tasoitustyöt Helsingissä ja Uudellamaalla. Seinien ja kattojen tasoitus.",
-            "provider": {
-                "@type": "LocalBusiness",
-                "name": "J&B Tasoitus ja Maalaus Oy",
-                "url": "https://www.jbtasoitusmaalaus.fi/"
-            },
-            "areaServed": {
-                "@type": "City",
-                "name": "Helsinki"
-            },
-            "hasOfferCatalog": {
-                "@type": "OfferCatalog",
-                "name": "Tasoituspalvelut",
-                "itemListElement": [
-                    {
-                        "@type": "Offer",
-                        "itemOffered": {
-                            "@type": "Service",
-                            "name": "Seinien tasoitus"
-                        }
-                    },
-                    {
-                        "@type": "Offer",
-                        "itemOffered": {
-                            "@type": "Service",
-                            "name": "Kattojen tasoitus"
-                        }
-                    }
-                ]
-            }
-        }
-        </script>
-        
-        <!-- Service Schema - Maalaustyöt -->
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Service",
-            "serviceType": "Maalaustyöt",
-            "name": "Maalaustyöt Helsinki",
-            "description": "Ammattitaitoiset maalaustyöt Helsingissä. Sisä- ja ulkomaalaukset.",
-            "provider": {
-                "@type": "LocalBusiness",
-                "name": "J&B Tasoitus ja Maalaus Oy",
-                "url": "https://www.jbtasoitusmaalaus.fi/"
-            },
-            "areaServed": {
-                "@type": "City",
-                "name": "Helsinki"
-            }
-        }
-        </script>
-        
-        <!-- Service Schema - Julkisivumaalaus -->
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Service",
-            "serviceType": "Julkisivumaalaus",
-            "name": "Julkisivumaalaus Helsinki",
-            "description": "Julkisivumaalaus ja julkisivurappaus Helsingissä ja Uudellamaalla.",
-            "provider": {
-                "@type": "LocalBusiness",
-                "name": "J&B Tasoitus ja Maalaus Oy",
-                "url": "https://www.jbtasoitusmaalaus.fi/"
-            },
-            "areaServed": [
-                {
-                    "@type": "City",
-                    "name": "Helsinki"
-                },
-                {
-                    "@type": "State",
-                    "name": "Uusimaa"
-                }
-            ]
-        }
-        </script>
-        
-        <!-- WebSite Schema for Search -->
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            "url": "https://www.jbtasoitusmaalaus.fi/",
-            "name": "J&B Tasoitus ja Maalaus Oy",
-            "description": "Ammattitaitoiset maalaus- ja tasoitustyöt Helsingissä",
-            "publisher": {
-                "@type": "Organization",
-                "name": "J&B Tasoitus ja Maalaus Oy"
-            }
-        }
-        </script>
-        
-        <!-- Preload Critical Resources -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" as="style" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-        
-        <!-- Google Analytics 4 -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZP42XN14NG"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-ZP42XN14NG');
-        </script>
-        
-        <script>window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);</script>
-        <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
-        <!--
-        These two scripts have been added for the Visual Edits, please do not edit or remove them
-        -->
-        <script>
-            // Only load visual edit scripts when inside an iframe
-            if (window.self !== window.top) {
-                // Load debug monitor script
-                var debugMonitorScript = document.createElement('script');
-                debugMonitorScript.src = 'https://assets.emergent.sh/scripts/debug-monitor.js';
-                document.head.appendChild(debugMonitorScript);
+<!-- Visible server-rendered content for home page -->
+<div class="ssr-page" data-page-type="home">
+    <!-- Navigation -->
+    <header style="background:#fff;border-bottom:1px solid #e5e7eb;padding:1rem 0;">
+        <div style="max-width:1200px;margin:0 auto;padding:0 1rem;display:flex;justify-content:space-between;align-items:center;">
+            <a href="/" style="font-size:1.25rem;font-weight:700;color:#0f172a;text-decoration:none;">
+                J&B Tasoitus<span style="color:#0056D2;">maalaus</span>
+            </a>
+            <nav style="display:flex;gap:1.5rem;">
+                <a href="/#palvelut" style="color:#64748b;text-decoration:none;">Palvelut</a>
+                <a href="/#meista" style="color:#64748b;text-decoration:none;">Meistä</a>
+                <a href="/referenssit" style="color:#64748b;text-decoration:none;">Referenssit</a>
+                <a href="/#yhteystiedot" style="color:#64748b;text-decoration:none;">Yhteystiedot</a>
+            </nav>
+        </div>
+    </header>
 
-                // Configure Tailwind
-                window.tailwind = window.tailwind || {};
-                tailwind.config = {
-                    corePlugins: { preflight: false },
-                };
-
-                // Load Tailwind CDN
-                var tailwindScript = document.createElement('script');
-                tailwindScript.src = 'https://cdn.tailwindcss.com';
-                document.head.appendChild(tailwindScript);
-            }
-        </script>
-    </head>
-    <body>
-        <!-- SEO Content for crawlers (visible to search engines when JS is disabled) -->
-        <noscript>
-            <div id="seo-fallback">
-                <header>
-                    <h1>J&B Tasoitus ja Maalaus Oy - Ammattitaitoista maalausta ja tasoitusta</h1>
-                    <nav>
-                        <a href="/">Etusivu</a> |
-                        <a href="/#palvelut">Palvelut</a> |
-                        <a href="/#meista">Meistä</a> |
-                        <a href="/referenssit">Referenssit</a> |
-                        <a href="/ukk">UKK</a> |
-                        <a href="/#yhteystiedot">Yhteystiedot</a>
-                    </nav>
-                </header>
-                
-                <main>
-                    <section id="hero">
-                        <h2>Ammattitaitoista maalausta ja tasoitusta Helsingissä</h2>
-                        <p>Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella.</p>
-                        <p><a href="tel:+358400547270">Soita: +358 40 054 7270</a></p>
-                    </section>
-                    
-                    <section id="palvelut">
-                        <h2>Palvelumme</h2>
-                        <article>
-                            <h3><a href="/tasoitustyot-helsinki">Tasoitustyöt Helsinki</a></h3>
-                            <p>Ammattimaiset tasoitustyöt takaavat tasaisen ja kestävän pinnan ennen maalausta. Toteutamme seinien ja kattojen tasoitukset Helsingissä, Espoossa ja Vantaalla.</p>
-                        </article>
-                        <article>
-                            <h3><a href="/maalaustyot-helsinki">Maalaustyöt Helsinki</a></h3>
-                            <p>Ammattimaiset maalaustyöt sisä- ja ulkotiloihin. Toteutamme seinien ja kattojen maalaukset Helsingissä, Espoossa ja Vantaalla.</p>
-                        </article>
-                        <article>
-                            <h3><a href="/julkisivumaalaus-helsinki">Julkisivumaalaus Helsinki</a></h3>
-                            <p>Julkisivumaalaus suojaa ja uudistaa rakennuksen ulkonäköä. Ammattitaitoinen julkisivumaalaus Helsingissä ja Uudellamaalla.</p>
-                        </article>
-                        <article>
-                            <h3><a href="/julkisivurappaus-helsinki">Julkisivurappaus Helsinki</a></h3>
-                            <p>Julkisivurappaus suojaa rakennuksen ulkopintoja ja parantaa julkisivun kestävyyttä. Toteutamme julkisivurappaukset Helsingissä.</p>
-                        </article>
-                        <article>
-                            <h3><a href="/mikrosementti-helsinki">Mikrosementti Helsinki</a></h3>
-                            <p>Mikrosementti on kestävä ja saumaton pinnoite, joka sopii lattioille, seinille ja märkätiloihin.</p>
-                        </article>
-                        <article>
-                            <h3><a href="/kattomaalaus-helsinki">Kattomaalaus Helsinki</a></h3>
-                            <p>Ammattitaitoinen kattomaalaus pidentää katon ikää ja parantaa rakennuksen ulkonäköä.</p>
-                        </article>
-                    </section>
-                    
-                    <section id="meista">
-                        <h2>Luotettava kumppani pintaremontteihin</h2>
-                        <p>J&B Tasoitus ja Maalaus Oy on vuodesta 2018 toiminut ammattitaitoinen maalaus- ja tasoituspalvelu Helsingissä ja Uudellamaalla.</p>
-                        <ul>
-                            <li>Vuodesta 2018 - Luotettava kokemus</li>
-                            <li>Ammattitaitoinen työ - Laadukas lopputulos</li>
-                            <li>Kotitalousvähennys - Hyödynnä veroetu</li>
-                            <li>Tyytyväisyystakuu - 100% tyytyväisyys</li>
-                        </ul>
-                    </section>
-                    
-                    <section id="yhteystiedot">
-                        <h2>Yhteystiedot</h2>
-                        <address>
-                            <p><strong>J&B Tasoitus ja Maalaus Oy</strong></p>
-                            <p>Sienitie 25, 00760 Helsinki</p>
-                            <p>Puhelin: <a href="tel:+358400547270">+358 40 054 7270</a></p>
-                            <p>Sähköposti: <a href="mailto:info@jbtasoitusmaalaus.fi">info@jbtasoitusmaalaus.fi</a></p>
-                        </address>
-                        <p>Palvelemme Helsingissä, Espoossa, Vantaalla, Kauniaisissa ja koko Uudenmaan alueella.</p>
-                    </section>
-                </main>
-                
-                <footer>
-                    <p>&copy; 2024 J&B Tasoitus ja Maalaus Oy. Kaikki oikeudet pidätetään.</p>
-                    <p>Y-tunnus: 2927270-5</p>
-                </footer>
+    <main>
+        <!-- Hero Section -->
+        <section style="background:linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);padding:4rem 0;">
+            <div style="max-width:1200px;margin:0 auto;padding:0 1rem;text-align:center;">
+                <p style="color:#0056D2;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 1rem;">LAATUJOHTAJAT</p>
+                <h1 style="font-size:3rem;color:#0f172a;margin:0 0 1rem;line-height:1.2;">
+                    Ammattitaitoista maalausta ja tasoitusta
+                </h1>
+                <p style="font-size:1.25rem;color:#64748b;max-width:700px;margin:0 auto 2rem;line-height:1.6;">
+                    Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella.
+                </p>
+                <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
+                    <a href="/#tarjouspyynto" style="background:#0056D2;color:#fff;padding:0.875rem 1.75rem;border-radius:0.5rem;text-decoration:none;font-weight:500;">Pyydä ilmainen arvio</a>
+                    <a href="tel:+358 40 054 7270" style="border:1px solid #e5e7eb;background:#fff;color:#0f172a;padding:0.875rem 1.75rem;border-radius:0.5rem;text-decoration:none;">Soita nyt</a>
+                </div>
             </div>
-        </noscript>
-        <!-- Initial SEO content that React will hydrate/replace -->
-        <div id="root">
-            <div id="seo-initial" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-                <header style="padding: 1rem; background: #fff; border-bottom: 1px solid #e5e7eb;">
-                    <h1 style="font-size: 1.5rem; color: #0f172a;">J&B Tasoitus ja Maalaus Oy</h1>
-                    <nav style="margin-top: 0.5rem;">
-                        <a href="/" style="margin-right: 1rem; color: #0056D2;">Etusivu</a>
-                        <a href="/#palvelut" style="margin-right: 1rem; color: #0056D2;">Palvelut</a>
-                        <a href="/#meista" style="margin-right: 1rem; color: #0056D2;">Meistä</a>
-                        <a href="/referenssit" style="margin-right: 1rem; color: #0056D2;">Referenssit</a>
-                        <a href="/ukk" style="margin-right: 1rem; color: #0056D2;">UKK</a>
-                        <a href="/#yhteystiedot" style="color: #0056D2;">Yhteystiedot</a>
-                    </nav>
-                </header>
-                
-                <main style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
-                    <section style="text-align: center; padding: 3rem 1rem; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-radius: 1rem; margin-bottom: 2rem;">
-                        <p style="color: #0056D2; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Laatujohtajat</p>
-                        <h2 style="font-size: 2.5rem; color: #0f172a; margin: 0.5rem 0;">Ammattitaitoista maalausta ja tasoitusta</h2>
-                        <p style="color: #64748b; max-width: 600px; margin: 1rem auto;">Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella.</p>
-                        <a href="tel:+358400547270" style="display: inline-block; background: #0056D2; color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; margin-top: 1rem;">Soita: +358 40 054 7270</a>
-                    </section>
+        </section>
+
+        <!-- Services Section -->
+        <section id="palvelut" style="padding:4rem 0;">
+            <div style="max-width:1200px;margin:0 auto;padding:0 1rem;">
+                <div style="text-align:center;margin-bottom:3rem;">
+                    <p style="color:#0056D2;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;font-size:0.875rem;margin:0 0 0.5rem;">PALVELUT</p>
+                    <h2 style="font-size:2rem;color:#0f172a;margin:0;">Palvelumme</h2>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:1.5rem;">
                     
-                    <section id="palvelut" style="margin-bottom: 3rem;">
-                        <h2 style="font-size: 1.75rem; color: #0f172a; margin-bottom: 1.5rem;">Palvelumme</h2>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-                            <article style="background: #fff; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                                <h3 style="color: #0f172a;"><a href="/tasoitustyot-helsinki" style="color: inherit; text-decoration: none;">Tasoitustyöt Helsinki</a></h3>
-                                <p style="color: #64748b;">Ammattimaiset tasoitustyöt takaavat tasaisen ja kestävän pinnan ennen maalausta.</p>
-                            </article>
-                            <article style="background: #fff; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                                <h3 style="color: #0f172a;"><a href="/maalaustyot-helsinki" style="color: inherit; text-decoration: none;">Maalaustyöt Helsinki</a></h3>
-                                <p style="color: #64748b;">Ammattimaiset maalaustyöt sisä- ja ulkotiloihin Helsingissä.</p>
-                            </article>
-                            <article style="background: #fff; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                                <h3 style="color: #0f172a;"><a href="/julkisivumaalaus-helsinki" style="color: inherit; text-decoration: none;">Julkisivumaalaus Helsinki</a></h3>
-                                <p style="color: #64748b;">Julkisivumaalaus suojaa ja uudistaa rakennuksen ulkonäköä.</p>
-                            </article>
-                            <article style="background: #fff; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                                <h3 style="color: #0f172a;"><a href="/julkisivurappaus-helsinki" style="color: inherit; text-decoration: none;">Julkisivurappaus Helsinki</a></h3>
-                                <p style="color: #64748b;">Julkisivurappaus suojaa rakennuksen ulkopintoja.</p>
-                            </article>
-                            <article style="background: #fff; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                                <h3 style="color: #0f172a;"><a href="/mikrosementti-helsinki" style="color: inherit; text-decoration: none;">Mikrosementti Helsinki</a></h3>
-                                <p style="color: #64748b;">Kestävä ja saumaton pinnoite lattioille ja seinille.</p>
-                            </article>
-                            <article style="background: #fff; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                                <h3 style="color: #0f172a;"><a href="/kattomaalaus-helsinki" style="color: inherit; text-decoration: none;">Kattomaalaus Helsinki</a></h3>
-                                <p style="color: #64748b;">Ammattitaitoinen kattomaalaus pidentää katon ikää.</p>
-                            </article>
-                        </div>
-                    </section>
+                    <article style="background:#fff;border:1px solid #e5e7eb;border-radius:0.75rem;padding:1.5rem;transition:box-shadow 0.2s;">
+                        <h3 style="font-size:1.25rem;color:#0f172a;margin:0 0 0.75rem;">
+                            <a href="/julkisivurappaus-helsinki" style="color:inherit;text-decoration:none;">Julkisivurappaus</a>
+                        </h3>
+                        <p style="color:#64748b;margin:0 0 1rem;line-height:1.6;">Julkisivurappaus suojaa rakennuksen ulkopintoja ja parantaa julkisivun kestävyyttä. Toteutamme julkisivurappaukset Helsingissä, Espoossa ja Vantaalla niin taloyhtiöille, yrityksille kuin omakotitaloihin.</p>
+                        <a href="/julkisivurappaus-helsinki" style="color:#0056D2;text-decoration:none;font-weight:500;">Lue lisää →</a>
+                    </article>
                     
-                    <section id="meista" style="background: #f8fafc; padding: 2rem; border-radius: 1rem; margin-bottom: 3rem;">
-                        <h2 style="font-size: 1.75rem; color: #0f172a;">Luotettava kumppani pintaremontteihin</h2>
-                        <p style="color: #64748b;">J&B Tasoitus ja Maalaus Oy on vuodesta 2018 toiminut ammattitaitoinen maalaus- ja tasoituspalvelu Helsingissä ja Uudellamaalla.</p>
-                        <ul style="color: #64748b; margin-top: 1rem;">
-                            <li>Vuodesta 2018 - Luotettava kokemus</li>
-                            <li>Ammattitaitoinen työ - Laadukas lopputulos</li>
-                            <li>Kotitalousvähennys - Hyödynnä veroetu</li>
-                            <li>Tyytyväisyystakuu - 100% tyytyväisyys</li>
-                        </ul>
-                    </section>
+                    <article style="background:#fff;border:1px solid #e5e7eb;border-radius:0.75rem;padding:1.5rem;transition:box-shadow 0.2s;">
+                        <h3 style="font-size:1.25rem;color:#0f172a;margin:0 0 0.75rem;">
+                            <a href="/tasoitustyot-helsinki" style="color:inherit;text-decoration:none;">Tasoitustyöt</a>
+                        </h3>
+                        <p style="color:#64748b;margin:0 0 1rem;line-height:1.6;">Ammattimaiset tasoitustyöt takaavat tasaisen ja kestävän pinnan ennen maalausta. Toteutamme seinien ja kattojen tasoitukset Helsingissä, Espoossa ja Vantaalla niin koteihin, yrityksille kuin taloyhtiöille.</p>
+                        <a href="/tasoitustyot-helsinki" style="color:#0056D2;text-decoration:none;font-weight:500;">Lue lisää →</a>
+                    </article>
                     
-                    <section id="yhteystiedot" style="margin-bottom: 3rem;">
-                        <h2 style="font-size: 1.75rem; color: #0f172a;">Yhteystiedot</h2>
-                        <address style="font-style: normal; color: #64748b;">
-                            <p><strong style="color: #0f172a;">J&B Tasoitus ja Maalaus Oy</strong></p>
-                            <p>Sienitie 25, 00760 Helsinki</p>
-                            <p>Puhelin: <a href="tel:+358400547270" style="color: #0056D2;">+358 40 054 7270</a></p>
-                            <p>Sähköposti: <a href="mailto:info@jbtasoitusmaalaus.fi" style="color: #0056D2;">info@jbtasoitusmaalaus.fi</a></p>
-                        </address>
-                        <p style="color: #64748b; margin-top: 1rem;">Palvelemme Helsingissä, Espoossa, Vantaalla, Kauniaisissa ja koko Uudenmaan alueella.</p>
-                    </section>
-                </main>
-                
-                <footer style="background: #0f172a; color: #94a3b8; padding: 2rem; text-align: center;">
-                    <p>&copy; 2024 J&B Tasoitus ja Maalaus Oy. Kaikki oikeudet pidätetään.</p>
-                    <p>Y-tunnus: 2927270-5</p>
-                </footer>
+                    <article style="background:#fff;border:1px solid #e5e7eb;border-radius:0.75rem;padding:1.5rem;transition:box-shadow 0.2s;">
+                        <h3 style="font-size:1.25rem;color:#0f172a;margin:0 0 0.75rem;">
+                            <a href="/maalaustyot-helsinki" style="color:inherit;text-decoration:none;">Maalaustyöt</a>
+                        </h3>
+                        <p style="color:#64748b;margin:0 0 1rem;line-height:1.6;">Ammattimaiset maalaustyöt sisä- ja ulkotiloihin. Toteutamme seinien ja kattojen maalaukset Helsingissä, Espoossa ja Vantaalla koteihin, yrityksille ja taloyhtiöille.</p>
+                        <a href="/maalaustyot-helsinki" style="color:#0056D2;text-decoration:none;font-weight:500;">Lue lisää →</a>
+                    </article>
+                    
+                    <article style="background:#fff;border:1px solid #e5e7eb;border-radius:0.75rem;padding:1.5rem;transition:box-shadow 0.2s;">
+                        <h3 style="font-size:1.25rem;color:#0f172a;margin:0 0 0.75rem;">
+                            <a href="/mikrosementti-helsinki" style="color:inherit;text-decoration:none;">Mikrosementti</a>
+                        </h3>
+                        <p style="color:#64748b;margin:0 0 1rem;line-height:1.6;">Mikrosementti on kestävä ja saumaton pinnoite, joka sopii lattioille, seinille ja märkätiloihin. Toteutamme mikrosementtipinnat Helsingissä, Espoossa ja Vantaalla koteihin, yrityksille ja taloyhtiöille.</p>
+                        <a href="/mikrosementti-helsinki" style="color:#0056D2;text-decoration:none;font-weight:500;">Lue lisää →</a>
+                    </article>
+                    
+                    <article style="background:#fff;border:1px solid #e5e7eb;border-radius:0.75rem;padding:1.5rem;transition:box-shadow 0.2s;">
+                        <h3 style="font-size:1.25rem;color:#0f172a;margin:0 0 0.75rem;">
+                            <a href="/kattomaalaus-helsinki" style="color:inherit;text-decoration:none;">Kattomaalaus</a>
+                        </h3>
+                        <p style="color:#64748b;margin:0 0 1rem;line-height:1.6;">Kattomaalaus suojaa kattoa ruosteelta, sammalelta ja kulumiselta. Toteutamme kattomaalaukset Helsingissä, Espoossa ja Vantaalla turvallisesti ja ammattitaidolla.</p>
+                        <a href="/kattomaalaus-helsinki" style="color:#0056D2;text-decoration:none;font-weight:500;">Lue lisää →</a>
+                    </article>
+                    
+                    <article style="background:#fff;border:1px solid #e5e7eb;border-radius:0.75rem;padding:1.5rem;transition:box-shadow 0.2s;">
+                        <h3 style="font-size:1.25rem;color:#0f172a;margin:0 0 0.75rem;">
+                            <a href="/julkisivumaalaus-helsinki" style="color:inherit;text-decoration:none;">Julkisivumaalaus</a>
+                        </h3>
+                        <p style="color:#64748b;margin:0 0 1rem;line-height:1.6;">Huolellisesti toteutettu julkisivupesu ja maalaus pidentävät rakennuksen käyttöikää ja parantavat sen ulkonäköä merkittävästi. Ennen maalausta teemme perusteellisen pesun, poistamme lian, homeen ja irtoavan maalin sekä tarkistamme alustan kunnon.</p>
+                        <a href="/julkisivumaalaus-helsinki" style="color:#0056D2;text-decoration:none;font-weight:500;">Lue lisää →</a>
+                    </article>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="meista" style="background:#f8fafc;padding:4rem 0;">
+            <div style="max-width:1200px;margin:0 auto;padding:0 1rem;">
+                <div style="text-align:center;margin-bottom:3rem;">
+                    <p style="color:#0056D2;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;font-size:0.875rem;margin:0 0 0.5rem;">MEISTÄ</p>
+                    <h2 style="font-size:2rem;color:#0f172a;margin:0;">Luotettava kumppani pintaremontteihin</h2>
+                </div>
+                <div style="max-width:800px;margin:0 auto;color:#64748b;line-height:1.8;">
+                    <p style="margin:0 0 1rem;">J&amp;B Tasoitus Ja Maalaus Oy on Uudellamaalla toimiva luotettava maalaustöiden ammattilainen. Olemme tehneet sisä- ja ulkomaalauksia vuodesta 2018.</p>
+                    <p style="margin:0 0 1rem;">Meiltä sujuu myös katto- ja julkisivumaalaukset, julkisivurappaukset sekä sisäpintojen tapetoinnit. Toiminnassa panostamme asiakaslähtöisyyteen, joustavuuteen ja ensiluokkaiseen työnlaatuun.</p>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:1.5rem;margin-top:2rem;">
+                    <div style="text-align:center;padding:1.5rem;">
+                        <p style="font-size:2rem;font-weight:700;color:#0056D2;margin:0;">2018</p>
+                        <p style="color:#64748b;margin:0.5rem 0 0;">Vuodesta lähtien</p>
+                    </div>
+                    <div style="text-align:center;padding:1.5rem;">
+                        <p style="font-size:2rem;font-weight:700;color:#0056D2;margin:0;">100%</p>
+                        <p style="color:#64748b;margin:0.5rem 0 0;">Tyytyväisyystakuu</p>
+                    </div>
+                    <div style="text-align:center;padding:1.5rem;">
+                        <p style="font-size:2rem;font-weight:700;color:#0056D2;margin:0;">✓</p>
+                        <p style="color:#64748b;margin:0.5rem 0 0;">Kotitalousvähennys</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="yhteystiedot" style="padding:4rem 0;">
+            <div style="max-width:1200px;margin:0 auto;padding:0 1rem;">
+                <div style="text-align:center;margin-bottom:3rem;">
+                    <p style="color:#0056D2;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;font-size:0.875rem;margin:0 0 0.5rem;">YHTEYSTIEDOT</p>
+                    <h2 style="font-size:2rem;color:#0f172a;margin:0;">Yhteystiedot</h2>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:2rem;">
+                    <address style="font-style:normal;background:#f8fafc;padding:2rem;border-radius:0.75rem;">
+                        <h3 style="font-size:1.25rem;color:#0f172a;margin:0 0 1rem;">J&amp;B Tasoitus ja Maalaus Oy</h3>
+                        <p style="color:#64748b;margin:0 0 0.5rem;">Sienitie 25, 00760 Helsinki</p>
+                        <p style="margin:0 0 0.5rem;">
+                            <a href="tel:+358 40 054 7270" style="color:#0056D2;text-decoration:none;">
+                                +358 40 054 7270
+                            </a>
+                        </p>
+                        <p style="margin:0;">
+                            <a href="mailto:info@jbtasoitusmaalaus.fi" style="color:#0056D2;text-decoration:none;">
+                                info@jbtasoitusmaalaus.fi
+                            </a>
+                        </p>
+                    </address>
+                    <div style="background:#f8fafc;padding:2rem;border-radius:0.75rem;">
+                        <h3 style="font-size:1.25rem;color:#0f172a;margin:0 0 1rem;">Palvelualueet</h3>
+                        <p style="color:#64748b;margin:0;">Palvelemme Helsingissä, Espoossa, Vantaalla, Kauniaisissa ja koko Uudenmaan alueella.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background:#0f172a;color:#94a3b8;padding:3rem 0;">
+        <div style="max-width:1200px;margin:0 auto;padding:0 1rem;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:2rem;">
+                <div>
+                    <h3 style="color:#fff;font-size:1.125rem;margin:0 0 1rem;">J&amp;B Tasoitus ja Maalaus Oy</h3>
+                    <p style="margin:0;line-height:1.6;">Ammattitaitoinen maalaus- ja tasoituspalvelu Helsingissä ja Uudellamaalla.</p>
+                </div>
+                <div>
+                    <h3 style="color:#fff;font-size:1.125rem;margin:0 0 1rem;">Palvelut</h3>
+                    <ul style="list-style:none;padding:0;margin:0;">
+                        <li style="margin-bottom:0.5rem;"><a href="/tasoitustyot-helsinki" style="color:#94a3b8;text-decoration:none;">Tasoitustyöt</a></li>
+                        <li style="margin-bottom:0.5rem;"><a href="/maalaustyot-helsinki" style="color:#94a3b8;text-decoration:none;">Maalaustyöt</a></li>
+                        <li style="margin-bottom:0.5rem;"><a href="/julkisivumaalaus-helsinki" style="color:#94a3b8;text-decoration:none;">Julkisivumaalaus</a></li>
+                        <li><a href="/mikrosementti-helsinki" style="color:#94a3b8;text-decoration:none;">Mikrosementti</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="color:#fff;font-size:1.125rem;margin:0 0 1rem;">Yhteystiedot</h3>
+                    <address style="font-style:normal;">
+                        <p style="margin:0 0 0.5rem;">Sienitie 25, 00760 Helsinki</p>
+                        <p style="margin:0 0 0.5rem;"><a href="tel:+358 40 054 7270" style="color:#94a3b8;text-decoration:none;">+358 40 054 7270</a></p>
+                        <p style="margin:0;"><a href="mailto:info@jbtasoitusmaalaus.fi" style="color:#94a3b8;text-decoration:none;">info@jbtasoitusmaalaus.fi</a></p>
+                    </address>
+                </div>
+            </div>
+            <div style="border-top:1px solid #334155;margin-top:2rem;padding-top:2rem;text-align:center;">
+                <p style="margin:0;">&copy; 2024 J&amp;B Tasoitus ja Maalaus Oy. Kaikki oikeudet pidätetään. Y-tunnus: 2927270-5</p>
             </div>
         </div>
-        <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+    </footer>
+</div>
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-        <a
-            id="emergent-badge"
-            target="_blank"
-            href="https://app.emergent.sh/?utm_source=emergent-badge"
-            style="
-                display: inline-flex !important;
-                box-sizing: border-box;
-                width: 178px;
-                height: 40px;
-                padding: 8px 12px 8px 12px;
-                align-items: center !important;
-                gap: 8px;
-                border-radius: 50px !important;
-                background: #000 !important;
-                position: fixed !important;
-                bottom: 16px;
-                right: 16px;
-                text-decoration: none;
-                font-family: -apple-system, BlinkMacSystemFont,
-                    &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu, Cantarell,
-                    &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;,
-                    sans-serif !important;
-                font-size: 12px !important;
-                z-index: 9999 !important;
-            "
-        >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M15.5702 8.13142C15.7729 8.0412 16.0007 8.18878 15.9892 8.4103C15.8374 11.3192 14.0965 14.0405 11.2531 15.3065C8.40964 16.5725 5.2224 16.0453 2.95912 14.2117C2.78676 14.072 2.82955 13.804 3.03219 13.7137L4.95677 12.8568C5.04866 12.8159 5.15446 12.823 5.24204 12.8725C6.73377 13.7153 8.59176 13.8649 10.2772 13.1145C11.9626 12.3641 13.0947 10.8833 13.4665 9.21075C13.4883 9.11256 13.5539 9.02918 13.6457 8.98827L15.5702 8.13142Z" fill="white"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M15.3066 4.74698L15.5067 5.19653C15.5759 5.35178 15.5061 5.53366 15.3508 5.60278L1.29992 11.8586C1.14467 11.9278 0.962794 11.8579 0.893675 11.7027L0.701732 11.2716L0.693457 11.2531C-1.10317 7.21778 0.711626 2.49007 4.74692 0.693443C8.78221 -1.10318 13.51 0.711693 15.3066 4.74698ZM2.82356 8.55367C2.63552 8.63739 2.41991 8.51617 2.40853 8.31065C2.28373 6.05724 3.53858 3.85787 5.72286 2.88536C7.90715 1.91286 10.3813 2.45199 11.9724 4.05256C12.1175 4.19854 12.0633 4.43988 11.8753 4.5236L2.82356 8.55367Z" fill="white"/>
-            </svg>
-            <p
-                style="
-                    color: #FFF !important;
-                    font-family: 'Inter', sans-serif !important;
-                    font-size: 13px !important;
-                    font-style: normal !important;
-                    font-weight: 600 !important;
-                    line-height: 20px !important;
-                    margin: 0 !important;
-                    white-space: nowrap !important;
-                "
-            >
-                Made with Emergent
-            </p>
-        </a>
-        <script>
-            !(function (t, e) {
-                var o, n, p, r;
-                e.__SV ||
-                    ((window.posthog = e),
-                    (e._i = []),
-                    (e.init = function (i, s, a) {
-                        function g(t, e) {
-                            var o = e.split(".");
-                            2 == o.length && ((t = t[o[0]]), (e = o[1])),
-                                (t[e] = function () {
-                                    t.push(
-                                        [e].concat(
-                                            Array.prototype.slice.call(
-                                                arguments,
-                                                0,
-                                            ),
-                                        ),
-                                    );
-                                });
-                        }
-                        ((p = t.createElement("script")).type =
-                            "text/javascript"),
-                            (p.crossOrigin = "anonymous"),
-                            (p.async = !0),
-                            (p.src =
-                                s.api_host.replace(
-                                    ".i.posthog.com",
-                                    "-assets.i.posthog.com",
-                                ) + "/static/array.js"),
-                            (r =
-                                t.getElementsByTagName(
-                                    "script",
-                                )[0]).parentNode.insertBefore(p, r);
-                        var u = e;
-                        for (
-                            void 0 !== a ? (u = e[a] = []) : (a = "posthog"),
-                                u.people = u.people || [],
-                                u.toString = function (t) {
-                                    var e = "posthog";
-                                    return (
-                                        "posthog" !== a && (e += "." + a),
-                                        t || (e += " (stub)"),
-                                        e
-                                    );
-                                },
-                                u.people.toString = function () {
-                                    return u.toString(1) + ".people (stub)";
-                                },
-                                o =
-                                    "init me ws ys ps bs capture je Di ks register register_once register_for_session unregister unregister_for_session Ps getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Es $s createPersonProfile Is opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Ss debug xs getPageViewId captureTraceFeedback captureTraceMetric".split(
-                                        " ",
-                                    ),
-                                n = 0;
-                            n < o.length;
-                            n++
-                        )
-                            g(u, o[n]);
-                        e._i.push([i, s, a]);
-                    }),
-                    (e.__SV = 1));
-            })(document, window.posthog || []);
-            posthog.init("phc_xAvL2Iq4tFmANRE7kzbKwaSqp1HJjN7x48s3vr0CMjs", {
-                api_host: "https://us.i.posthog.com",
-                person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well,
-                session_recording: {
-                    recordCrossOriginIframes: true,
-                    capturePerformance: false,
-                },
-            });
-        </script>
-        
-        <!-- Remove Emergent Badge from DOM -->
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                const badge = document.getElementById("emergent-badge");
-                if (badge) badge.remove();
-            });
-            
-            // Also remove via MutationObserver for dynamically added badges
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    mutation.addedNodes.forEach((node) => {
-                        if (node.nodeType === 1) {
-                            if (node.id === 'emergent-badge' || 
-                                node.textContent?.includes('Made with Emergent') ||
-                                node.innerHTML?.includes('Made with Emergent')) {
-                                node.remove();
-                            }
-                        }
-                    });
-                });
-            });
-            observer.observe(document.body || document.documentElement, { childList: true, subtree: true });
-        </script>
-    </body>
+    </div>
+    
+    <!-- React App JS - loaded from build -->
+    
+    <script src="/static/js/main.199f3e5f.js"></script>
+    
+</body>
 </html>
