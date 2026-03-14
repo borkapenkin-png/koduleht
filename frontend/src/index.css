@@ -41,9 +41,10 @@
   --font-main: "Inter", sans-serif;
   --size-multiplier: 1;
   
-  /* Backgrounds */
-  --background: #FFFFFF;
-  --surface: #FAFAFA;
+  /* Backgrounds - warm off-white */
+  --background: #F8F5F1;
+  --background-white: #F8F5F1;
+  --surface: #F8F5F1;
   --surface-grey: #f7fafb;
   
   /* Text colors */
@@ -69,6 +70,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--background);
   color: var(--text-primary);
+}
+
+/* Override Tailwind's bg-white to use warm off-white */
+.bg-white {
+  background-color: var(--background) !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
