@@ -551,9 +551,18 @@ const ContactFormSection = ({ page, settings }) => {
 };
 
 // ========== RELATED SERVICES - Project cards on light grey ==========
-const RelatedServices = ({ allPages, currentSlug, settings }) => {
+const RelatedServices = ({ allPages, currentSlug, settings, services }) => {
   const otherPages = allPages.filter(p => p.slug !== currentSlug).slice(0, 3);
   if (otherPages.length === 0) return null;
+  
+  // Helper to find matching service image from landing page
+  const getServiceImage = (relPage) => {
+    const matchingService = services?.find(s => 
+      s.title?.toLowerCase().includes(relPage.hero_title?.toLowerCase()?.split(' ')[0]) ||
+      relPage.hero_title?.toLowerCase().includes(s.title?.toLowerCase()?.split(' ')[0])
+    );
+    return matchingService?.image_url || relPage.hero_image_url || 'https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg';
+  };
 
   return (
     <section className="service-section-grey">
@@ -567,7 +576,11 @@ const RelatedServices = ({ allPages, currentSlug, settings }) => {
             <motion.div key={relPage.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }}>
               <Link to={`/${relPage.slug}`} className="project-card block h-full group">
                 <div className="overflow-hidden">
-                  <img src={getImageUrl(relPage.hero_image_url) || 'https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg'} alt={relPage.hero_title} />
+                  <img 
+                    src={getImageUrl(getServiceImage(relPage))} 
+                    alt={relPage.hero_title}
+                    onError={(e) => { e.target.src = 'https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg'; }}
+                  />
                 </div>
                 <div className="p-5">
                   <p className="text-xs text-primary font-medium uppercase tracking-wide mb-2">Palvelu</p>
@@ -796,7 +809,7 @@ const DynamicServicePage = () => {
       {/* Service-specific FAQ Section */}
       <ServiceFAQSection faqs={serviceFaqs} settings={settings} serviceName={page.hero_title || page.seo_title} />
       <ContactFormSection page={page} settings={settings} />
-      <RelatedServices allPages={allPages} currentSlug={slug} settings={settings} />
+      <RelatedServices allPages={allPages} currentSlug={slug} settings={settings} services={services} />
       <StrongCTA settings={settings} />
       <Footer logoUrl={settings?.logo_url} settings={settings} />
     </div>
