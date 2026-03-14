@@ -193,7 +193,8 @@ const Navbar = ({ isScrolled, settings }) => {
 
 // ========== HERO - Text width limited to 600px ==========
 const ServiceHero = ({ page, settings }) => {
-  const heroImage = page.hero_image_url || 'https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&w=1920';
+  // Use the same hero image as the landing page (from settings)
+  const heroImage = settings?.hero_image_url || 'https://images.pexels.com/photos/5493669/pexels-photo-5493669.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940';
   const phone = settings?.company_phone_primary || settings?.contact_phone_1 || '+358 40 054 7270';
 
   return (
