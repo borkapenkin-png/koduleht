@@ -52,9 +52,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 </head>
 <body>
-    <!-- Server-rendered visible content - React will hydrate this -->
+    <!-- SEO content is in meta tags, JSON-LD, etc. React renders the visible UI -->
     <div id="root">
-        {% block content %}{% endblock %}
+        <!-- Minimal loading placeholder that matches React's initial render -->
+        <noscript>
+            <div style="padding: 2rem; text-align: center; font-family: system-ui, sans-serif;">
+                <h1>{{ title }}</h1>
+                <p>{{ description }}</p>
+                <p>JavaScript on vajalik selle lehe vaatamiseks.</p>
+            </div>
+        </noscript>
     </div>
     
     <!-- React App JS - loaded from build -->
