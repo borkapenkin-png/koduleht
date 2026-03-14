@@ -321,10 +321,10 @@ const FaqHubPage = () => {
               Ota yhteyttä ja vastaamme kysymyksiisi henkilökohtaisesti.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link to="/#yhteydenotto" className="btn-primary bg-white text-[#0F172A] hover:bg-gray-100">
+              <Link to="/#yhteystiedot" className="inline-flex items-center justify-center px-6 py-3 bg-white text-[#0F172A] font-medium rounded-lg hover:bg-gray-100 transition-colors">
                 Ota yhteyttä
               </Link>
-              <a href={`tel:${settings?.company_phone_primary?.replace(/\s/g, '') || '+358400547270'}`} className="btn-secondary border-white text-white hover:bg-white/10">
+              <a href={`tel:${settings?.company_phone_primary?.replace(/\s/g, '') || '+358400547270'}`} className="inline-flex items-center justify-center px-6 py-3 border-2 border-white text-white font-medium rounded-lg hover:bg-white/10 transition-colors">
                 Soita nyt
               </a>
             </div>
