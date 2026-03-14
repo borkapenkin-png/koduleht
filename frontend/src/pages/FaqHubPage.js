@@ -189,23 +189,23 @@ const FaqHubPage = () => {
             className="w-full h-full object-cover"
             loading="eager"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50"></div>
+          <div className="hero-overlay absolute inset-0"></div>
         </div>
         
         <div className="container-custom relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="max-w-3xl mx-auto text-center"
+            className="max-w-3xl"
           >
-            <Link to="/" className="inline-flex items-center gap-2 text-sm text-white/80 hover:text-white mb-6 transition-colors">
+            <Link to="/" className="inline-flex items-center gap-2 text-sm text-[#64748B] hover:text-primary mb-6 transition-colors">
               <ArrowLeft size={16} />
               Takaisin etusivulle
             </Link>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#0F172A] mb-4">
               Usein kysytyt kysymykset
             </h1>
-            <p className="text-base md:text-lg text-white/80 leading-relaxed">
+            <p className="text-base md:text-lg text-[#64748B] leading-relaxed">
               Löydä vastaukset yleisimpiin kysymyksiin maalaus- ja tasoitustöistä. 
               Etkö löytänyt vastausta? Ota yhteyttä - autamme mielellämme!
             </p>
