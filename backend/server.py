@@ -1467,6 +1467,43 @@ async def import_all_data(request: Request, username: str = Depends(get_current_
         logging.error(f"Import error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# FAQ-only export/import endpoints
+@api_router.get("/admin/export-faqs")
+async def export_faqs_only(username: str = Depends(get_current_admin)):
+    """Export only FAQs as JSON."""
+    try:
+        data = {
+            "exported_at": datetime.now(timezone.utc).isoformat(),
+            "type": "faqs_only",
+            "faqs": await db.faqs.find({}, {"_id": 0}).to_list(1000),
+        }
+        return data
+    except Exception as e:
+        logging.error(f"FAQ export error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/admin/import-faqs")
+async def import_faqs_only(request: Request, username: str = Depends(get_current_admin)):
+    """Import only FAQs from JSON. Replaces existing FAQs."""
+    try:
+        data = await request.json()
+        
+        if "faqs" not in data or not isinstance(data["faqs"], list):
+            raise HTTPException(status_code=400, detail="Invalid data format - 'faqs' array required")
+        
+        # Delete existing FAQs and import new ones
+        await db.faqs.delete_many({})
+        if data["faqs"]:
+            await db.faqs.insert_many(data["faqs"])
+        
+        logging.info(f"FAQs imported: {len(data['faqs'])} items")
+        return {"success": True, "imported_count": len(data["faqs"])}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"FAQ import error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Public export endpoint (no auth required, for easy sync)
 @api_router.get("/export-public-data")
 async def export_public_data():

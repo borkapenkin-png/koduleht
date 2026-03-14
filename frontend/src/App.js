@@ -1216,6 +1216,48 @@ const AdminPanel = () => {
     }
   };
 
+  const exportFaqsOnly = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/export-faqs`, getAuthHeaders());
+      const dataStr = JSON.stringify(response.data, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `jb-faqs-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      alert(`FAQ exportattu onnistuneesti! (${response.data.faqs?.length || 0} kysymystä)`);
+    } catch (error) {
+      console.error('FAQ Export error:', error);
+      alert(`FAQ Export epäonnistui: ${error.message}`);
+    }
+  };
+
+  const importFaqsOnly = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    if (!window.confirm('Tämä korvaa kaikki nykyiset UKK-kysymykset! Haluatko jatkaa?')) {
+      event.target.value = '';
+      return;
+    }
+    
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      const response = await axios.post(`${API}/admin/import-faqs`, data, getAuthHeaders());
+      alert(`FAQ importattu onnistuneesti! (${response.data.imported_count} kysymystä)`);
+      loadData();
+    } catch (error) {
+      console.error('FAQ Import error:', error);
+      alert(`FAQ Import epäonnistui: ${error.message}`);
+    }
+    event.target.value = '';
+  };
+
   const importAllData = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -1693,12 +1735,21 @@ const AdminPanel = () => {
                       Hallitse UKK-osion sisältöä. Kysymykset näytetään /ukk -sivulla ja palvelukohtaiset kysymykset palvelusivuilla.
                     </p>
                   </div>
-                  <button 
-                    onClick={() => setNewItem({ question: "", answer: "", service_id: null, order: faqs.length + 1, is_published: true, isNew: true })} 
-                    className="btn-primary text-xs md:text-sm flex items-center gap-1"
-                  >
-                    <Plus size={14} />Lisää kysymys
-                  </button>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <button onClick={exportFaqsOnly} className="text-xs text-[#64748B] hover:text-blue-600 flex items-center gap-1 border border-[#E2E8F0] px-2 py-1 rounded" title="Lataa vain UKK-kysymykset">
+                      <Download size={12} />Export FAQ
+                    </button>
+                    <label className="text-xs text-[#64748B] hover:text-green-600 flex items-center gap-1 border border-[#E2E8F0] px-2 py-1 rounded cursor-pointer" title="Lataa UKK-kysymykset tiedostosta">
+                      <Upload size={12} />Import FAQ
+                      <input type="file" accept=".json" onChange={importFaqsOnly} className="hidden" />
+                    </label>
+                    <button 
+                      onClick={() => setNewItem({ question: "", answer: "", service_id: null, order: faqs.length + 1, is_published: true, isNew: true })} 
+                      className="btn-primary text-xs md:text-sm flex items-center gap-1"
+                    >
+                      <Plus size={14} />Lisää kysymys
+                    </button>
+                  </div>
                 </div>
 
                 {/* New FAQ Form */}
