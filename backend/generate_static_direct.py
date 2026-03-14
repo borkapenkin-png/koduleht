@@ -195,7 +195,7 @@ async def generate_service_page(db, slug: str, css_files, js_files):
     breadcrumb_json_ld = build_json_ld_breadcrumb([
         {"name": "Etusivu", "url": "/"},
         {"name": "Palvelut", "url": "/#palvelut"},
-        {"name": page.get("hero_title", ""), "url": f"/{slug}"}
+        {"name": page.get("hero_title", ""), "url": f"/{slug}/index.html"}
     ])
     combined_json_ld = f'[{service_json_ld},{breadcrumb_json_ld}]'
     
@@ -213,7 +213,7 @@ async def generate_service_page(db, slug: str, css_files, js_files):
         title=f"{page.get('seo_title', page.get('hero_title', ''))} | {company_name}",
         description=page.get("seo_description", page.get("hero_subtitle", "")),
         keywords=page.get("seo_keywords", ""),
-        canonical_url=f"{SITE_URL}/{slug}",
+        canonical_url=f"{SITE_URL}/{slug}/index.html",
         og_title=page.get("seo_title", page.get("hero_title", "")),
         og_description=page.get("seo_description", page.get("hero_subtitle", "")),
         og_image=page.get("hero_image_url"),
@@ -250,7 +250,7 @@ async def generate_references_page(db, css_files, js_files):
     return template.render(
         title=f"Referenssit | {company_name}",
         description="Tutustu J&B Tasoitus ja Maalaus Oy:n toteuttamiin kohteisiin. Laadukkaita maalaus- ja tasoitustöitä Helsingissä ja Uudellamaalla.",
-        canonical_url=f"{SITE_URL}/referenssit",
+        canonical_url=f"{SITE_URL}/referenssit/index.html",
         og_title=f"Referenssit | {company_name}",
         og_description="Tutustu tekemiimme kohteisiin",
         company_name=company_name,
@@ -300,7 +300,7 @@ async def generate_faq_page(db, css_files, js_files):
     return template.render(
         title=f"Usein kysytyt kysymykset | {company_name}",
         description="Vastauksia yleisimpiin kysymyksiin maalaus- ja tasoituspalveluistamme. UKK - hinnoittelu, kotitalousvähennys, työajat ja materiaalit.",
-        canonical_url=f"{SITE_URL}/ukk",
+        canonical_url=f"{SITE_URL}/ukk/index.html",
         og_title=f"UKK - Usein kysytyt kysymykset | {company_name}",
         og_description="Vastauksia yleisimpiin kysymyksiin maalaus- ja tasoituspalveluistamme.",
         company_name=company_name,
@@ -381,13 +381,15 @@ async def main():
     client.close()
     
     # Copy serve.json for proper routing to both directories
-    serve_json_content = '''{
-  "rewrites": [
-    { "source": "/admin", "destination": "/index.html" },
-    { "source": "/admin/**", "destination": "/index.html" },
-    { "source": "/login", "destination": "/index.html" }
-  ]
-}'''
+    # Note: Do not add cleanUrls:false or redirects - serve handles /slug -> /slug/index.html automatically
+    serve_json_obj = {
+        "rewrites": [
+            { "source": "/admin", "destination": "/index.html" },
+            { "source": "/admin/**", "destination": "/index.html" },
+            { "source": "/login", "destination": "/index.html" }
+        ]
+    }
+    serve_json_content = json.dumps(serve_json_obj, indent=2)
     (BUILD_DIR / "serve.json").write_text(serve_json_content, encoding="utf-8")
     (PUBLIC_DIR / "serve.json").write_text(serve_json_content, encoding="utf-8")
     print(f"  ✓ serve.json")

@@ -12,7 +12,7 @@
             <nav style="display:flex;gap:1.5rem;">
                 <a href="/#palvelut" style="color:#64748b;text-decoration:none;">Palvelut</a>
                 <a href="/#meista" style="color:#64748b;text-decoration:none;">Meistä</a>
-                <a href="/referenssit" style="color:#64748b;text-decoration:none;">Referenssit</a>
+                <a href="/referenssit/index.html" style="color:#64748b;text-decoration:none;">Referenssit</a>
                 <a href="/#yhteystiedot" style="color:#64748b;text-decoration:none;">Yhteystiedot</a>
             </nav>
         </div>
@@ -47,10 +47,10 @@
                     {% for service in services %}
                     <article style="background:#fff;border:1px solid #e5e7eb;border-radius:0.75rem;padding:1.5rem;transition:box-shadow 0.2s;">
                         <h3 style="font-size:1.25rem;color:#0f172a;margin:0 0 0.75rem;">
-                            <a href="/{{ service.slug }}" style="color:inherit;text-decoration:none;">{{ service.title }}</a>
+                            <a href="/{{ service.slug }}/index.html" style="color:inherit;text-decoration:none;">{{ service.title }}</a>
                         </h3>
                         <p style="color:#64748b;margin:0 0 1rem;line-height:1.6;">{{ service.description }}</p>
-                        <a href="/{{ service.slug }}" style="color:#0056D2;text-decoration:none;font-weight:500;">Lue lisää →</a>
+                        <a href="/{{ service.slug }}/index.html" style="color:#0056D2;text-decoration:none;font-weight:500;">Lue lisää →</a>
                     </article>
                     {% endfor %}
                 </div>
@@ -127,10 +127,10 @@
                 <div>
                     <h3 style="color:#fff;font-size:1.125rem;margin:0 0 1rem;">Palvelut</h3>
                     <ul style="list-style:none;padding:0;margin:0;">
-                        <li style="margin-bottom:0.5rem;"><a href="/tasoitustyot-helsinki" style="color:#94a3b8;text-decoration:none;">Tasoitustyöt</a></li>
-                        <li style="margin-bottom:0.5rem;"><a href="/maalaustyot-helsinki" style="color:#94a3b8;text-decoration:none;">Maalaustyöt</a></li>
-                        <li style="margin-bottom:0.5rem;"><a href="/julkisivumaalaus-helsinki" style="color:#94a3b8;text-decoration:none;">Julkisivumaalaus</a></li>
-                        <li><a href="/mikrosementti-helsinki" style="color:#94a3b8;text-decoration:none;">Mikrosementti</a></li>
+                        <li style="margin-bottom:0.5rem;"><a href="/tasoitustyot-helsinki/index.html" style="color:#94a3b8;text-decoration:none;">Tasoitustyöt</a></li>
+                        <li style="margin-bottom:0.5rem;"><a href="/maalaustyot-helsinki/index.html" style="color:#94a3b8;text-decoration:none;">Maalaustyöt</a></li>
+                        <li style="margin-bottom:0.5rem;"><a href="/julkisivumaalaus-helsinki/index.html" style="color:#94a3b8;text-decoration:none;">Julkisivumaalaus</a></li>
+                        <li><a href="/mikrosementti-helsinki/index.html" style="color:#94a3b8;text-decoration:none;">Mikrosementti</a></li>
                     </ul>
                 </div>
                 <div>

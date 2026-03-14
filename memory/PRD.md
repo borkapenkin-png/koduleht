@@ -5,7 +5,29 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
 ## Latest Update: March 14, 2026
 
-### Hybrid SSR Architecture for SEO (March 14, 2026) - LATEST
+### P0 Production SEO Fix - URL Structure Workaround (March 14, 2026) - LATEST
+**Problem:** Emergent platform's production Nginx uses `try_files $uri $uri/ /index.html;` which doesn't check for `$uri/index.html`. This causes all clean URLs like `/maalaustyot-helsinki` to return the homepage instead of the unique static page.
+
+**Solution Implemented:**
+- ✅ **Canonical URLs updated** - All service pages now use `/slug/index.html` format in canonical tags
+- ✅ **Sitemap updated** - All URLs in sitemap use `/slug/index.html` format
+- ✅ **Internal links in SSG templates** - Updated to use `/slug/index.html` format
+- ✅ **serve.json simplified** - Removed conflicting cleanUrls/redirects settings
+- ✅ **Preview environment working** - All pages return unique content with correct SEO tags
+
+**How SEO works now:**
+1. Google crawls sitemap URLs (e.g., `https://jbtasoitusmaalaus.fi/maalaustyot-helsinki/index.html`)
+2. Each URL returns unique, pre-rendered HTML with correct title, meta tags, structured data
+3. React hydrates the page for interactivity
+4. User navigation within the app uses React Router (client-side)
+
+**Files Modified:**
+- `/app/backend/generate_static_direct.py` - Updated canonical URLs to `/slug/index.html`
+- `/app/backend/server.py` - Updated sitemap endpoint URLs
+- `/app/backend/templates/*.html` - Updated internal links
+- `/app/frontend/build/serve.json` & `/app/frontend/public/serve.json` - Simplified config
+
+### Hybrid SSR Architecture for SEO (March 14, 2026)
 - ✅ **FastAPI + Jinja2 SSR** - Server-side rendering for public pages
 - ✅ **Full HTML content in View Source** - All page content visible to crawlers
 - ✅ **SEO meta tags** - Title, description, canonical URL, Open Graph, Twitter Card
@@ -333,11 +355,12 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 ### Pending/Future Tasks
 
 #### P0 (High Priority)
-- **Google Analytics** - Blocked: waiting for user's Measurement ID (G-XXXXXXXXXX)
+- **Production verification** - Deploy and verify that `/slug/index.html` URLs work in production
+- **Contact Emergent Support** - Request Nginx config change to `try_files $uri $uri/index.html $uri/ /index.html;`
 
 #### P1 (Medium Priority)
 - Backend refactoring (split server.py into modules)
-- Refactor image URL storage to use relative paths (prevents "data loss" on domain changes)
+- Google Analytics route change tracking (GA4 only tracks initial page load, not client-side navigation)
 
 #### P2 (Low Priority)
 - Additional schema types (FAQ, Review)

@@ -677,7 +677,7 @@ async def get_sitemap():
     service_pages = await db.service_pages.find({}, {"_id": 0, "slug": 1}).to_list(100)
     for page in service_pages:
         xml += f'''  <url>
-    <loc>{base_url}/{page["slug"]}</loc>
+    <loc>{base_url}/{page["slug"]}/index.html</loc>
     <lastmod>{today}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -685,7 +685,7 @@ async def get_sitemap():
     
     # References page
     xml += f'''  <url>
-    <loc>{base_url}/referenssit</loc>
+    <loc>{base_url}/referenssit/index.html</loc>
     <lastmod>{today}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -693,7 +693,7 @@ async def get_sitemap():
     
     # FAQ page
     xml += f'''  <url>
-    <loc>{base_url}/ukk</loc>
+    <loc>{base_url}/ukk/index.html</loc>
     <lastmod>{today}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
