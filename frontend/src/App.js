@@ -775,7 +775,7 @@ const ContactSection = ({ settings }) => {
             
             {/* Contact info grid - responsive */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-              <address className="not-italic bg-white p-4 md:p-6 border border-[#E2E8F0] rounded-lg">
+              <address className="not-italic bg-[#FFFFFF] p-4 md:p-6 border border-[#E2E8F0] rounded-lg">
                 <div className="flex items-start gap-3">
                   <div className="icon-box flex-shrink-0"><MapPin size={18} className="text-primary" aria-hidden="true" /></div>
                   <div>
@@ -785,7 +785,7 @@ const ContactSection = ({ settings }) => {
                 </div>
               </address>
               
-              <div className="bg-white p-4 md:p-6 border border-[#E2E8F0] rounded-lg">
+              <div className="bg-[#FFFFFF] p-4 md:p-6 border border-[#E2E8F0] rounded-lg">
                 <div className="flex items-start gap-3">
                   <div className="icon-box flex-shrink-0"><Mail size={18} className="text-primary" aria-hidden="true" /></div>
                   <div>
@@ -795,7 +795,7 @@ const ContactSection = ({ settings }) => {
                 </div>
               </div>
               
-              <div className="bg-white p-4 md:p-6 border border-[#E2E8F0] rounded-lg">
+              <div className="bg-[#FFFFFF] p-4 md:p-6 border border-[#E2E8F0] rounded-lg">
                 <div className="flex items-start gap-3">
                   <div className="icon-box flex-shrink-0"><Phone size={18} className="text-primary" aria-hidden="true" /></div>
                   <div>
@@ -814,7 +814,7 @@ const ContactSection = ({ settings }) => {
                 </div>
               </div>
               
-              <div className="bg-[#FAFAFA] p-4 md:p-6 border border-[#E2E8F0] rounded-lg">
+              <div className="bg-[#FFFFFF] p-4 md:p-6 border border-[#E2E8F0] rounded-lg">
                 <p className="font-medium text-[#0F172A] mb-2 text-sm md:text-base">{s.contact_jobs_title}</p>
                 <p className="text-xs md:text-sm text-[#64748B]">{s.contact_jobs_text}</p>
               </div>
