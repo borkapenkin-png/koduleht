@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block seo_content %}
+<h1>Referenssit</h1>
+<p>{{ subtitle or 'Tutustu tekemiimme kohteisiin' }}</p>
+
+<section>
+    {% for ref in references %}
+    <article>
+        <h2>{{ ref.title }}</h2>
+        <p><strong>Työn tyyppi:</strong> {{ ref.work_type }}</p>
+        <p>{{ ref.description }}</p>
+        {% if ref.main_contractor %}<p><strong>Pääurakoitsija:</strong> {{ ref.main_contractor }}</p>{% endif %}
+        {% if ref.location %}<p><strong>Sijainti:</strong> {{ ref.location }}</p>{% endif %}
+        {% if ref.year %}<p><strong>Vuosi:</strong> {{ ref.year }}</p>{% endif %}
+    </article>
+    {% endfor %}
+</section>
+{% endblock %}
+
+{% block content %}
+<div class="ssr-loading">
+    <header>
+        <nav>
+            <a href="/">{{ company_name }}</a>
+            <a href="/#palvelut">Palvelut</a>
+            <a href="/#meista">Meistä</a>
+            <a href="/referenssit">Referenssit</a>
+            <a href="/#yhteystiedot">Yhteystiedot</a>
+        </nav>
+    </header>
+    
+    <main>
+        <section>
+            <h1>Referenssit</h1>
+            <p>{{ subtitle or 'Tutustu tekemiimme kohteisiin' }}</p>
+        </section>
+        
+        <section>
+            {% for ref in references %}
+            <article>
+                {% if ref.cover_image_url %}
+                <img src="{{ ref.cover_image_url }}" alt="{{ ref.title }} - {{ ref.work_type }}{% if ref.location %}, {{ ref.location }}{% endif %}" loading="lazy" />
+                {% endif %}
+                <h2>{{ ref.title }}</h2>
+                <p>{{ ref.work_type }}</p>
+                <p>{{ ref.description }}</p>
+                {% if ref.main_contractor %}<p>{{ ref.main_contractor }}</p>{% endif %}
+                {% if ref.location %}<p>{{ ref.location }}</p>{% endif %}
+                {% if ref.year %}<p>{{ ref.year }}</p>{% endif %}
+            </article>
+            {% endfor %}
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; {{ company_name }}</p>
+    </footer>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block seo_content %}
+<h1>Usein kysytyt kysymykset</h1>
+<p>Vastauksia yleisimpiin kysymyksiin maalaus- ja tasoituspalveluistamme.</p>
+
+{% for category in faq_categories %}
+<section>
+    <h2>{{ category.name }}</h2>
+    {% for faq in category.faqs %}
+    <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">{{ faq.question }}</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p itemprop="text">{{ faq.answer }}</p>
+        </div>
+    </article>
+    {% endfor %}
+</section>
+{% endfor %}
+{% endblock %}
+
+{% block content %}
+<div class="ssr-loading">
+    <header>
+        <nav>
+            <a href="/">{{ company_name }}</a>
+            <a href="/#palvelut">Palvelut</a>
+            <a href="/#meista">Meistä</a>
+            <a href="/referenssit">Referenssit</a>
+            <a href="/ukk">UKK</a>
+            <a href="/#yhteystiedot">Yhteystiedot</a>
+        </nav>
+    </header>
+    
+    <main>
+        <section>
+            <h1>Usein kysytyt kysymykset</h1>
+            <p>Vastauksia yleisimpiin kysymyksiin maalaus- ja tasoituspalveluistamme.</p>
+        </section>
+        
+        {% for category in faq_categories %}
+        <section>
+            <h2>{{ category.name }}</h2>
+            {% for faq in category.faqs %}
+            <details>
+                <summary>{{ faq.question }}</summary>
+                <p>{{ faq.answer }}</p>
+            </details>
+            {% endfor %}
+        </section>
+        {% endfor %}
+    </main>
+    
+    <footer>
+        <p>&copy; {{ company_name }}</p>
+    </footer>
+</div>
+{% endblock %}

@@ -1,6 +1,7 @@
 from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, UploadFile, File, Request
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from fastapi.responses import Response
+from fastapi.responses import Response, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -1490,6 +1491,111 @@ async def import_with_sync_key(request: Request):
 
 # Include router
 app.include_router(api_router)
+
+# ============================================================================
+# SSR (Server-Side Rendering) for SEO-friendly public pages
+# ============================================================================
+from ssr import (
+    render_home_page, render_service_page, render_references_page, 
+    render_faq_page, render_404_page, handle_dynamic_slug, 
+    is_system_route, FIXED_SERVICE_SLUGS
+)
+
+# Get base URL for canonical links
+def get_base_url(request: Request) -> str:
+    """Get the base URL from request or environment."""
+    # Prefer environment variable for production
+    prod_url = os.environ.get('SITE_URL', '')
+    if prod_url:
+        return prod_url.rstrip('/')
+    # Fallback to request URL
+    return str(request.base_url).rstrip('/')
+
+# Mount static files from React build
+FRONTEND_BUILD_DIR = Path("/app/frontend/build")
+if FRONTEND_BUILD_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(FRONTEND_BUILD_DIR / "static")), name="static")
+
+# SSR Routes - these must come BEFORE the catch-all SPA route
+# Priority: API > Fixed public routes > Dynamic slugs > SPA fallback
+
+@app.get("/", response_class=HTMLResponse)
+async def ssr_home(request: Request):
+    """Render home page with SSR for SEO."""
+    base_url = get_base_url(request)
+    return await render_home_page(db, request, base_url)
+
+@app.get("/referenssit", response_class=HTMLResponse)
+async def ssr_references(request: Request):
+    """Render references page with SSR for SEO."""
+    base_url = get_base_url(request)
+    return await render_references_page(db, request, base_url)
+
+@app.get("/ukk", response_class=HTMLResponse)
+async def ssr_faq(request: Request):
+    """Render FAQ page with SSR for SEO."""
+    base_url = get_base_url(request)
+    return await render_faq_page(db, request, base_url)
+
+# Fixed service page routes (known URLs)
+@app.get("/tasoitustyot-helsinki", response_class=HTMLResponse)
+async def ssr_tasoitustyot(request: Request):
+    base_url = get_base_url(request)
+    return await render_service_page(db, "tasoitustyot-helsinki", request, base_url)
+
+@app.get("/maalaustyot-helsinki", response_class=HTMLResponse)
+async def ssr_maalaustyot(request: Request):
+    base_url = get_base_url(request)
+    return await render_service_page(db, "maalaustyot-helsinki", request, base_url)
+
+@app.get("/mikrosementti-helsinki", response_class=HTMLResponse)
+async def ssr_mikrosementti(request: Request):
+    base_url = get_base_url(request)
+    return await render_service_page(db, "mikrosementti-helsinki", request, base_url)
+
+@app.get("/julkisivumaalaus-helsinki", response_class=HTMLResponse)
+async def ssr_julkisivumaalaus(request: Request):
+    base_url = get_base_url(request)
+    return await render_service_page(db, "julkisivumaalaus-helsinki", request, base_url)
+
+@app.get("/julkisivurappaus-helsinki", response_class=HTMLResponse)
+async def ssr_julkisivurappaus(request: Request):
+    base_url = get_base_url(request)
+    return await render_service_page(db, "julkisivurappaus-helsinki", request, base_url)
+
+@app.get("/kattomaalaus-helsinki", response_class=HTMLResponse)
+async def ssr_kattomaalaus(request: Request):
+    base_url = get_base_url(request)
+    return await render_service_page(db, "kattomaalaus-helsinki", request, base_url)
+
+# Dynamic slug handler - catches any other public pages created in admin
+# This MUST be defined after all fixed routes
+@app.get("/{slug:path}", response_class=HTMLResponse)
+async def ssr_dynamic_slug(slug: str, request: Request):
+    """Handle dynamic slugs - check if it's a valid public page or serve SPA."""
+    base_url = get_base_url(request)
+    
+    # Skip system routes - let them fall through to SPA/static handlers
+    if is_system_route(slug):
+        # Return the React SPA index.html for admin and other system routes
+        index_path = FRONTEND_BUILD_DIR / "index.html"
+        if index_path.exists():
+            return HTMLResponse(content=index_path.read_text())
+        raise HTTPException(status_code=404, detail="Not found")
+    
+    # Skip if it looks like a static file request
+    if '.' in slug.split('/')[-1]:
+        raise HTTPException(status_code=404, detail="Not found")
+    
+    # Check if this is a known service page slug
+    page = await db.servicepages.find_one({"slug": slug})
+    if page:
+        return await render_service_page(db, slug, request, base_url)
+    
+    # Not a known page - return 404
+    return await render_404_page(request, base_url)
+
+# ============================================================================
 
 app.add_middleware(
     CORSMiddleware,

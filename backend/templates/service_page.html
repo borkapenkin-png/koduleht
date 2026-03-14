@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block seo_content %}
+<nav aria-label="Breadcrumb">
+    <ol>
+        <li><a href="/">Etusivu</a></li>
+        <li><a href="/#palvelut">Palvelut</a></li>
+        <li>{{ page.hero_title }}</li>
+    </ol>
+</nav>
+
+<h1>{{ page.hero_title }}</h1>
+{% if page.hero_subtitle %}<p>{{ page.hero_subtitle }}</p>{% endif %}
+
+<section>
+    <h2>{{ page.description_title or 'Palvelun kuvaus' }}</h2>
+    {{ page.description_text | safe }}
+</section>
+
+{% if page.features %}
+<section>
+    <h2>{{ page.features_title or 'Mitä palvelu sisältää' }}</h2>
+    <ul>
+    {% for feature in page.features %}
+        <li>
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.description }}</p>
+        </li>
+    {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+<section>
+    <h2>{{ page.why_title or 'Miksi valita meidät' }}</h2>
+    <ul>
+    {% for item in why_items %}
+        <li>{{ item }}</li>
+    {% endfor %}
+    </ul>
+</section>
+
+<section>
+    <h2>Toimialue</h2>
+    <p>{{ page.hero_title }} palvelualueella:</p>
+    <ul>
+    {% for area in service_areas %}
+        <li>{{ area }}</li>
+    {% endfor %}
+    </ul>
+</section>
+
+<section>
+    <h2>Ota yhteyttä</h2>
+    <p>{{ page.cta_text or 'Pyydä ilmainen arvio' }}</p>
+    <a href="tel:{{ phone }}">{{ phone }}</a>
+    <a href="mailto:{{ email }}">{{ email }}</a>
+</section>
+{% endblock %}
+
+{% block content %}
+<div class="ssr-loading">
+    <header>
+        <nav>
+            <a href="/">{{ company_name }}</a>
+            <a href="/#palvelut">Palvelut</a>
+            <a href="/#meista">Meistä</a>
+            <a href="/referenssit">Referenssit</a>
+            <a href="/#yhteystiedot">Yhteystiedot</a>
+        </nav>
+    </header>
+    
+    <main>
+        <nav aria-label="Breadcrumb">
+            <a href="/">Etusivu</a> &gt;
+            <a href="/#palvelut">Palvelut</a> &gt;
+            <span>{{ page.hero_title }}</span>
+        </nav>
+        
+        <section>
+            <h1>{{ page.hero_title }}</h1>
+            {% if page.hero_subtitle %}<p>{{ page.hero_subtitle }}</p>{% endif %}
+        </section>
+        
+        <section>
+            <h2>{{ page.description_title or 'Palvelun kuvaus' }}</h2>
+            <div>{{ page.description_text | safe }}</div>
+        </section>
+        
+        {% if page.features %}
+        <section>
+            <h2>{{ page.features_title or 'Mitä palvelu sisältää' }}</h2>
+            {% for feature in page.features %}
+            <article>
+                <h3>{{ feature.title }}</h3>
+                <p>{{ feature.description }}</p>
+            </article>
+            {% endfor %}
+        </section>
+        {% endif %}
+        
+        <section>
+            <h2>Toimialue</h2>
+            <p>{{ areas_description }}</p>
+            {% for area in service_areas %}
+            <span>{{ area }}</span>
+            {% endfor %}
+        </section>
+        
+        <section>
+            <h2>Ota yhteyttä</h2>
+            <p>{{ page.cta_text or 'Pyydä ilmainen arvio' }}</p>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; {{ company_name }}</p>
+    </footer>
+</div>
+{% endblock %}

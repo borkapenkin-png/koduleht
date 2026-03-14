@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block seo_content %}
+<h1>{{ settings.hero_title_1 }} {{ settings.hero_title_2 }} {{ settings.hero_title_3 }}</h1>
+<p>{{ settings.hero_description }}</p>
+
+<section>
+    <h2>Palvelut</h2>
+    {% for service in services %}
+    <article>
+        <h3><a href="/{{ service.slug }}">{{ service.title }}</a></h3>
+        <p>{{ service.description }}</p>
+    </article>
+    {% endfor %}
+</section>
+
+<section>
+    <h2>{{ settings.about_title }}</h2>
+    <p>{{ settings.about_text_1 }}</p>
+    <p>{{ settings.about_text_2 }}</p>
+    <p>{{ settings.about_text_3 }}</p>
+</section>
+
+<section>
+    <h2>Yhteystiedot</h2>
+    <address>
+        <p>{{ company_name }}</p>
+        <p>{{ settings.contact_address }}</p>
+        <p>{{ settings.contact_email }}</p>
+        <p>{{ settings.contact_phone_1 }}</p>
+    </address>
+</section>
+{% endblock %}
+
+{% block content %}
+<!-- React will hydrate this -->
+<div class="ssr-loading">
+    <header>
+        <nav>
+            <a href="/">{{ company_name }}</a>
+            <a href="/#palvelut">Palvelut</a>
+            <a href="/#meista">Meistä</a>
+            <a href="/referenssit">Referenssit</a>
+            <a href="/#yhteystiedot">Yhteystiedot</a>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="hero">
+            <p>{{ settings.hero_slogan }}</p>
+            <h1>{{ settings.hero_title_1 }} {{ settings.hero_title_2 }} {{ settings.hero_title_3 }}</h1>
+            <p>{{ settings.hero_description }}</p>
+        </section>
+        
+        <section id="palvelut">
+            <h2>Palvelumme</h2>
+            {% for service in services %}
+            <article>
+                <h3><a href="/{{ service.slug }}">{{ service.title }}</a></h3>
+                <p>{{ service.description }}</p>
+            </article>
+            {% endfor %}
+        </section>
+        
+        <section id="meista">
+            <h2>{{ settings.about_title }}</h2>
+            <p>{{ settings.about_text_1 }}</p>
+            <p>{{ settings.about_text_2 }}</p>
+        </section>
+        
+        <section id="yhteystiedot">
+            <h2>{{ settings.contact_title }}</h2>
+            <p>{{ settings.contact_description }}</p>
+            <address>
+                <p>{{ settings.contact_address }}</p>
+                <p>{{ settings.contact_email }}</p>
+                <p>{{ settings.contact_phone_1 }}</p>
+            </address>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; {{ company_name }}</p>
+    </footer>
+</div>
+{% endblock %}

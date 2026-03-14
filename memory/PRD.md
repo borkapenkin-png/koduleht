@@ -3,9 +3,35 @@
 ## Original Problem Statement
 Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
-## Latest Update: March 13, 2026
+## Latest Update: March 14, 2026
 
-### Service Page Description Layout Patch (March 13, 2026) - LATEST
+### Hybrid SSR Architecture for SEO (March 14, 2026) - LATEST
+- ✅ **FastAPI + Jinja2 SSR** - Server-side rendering for public pages
+- ✅ **Full HTML content in View Source** - All page content visible to crawlers
+- ✅ **SEO meta tags** - Title, description, canonical URL, Open Graph, Twitter Card
+- ✅ **JSON-LD structured data** - LocalBusiness, Service, FAQPage, BreadcrumbList
+- ✅ **Static HTML generation** - `generate_static.py` creates pre-rendered pages
+- ✅ **React hydration** - Client-side interactivity preserved
+- ✅ **Admin/API unchanged** - Admin panel and API work as before
+- ✅ **Dynamic sitemap** - Auto-generated from database content
+
+**Generated static pages:**
+- `/` (index.html)
+- `/referenssit` 
+- `/ukk`
+- `/tasoitustyot-helsinki`
+- `/maalaustyot-helsinki`
+- `/mikrosementti-helsinki`
+- `/julkisivumaalaus-helsinki`
+- `/julkisivurappaus-helsinki`
+- `/kattomaalaus-helsinki`
+
+**New files:**
+- `/app/backend/ssr.py` - SSR rendering logic
+- `/app/backend/templates/` - Jinja2 HTML templates
+- `/app/backend/generate_static.py` - Static page generator
+
+### Service Page Description Layout Patch (March 13, 2026)
 - ✅ **60/40 text/image split** - Desktop layout with lg:col-span-7 (text) and lg:col-span-5 (image)
 - ✅ **Improved typography** - `.service-description-content` class with optimized line-height (1.8), font-size, paragraph spacing
 - ✅ **Mobile responsive** - Stacked layout on mobile with text first, image below

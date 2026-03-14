@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block seo_content %}
+<h1>404 - Sivua ei löytynyt</h1>
+<p>Etsimääsi sivua ei valitettavasti löytynyt.</p>
+<nav>
+    <a href="/">Takaisin etusivulle</a>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="ssr-loading" style="min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+    <h1 style="font-size:2rem;margin-bottom:1rem;">Sivua ei löytynyt</h1>
+    <p style="margin-bottom:2rem;">Etsimääsi sivua ei valitettavasti löytynyt.</p>
+    <a href="/" style="background:#0056D2;color:white;padding:0.75rem 1.5rem;border-radius:0.5rem;text-decoration:none;">Takaisin etusivulle</a>
+</div>
+{% endblock %}

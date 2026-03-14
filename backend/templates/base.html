@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <!-- SEO Meta Tags -->
+    <title>{{ title }}</title>
+    <meta name="description" content="{{ description }}" />
+    {% if keywords %}<meta name="keywords" content="{{ keywords }}" />{% endif %}
+    <link rel="canonical" href="{{ canonical_url }}" />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ og_title or title }}" />
+    <meta property="og:description" content="{{ og_description or description }}" />
+    <meta property="og:type" content="{{ og_type or 'website' }}" />
+    <meta property="og:url" content="{{ canonical_url }}" />
+    {% if og_image %}<meta property="og:image" content="{{ og_image }}" />{% endif %}
+    <meta property="og:site_name" content="{{ company_name }}" />
+    <meta property="og:locale" content="fi_FI" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ og_title or title }}" />
+    <meta name="twitter:description" content="{{ og_description or description }}" />
+    {% if og_image %}<meta name="twitter:image" content="{{ og_image }}" />{% endif %}
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" />
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZP42XN14NG"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-ZP42XN14NG');
+    </script>
+    
+    <!-- JSON-LD Structured Data -->
+    {% if json_ld %}
+    <script type="application/ld+json">{{ json_ld | safe }}</script>
+    {% endif %}
+    
+    <!-- React App CSS - loaded from build -->
+    {% for css_file in css_files %}
+    <link rel="stylesheet" href="{{ css_file }}" />
+    {% endfor %}
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+    <!-- Server-rendered content for SEO -->
+    <div id="seo-content" style="display:none;">
+        {% block seo_content %}{% endblock %}
+    </div>
+    
+    <!-- React app root -->
+    <div id="root">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <!-- React App JS - loaded from build -->
+    {% for js_file in js_files %}
+    <script src="{{ js_file }}"></script>
+    {% endfor %}
+</body>
+</html>
