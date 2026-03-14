@@ -251,8 +251,167 @@
         </script>
     </head>
     <body>
-        <noscript>You need to enable JavaScript to run this app.</noscript>
-        <div id="root"></div>
+        <!-- SEO Content for crawlers (visible to search engines when JS is disabled) -->
+        <noscript>
+            <div id="seo-fallback">
+                <header>
+                    <h1>J&B Tasoitus ja Maalaus Oy - Ammattitaitoista maalausta ja tasoitusta</h1>
+                    <nav>
+                        <a href="/">Etusivu</a> |
+                        <a href="/#palvelut">Palvelut</a> |
+                        <a href="/#meista">Meistä</a> |
+                        <a href="/referenssit">Referenssit</a> |
+                        <a href="/ukk">UKK</a> |
+                        <a href="/#yhteystiedot">Yhteystiedot</a>
+                    </nav>
+                </header>
+                
+                <main>
+                    <section id="hero">
+                        <h2>Ammattitaitoista maalausta ja tasoitusta Helsingissä</h2>
+                        <p>Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella.</p>
+                        <p><a href="tel:+358400547270">Soita: +358 40 054 7270</a></p>
+                    </section>
+                    
+                    <section id="palvelut">
+                        <h2>Palvelumme</h2>
+                        <article>
+                            <h3><a href="/tasoitustyot-helsinki">Tasoitustyöt Helsinki</a></h3>
+                            <p>Ammattimaiset tasoitustyöt takaavat tasaisen ja kestävän pinnan ennen maalausta. Toteutamme seinien ja kattojen tasoitukset Helsingissä, Espoossa ja Vantaalla.</p>
+                        </article>
+                        <article>
+                            <h3><a href="/maalaustyot-helsinki">Maalaustyöt Helsinki</a></h3>
+                            <p>Ammattimaiset maalaustyöt sisä- ja ulkotiloihin. Toteutamme seinien ja kattojen maalaukset Helsingissä, Espoossa ja Vantaalla.</p>
+                        </article>
+                        <article>
+                            <h3><a href="/julkisivumaalaus-helsinki">Julkisivumaalaus Helsinki</a></h3>
+                            <p>Julkisivumaalaus suojaa ja uudistaa rakennuksen ulkonäköä. Ammattitaitoinen julkisivumaalaus Helsingissä ja Uudellamaalla.</p>
+                        </article>
+                        <article>
+                            <h3><a href="/julkisivurappaus-helsinki">Julkisivurappaus Helsinki</a></h3>
+                            <p>Julkisivurappaus suojaa rakennuksen ulkopintoja ja parantaa julkisivun kestävyyttä. Toteutamme julkisivurappaukset Helsingissä.</p>
+                        </article>
+                        <article>
+                            <h3><a href="/mikrosementti-helsinki">Mikrosementti Helsinki</a></h3>
+                            <p>Mikrosementti on kestävä ja saumaton pinnoite, joka sopii lattioille, seinille ja märkätiloihin.</p>
+                        </article>
+                        <article>
+                            <h3><a href="/kattomaalaus-helsinki">Kattomaalaus Helsinki</a></h3>
+                            <p>Ammattitaitoinen kattomaalaus pidentää katon ikää ja parantaa rakennuksen ulkonäköä.</p>
+                        </article>
+                    </section>
+                    
+                    <section id="meista">
+                        <h2>Luotettava kumppani pintaremontteihin</h2>
+                        <p>J&B Tasoitus ja Maalaus Oy on vuodesta 2018 toiminut ammattitaitoinen maalaus- ja tasoituspalvelu Helsingissä ja Uudellamaalla.</p>
+                        <ul>
+                            <li>Vuodesta 2018 - Luotettava kokemus</li>
+                            <li>Ammattitaitoinen työ - Laadukas lopputulos</li>
+                            <li>Kotitalousvähennys - Hyödynnä veroetu</li>
+                            <li>Tyytyväisyystakuu - 100% tyytyväisyys</li>
+                        </ul>
+                    </section>
+                    
+                    <section id="yhteystiedot">
+                        <h2>Yhteystiedot</h2>
+                        <address>
+                            <p><strong>J&B Tasoitus ja Maalaus Oy</strong></p>
+                            <p>Sienitie 25, 00760 Helsinki</p>
+                            <p>Puhelin: <a href="tel:+358400547270">+358 40 054 7270</a></p>
+                            <p>Sähköposti: <a href="mailto:info@jbtasoitusmaalaus.fi">info@jbtasoitusmaalaus.fi</a></p>
+                        </address>
+                        <p>Palvelemme Helsingissä, Espoossa, Vantaalla, Kauniaisissa ja koko Uudenmaan alueella.</p>
+                    </section>
+                </main>
+                
+                <footer>
+                    <p>&copy; 2024 J&B Tasoitus ja Maalaus Oy. Kaikki oikeudet pidätetään.</p>
+                    <p>Y-tunnus: 2927270-5</p>
+                </footer>
+            </div>
+        </noscript>
+        <!-- Initial SEO content that React will hydrate/replace -->
+        <div id="root">
+            <div id="seo-initial" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                <header style="padding: 1rem; background: #fff; border-bottom: 1px solid #e5e7eb;">
+                    <h1 style="font-size: 1.5rem; color: #0f172a;">J&B Tasoitus ja Maalaus Oy</h1>
+                    <nav style="margin-top: 0.5rem;">
+                        <a href="/" style="margin-right: 1rem; color: #0056D2;">Etusivu</a>
+                        <a href="/#palvelut" style="margin-right: 1rem; color: #0056D2;">Palvelut</a>
+                        <a href="/#meista" style="margin-right: 1rem; color: #0056D2;">Meistä</a>
+                        <a href="/referenssit" style="margin-right: 1rem; color: #0056D2;">Referenssit</a>
+                        <a href="/ukk" style="margin-right: 1rem; color: #0056D2;">UKK</a>
+                        <a href="/#yhteystiedot" style="color: #0056D2;">Yhteystiedot</a>
+                    </nav>
+                </header>
+                
+                <main style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
+                    <section style="text-align: center; padding: 3rem 1rem; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-radius: 1rem; margin-bottom: 2rem;">
+                        <p style="color: #0056D2; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Laatujohtajat</p>
+                        <h2 style="font-size: 2.5rem; color: #0f172a; margin: 0.5rem 0;">Ammattitaitoista maalausta ja tasoitusta</h2>
+                        <p style="color: #64748b; max-width: 600px; margin: 1rem auto;">Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella.</p>
+                        <a href="tel:+358400547270" style="display: inline-block; background: #0056D2; color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; margin-top: 1rem;">Soita: +358 40 054 7270</a>
+                    </section>
+                    
+                    <section id="palvelut" style="margin-bottom: 3rem;">
+                        <h2 style="font-size: 1.75rem; color: #0f172a; margin-bottom: 1.5rem;">Palvelumme</h2>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                            <article style="background: #fff; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                <h3 style="color: #0f172a;"><a href="/tasoitustyot-helsinki" style="color: inherit; text-decoration: none;">Tasoitustyöt Helsinki</a></h3>
+                                <p style="color: #64748b;">Ammattimaiset tasoitustyöt takaavat tasaisen ja kestävän pinnan ennen maalausta.</p>
+                            </article>
+                            <article style="background: #fff; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                <h3 style="color: #0f172a;"><a href="/maalaustyot-helsinki" style="color: inherit; text-decoration: none;">Maalaustyöt Helsinki</a></h3>
+                                <p style="color: #64748b;">Ammattimaiset maalaustyöt sisä- ja ulkotiloihin Helsingissä.</p>
+                            </article>
+                            <article style="background: #fff; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                <h3 style="color: #0f172a;"><a href="/julkisivumaalaus-helsinki" style="color: inherit; text-decoration: none;">Julkisivumaalaus Helsinki</a></h3>
+                                <p style="color: #64748b;">Julkisivumaalaus suojaa ja uudistaa rakennuksen ulkonäköä.</p>
+                            </article>
+                            <article style="background: #fff; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                <h3 style="color: #0f172a;"><a href="/julkisivurappaus-helsinki" style="color: inherit; text-decoration: none;">Julkisivurappaus Helsinki</a></h3>
+                                <p style="color: #64748b;">Julkisivurappaus suojaa rakennuksen ulkopintoja.</p>
+                            </article>
+                            <article style="background: #fff; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                <h3 style="color: #0f172a;"><a href="/mikrosementti-helsinki" style="color: inherit; text-decoration: none;">Mikrosementti Helsinki</a></h3>
+                                <p style="color: #64748b;">Kestävä ja saumaton pinnoite lattioille ja seinille.</p>
+                            </article>
+                            <article style="background: #fff; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                <h3 style="color: #0f172a;"><a href="/kattomaalaus-helsinki" style="color: inherit; text-decoration: none;">Kattomaalaus Helsinki</a></h3>
+                                <p style="color: #64748b;">Ammattitaitoinen kattomaalaus pidentää katon ikää.</p>
+                            </article>
+                        </div>
+                    </section>
+                    
+                    <section id="meista" style="background: #f8fafc; padding: 2rem; border-radius: 1rem; margin-bottom: 3rem;">
+                        <h2 style="font-size: 1.75rem; color: #0f172a;">Luotettava kumppani pintaremontteihin</h2>
+                        <p style="color: #64748b;">J&B Tasoitus ja Maalaus Oy on vuodesta 2018 toiminut ammattitaitoinen maalaus- ja tasoituspalvelu Helsingissä ja Uudellamaalla.</p>
+                        <ul style="color: #64748b; margin-top: 1rem;">
+                            <li>Vuodesta 2018 - Luotettava kokemus</li>
+                            <li>Ammattitaitoinen työ - Laadukas lopputulos</li>
+                            <li>Kotitalousvähennys - Hyödynnä veroetu</li>
+                            <li>Tyytyväisyystakuu - 100% tyytyväisyys</li>
+                        </ul>
+                    </section>
+                    
+                    <section id="yhteystiedot" style="margin-bottom: 3rem;">
+                        <h2 style="font-size: 1.75rem; color: #0f172a;">Yhteystiedot</h2>
+                        <address style="font-style: normal; color: #64748b;">
+                            <p><strong style="color: #0f172a;">J&B Tasoitus ja Maalaus Oy</strong></p>
+                            <p>Sienitie 25, 00760 Helsinki</p>
+                            <p>Puhelin: <a href="tel:+358400547270" style="color: #0056D2;">+358 40 054 7270</a></p>
+                            <p>Sähköposti: <a href="mailto:info@jbtasoitusmaalaus.fi" style="color: #0056D2;">info@jbtasoitusmaalaus.fi</a></p>
+                        </address>
+                        <p style="color: #64748b; margin-top: 1rem;">Palvelemme Helsingissä, Espoossa, Vantaalla, Kauniaisissa ja koko Uudenmaan alueella.</p>
+                    </section>
+                </main>
+                
+                <footer style="background: #0f172a; color: #94a3b8; padding: 2rem; text-align: center;">
+                    <p>&copy; 2024 J&B Tasoitus ja Maalaus Oy. Kaikki oikeudet pidätetään.</p>
+                    <p>Y-tunnus: 2927270-5</p>
+                </footer>
+            </div>
+        </div>
         <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
