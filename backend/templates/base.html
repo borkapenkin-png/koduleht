@@ -52,12 +52,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 </head>
 <body>
-    <!-- Server-rendered content for SEO -->
-    <div id="seo-content" style="display:none;">
-        {% block seo_content %}{% endblock %}
-    </div>
-    
-    <!-- React app root -->
+    <!-- Server-rendered visible content - React will hydrate this -->
     <div id="root">
         {% block content %}{% endblock %}
     </div>

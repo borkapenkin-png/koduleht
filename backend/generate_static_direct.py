@@ -136,6 +136,10 @@ def build_json_ld_breadcrumb(items: list) -> str:
 async def generate_home_page(db, css_files, js_files):
     """Generate home page HTML."""
     settings = await db.site_settings.find_one({}) or {}
+    # Remove MongoDB _id to avoid serialization issues
+    if '_id' in settings:
+        del settings['_id']
+    
     services_cursor = db.services.find({})
     services = await services_cursor.to_list(100)
     
@@ -174,7 +178,13 @@ async def generate_service_page(db, slug: str, css_files, js_files):
         print(f"  Warning: Page not found for slug: {slug}")
         return None
     
+    # Remove MongoDB _id
+    if '_id' in page:
+        del page['_id']
+    
     settings = await db.site_settings.find_one({}) or {}
+    if '_id' in settings:
+        del settings['_id']
     company_name = settings.get("company_name", COMPANY_NAME)
     phone = settings.get("company_phone_primary", COMPANY_PHONE)
     email = settings.get("company_email", COMPANY_EMAIL)
@@ -223,8 +233,15 @@ async def generate_service_page(db, slug: str, css_files, js_files):
 async def generate_references_page(db, css_files, js_files):
     """Generate references page HTML."""
     settings = await db.site_settings.find_one({}) or {}
+    if '_id' in settings:
+        del settings['_id']
+    
     references_cursor = db.references.find({})
     references = await references_cursor.to_list(100)
+    # Remove _id from each reference
+    for ref in references:
+        if '_id' in ref:
+            del ref['_id']
     
     company_name = settings.get("company_name", COMPANY_NAME)
     
@@ -246,10 +263,21 @@ async def generate_references_page(db, css_files, js_files):
 async def generate_faq_page(db, css_files, js_files):
     """Generate FAQ page HTML."""
     settings = await db.site_settings.find_one({}) or {}
+    if '_id' in settings:
+        del settings['_id']
+    
     faqs_cursor = db.faqs.find({})
     faqs = await faqs_cursor.to_list(100)
     services_cursor = db.services.find({})
     services = await services_cursor.to_list(100)
+    
+    # Remove _id from documents
+    for faq in faqs:
+        if '_id' in faq:
+            del faq['_id']
+    for service in services:
+        if '_id' in service:
+            del service['_id']
     
     service_map = {s.get("id"): s.get("title", "Yleinen") for s in services}
     faq_categories = {}
