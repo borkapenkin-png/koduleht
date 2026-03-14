@@ -60,9 +60,10 @@
   },
   "scripts": {
     "dev": "craco start",
-    "start": "/app/frontend/start.sh",
-    "start:simple": "serve build -l 3000",
+    "start": "serve build -l 3000",
+    "prebuild": "echo 'Starting build...'",
     "build": "craco build",
+    "postbuild": "cd /app/backend && python generate_static_direct.py || echo 'SEO generation skipped'",
     "generate-seo": "cd /app/backend && python generate_static_direct.py",
     "test": "craco test"
   },
