@@ -61,9 +61,10 @@
   "scripts": {
     "dev": "craco start",
     "start": "serve build -l 3000",
-    "build": "craco build",
-    "test": "craco test",
-    "generate-static": "node -e \"const{execSync}=require('child_process');execSync('cd /app/backend && python generate_static.py',{stdio:'inherit'})\""
+    "build": "craco build && cd /app/backend && python generate_static_direct.py",
+    "build:frontend": "craco build",
+    "generate-seo": "cd /app/backend && python generate_static_direct.py",
+    "test": "craco test"
   },
   "browserslist": {
     "production": [
