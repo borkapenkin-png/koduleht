@@ -909,16 +909,16 @@ const Footer = ({ logoUrl, settings }) => {
                   <img 
                     src={getImageUrl(trustBadge1)} 
                     alt="Luotettava kumppani" 
-                    className="w-auto object-contain rounded"
-                    style={{ height: '100px' }}
+                    className="object-contain rounded"
+                    style={{ height: '150px', width: 'auto', maxWidth: '300px' }}
                   />
                 )}
                 {trustBadge2 && (
                   <img 
                     src={getImageUrl(trustBadge2)} 
                     alt="Asiakastieto" 
-                    className="w-auto object-contain rounded"
-                    style={{ height: '100px' }}
+                    className="object-contain rounded"
+                    style={{ height: '150px', width: 'auto', maxWidth: '300px' }}
                   />
                 )}
               </div>
