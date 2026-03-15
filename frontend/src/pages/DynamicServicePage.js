@@ -151,7 +151,8 @@ const Navbar = ({ isScrolled, settings }) => {
   const navLinks = [
     { href: "/#palvelut", label: "Palvelut" },
     { href: "/#meista", label: "Meistä" },
-    { href: "/#referenssit", label: "Referenssit" },
+    { href: "/referenssit", label: "Referenssit", isPage: true },
+    { href: "/ukk", label: "UKK", isPage: true },
     { href: "/#yhteystiedot", label: "Yhteystiedot" },
   ];
 
