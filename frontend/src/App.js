@@ -904,19 +904,21 @@ const Footer = ({ logoUrl, settings }) => {
             
             {/* Trust badges */}
             {(trustBadge1 || trustBadge2) && (
-              <div className="flex items-center gap-3 mt-4" data-testid="footer-trust-badges">
+              <div className="flex items-center gap-4 mt-4" data-testid="footer-trust-badges">
                 {trustBadge1 && (
                   <img 
                     src={getImageUrl(trustBadge1)} 
                     alt="Luotettava kumppani" 
-                    className="h-10 md:h-12 w-auto object-contain rounded"
+                    className="w-auto object-contain rounded"
+                    style={{ height: '100px' }}
                   />
                 )}
                 {trustBadge2 && (
                   <img 
                     src={getImageUrl(trustBadge2)} 
                     alt="Asiakastieto" 
-                    className="h-10 md:h-12 w-auto object-contain rounded"
+                    className="w-auto object-contain rounded"
+                    style={{ height: '100px' }}
                   />
                 )}
               </div>
