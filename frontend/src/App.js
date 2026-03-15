@@ -857,6 +857,10 @@ const Footer = ({ logoUrl, settings }) => {
   const footerServiceArea = settings?.footer_service_area || 'Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella.';
   const city = settings?.company_city || 'Helsinki';
   
+  // Trust badges
+  const trustBadge1 = settings?.footer_trust_badge_1 || '';
+  const trustBadge2 = settings?.footer_trust_badge_2 || '';
+  
   const servicesList = footerServices.split(',').map(s => s.trim()).filter(s => s);
   
   return (
@@ -884,7 +888,7 @@ const Footer = ({ logoUrl, settings }) => {
             </ul>
           </div>
           
-          {/* Navigation links */}
+          {/* Navigation links + Trust badges */}
           <div>
             <p className="text-white/80 text-sm font-medium mb-3">Sivusto</p>
             <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs md:text-sm text-white/60">
@@ -897,6 +901,26 @@ const Footer = ({ logoUrl, settings }) => {
             <p className="text-white/50 text-xs mt-4 leading-relaxed">
               {footerServiceArea}
             </p>
+            
+            {/* Trust badges */}
+            {(trustBadge1 || trustBadge2) && (
+              <div className="flex items-center gap-3 mt-4" data-testid="footer-trust-badges">
+                {trustBadge1 && (
+                  <img 
+                    src={getImageUrl(trustBadge1)} 
+                    alt="Luotettava kumppani" 
+                    className="h-10 md:h-12 w-auto object-contain rounded"
+                  />
+                )}
+                {trustBadge2 && (
+                  <img 
+                    src={getImageUrl(trustBadge2)} 
+                    alt="Asiakastieto" 
+                    className="h-10 md:h-12 w-auto object-contain rounded"
+                  />
+                )}
+              </div>
+            )}
           </div>
           
         </div>
@@ -1652,6 +1676,29 @@ const AdminPanel = () => {
                   <div><label className="block text-sm font-medium mb-1">Yrityksen kuvaus</label><input value={settings.footer_description || ''} onChange={(e) => setSettings({...settings, footer_description: e.target.value})} className="form-input text-sm" placeholder="Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla." /></div>
                   <div><label className="block text-sm font-medium mb-1">Palvelut (pilkulla erotettuna)</label><input value={settings.footer_services || ''} onChange={(e) => setSettings({...settings, footer_services: e.target.value})} className="form-input text-sm" placeholder="Tasoitustyöt,Sisämaalaus,Julkisivumaalaus..." /></div>
                   <div><label className="block text-sm font-medium mb-1">Palvelualue teksti</label><input value={settings.footer_service_area || ''} onChange={(e) => setSettings({...settings, footer_service_area: e.target.value})} className="form-input text-sm" placeholder="Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella." /></div>
+                  
+                  {/* Trust badges */}
+                  <div className="border-t pt-4 mt-4">
+                    <p className="text-sm font-medium mb-3">Luotettavuusmerkit</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Merkki 1 (esim. Luotettava Kumppani)</label>
+                        <ImageUpload 
+                          value={settings.footer_trust_badge_1 || ''} 
+                          onChange={(url) => setSettings({...settings, footer_trust_badge_1: url})} 
+                          token={token}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Merkki 2 (esim. Asiakastieto)</label>
+                        <ImageUpload 
+                          value={settings.footer_trust_badge_2 || ''} 
+                          onChange={(url) => setSettings({...settings, footer_trust_badge_2: url})} 
+                          token={token}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}

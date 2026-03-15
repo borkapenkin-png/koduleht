@@ -1,14 +1,40 @@
 {
   "rewrites": [
-    { "source": "/maalaustyot-helsinki", "destination": "/maalaustyot-helsinki/index.html" },
-    { "source": "/tasoitustyot-helsinki", "destination": "/tasoitustyot-helsinki/index.html" },
-    { "source": "/mikrosementti-helsinki", "destination": "/mikrosementti-helsinki/index.html" },
-    { "source": "/julkisivurappaus-helsinki", "destination": "/julkisivurappaus-helsinki/index.html" },
-    { "source": "/julkisivumaalaus-helsinki", "destination": "/julkisivumaalaus-helsinki/index.html" },
-    { "source": "/kattomaalaus-helsinki", "destination": "/kattomaalaus-helsinki/index.html" },
-    { "source": "/julkisivurappaus-helsinki", "destination": "/julkisivurappaus-helsinki/index.html" },
-    { "source": "/ukk", "destination": "/ukk/index.html" },
-    { "source": "/referenssit", "destination": "/referenssit/index.html" },
-    { "source": "/((?!api|static|.*\\.).*)", "destination": "/index.html" }
+    {
+      "source": "/tasoitustyot-helsinki",
+      "destination": "/tasoitustyot-helsinki/index.html"
+    },
+    {
+      "source": "/maalaustyot-helsinki",
+      "destination": "/maalaustyot-helsinki/index.html"
+    },
+    {
+      "source": "/mikrosementti-helsinki",
+      "destination": "/mikrosementti-helsinki/index.html"
+    },
+    {
+      "source": "/julkisivurappaus-helsinki",
+      "destination": "/julkisivurappaus-helsinki/index.html"
+    },
+    {
+      "source": "/kattomaalaus-helsinki",
+      "destination": "/kattomaalaus-helsinki/index.html"
+    },
+    {
+      "source": "/julkisivumaalaus-helsinki",
+      "destination": "/julkisivumaalaus-helsinki/index.html"
+    },
+    {
+      "source": "/ukk",
+      "destination": "/ukk/index.html"
+    },
+    {
+      "source": "/referenssit",
+      "destination": "/referenssit/index.html"
+    },
+    {
+      "source": "/((?!api|static|.*\\.).*)",
+      "destination": "/index.html"
+    }
   ]
 }

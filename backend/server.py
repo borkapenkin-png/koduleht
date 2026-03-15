@@ -291,6 +291,8 @@ class SiteSettings(BaseModel):
     footer_description: str = "Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla."
     footer_services: str = "Tasoitustyöt,Sisämaalaus,Julkisivumaalaus,Julkisivurappaus,Mikrosementti,Kattomaalaus,Huoltomaalaus,Parvekemaalaus"
     footer_service_area: str = "Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella."
+    footer_trust_badge_1: str = ""
+    footer_trust_badge_2: str = ""
     
     # ========== REFERENCES SECTION SETTINGS ==========
     references_subtitle: str = "TYÖNÄYTTEITÄ"
@@ -386,6 +388,8 @@ class SiteSettingsUpdate(BaseModel):
     footer_description: Optional[str] = None
     footer_services: Optional[str] = None
     footer_service_area: Optional[str] = None
+    footer_trust_badge_1: Optional[str] = None
+    footer_trust_badge_2: Optional[str] = None
     # References Section Settings
     references_subtitle: Optional[str] = None
     references_title: Optional[str] = None
