@@ -1,0 +1,19 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # Service pages
+  RewriteRule ^maalaustyot-helsinki$ maalaustyot-helsinki/index.html [L]
+  RewriteRule ^tasoitustyot-helsinki$ tasoitustyot-helsinki/index.html [L]
+  RewriteRule ^mikrosementti-helsinki$ mikrosementti-helsinki/index.html [L]
+  RewriteRule ^julkisivurappaus-helsinki$ julkisivurappaus-helsinki/index.html [L]
+  RewriteRule ^kattomaalaus-helsinki$ kattomaalaus-helsinki/index.html [L]
+  RewriteRule ^julkisivumaalaus-helsinki$ julkisivumaalaus-helsinki/index.html [L]
+  RewriteRule ^ukk$ ukk/index.html [L]
+  RewriteRule ^referenssit$ referenssit/index.html [L]
+  
+  # SPA fallback
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>

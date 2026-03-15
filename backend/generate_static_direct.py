@@ -471,6 +471,31 @@ async def main():
     (PUBLIC_DIR / "serve.json").write_text(serve_json_content, encoding="utf-8")
     print(f"  ✓ serve.json")
     
+    # Create _redirects for Netlify-style routing (if platform supports it)
+    redirects_lines = []
+    for slug in slugs:
+        redirects_lines.append(f"/{slug} /{slug}/index.html 200")
+    redirects_lines.append("/ukk /ukk/index.html 200")
+    redirects_lines.append("/referenssit /referenssit/index.html 200")
+    redirects_lines.append("/* /index.html 200")
+    redirects_content = "\n".join(redirects_lines)
+    (BUILD_DIR / "_redirects").write_text(redirects_content, encoding="utf-8")
+    (PUBLIC_DIR / "_redirects").write_text(redirects_content, encoding="utf-8")
+    print(f"  ✓ _redirects")
+    
+    # Create vercel.json for Vercel-style routing (if platform supports it)
+    vercel_rewrites = []
+    for slug in slugs:
+        vercel_rewrites.append({"source": f"/{slug}", "destination": f"/{slug}/index.html"})
+    vercel_rewrites.append({"source": "/ukk", "destination": "/ukk/index.html"})
+    vercel_rewrites.append({"source": "/referenssit", "destination": "/referenssit/index.html"})
+    vercel_rewrites.append({"source": "/((?!api|static|.*\\.).*)", "destination": "/index.html"})
+    vercel_json_obj = {"rewrites": vercel_rewrites}
+    vercel_json_content = json.dumps(vercel_json_obj, indent=2)
+    (BUILD_DIR / "vercel.json").write_text(vercel_json_content, encoding="utf-8")
+    (PUBLIC_DIR / "vercel.json").write_text(vercel_json_content, encoding="utf-8")
+    print(f"  ✓ vercel.json")
+    
     print()
     print("=" * 60)
     print(f"Generation complete: {success_count}/{len(pages_to_generate)} pages")
