@@ -5,18 +5,18 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
 ## Latest Update: March 14, 2026
 
-### P0 Production SEO Fix - URL Structure Workaround (March 14, 2026) - LATEST
-**Problem:** Emergent platform's production Nginx uses `try_files $uri $uri/ /index.html;` which doesn't check for `$uri/index.html`. This causes all clean URLs like `/maalaustyot-helsinki` to return the homepage instead of the unique static page.
+### P0 Production SEO Fix - RESOLVED (March 15, 2026) ✅
+**Problem:** Emergent platform's production Nginx uses `try_files $uri $uri/ /index.html;` which doesn't check for `$uri/index.html`. This caused all clean URLs like `/maalaustyot-helsinki` to return the homepage instead of the unique static page.
 
-**Solution Implemented:**
-- ✅ **Canonical URLs updated** - All service pages now use `/slug/index.html` format in canonical tags
-- ✅ **Sitemap updated** - All URLs in sitemap use `/slug/index.html` format
-- ✅ **Internal links in SSG templates** - Updated to use `/slug/index.html` format
-- ✅ **serve.json simplified** - Removed conflicting cleanUrls/redirects settings
-- ✅ **Preview environment working** - All pages return unique content with correct SEO tags
+**Solution Implemented (WORKING):**
+- ✅ **Multiple routing config files** - Created `_redirects`, `vercel.json`, `.htaccess`, `serve.json` for platform compatibility
+- ✅ **Flat HTML files** - Generated both `/slug/index.html` AND `/slug.html` formats
+- ✅ **Clean URLs working** - All service pages now accessible via clean URLs (e.g., `/maalaustyot-helsinki`)
+- ✅ **Sitemap with clean URLs** - All URLs use clean format without `/index.html`
+- ✅ **Production verified** - All 9 pages tested and working
 
 **How SEO works now:**
-1. Google crawls sitemap URLs (e.g., `https://jbtasoitusmaalaus.fi/maalaustyot-helsinki/index.html`)
+1. Google crawls sitemap URLs (e.g., `https://jbtasoitusmaalaus.fi/maalaustyot-helsinki`)
 2. Each URL returns unique, pre-rendered HTML with correct title, meta tags, structured data
 3. React hydrates the page for interactivity
 4. User navigation within the app uses React Router (client-side)
@@ -354,17 +354,15 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
 ### Pending/Future Tasks
 
-#### P0 (High Priority)
-- **Production verification** - Deploy and verify that `/slug/index.html` URLs work in production
-- **Contact Emergent Support** - Request Nginx config change to `try_files $uri $uri/index.html $uri/ /index.html;`
-
 #### P1 (Medium Priority)
+- **Import FAQs to production** - 52 FAQ entries in preview need migration via admin panel
 - Backend refactoring (split server.py into modules)
-- Google Analytics route change tracking (GA4 only tracks initial page load, not client-side navigation)
+- Google Analytics route change tracking verification
 
 #### P2 (Low Priority)
-- Additional schema types (FAQ, Review)
+- Additional schema types (Review)
 - Rich text editor for service page descriptions
+- Location-specific pages (Espoo, Vantaa)
 
 ### Known Issues
 - Image URLs stored as absolute paths - causes apparent "data loss" when preview URL changes
