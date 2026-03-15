@@ -427,7 +427,7 @@ async def main():
         try:
             html = await generator()
             if html:
-                # Write to build directory
+                # Write to build directory - /slug/index.html format
                 build_path = BUILD_DIR / output_file
                 build_path.parent.mkdir(parents=True, exist_ok=True)
                 build_path.write_text(html, encoding="utf-8")
@@ -437,7 +437,16 @@ async def main():
                 public_path.parent.mkdir(parents=True, exist_ok=True)
                 public_path.write_text(html, encoding="utf-8")
                 
-                print(f"  ✓ {output_file}")
+                # ALSO create /slug.html for Nginx clean URL support
+                # This allows Nginx's try_files $uri $uri.html to work
+                if output_file != "index.html" and output_file.endswith("/index.html"):
+                    slug_name = output_file.replace("/index.html", "")
+                    flat_file = f"{slug_name}.html"
+                    (BUILD_DIR / flat_file).write_text(html, encoding="utf-8")
+                    (PUBLIC_DIR / flat_file).write_text(html, encoding="utf-8")
+                    print(f"  ✓ {output_file} + {flat_file}")
+                else:
+                    print(f"  ✓ {output_file}")
                 success_count += 1
             else:
                 print(f"  ✗ No content generated")
@@ -447,8 +456,10 @@ async def main():
     client.close()
     
     # Copy serve.json for proper routing to both directories
-    # Note: Do not add cleanUrls:false or redirects - serve handles /slug -> /slug/index.html automatically
+    # cleanUrls: true allows /slug to serve /slug.html
     serve_json_obj = {
+        "cleanUrls": True,
+        "trailingSlash": False,
         "rewrites": [
             { "source": "/admin", "destination": "/index.html" },
             { "source": "/admin/**", "destination": "/index.html" },
