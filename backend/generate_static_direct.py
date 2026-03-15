@@ -64,8 +64,10 @@ def build_json_ld_local_business(settings: dict) -> str:
     schema = {
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
+        "@id": f"{SITE_URL}/#organization",
         "name": settings.get("company_name", COMPANY_NAME),
         "description": settings.get("hero_description", "Ammattitaitoinen maalaus- ja tasoituspalvelu Uudellamaalla"),
+        "url": SITE_URL,
         "telephone": settings.get("company_phone_primary", COMPANY_PHONE),
         "email": settings.get("company_email", COMPANY_EMAIL),
         "address": {
@@ -75,25 +77,81 @@ def build_json_ld_local_business(settings: dict) -> str:
             "postalCode": settings.get("company_postal_code", "00760"),
             "addressCountry": "FI"
         },
-        "areaServed": settings.get("service_areas", ["Helsinki", "Espoo", "Vantaa", "Uusimaa"]),
-        "priceRange": "$$"
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "60.2341",
+            "longitude": "25.0722"
+        },
+        "areaServed": [
+            {"@type": "City", "name": "Helsinki"},
+            {"@type": "City", "name": "Espoo"},
+            {"@type": "City", "name": "Vantaa"},
+            {"@type": "City", "name": "Kauniainen"},
+            {"@type": "AdministrativeArea", "name": "Uusimaa"}
+        ],
+        "priceRange": "$$",
+        "openingHoursSpecification": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            "opens": "07:00",
+            "closes": "18:00"
+        },
+        "sameAs": [
+            settings.get("facebook_url", ""),
+            settings.get("instagram_url", "")
+        ],
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Maalaus- ja tasoituspalvelut",
+            "itemListElement": [
+                {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Sisämaalaus"}},
+                {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Ulkomaalaus"}},
+                {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Tasoitustyöt"}},
+                {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Julkisivumaalaus"}},
+                {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Mikrosementti"}}
+            ]
+        }
     }
+    # Remove empty sameAs links
+    schema["sameAs"] = [url for url in schema["sameAs"] if url]
+    if not schema["sameAs"]:
+        del schema["sameAs"]
     return json.dumps(schema, ensure_ascii=False)
 
 
 def build_json_ld_service(page: dict, settings: dict) -> str:
+    service_name = page.get("hero_title", page.get("seo_title", ""))
     schema = {
         "@context": "https://schema.org",
         "@type": "Service",
-        "name": page.get("hero_title", page.get("seo_title", "")),
+        "name": service_name,
         "description": page.get("seo_description", page.get("hero_subtitle", "")),
         "provider": {
             "@type": "LocalBusiness",
+            "@id": f"{SITE_URL}/#organization",
             "name": settings.get("company_name", COMPANY_NAME),
-            "telephone": settings.get("company_phone_primary", COMPANY_PHONE)
+            "telephone": settings.get("company_phone_primary", COMPANY_PHONE),
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Helsinki",
+                "addressCountry": "FI"
+            }
         },
-        "areaServed": settings.get("service_areas", ["Helsinki", "Espoo", "Vantaa", "Uusimaa"]),
-        "serviceType": page.get("hero_title", "")
+        "areaServed": [
+            {"@type": "City", "name": "Helsinki"},
+            {"@type": "City", "name": "Espoo"},
+            {"@type": "City", "name": "Vantaa"}
+        ],
+        "serviceType": service_name,
+        "offers": {
+            "@type": "Offer",
+            "availability": "https://schema.org/InStock",
+            "priceSpecification": {
+                "@type": "PriceSpecification",
+                "priceCurrency": "EUR"
+            }
+        },
+        "termsOfService": f"{SITE_URL}/#yhteystiedot"
     }
     return json.dumps(schema, ensure_ascii=False)
 
@@ -209,12 +267,20 @@ async def generate_service_page(db, slug: str, css_files, js_files):
     ]))
     
     template = jinja_env.get_template("service_page.html")
+    
+    # Build title - avoid duplication if seo_title already contains company name
+    seo_title = page.get('seo_title', page.get('hero_title', ''))
+    if company_name.lower() in seo_title.lower() or "j&b" in seo_title.lower() or "j & b" in seo_title.lower():
+        page_title = seo_title
+    else:
+        page_title = f"{seo_title} | {company_name}"
+    
     return template.render(
-        title=f"{page.get('seo_title', page.get('hero_title', ''))} | {company_name}",
+        title=page_title,
         description=page.get("seo_description", page.get("hero_subtitle", "")),
         keywords=page.get("seo_keywords", ""),
         canonical_url=f"{SITE_URL}/{slug}/index.html",
-        og_title=page.get("seo_title", page.get("hero_title", "")),
+        og_title=seo_title,  # OG title without company suffix for cleaner sharing
         og_description=page.get("seo_description", page.get("hero_subtitle", "")),
         og_image=page.get("hero_image_url"),
         company_name=company_name,

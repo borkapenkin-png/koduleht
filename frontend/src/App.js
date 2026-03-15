@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "@/App.css";
 import { motion, AnimatePresence } from "framer-motion";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { SEOHead, COMPANY } from "./seo/SEOHead";
 import { serviceSlugMap } from "./seo/serviceContent";
@@ -24,6 +24,19 @@ import {
   Wallpaper, LampCeiling, Armchair
 } from "lucide-react";
 import axios from "axios";
+
+// GA4 Route Change Tracking Hook
+const useGA4PageTracking = () => {
+  const location = useLocation();
+  useEffect(() => {
+    if (typeof window.gtag === 'function') {
+      window.gtag('config', 'G-ZP42XN14NG', {
+        page_path: location.pathname + location.search,
+        page_title: document.title
+      });
+    }
+  }, [location]);
+};
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -2258,10 +2271,17 @@ const HomePage = () => {
 };
 
 // ========== APP ==========
+// GA4 Page Tracking Component
+const GA4Tracker = () => {
+  useGA4PageTracking();
+  return null;
+};
+
 function App() {
   return (
     <div className="App" data-testid="app-container">
       <BrowserRouter>
+        <GA4Tracker />
         <Routes>
           <Route path="/" element={<HomePage />} />
           {/* Admin panel - MUST be before catch-all route */}
