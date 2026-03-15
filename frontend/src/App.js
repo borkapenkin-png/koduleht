@@ -910,7 +910,7 @@ const Footer = ({ logoUrl, settings }) => {
                     src={getImageUrl(trustBadge1)} 
                     alt="Luotettava kumppani" 
                     className="object-contain rounded"
-                    style={{ height: '150px', width: 'auto', maxWidth: '300px' }}
+                    style={{ height: '98px', width: 'auto', maxWidth: '300px' }}
                   />
                 )}
                 {trustBadge2 && (
@@ -918,7 +918,7 @@ const Footer = ({ logoUrl, settings }) => {
                     src={getImageUrl(trustBadge2)} 
                     alt="Asiakastieto" 
                     className="object-contain rounded"
-                    style={{ height: '150px', width: 'auto', maxWidth: '300px' }}
+                    style={{ height: '98px', width: 'auto', maxWidth: '300px' }}
                   />
                 )}
               </div>
