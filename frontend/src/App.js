@@ -1684,16 +1684,16 @@ const AdminPanel = () => {
                       <div>
                         <label className="block text-sm font-medium mb-1">Merkki 1 (esim. Luotettava Kumppani)</label>
                         <ImageUpload 
-                          value={settings.footer_trust_badge_1 || ''} 
-                          onChange={(url) => setSettings({...settings, footer_trust_badge_1: url})} 
+                          currentImage={settings.footer_trust_badge_1 || ''} 
+                          onImageChange={(url) => setSettings({...settings, footer_trust_badge_1: url})} 
                           token={token}
                         />
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-1">Merkki 2 (esim. Asiakastieto)</label>
                         <ImageUpload 
-                          value={settings.footer_trust_badge_2 || ''} 
-                          onChange={(url) => setSettings({...settings, footer_trust_badge_2: url})} 
+                          currentImage={settings.footer_trust_badge_2 || ''} 
+                          onImageChange={(url) => setSettings({...settings, footer_trust_badge_2: url})} 
                           token={token}
                         />
                       </div>
