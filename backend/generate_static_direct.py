@@ -253,7 +253,7 @@ async def generate_service_page(db, slug: str, css_files, js_files):
     breadcrumb_json_ld = build_json_ld_breadcrumb([
         {"name": "Etusivu", "url": "/"},
         {"name": "Palvelut", "url": "/#palvelut"},
-        {"name": page.get("hero_title", ""), "url": f"/{slug}/index.html"}
+        {"name": page.get("hero_title", ""), "url": f"/{slug}"}
     ])
     combined_json_ld = f'[{service_json_ld},{breadcrumb_json_ld}]'
     
@@ -279,7 +279,7 @@ async def generate_service_page(db, slug: str, css_files, js_files):
         title=page_title,
         description=page.get("seo_description", page.get("hero_subtitle", "")),
         keywords=page.get("seo_keywords", ""),
-        canonical_url=f"{SITE_URL}/{slug}/index.html",
+        canonical_url=f"{SITE_URL}/{slug}",
         og_title=seo_title,  # OG title without company suffix for cleaner sharing
         og_description=page.get("seo_description", page.get("hero_subtitle", "")),
         og_image=page.get("hero_image_url"),
@@ -316,7 +316,7 @@ async def generate_references_page(db, css_files, js_files):
     return template.render(
         title=f"Referenssit | {company_name}",
         description="Tutustu J&B Tasoitus ja Maalaus Oy:n toteuttamiin kohteisiin. Laadukkaita maalaus- ja tasoitustöitä Helsingissä ja Uudellamaalla.",
-        canonical_url=f"{SITE_URL}/referenssit/index.html",
+        canonical_url=f"{SITE_URL}/referenssit",
         og_title=f"Referenssit | {company_name}",
         og_description="Tutustu tekemiimme kohteisiin",
         company_name=company_name,
@@ -366,7 +366,7 @@ async def generate_faq_page(db, css_files, js_files):
     return template.render(
         title=f"Usein kysytyt kysymykset | {company_name}",
         description="Vastauksia yleisimpiin kysymyksiin maalaus- ja tasoituspalveluistamme. UKK - hinnoittelu, kotitalousvähennys, työajat ja materiaalit.",
-        canonical_url=f"{SITE_URL}/ukk/index.html",
+        canonical_url=f"{SITE_URL}/ukk",
         og_title=f"UKK - Usein kysytyt kysymykset | {company_name}",
         og_description="Vastauksia yleisimpiin kysymyksiin maalaus- ja tasoituspalveluistamme.",
         company_name=company_name,
@@ -457,9 +457,20 @@ async def main():
     
     # Copy serve.json for proper routing to both directories
     # cleanUrls: true allows /slug to serve /slug.html
+    # trailingSlash: false redirects /slug/ to /slug
     serve_json_obj = {
         "cleanUrls": True,
         "trailingSlash": False,
+        "redirects": [
+            { "source": "/maalaustyot-helsinki/", "destination": "/maalaustyot-helsinki", "type": 301 },
+            { "source": "/tasoitustyot-helsinki/", "destination": "/tasoitustyot-helsinki", "type": 301 },
+            { "source": "/mikrosementti-helsinki/", "destination": "/mikrosementti-helsinki", "type": 301 },
+            { "source": "/julkisivurappaus-helsinki/", "destination": "/julkisivurappaus-helsinki", "type": 301 },
+            { "source": "/kattomaalaus-helsinki/", "destination": "/kattomaalaus-helsinki", "type": 301 },
+            { "source": "/julkisivumaalaus-helsinki/", "destination": "/julkisivumaalaus-helsinki", "type": 301 },
+            { "source": "/ukk/", "destination": "/ukk", "type": 301 },
+            { "source": "/referenssit/", "destination": "/referenssit", "type": 301 }
+        ],
         "rewrites": [
             { "source": "/admin", "destination": "/index.html" },
             { "source": "/admin/**", "destination": "/index.html" },
@@ -473,9 +484,13 @@ async def main():
     
     # Create _redirects for Netlify-style routing (if platform supports it)
     redirects_lines = []
+    # Redirect trailing slash versions to clean URLs (301 redirect)
     for slug in slugs:
+        redirects_lines.append(f"/{slug}/ /{slug} 301")
         redirects_lines.append(f"/{slug} /{slug}/index.html 200")
+    redirects_lines.append("/ukk/ /ukk 301")
     redirects_lines.append("/ukk /ukk/index.html 200")
+    redirects_lines.append("/referenssit/ /referenssit 301")
     redirects_lines.append("/referenssit /referenssit/index.html 200")
     redirects_lines.append("/* /index.html 200")
     redirects_content = "\n".join(redirects_lines)
@@ -485,12 +500,17 @@ async def main():
     
     # Create vercel.json for Vercel-style routing (if platform supports it)
     vercel_rewrites = []
+    vercel_redirects = []
+    # Add trailing slash redirects first (301)
     for slug in slugs:
+        vercel_redirects.append({"source": f"/{slug}/", "destination": f"/{slug}", "permanent": True})
         vercel_rewrites.append({"source": f"/{slug}", "destination": f"/{slug}/index.html"})
+    vercel_redirects.append({"source": "/ukk/", "destination": "/ukk", "permanent": True})
+    vercel_redirects.append({"source": "/referenssit/", "destination": "/referenssit", "permanent": True})
     vercel_rewrites.append({"source": "/ukk", "destination": "/ukk/index.html"})
     vercel_rewrites.append({"source": "/referenssit", "destination": "/referenssit/index.html"})
     vercel_rewrites.append({"source": "/((?!api|static|.*\\.).*)", "destination": "/index.html"})
-    vercel_json_obj = {"rewrites": vercel_rewrites}
+    vercel_json_obj = {"redirects": vercel_redirects, "rewrites": vercel_rewrites}
     vercel_json_content = json.dumps(vercel_json_obj, indent=2)
     (BUILD_DIR / "vercel.json").write_text(vercel_json_content, encoding="utf-8")
     (PUBLIC_DIR / "vercel.json").write_text(vercel_json_content, encoding="utf-8")

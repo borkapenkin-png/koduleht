@@ -1,6 +1,48 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/maalaustyot-helsinki/",
+      "destination": "/maalaustyot-helsinki",
+      "type": 301
+    },
+    {
+      "source": "/tasoitustyot-helsinki/",
+      "destination": "/tasoitustyot-helsinki",
+      "type": 301
+    },
+    {
+      "source": "/mikrosementti-helsinki/",
+      "destination": "/mikrosementti-helsinki",
+      "type": 301
+    },
+    {
+      "source": "/julkisivurappaus-helsinki/",
+      "destination": "/julkisivurappaus-helsinki",
+      "type": 301
+    },
+    {
+      "source": "/kattomaalaus-helsinki/",
+      "destination": "/kattomaalaus-helsinki",
+      "type": 301
+    },
+    {
+      "source": "/julkisivumaalaus-helsinki/",
+      "destination": "/julkisivumaalaus-helsinki",
+      "type": 301
+    },
+    {
+      "source": "/ukk/",
+      "destination": "/ukk",
+      "type": 301
+    },
+    {
+      "source": "/referenssit/",
+      "destination": "/referenssit",
+      "type": 301
+    }
+  ],
   "rewrites": [
     {
       "source": "/admin",

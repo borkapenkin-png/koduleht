@@ -1,4 +1,46 @@
 {
+  "redirects": [
+    {
+      "source": "/tasoitustyot-helsinki/",
+      "destination": "/tasoitustyot-helsinki",
+      "permanent": true
+    },
+    {
+      "source": "/maalaustyot-helsinki/",
+      "destination": "/maalaustyot-helsinki",
+      "permanent": true
+    },
+    {
+      "source": "/mikrosementti-helsinki/",
+      "destination": "/mikrosementti-helsinki",
+      "permanent": true
+    },
+    {
+      "source": "/julkisivurappaus-helsinki/",
+      "destination": "/julkisivurappaus-helsinki",
+      "permanent": true
+    },
+    {
+      "source": "/kattomaalaus-helsinki/",
+      "destination": "/kattomaalaus-helsinki",
+      "permanent": true
+    },
+    {
+      "source": "/julkisivumaalaus-helsinki/",
+      "destination": "/julkisivumaalaus-helsinki",
+      "permanent": true
+    },
+    {
+      "source": "/ukk/",
+      "destination": "/ukk",
+      "permanent": true
+    },
+    {
+      "source": "/referenssit/",
+      "destination": "/referenssit",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/tasoitustyot-helsinki",
