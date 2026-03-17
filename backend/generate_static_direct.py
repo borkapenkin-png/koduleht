@@ -516,6 +516,36 @@ async def main():
     (PUBLIC_DIR / "vercel.json").write_text(vercel_json_content, encoding="utf-8")
     print(f"  ✓ vercel.json")
     
+    # Create .htaccess for Apache-style routing with trailing slash removal
+    htaccess_lines = [
+        "<IfModule mod_rewrite.c>",
+        "  RewriteEngine On",
+        "  RewriteBase /",
+        "  ",
+        "  # Remove trailing slash (301 redirect)",
+        "  RewriteCond %{REQUEST_FILENAME} !-d",
+        "  RewriteCond %{REQUEST_URI} (.+)/$",
+        "  RewriteRule ^ %1 [R=301,L]",
+        "  "
+    ]
+    # Add service page rules
+    for slug in slugs:
+        htaccess_lines.append(f"  RewriteRule ^{slug}$ {slug}/index.html [L]")
+    htaccess_lines.append("  RewriteRule ^ukk$ ukk/index.html [L]")
+    htaccess_lines.append("  RewriteRule ^referenssit$ referenssit/index.html [L]")
+    htaccess_lines.extend([
+        "  ",
+        "  # SPA fallback",
+        "  RewriteCond %{REQUEST_FILENAME} !-f",
+        "  RewriteCond %{REQUEST_FILENAME} !-d",
+        "  RewriteRule . /index.html [L]",
+        "</IfModule>"
+    ])
+    htaccess_content = "\n".join(htaccess_lines)
+    (BUILD_DIR / ".htaccess").write_text(htaccess_content, encoding="utf-8")
+    (PUBLIC_DIR / ".htaccess").write_text(htaccess_content, encoding="utf-8")
+    print(f"  ✓ .htaccess")
+    
     print()
     print("=" * 60)
     print(f"Generation complete: {success_count}/{len(pages_to_generate)} pages")
