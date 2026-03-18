@@ -4,6 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     
+    <!-- Redirect www to non-www -->
+    <script>
+      if (window.location.hostname === 'www.jbtasoitusmaalaus.fi') {
+        window.location.href = 'https://jbtasoitusmaalaus.fi' + window.location.pathname + window.location.search;
+      }
+    </script>
+    
     <!-- SEO Meta Tags -->
     <title>Julkisivurappaus Helsinki, Espoo ja Vantaa | J&amp;B Tasoitus ja Maalaus</title>
     <meta name="description" content="Julkisivurappaus Helsingissä, Espoossa ja Vantaalla. Laadukkaat rappaustyöt taloyhtiöille, yrityksille ja omakotitaloihin. Pyydä maksuton arvio!" />

@@ -7,9 +7,8 @@
   RewriteCond %{REQUEST_URI} (.+)/$
   RewriteRule ^ %1 [R=301,L]
   
-  # Service pages - serve index.html from subdirectory
-  RewriteRule ^maalaustyot-helsinki$ maalaustyot-helsinki/index.html [L]
   RewriteRule ^tasoitustyot-helsinki$ tasoitustyot-helsinki/index.html [L]
+  RewriteRule ^maalaustyot-helsinki$ maalaustyot-helsinki/index.html [L]
   RewriteRule ^mikrosementti-helsinki$ mikrosementti-helsinki/index.html [L]
   RewriteRule ^julkisivurappaus-helsinki$ julkisivurappaus-helsinki/index.html [L]
   RewriteRule ^kattomaalaus-helsinki$ kattomaalaus-helsinki/index.html [L]

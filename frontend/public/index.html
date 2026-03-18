@@ -4,6 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     
+    <!-- Redirect www to non-www -->
+    <script>
+      if (window.location.hostname === 'www.jbtasoitusmaalaus.fi') {
+        window.location.href = 'https://jbtasoitusmaalaus.fi' + window.location.pathname + window.location.search;
+      }
+    </script>
+    
     <!-- SEO Meta Tags -->
     <title>J&amp;B Tasoitus ja Maalaus Oy | Maalaus ja tasoituspalvelut Helsinki</title>
     <meta name="description" content="Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella." />

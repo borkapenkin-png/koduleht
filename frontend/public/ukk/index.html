@@ -4,6 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     
+    <!-- Redirect www to non-www -->
+    <script>
+      if (window.location.hostname === 'www.jbtasoitusmaalaus.fi') {
+        window.location.href = 'https://jbtasoitusmaalaus.fi' + window.location.pathname + window.location.search;
+      }
+    </script>
+    
     <!-- SEO Meta Tags -->
     <title>Usein kysytyt kysymykset | J&amp;B Tasoitus ja Maalaus Oy</title>
     <meta name="description" content="Vastauksia yleisimpiin kysymyksiin maalaus- ja tasoituspalveluistamme. UKK - hinnoittelu, kotitalousvähennys, työajat ja materiaalit." />
