@@ -76,7 +76,7 @@
     
     <!-- React App CSS - loaded from build -->
     {% for css_file in css_files %}
-    <link rel="stylesheet" href="{{ css_file }}" />
+    <link rel="stylesheet" href="{{ css_file }}?v=20260319" />
     {% endfor %}
     
     <!-- Preconnect for performance -->
@@ -98,7 +98,7 @@
     
     <!-- React App JS - loaded from build -->
     {% for js_file in js_files %}
-    <script src="{{ js_file }}"></script>
+    <script src="{{ js_file }}?v=20260319"></script>
     {% endfor %}
 </body>
 </html>
