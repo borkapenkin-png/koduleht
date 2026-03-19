@@ -4,11 +4,36 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     
-    <!-- Redirect www to non-www -->
+    <!-- SEO URL Normalization: redirect www, trailing slash, and /index.html to clean URLs -->
     <script>
-      if (window.location.hostname === 'www.jbtasoitusmaalaus.fi') {
-        window.location.href = 'https://jbtasoitusmaalaus.fi' + window.location.pathname + window.location.search;
-      }
+      (function() {
+        var host = window.location.hostname;
+        var path = window.location.pathname;
+        var search = window.location.search;
+        var needsRedirect = false;
+        var newUrl = 'https://jbtasoitusmaalaus.fi';
+        
+        // Redirect www to non-www
+        if (host === 'www.jbtasoitusmaalaus.fi') {
+          needsRedirect = true;
+        }
+        
+        // Remove trailing slash (except for root)
+        if (path !== '/' && path.endsWith('/')) {
+          path = path.slice(0, -1);
+          needsRedirect = true;
+        }
+        
+        // Remove /index.html
+        if (path.endsWith('/index.html')) {
+          path = path.replace('/index.html', '') || '/';
+          needsRedirect = true;
+        }
+        
+        if (needsRedirect) {
+          window.location.replace(newUrl + path + search);
+        }
+      })();
     </script>
     
     <!-- SEO Meta Tags -->

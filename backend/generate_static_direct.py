@@ -312,6 +312,23 @@ async def generate_references_page(db, css_files, js_files):
     
     company_name = settings.get("company_name", COMPANY_NAME)
     
+    # Build JSON-LD for references page (ItemList schema)
+    json_ld = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": f"Referenssit - {company_name}",
+        "description": "Tutustu J&B Tasoitus ja Maalaus Oy:n toteuttamiin kohteisiin.",
+        "numberOfItems": len(references),
+        "itemListElement": []
+    }
+    for i, ref in enumerate(references):
+        json_ld["itemListElement"].append({
+            "@type": "ListItem",
+            "position": i + 1,
+            "name": ref.get("name", ""),
+            "description": ref.get("type", "")
+        })
+    
     template = jinja_env.get_template("references.html")
     return template.render(
         title=f"Referenssit | {company_name}",
@@ -320,6 +337,7 @@ async def generate_references_page(db, css_files, js_files):
         og_title=f"Referenssit | {company_name}",
         og_description="Tutustu tekemiimme kohteisiin",
         company_name=company_name,
+        json_ld=json.dumps(json_ld, ensure_ascii=False),
         references=references,
         subtitle=settings.get("references_subtitle", "Tutustu tekemiimme kohteisiin"),
         css_files=css_files,
