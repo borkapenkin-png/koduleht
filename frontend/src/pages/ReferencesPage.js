@@ -167,7 +167,7 @@ const ReferencesPage = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.05 }}
-                    className="reference-card-full group"
+                    className="reference-card-full group flex flex-col h-full"
                   >
                     {/* Cover Image */}
                     <div className="reference-card-image-container">
@@ -180,17 +180,21 @@ const ReferencesPage = () => {
                     </div>
                     
                     {/* Content */}
-                    <div className="p-5">
+                    <div className="p-5 flex flex-col flex-1">
                       <h2 className="text-lg font-bold text-[#0F172A] group-hover:text-primary transition-colors mb-2">
                         {ref.name}
                       </h2>
                       <p className="text-sm text-primary font-medium mb-3">{ref.type}</p>
                       
                       {ref.description && (
-                        <p className="text-sm text-[#64748B] mb-3">{ref.description}</p>
+                        <p className="text-sm text-[#64748B] mb-3 line-clamp-3">{ref.description}</p>
                       )}
                       
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[#64748B]">
+                      {/* Spacer to push footer to bottom */}
+                      <div className="flex-1"></div>
+                      
+                      {/* Footer - always at bottom */}
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[#64748B] pt-3 border-t border-gray-100 mt-3">
                         {ref.main_contractor && (
                           <div className="flex items-center gap-1.5">
                             <Building2 size={14} className="text-primary" />
