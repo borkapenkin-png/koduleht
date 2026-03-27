@@ -641,7 +641,7 @@ const ReferencesSection = ({ settings, references }) => {
               whileInView={{ opacity: 1, y: 0 }} 
               viewport={{ once: true }} 
               transition={{ delay: index * 0.08 }}
-              className="reference-card-full group"
+              className="reference-card-full group flex flex-col h-full"
               data-testid={`reference-card-${index}`}
             >
               {/* Cover Image */}
@@ -657,7 +657,7 @@ const ReferencesSection = ({ settings, references }) => {
               </div>
               
               {/* Text Content - Always visible below image */}
-              <div className="p-5 md:p-6">
+              <div className="p-5 md:p-6 flex flex-col flex-1">
                 {/* Project Title */}
                 <h3 className="text-base md:text-lg font-bold text-[#0F172A] group-hover:text-primary transition-colors mb-2">
                   {ref.name}
@@ -666,18 +666,21 @@ const ReferencesSection = ({ settings, references }) => {
                 {/* Work Type / Description */}
                 <p className="text-sm text-primary font-medium mb-3">{ref.type}</p>
                 
-                {/* Description - Always show full text */}
+                {/* Description - limit to 3 lines */}
                 {ref.description && (
-                  <p className="text-sm text-[#64748B] mb-3 leading-relaxed">{ref.description}</p>
+                  <p className="text-sm text-[#64748B] mb-3 leading-relaxed line-clamp-3">{ref.description}</p>
                 )}
                 
-                {/* Meta info row */}
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[#64748B]">
+                {/* Spacer to push footer to bottom */}
+                <div className="flex-1"></div>
+                
+                {/* Meta info row - always at bottom */}
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[#64748B] pt-3 border-t border-gray-100 mt-3">
                   {/* Main Contractor - Pääurakoitsija */}
                   {ref.main_contractor && (
                     <div className="flex items-center gap-1.5">
                       <Building2 size={14} className="text-primary" />
-                      <span><span className="font-medium">Pääurakoitsija:</span> {ref.main_contractor}</span>
+                      <span>{ref.main_contractor}</span>
                     </div>
                   )}
                   
