@@ -36,8 +36,9 @@ const ReferencesPage = () => {
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(9); // Start with 9 (3 rows)
   
-  const initialCount = 6; // Show 6 initially (3 rows of 2)
+  const initialCount = 9; // Show 9 initially (3 rows of 3)
   
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -76,8 +77,19 @@ const ReferencesPage = () => {
   }, []);
   
   const placeholderImage = "https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&w=600";
-  const visibleRefs = showAll ? references : references.slice(0, initialCount);
-  const hasMore = references.length > initialCount;
+  const visibleRefs = showAll ? references : references.slice(0, visibleCount);
+  const hasMore = references.length > visibleCount;
+  
+  // Load more references (9 at a time)
+  const loadMore = () => {
+    if (showAll) return;
+    const newCount = visibleCount + 9;
+    if (newCount >= references.length) {
+      setShowAll(true);
+    } else {
+      setVisibleCount(newCount);
+    }
+  };
   
   // JSON-LD Structured Data
   const structuredData = {
@@ -228,11 +240,11 @@ const ReferencesPage = () => {
                   className="text-center mt-10"
                 >
                   <button
-                    onClick={() => setShowAll(!showAll)}
+                    onClick={loadMore}
                     className="btn-secondary inline-flex items-center gap-2 px-6 py-3"
                   >
-                    {showAll ? 'Näytä vähemmän' : 'Näytä lisää'}
-                    <ChevronDown size={18} className={`transition-transform duration-300 ${showAll ? 'rotate-180' : ''}`} />
+                    Näytä lisää ({references.length - visibleCount} jäljellä)
+                    <ChevronDown size={18} />
                   </button>
                 </motion.div>
               )}
