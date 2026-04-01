@@ -5,56 +5,37 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
 ## Latest Update: April 1, 2026
 
-### Session 3: Areas Admin Panel UI (April 1, 2026)
+### Session 3: Areas Admin Panel + Navigation Fix (April 1, 2026)
 
 #### Areas (Locations) Admin Panel - COMPLETED
-**Problem:** Backend API for location-specific SEO pages existed but no admin UI to manage cities.
-
-**Solution:** Created `AreasAdmin.js` component with full CRUD:
-- New "Alueet" tab in Admin Panel between "Palvelusivut" and "Palvelut"
-- List view showing all cities with slug, inessive form, order, and default badge
-- Create form with auto-slug generation from Finnish city names
-- Edit/Delete functionality (default city Helsinki protected from deletion)
-- "Päivitä SEO-sivut" button to regenerate static pages after changes
+- Created `AreasAdmin.js` component with full CRUD (Add/Edit/Delete cities)
+- New "Alueet" tab in Admin Panel
 - Info box explaining how area pages work
+- "Päivitä SEO-sivut" regeneration button
+
+#### Service Navigation Fix - COMPLETED
+**Problem:** Hero section linked directly to city-specific pages (e.g., `/maalaustyot-helsinki`) instead of general pages.
+
+**Solution:**
+- Updated service `link_url` values in DB: `maalaustyot-helsinki` → `maalaustyot`
+- Fixed city variant page logic: only `hero_title` and `seo_title` get city name, all other content stays identical
+- **Flow:** Hero → `/maalaustyot` (general) → "Valitse alue" cards → `/maalaustyot-espoo` (city-specific)
 
 **Files Modified:**
-- `/app/frontend/src/components/admin/AreasAdmin.js` - NEW: Areas CRUD component
-- `/app/frontend/src/App.js` - Added AreasAdmin import, tab, and render block
-
-**Testing:** 100% pass rate (14 backend tests + full Playwright UI verification)
+- `/app/frontend/src/components/admin/AreasAdmin.js` - NEW
+- `/app/frontend/src/App.js` - Added AreasAdmin import, tab, render
+- `/app/frontend/src/pages/DynamicServicePage.js` - Fixed city variant replacement logic
 
 ### Session 2: SEO Pre-rendering + Company Stats Bar (April 1, 2026)
-
-#### P0 SEO Fix: Pre-rendered HTML Content for Google Crawler - COMPLETED
-**Problem:** Google's crawler saw empty pages with only a `<noscript>` message. SSG templates were empty.
-
-**Solution:** Added semantic HTML content to all 9 SSG templates:
-- home.html: Hero, services list, about, contact info
-- service_page.html: Full description, features, process steps, service areas
-- faq.html: All 52 FAQ Q&A pairs
-- references.html: All reference projects with details
-
-#### Company Stats Bar + Trust Badge Relocation - COMPLETED
-**Solution:**
-- Added dynamic stats bar with dark navy background (#0F172A) to Meistä section
-- 4 initial stats: 300+ projects, 3.7M€ revenue, 18 employees, 40,000+ m² painted
-- Trust badges moved from footer to stats bar
-- Admin panel CRUD for stats
-
-#### Dynamic Footer Service Links - COMPLETED
-- Footer service links fetched from DB via `/api/service-pages`
-
-#### Location-Specific SEO Pages (Backend + SSG) - COMPLETED
-- Area DB schema, API endpoints, SSG generation for 33 city-specific pages
-- Default cities: Helsinki, Espoo, Vantaa, Kauniainen
+- P0 SEO Fix: Pre-rendered HTML Content for Google Crawler
+- Company Stats Bar + Trust Badge Relocation to Meistä section
+- Dynamic Footer Service Links from DB
+- Location-Specific SEO Pages Backend + SSG (33 pages for 4 cities × services)
 
 ### Session 1: Production SEO & Technical Fixes (March 2026)
 - Flat HTML files for Nginx clean URLs
-- Trust badges in footer (now moved to Meistä)
 - Technical SEO cleanup (canonicals, sitemap, JSON-LD)
-- Reference card pagination
-- Internal service links
+- Reference card pagination, internal service links
 
 ## Tech Stack
 - Frontend: React 18, TailwindCSS, Framer Motion

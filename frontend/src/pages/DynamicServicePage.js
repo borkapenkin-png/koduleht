@@ -818,27 +818,21 @@ const DynamicServicePage = () => {
               const basePage = allPagesData.find(p => p.slug === `${computedBaseSlug}-${defaultArea.slug}`);
               
               if (basePage) {
-                // Found base page - create city variant by replacing city references
+                // Found base page - create city variant
+                // Only hero_title and seo_title get the city name; all other content stays identical
                 setCurrentArea(targetArea);
                 setBaseSlug(computedBaseSlug);
                 const variantPage = { ...basePage, slug: slug };
-                const replacer = (text) => {
+                // Strip default city from title, then add target city
+                const stripCity = (text) => {
                   if (!text) return text;
-                  return text.replace(new RegExp(defaultArea.name_inessive, 'gi'), targetArea.name_inessive)
-                             .replace(new RegExp(defaultArea.name, 'gi'), targetArea.name);
+                  return text.replace(new RegExp(`\\s*${defaultArea.name_inessive}`, 'gi'), '')
+                             .replace(new RegExp(`\\s*${defaultArea.name}`, 'gi'), '').trim();
                 };
-                variantPage.hero_title = replacer(variantPage.hero_title);
-                variantPage.hero_subtitle = replacer(variantPage.hero_subtitle);
-                variantPage.seo_title = replacer(variantPage.seo_title);
-                variantPage.seo_description = replacer(variantPage.seo_description);
-                variantPage.description_text = replacer(variantPage.description_text);
-                variantPage.description_title = replacer(variantPage.description_title);
-                variantPage.areas_text = replacer(variantPage.areas_text);
-                if (variantPage.features) {
-                  variantPage.features = variantPage.features.map(f => ({
-                    ...f, title: replacer(f.title), description: replacer(f.description)
-                  }));
-                }
+                const baseTitle = stripCity(variantPage.hero_title);
+                variantPage.hero_title = `${baseTitle} ${targetArea.name_inessive}`;
+                const baseSeoTitle = stripCity(variantPage.seo_title);
+                variantPage.seo_title = `${baseSeoTitle} ${targetArea.name_inessive}`;
                 setPage(variantPage);
               } else {
                 setError('not_found');
