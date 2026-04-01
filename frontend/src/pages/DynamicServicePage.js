@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Phone, Mail, MapPin, Menu, X, ChevronRight, ArrowRight, Send,
   CheckCircle, Clock, Shield, Award, Star, ChevronDown, HelpCircle,
-  Paintbrush, Building2, Layers, Wrench, Droplets, Square, Sparkles, Frame
+  Paintbrush, Building2, Layers, Wrench, Droplets, Square, Sparkles, Frame, Calculator
 } from 'lucide-react';
 import QuoteRequestForm from '../components/QuoteRequestForm';
 import { Footer } from '../App';
@@ -599,6 +599,24 @@ const RelatedServices = ({ allPages, currentSlug, settings, services }) => {
 };
 
 // ========== STRONG CTA BEFORE FOOTER ==========
+// ========== CALCULATOR CTA ==========
+const CalculatorCTA = () => (
+  <section className="section-padding bg-primary/5 border-y border-primary/10">
+    <div className="container-custom">
+      <div className="max-w-3xl mx-auto text-center">
+        <Calculator size={32} className="text-primary mx-auto mb-3" />
+        <h2 className="text-xl md:text-2xl font-bold text-[#0F172A] mb-2">Laske hinta-arvio hetkessä</h2>
+        <p className="text-sm text-[#64748B] mb-5 max-w-lg mx-auto">
+          Käytä hintalaskuriamme ja saat suuntaa-antavan hinnan heti – kotitalousvähennys lasketaan automaattisesti.
+        </p>
+        <Link to="/hintalaskuri" className="btn-primary inline-flex items-center gap-2 text-sm">
+          Avaa hintalaskuri <Calculator size={16} />
+        </Link>
+      </div>
+    </div>
+  </section>
+);
+
 const StrongCTA = ({ settings }) => {
   const phone = settings?.company_phone_primary || '+358 40 054 7270';
   
@@ -912,6 +930,7 @@ const DynamicServicePage = () => {
         <ServiceAreasSection page={page} settings={settings} />
         <ServiceFAQSection faqs={serviceFaqs} settings={settings} serviceName={page.hero_title || page.seo_title} />
         <ContactFormSection page={page} settings={settings} />
+        <CalculatorCTA />
         <RelatedServices allPages={allPages} currentSlug={slug} settings={settings} services={services} />
         <StrongCTA settings={settings} />
         <Footer logoUrl={settings?.logo_url} settings={settings} servicePages={servicePages} />
@@ -953,6 +972,7 @@ const DynamicServicePage = () => {
       
       <ServiceFAQSection faqs={serviceFaqs} settings={settings} serviceName={page.hero_title || page.seo_title} />
       <ContactFormSection page={page} settings={settings} />
+      <CalculatorCTA />
       <RelatedServices allPages={allPages} currentSlug={slug} settings={settings} services={services} />
       <StrongCTA settings={settings} />
       <Footer logoUrl={settings?.logo_url} settings={settings} servicePages={servicePages} />

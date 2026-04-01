@@ -951,6 +951,7 @@ const Footer = ({ logoUrl, settings, servicePages = [] }) => {
               <a href="#meista" className="hover:text-white transition-colors">Meistä</a>
               <Link to="/referenssit" className="hover:text-white transition-colors">Referenssit</Link>
               <Link to="/ukk" className="hover:text-white transition-colors">UKK</Link>
+              <Link to="/hintalaskuri" className="hover:text-white transition-colors">Hintalaskuri</Link>
               <a href="#yhteystiedot" className="hover:text-white transition-colors">Yhteystiedot</a>
             </div>
           </div>
