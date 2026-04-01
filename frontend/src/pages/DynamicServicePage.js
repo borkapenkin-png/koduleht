@@ -907,6 +907,10 @@ const DynamicServicePage = () => {
         </section>
 
         <FeaturesSection page={page} settings={settings} />
+        <WhyChooseSection page={page} settings={settings} />
+        {page.use_global_process !== false && <ProcessSection page={page} settings={settings} />}
+        <ServiceAreasSection page={page} settings={settings} />
+        <ServiceFAQSection faqs={serviceFaqs} settings={settings} serviceName={page.hero_title || page.seo_title} />
         <ContactFormSection page={page} settings={settings} />
         <RelatedServices allPages={allPages} currentSlug={slug} settings={settings} services={services} />
         <StrongCTA settings={settings} />
