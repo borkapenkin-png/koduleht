@@ -272,6 +272,14 @@ class SiteSettings(BaseModel):
     about_info_title: str = "Muista kotitalousvähennys!"
     about_info_text: str = "Maalaus luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen."
     
+    # ========== COMPANY STATS ==========
+    company_stats: List[dict] = [
+        {"value": "300+", "label": "Toteutettua kohdetta"},
+        {"value": "3,7M€", "label": "Liikevaihto"},
+        {"value": "18", "label": "Ammattilaista"},
+        {"value": "40 000+", "label": "Neliömetriä maalattu"}
+    ]
+    
     # ========== CONTACT SECTION ==========
     contact_subtitle: str = "OTA YHTEYTTÄ"
     contact_title: str = "Yhteystiedot"
@@ -370,6 +378,8 @@ class SiteSettingsUpdate(BaseModel):
     about_year: Optional[str] = None
     about_info_title: Optional[str] = None
     about_info_text: Optional[str] = None
+    # Company Stats
+    company_stats: Optional[List[dict]] = None
     # Contact
     contact_subtitle: Optional[str] = None
     contact_title: Optional[str] = None

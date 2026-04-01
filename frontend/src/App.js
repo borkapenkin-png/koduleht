@@ -85,6 +85,12 @@ const defaultSettings = {
   about_year: "2018",
   about_info_title: "Muista kotitalousvähennys!",
   about_info_text: "Maalaus luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen.",
+  company_stats: [
+    { value: "300+", label: "Toteutettua kohdetta" },
+    { value: "3,7M€", label: "Liikevaihto" },
+    { value: "18", label: "Ammattilaista" },
+    { value: "40 000+", label: "Neliömetriä maalattu" }
+  ],
   contact_subtitle: "OTA YHTEYTTÄ",
   contact_title: "Yhteystiedot",
   contact_description: "Lähetä tarjouspyyntö tai pyydä meidät ilmaiselle arviokäynnille.",
@@ -539,6 +545,9 @@ const ServicesSection = ({ services_data, settings }) => (
 const AboutSection = ({ settings }) => {
   const s = { ...defaultSettings, ...settings };
   const aboutImage = s.about_image_url || defaultSettings.about_image_url;
+  const stats = s.company_stats || [];
+  const trustBadge1 = s.footer_trust_badge_1 || '';
+  const trustBadge2 = s.footer_trust_badge_2 || '';
   return (
     <section id="meista" data-testid="about-section" className="section-padding" aria-labelledby="about-heading">
       <div className="container-custom">
@@ -571,6 +580,40 @@ const AboutSection = ({ settings }) => {
             </div>
           </motion.div>
         </div>
+
+        {/* Company Stats Bar */}
+        {stats.length > 0 && (
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }}
+            className="mt-12 md:mt-16 bg-[#0F172A] p-6 md:p-10"
+            data-testid="company-stats-bar"
+          >
+            <div className={`grid grid-cols-2 ${stats.length >= 4 ? 'md:grid-cols-4' : stats.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-6 md:gap-8`}>
+              {stats.map((stat, i) => (
+                <motion.div 
+                  key={i} 
+                  initial={{ opacity: 0, y: 20 }} 
+                  whileInView={{ opacity: 1, y: 0 }} 
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="text-center"
+                >
+                  <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1">{stat.value}</p>
+                  <p className="text-xs sm:text-sm text-white/60">{stat.label}</p>
+                </motion.div>
+              ))}
+            </div>
+            {/* Trust badges inside stats bar */}
+            {(trustBadge1 || trustBadge2) && (
+              <div className="flex items-center justify-center gap-6 mt-6 md:mt-8 pt-6 border-t border-white/10" data-testid="about-trust-badges">
+                {trustBadge1 && <img src={getImageUrl(trustBadge1)} alt="Luotettava kumppani" className="h-12 md:h-16 object-contain brightness-0 invert opacity-70" />}
+                {trustBadge2 && <img src={getImageUrl(trustBadge2)} alt="Asiakastieto" className="h-12 md:h-16 object-contain brightness-0 invert opacity-70" />}
+              </div>
+            )}
+          </motion.div>
+        )}
       </div>
     </section>
   );
@@ -860,10 +903,6 @@ const Footer = ({ logoUrl, settings }) => {
   const footerServiceArea = settings?.footer_service_area || 'Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella.';
   const city = settings?.company_city || 'Helsinki';
   
-  // Trust badges
-  const trustBadge1 = settings?.footer_trust_badge_1 || '';
-  const trustBadge2 = settings?.footer_trust_badge_2 || '';
-  
   const servicesList = footerServices.split(',').map(s => s.trim()).filter(s => s);
   
   return (
@@ -907,26 +946,6 @@ const Footer = ({ logoUrl, settings }) => {
             <p className="text-white/50 text-xs mt-4 leading-relaxed">
               {footerServiceArea}
             </p>
-            
-            {/* Trust badges */}
-            {(trustBadge1 || trustBadge2) && (
-              <div className="flex items-center gap-4 mt-4" data-testid="footer-trust-badges">
-                {trustBadge1 && (
-                  <img 
-                    src={getImageUrl(trustBadge1)} 
-                    alt="Luotettava kumppani" 
-                    className="object-contain rounded"
-                  />
-                )}
-                {trustBadge2 && (
-                  <img 
-                    src={getImageUrl(trustBadge2)} 
-                    alt="Asiakastieto" 
-                    className="object-contain rounded"
-                  />
-                )}
-              </div>
-            )}
           </div>
           
         </div>
@@ -1654,6 +1673,83 @@ const AdminPanel = () => {
                     <div><label className="block text-sm font-medium mb-1">Info-otsikko</label><input value={settings.about_info_title} onChange={(e) => setSettings({...settings, about_info_title: e.target.value})} className="form-input text-sm" /></div>
                     <div><label className="block text-sm font-medium mb-1">Info-teksti</label><input value={settings.about_info_text} onChange={(e) => setSettings({...settings, about_info_text: e.target.value})} className="form-input text-sm" /></div>
                   </div>
+                  
+                  {/* Company Stats */}
+                  <div className="border-t pt-4 mt-4">
+                    <div className="flex justify-between items-center mb-3">
+                      <p className="text-sm font-medium">Yrityksen avainluvut</p>
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          const stats = [...(settings.company_stats || [])];
+                          stats.push({ value: '', label: '' });
+                          setSettings({...settings, company_stats: stats});
+                        }} 
+                        className="text-xs bg-primary text-white px-3 py-1.5 hover:bg-primary/90 flex items-center gap-1"
+                      ><Plus size={12} />Lisää luku</button>
+                    </div>
+                    <div className="space-y-2">
+                      {(settings.company_stats || []).map((stat, i) => (
+                        <div key={i} className="flex items-center gap-2">
+                          <input 
+                            value={stat.value} 
+                            onChange={(e) => {
+                              const stats = [...(settings.company_stats || [])];
+                              stats[i] = {...stats[i], value: e.target.value};
+                              setSettings({...settings, company_stats: stats});
+                            }} 
+                            className="form-input text-sm w-32" 
+                            placeholder="300+"
+                          />
+                          <input 
+                            value={stat.label} 
+                            onChange={(e) => {
+                              const stats = [...(settings.company_stats || [])];
+                              stats[i] = {...stats[i], label: e.target.value};
+                              setSettings({...settings, company_stats: stats});
+                            }} 
+                            className="form-input text-sm flex-1" 
+                            placeholder="Toteutettua kohdetta"
+                          />
+                          <button 
+                            type="button"
+                            onClick={() => {
+                              const stats = [...(settings.company_stats || [])];
+                              stats.splice(i, 1);
+                              setSettings({...settings, company_stats: stats});
+                            }} 
+                            className="text-red-500 hover:text-red-700 p-1"
+                          ><Trash2 size={14} /></button>
+                        </div>
+                      ))}
+                      {(!settings.company_stats || settings.company_stats.length === 0) && (
+                        <p className="text-xs text-[#64748B]">Ei avainlukuja. Lisää painamalla "Lisää luku".</p>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Trust badges - moved from footer to about section */}
+                  <div className="border-t pt-4 mt-4">
+                    <p className="text-sm font-medium mb-3">Luotettavuusmerkit (näkyvät avainlukujen alla)</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Merkki 1</label>
+                        <ImageUpload 
+                          currentImage={settings.footer_trust_badge_1 || ''} 
+                          onImageChange={(url) => setSettings({...settings, footer_trust_badge_1: url})} 
+                          token={token}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Merkki 2</label>
+                        <ImageUpload 
+                          currentImage={settings.footer_trust_badge_2 || ''} 
+                          onImageChange={(url) => setSettings({...settings, footer_trust_badge_2: url})} 
+                          token={token}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Contact */}
@@ -1682,29 +1778,6 @@ const AdminPanel = () => {
                   <div><label className="block text-sm font-medium mb-1">Yrityksen kuvaus</label><input value={settings.footer_description || ''} onChange={(e) => setSettings({...settings, footer_description: e.target.value})} className="form-input text-sm" placeholder="Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla." /></div>
                   <div><label className="block text-sm font-medium mb-1">Palvelut (pilkulla erotettuna)</label><input value={settings.footer_services || ''} onChange={(e) => setSettings({...settings, footer_services: e.target.value})} className="form-input text-sm" placeholder="Tasoitustyöt,Sisämaalaus,Julkisivumaalaus..." /></div>
                   <div><label className="block text-sm font-medium mb-1">Palvelualue teksti</label><input value={settings.footer_service_area || ''} onChange={(e) => setSettings({...settings, footer_service_area: e.target.value})} className="form-input text-sm" placeholder="Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella." /></div>
-                  
-                  {/* Trust badges */}
-                  <div className="border-t pt-4 mt-4">
-                    <p className="text-sm font-medium mb-3">Luotettavuusmerkit</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium mb-1">Merkki 1 (esim. Luotettava Kumppani)</label>
-                        <ImageUpload 
-                          currentImage={settings.footer_trust_badge_1 || ''} 
-                          onImageChange={(url) => setSettings({...settings, footer_trust_badge_1: url})} 
-                          token={token}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-1">Merkki 2 (esim. Asiakastieto)</label>
-                        <ImageUpload 
-                          currentImage={settings.footer_trust_badge_2 || ''} 
-                          onImageChange={(url) => setSettings({...settings, footer_trust_badge_2: url})} 
-                          token={token}
-                        />
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             )}
