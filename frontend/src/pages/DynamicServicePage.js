@@ -153,6 +153,7 @@ const Navbar = ({ isScrolled, settings }) => {
     { href: "/#meista", label: "Meistä" },
     { href: "/referenssit", label: "Referenssit", isPage: true },
     { href: "/ukk", label: "UKK", isPage: true },
+    { href: "/hintalaskuri", label: "Hintalaskuri", isPage: true },
     { href: "/#yhteystiedot", label: "Yhteystiedot" },
   ];
 
@@ -163,19 +164,19 @@ const Navbar = ({ isScrolled, settings }) => {
           <Link to="/" className="flex items-center">
             <img src={logo} alt="J&B Tasoitus ja Maalaus" className="h-10 md:h-12 w-auto max-w-[180px] object-contain" />
           </Link>
-          <div className="hidden md:flex items-center gap-6 lg:gap-8">
+          <div className="hidden lg:flex items-center gap-5 xl:gap-8">
             {navLinks.map((link) => (
               <Link key={link.href} to={link.href} className="nav-link text-sm font-medium">{link.label}</Link>
             ))}
             <Link to="/#yhteystiedot" className="btn-primary text-sm py-2 px-4">Pyydä tarjous</Link>
           </div>
-          <button className="md:hidden p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <button className="lg:hidden p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
         <AnimatePresence>
           {isMobileMenuOpen && (
-            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="md:hidden bg-white border-t">
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="lg:hidden bg-white border-t">
               <div className="py-4 space-y-1">
                 {navLinks.map((link) => (
                   <Link key={link.href} to={link.href} className="block px-4 py-3 nav-link-mobile" onClick={() => setIsMobileMenuOpen(false)}>{link.label}</Link>
@@ -263,15 +264,15 @@ const TrustBadges = ({ settings }) => {
   return (
     <section className="section-bg-alt py-5 md:py-6 border-b border-[#E2E8F0]">
       <div className="container-custom">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
           {badges.map((badge, index) => (
-            <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="flex items-center gap-3">
+            <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="flex items-center gap-2 md:gap-3">
               <div className="icon-box flex-shrink-0 rounded-lg">
-                <badge.icon size={18} className="text-primary" />
+                <badge.icon size={16} className="text-primary" />
               </div>
-              <div>
-                <p className="font-semibold text-[#0F172A] text-xs md:text-sm">{badge.title}</p>
-                <p className="text-[#64748B] text-xs hidden md:block">{badge.subtitle}</p>
+              <div className="min-w-0">
+                <p className="font-semibold text-[#0F172A] text-xs md:text-sm truncate">{badge.title}</p>
+                <p className="text-[#64748B] text-xs hidden lg:block">{badge.subtitle}</p>
               </div>
             </motion.div>
           ))}
@@ -905,7 +906,7 @@ const DynamicServicePage = () => {
               <p className="uppercase text-sm font-medium text-primary tracking-wide mb-2">Valitse alue</p>
               <h2 className="section-title">Palvelemme seuraavilla alueilla</h2>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
               {areas.map((area) => (
                 <Link 
                   key={area.slug} 

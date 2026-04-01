@@ -396,7 +396,7 @@ const Navbar = ({ isScrolled, activeSection, logoUrl }) => {
       <div className="container-custom">
         <div className="flex items-center justify-between h-16 md:h-20">
           <a href="/" data-testid="logo-link"><img src={logo} alt="J&B" className="h-10 md:h-12 w-auto max-w-[180px] object-contain" /></a>
-          <div className="hidden md:flex items-center gap-6 lg:gap-8">
+          <div className="hidden lg:flex items-center gap-5 xl:gap-8">
             {navLinks.map((link) => (
               link.isPage ? (
                 <Link key={link.href} to={link.href} className="nav-link text-sm font-medium transition-colors">{link.label}</Link>
@@ -406,13 +406,13 @@ const Navbar = ({ isScrolled, activeSection, logoUrl }) => {
             ))}
             <a href={getHref("#yhteystiedot")} className="btn-primary text-sm py-2 px-4">Pyydä tarjous</a>
           </div>
-          <button className="md:hidden p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <button className="lg:hidden p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
         <AnimatePresence>
           {isMobileMenuOpen && (
-            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="md:hidden bg-white border-t">
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="lg:hidden bg-white border-t">
               <div className="py-4 space-y-1">
                 {navLinks.map((link) => (
                   link.isPage ? (

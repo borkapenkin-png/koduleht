@@ -262,19 +262,19 @@ const PriceCalculatorPage = () => {
       {/* Trust Badges */}
       <section className="bg-[#F8FAFC] border-y border-[#E2E8F0]">
         <div className="container-custom py-4 md:py-5">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {[
               { icon: Clock, title: settings?.trust_badge_1_title || 'Vuodesta 2018', sub: settings?.trust_badge_1_subtitle || 'Luotettava kokemus' },
               { icon: Award, title: settings?.trust_badge_2_title || 'Ammattitaitoinen työ', sub: settings?.trust_badge_2_subtitle || 'Laadukas lopputulos' },
               { icon: Shield, title: settings?.trust_badge_3_title || 'Kotitalousvähennys', sub: settings?.trust_badge_3_subtitle || 'Hyödynnä veroetu' },
               { icon: Star, title: settings?.trust_badge_4_title || 'Tyytyväisyystakuu', sub: settings?.trust_badge_4_subtitle || '100% tyytyväisyys' },
             ].map((b, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <b.icon size={16} className="text-primary" />
+              <div key={i} className="flex items-center gap-2 md:gap-3">
+                <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <b.icon size={14} className="text-primary md:w-4 md:h-4" />
                 </div>
-                <div>
-                  <p className="text-xs md:text-sm font-semibold text-[#0F172A]">{b.title}</p>
+                <div className="min-w-0">
+                  <p className="text-xs md:text-sm font-semibold text-[#0F172A] truncate">{b.title}</p>
                   <p className="text-xs text-[#64748B] hidden md:block">{b.sub}</p>
                 </div>
               </div>
