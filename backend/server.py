@@ -1429,6 +1429,339 @@ async def admin_delete_area(area_id: str, username: str = Depends(get_current_ad
     return {"message": "Deleted"}
 
 
+# ============================================================================
+# PRICE CALCULATOR CONFIG
+# ============================================================================
+
+def get_default_calculator_config():
+    return {
+        "id": "calculator_config",
+        "services": [
+            {
+                "id": "sisamaalaus",
+                "name": "Sisämaalaus",
+                "icon": "Paintbrush",
+                "description": "Seinien ja kattojen maalaus sisätiloissa",
+                "enabled": True,
+                "order": 0,
+                "base_price_per_m2": 19,
+                "steps": [
+                    {
+                        "id": "target_type",
+                        "title": "Kohteen tyyppi",
+                        "type": "cards",
+                        "options": [
+                            {"id": "room", "label": "Yksittäinen huone", "multiplier": 1.1},
+                            {"id": "studio", "label": "Yksiö", "multiplier": 1.0},
+                            {"id": "2room", "label": "Kaksio", "multiplier": 0.95},
+                            {"id": "3room", "label": "Kolmio", "multiplier": 0.92},
+                            {"id": "4room", "label": "4h+", "multiplier": 0.88}
+                        ]
+                    },
+                    {
+                        "id": "area",
+                        "title": "Pinta-ala",
+                        "type": "slider",
+                        "min": 10,
+                        "max": 200,
+                        "default": 50,
+                        "step": 5,
+                        "unit": "m²"
+                    },
+                    {
+                        "id": "condition",
+                        "title": "Pintojen kunto",
+                        "type": "cards",
+                        "options": [
+                            {"id": "good", "label": "Moitteeton", "description": "Pinnat hyvässä kunnossa", "multiplier": 1.0},
+                            {"id": "minor", "label": "Pieniä korjauksia", "description": "Kolhuja ja pieniä reikiä", "multiplier": 1.15},
+                            {"id": "leveling", "label": "Tasoitettava", "description": "Seinät vaativat tasoituksen", "multiplier": 1.4}
+                        ]
+                    }
+                ],
+                "addons": [
+                    {"id": "ceiling", "label": "Katon maalaus", "price_per_m2": 22, "enabled": True},
+                    {"id": "wall_leveling", "label": "Seinien tasoitus", "price_per_m2": 23, "enabled": True},
+                    {"id": "extra_color", "label": "Lisäsävy (+1 väri)", "fixed_price": 100, "enabled": True}
+                ]
+            },
+            {
+                "id": "tasoitustyot",
+                "name": "Tasoitustyöt",
+                "icon": "Layers",
+                "description": "Seinien ja kattojen tasoitus ammattitaidolla",
+                "enabled": True,
+                "order": 1,
+                "base_price_per_m2": 25,
+                "steps": [
+                    {
+                        "id": "target_type",
+                        "title": "Tasoituskohde",
+                        "type": "cards",
+                        "options": [
+                            {"id": "walls", "label": "Seinät", "multiplier": 1.0},
+                            {"id": "ceiling", "label": "Katto", "multiplier": 1.3},
+                            {"id": "both", "label": "Seinät + katto", "multiplier": 1.2}
+                        ]
+                    },
+                    {
+                        "id": "area",
+                        "title": "Pinta-ala",
+                        "type": "slider",
+                        "min": 10,
+                        "max": 200,
+                        "default": 50,
+                        "step": 5,
+                        "unit": "m²"
+                    },
+                    {
+                        "id": "condition",
+                        "title": "Pinnan kunto",
+                        "type": "cards",
+                        "options": [
+                            {"id": "partial", "label": "Osatasoitus", "description": "Pienet korjaukset", "multiplier": 0.6},
+                            {"id": "full", "label": "Tasoitus", "description": "Koko pinta tasoitettava", "multiplier": 1.0},
+                            {"id": "heavy", "label": "Ylitasoitus", "description": "Paksu tasoitekerros", "multiplier": 1.5}
+                        ]
+                    }
+                ],
+                "addons": [
+                    {"id": "primer", "label": "Pohjamaalaus", "price_per_m2": 8, "enabled": True},
+                    {"id": "reinforcement", "label": "Vahvikekangas", "price_per_m2": 12, "enabled": True}
+                ]
+            },
+            {
+                "id": "mikrosementti",
+                "name": "Mikrosementti",
+                "icon": "Gem",
+                "description": "Moderni mikrosementtipinta lattioihin ja seiniin",
+                "enabled": True,
+                "order": 2,
+                "base_price_per_m2": 120,
+                "steps": [
+                    {
+                        "id": "target_type",
+                        "title": "Kohteen tyyppi",
+                        "type": "cards",
+                        "options": [
+                            {"id": "floor", "label": "Lattia", "multiplier": 1.0},
+                            {"id": "wall", "label": "Seinä", "multiplier": 0.9},
+                            {"id": "bathroom", "label": "Kylpyhuone", "multiplier": 1.3},
+                            {"id": "kitchen", "label": "Keittiön välitila", "multiplier": 1.2}
+                        ]
+                    },
+                    {
+                        "id": "area",
+                        "title": "Pinta-ala",
+                        "type": "slider",
+                        "min": 2,
+                        "max": 80,
+                        "default": 15,
+                        "step": 1,
+                        "unit": "m²"
+                    },
+                    {
+                        "id": "condition",
+                        "title": "Alustan kunto",
+                        "type": "cards",
+                        "options": [
+                            {"id": "good", "label": "Hyvä alusta", "description": "Tasainen ja puhdas", "multiplier": 1.0},
+                            {"id": "prep", "label": "Esikäsittely", "description": "Alusta vaatii valmistelua", "multiplier": 1.2}
+                        ]
+                    }
+                ],
+                "addons": [
+                    {"id": "sealing", "label": "Suojalakkaus", "price_per_m2": 15, "enabled": True}
+                ]
+            },
+            {
+                "id": "julkisivumaalaus",
+                "name": "Julkisivumaalaus",
+                "icon": "Home",
+                "description": "Talon ulkoseinien maalaus ammattitaidolla",
+                "enabled": True,
+                "order": 3,
+                "base_price_per_m2": 35,
+                "steps": [
+                    {
+                        "id": "target_type",
+                        "title": "Talon tyyppi",
+                        "type": "cards",
+                        "options": [
+                            {"id": "wood", "label": "Puutalo", "multiplier": 1.0},
+                            {"id": "brick", "label": "Tiilitalo", "multiplier": 1.1},
+                            {"id": "plaster", "label": "Rapattu talo", "multiplier": 1.15}
+                        ]
+                    },
+                    {
+                        "id": "area",
+                        "title": "Pohjapinta-ala",
+                        "type": "slider",
+                        "min": 50,
+                        "max": 300,
+                        "default": 120,
+                        "step": 10,
+                        "unit": "m²"
+                    },
+                    {
+                        "id": "floors",
+                        "title": "Kerrosten määrä",
+                        "type": "cards",
+                        "options": [
+                            {"id": "1", "label": "1 kerros", "multiplier": 1.0},
+                            {"id": "1.5", "label": "1,5 kerrosta", "multiplier": 1.15},
+                            {"id": "2", "label": "2 kerrosta", "multiplier": 1.35},
+                            {"id": "3", "label": "3 kerrosta", "multiplier": 1.6}
+                        ]
+                    },
+                    {
+                        "id": "condition",
+                        "title": "Pinnan kunto",
+                        "type": "cards",
+                        "options": [
+                            {"id": "good", "label": "Hyvä kunto", "description": "Ei hilseilyä", "multiplier": 1.0},
+                            {"id": "some", "label": "Hieman hilseilyä", "description": "Yhdellä seinällä", "multiplier": 1.2},
+                            {"id": "heavy", "label": "Paljon hilseilyä", "description": "Useammalla seinällä", "multiplier": 1.5}
+                        ]
+                    }
+                ],
+                "addons": [
+                    {"id": "scaffolding", "label": "Telineet sis. hintaan", "fixed_price": 0, "enabled": True},
+                    {"id": "wood_repair", "label": "Lautojen vaihto", "price_per_m2": 45, "enabled": True}
+                ]
+            },
+            {
+                "id": "kattomaalaus",
+                "name": "Kattomaalaus",
+                "icon": "Triangle",
+                "description": "Katon maalaus ja pinnoitus",
+                "enabled": True,
+                "order": 4,
+                "base_price_per_m2": 18,
+                "steps": [
+                    {
+                        "id": "target_type",
+                        "title": "Katon tyyppi",
+                        "type": "cards",
+                        "options": [
+                            {"id": "metal", "label": "Peltikatto", "multiplier": 1.0},
+                            {"id": "tile", "label": "Tiilikatto", "multiplier": 1.4}
+                        ]
+                    },
+                    {
+                        "id": "area",
+                        "title": "Katon pinta-ala",
+                        "type": "slider",
+                        "min": 50,
+                        "max": 400,
+                        "default": 150,
+                        "step": 10,
+                        "unit": "m²"
+                    },
+                    {
+                        "id": "condition",
+                        "title": "Katon kunto",
+                        "type": "cards",
+                        "options": [
+                            {"id": "good", "label": "Hyvä kunto", "description": "Puhdas pinta", "multiplier": 1.0},
+                            {"id": "moss", "label": "Vähän sammalta", "description": "Pieni sammalkasvusto", "multiplier": 1.15},
+                            {"id": "heavy_moss", "label": "Paljon sammalta", "description": "Laaja sammalkasvusto", "multiplier": 1.35}
+                        ]
+                    }
+                ],
+                "addons": [
+                    {"id": "wash", "label": "Katon pesu", "price_per_m2": 5, "enabled": True},
+                    {"id": "moss_treatment", "label": "Sammalesto", "price_per_m2": 4, "enabled": True}
+                ]
+            },
+            {
+                "id": "julkisivurappaus",
+                "name": "Julkisivurappaus",
+                "icon": "Building2",
+                "description": "Julkisivun rappaus ja pinnoitus",
+                "enabled": True,
+                "order": 5,
+                "base_price_per_m2": 55,
+                "steps": [
+                    {
+                        "id": "target_type",
+                        "title": "Rappaustyyppi",
+                        "type": "cards",
+                        "options": [
+                            {"id": "thin", "label": "Ohutrappaus", "multiplier": 1.0},
+                            {"id": "thick", "label": "Paksurappaus", "multiplier": 1.4},
+                            {"id": "repair", "label": "Korjausrappaus", "multiplier": 0.8}
+                        ]
+                    },
+                    {
+                        "id": "area",
+                        "title": "Pinta-ala",
+                        "type": "slider",
+                        "min": 20,
+                        "max": 500,
+                        "default": 100,
+                        "step": 10,
+                        "unit": "m²"
+                    },
+                    {
+                        "id": "condition",
+                        "title": "Alustan kunto",
+                        "type": "cards",
+                        "options": [
+                            {"id": "good", "label": "Hyvä alusta", "description": "Puhdas ja kiinteä", "multiplier": 1.0},
+                            {"id": "repair", "label": "Korjattava", "description": "Halkeamia ja irtonaista rappausta", "multiplier": 1.3}
+                        ]
+                    }
+                ],
+                "addons": [
+                    {"id": "color", "label": "Värillinen rappaus", "price_per_m2": 8, "enabled": True}
+                ]
+            }
+        ],
+        "global_settings": {
+            "tax_rate": 25.5,
+            "kotitalousvahennys_rate": 35,
+            "kotitalousvahennys_max_per_person": 1600,
+            "labor_percentage": 70,
+            "material_percentage": 30,
+            "cta_title": "Haluatko tarkemman tarjouksen?",
+            "cta_subtitle": "Jätä yhteystietosi ja saat tarkan tarjouksen 24h sisällä – maksuton arviokäynti.",
+            "disclaimer": "Hinnat ovat suuntaa-antavia ja sisältävät ALV:n. Lopullinen hinta varmistuu kartoituskäynnillä."
+        }
+    }
+
+@api_router.get("/calculator-config")
+async def get_calculator_config():
+    """Public endpoint - returns calculator configuration."""
+    config = await db.calculator_config.find_one({"id": "calculator_config"}, {"_id": 0})
+    if not config:
+        config = get_default_calculator_config()
+        await db.calculator_config.insert_one(config)
+        config.pop("_id", None)
+    return config
+
+@api_router.get("/admin/calculator-config")
+async def admin_get_calculator_config(username: str = Depends(get_current_admin)):
+    """Admin endpoint - returns full calculator config."""
+    config = await db.calculator_config.find_one({"id": "calculator_config"}, {"_id": 0})
+    if not config:
+        config = get_default_calculator_config()
+        await db.calculator_config.insert_one(config)
+        config.pop("_id", None)
+    return config
+
+@api_router.put("/admin/calculator-config")
+async def admin_update_calculator_config(config: dict, username: str = Depends(get_current_admin)):
+    """Admin endpoint - update calculator configuration."""
+    config["id"] = "calculator_config"
+    await db.calculator_config.replace_one(
+        {"id": "calculator_config"},
+        config,
+        upsert=True
+    )
+    updated = await db.calculator_config.find_one({"id": "calculator_config"}, {"_id": 0})
+    return updated
+
 # Admin - Seed Data
 @api_router.post("/admin/seed")
 async def seed_initial_data(username: str = Depends(get_current_admin)):

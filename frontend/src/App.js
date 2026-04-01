@@ -8,9 +8,11 @@ import { serviceSlugMap } from "./seo/serviceContent";
 import DynamicServicePage from "./pages/DynamicServicePage";
 import ReferencesPage from "./pages/ReferencesPage";
 import FaqHubPage from "./pages/FaqHubPage";
+import PriceCalculatorPage from "./pages/PriceCalculatorPage";
 import ServicePagesAdmin from "./components/admin/ServicePagesAdmin";
 import GlobalSettingsAdmin from "./components/admin/GlobalSettingsAdmin";
 import AreasAdmin from "./components/admin/AreasAdmin";
+import CalculatorAdmin from "./components/admin/CalculatorAdmin";
 import StructuredData from "./components/StructuredData";
 import FAQSection from "./components/FAQSection";
 import QuoteRequestForm from "./components/QuoteRequestForm";
@@ -22,7 +24,7 @@ import {
   Hammer, Wrench, PaintBucket, Brush, Ruler, HardHat, Construction, Warehouse,
   DoorOpen, DoorClosed, Sofa, Lamp, Frame, Square, CircleDot, Sparkles,
   Sun, Droplets, Wind, TreeDeciduous, Fence, Scaling, LayoutGrid, PanelTop,
-  Wallpaper, LampCeiling, Armchair
+  Wallpaper, LampCeiling, Armchair, Calculator
 } from "lucide-react";
 import axios from "axios";
 
@@ -376,6 +378,7 @@ const Navbar = ({ isScrolled, activeSection, logoUrl }) => {
     { href: "#meista", label: "Meistä" },
     { href: "#referenssit", label: "Referenssit" },
     { href: "/ukk", label: "UKK", isPage: true },
+    { href: "/hintalaskuri", label: "Hintalaskuri", isPage: true },
     { href: "#yhteystiedot", label: "Yhteystiedot" },
   ];
   const logo = logoUrl || LOGO_URL;
@@ -1370,6 +1373,7 @@ const AdminPanel = () => {
     { id: "settings", label: "Etusivu", icon: Home },
     { id: "servicepages", label: "Palvelusivut", icon: FileText },
     { id: "areas", label: "Alueet", icon: MapPin },
+    { id: "calculator", label: "Laskuri", icon: Calculator },
     { id: "services", label: "Palvelut", icon: Briefcase },
     { id: "references", label: "Referenssit", icon: Building2 },
     { id: "faqs", label: "UKK", icon: HelpCircle },
@@ -1645,6 +1649,11 @@ const AdminPanel = () => {
                 token={token}
                 onRefresh={loadData}
               />
+            )}
+
+            {/* CALCULATOR TAB */}
+            {activeTab === "calculator" && (
+              <CalculatorAdmin token={token} />
             )}
 
             {/* SETTINGS TAB */}
@@ -2473,6 +2482,8 @@ function App() {
           <Route path="/ukk" element={<FaqHubPage />} />
           {/* References page - SEO dedicated page */}
           <Route path="/referenssit" element={<ReferencesPage />} />
+          {/* Price Calculator */}
+          <Route path="/hintalaskuri" element={<PriceCalculatorPage />} />
           {/* Legacy route for old service URLs */}
           <Route path="/palvelut/:slug" element={<DynamicServicePage />} />
           {/* New SEO-friendly Finnish URLs - catch-all for service pages */}

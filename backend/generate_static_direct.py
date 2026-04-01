@@ -623,7 +623,8 @@ async def main():
         "rewrites": [
             { "source": "/admin", "destination": "/index.html" },
             { "source": "/admin/**", "destination": "/index.html" },
-            { "source": "/login", "destination": "/index.html" }
+            { "source": "/login", "destination": "/index.html" },
+            { "source": "/hintalaskuri", "destination": "/index.html" }
         ]
     }
     serve_json_content = json.dumps(serve_json_obj, indent=2)

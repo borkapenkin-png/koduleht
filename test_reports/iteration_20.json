@@ -1,0 +1,94 @@
+{
+  "summary": "Price Calculator (Hintalaskuri) feature fully tested. All 16 backend API tests passed. Frontend wizard flow works correctly with all 6 services, multi-step wizard, real-time pricing, kotitalousvähennys calculation, and admin-configurable prices. Admin panel 'Laskuri' tab allows viewing/modifying global settings, service base prices, step multipliers, and addons.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "GET /api/calculator-config returns 200 with correct structure",
+    "Calculator config has 6 services: sisamaalaus, tasoitustyot, mikrosementti, julkisivumaalaus, kattomaalaus, julkisivurappaus",
+    "Global settings has required fields: tax_rate, kotitalousvahennys_rate, labor_percentage, material_percentage",
+    "Each service has id, name, base_price_per_m2, steps, addons, enabled",
+    "Step types are valid (cards or slider)",
+    "Admin GET /api/admin/calculator-config requires authentication",
+    "Admin GET /api/admin/calculator-config works with valid token",
+    "Admin PUT /api/admin/calculator-config requires authentication",
+    "Admin can update global settings (tax_rate)",
+    "Admin can update service base_price_per_m2",
+    "Admin can update step multipliers",
+    "Config persists after update and is returned by public endpoint",
+    "Price calculator page loads at /hintalaskuri",
+    "Calculator shows 6 service cards with correct data-testids",
+    "Full wizard flow: select service -> select options -> area slider -> condition -> addons -> result",
+    "Price result shows breakdown: labor (70%), materials (30%), addons, ALV, total, kotitalousvähennys, final price",
+    "Live price preview shown during wizard steps",
+    "Back button navigates to previous step",
+    "Request quote button shows contact form",
+    "Recalculate button resets calculator to service selection",
+    "Admin login and navigate to 'Laskuri' tab",
+    "Admin can view global settings (ALV, kotitalousvähennys rate, labor %)",
+    "Admin can expand service and view/modify base_price_per_m2",
+    "Admin can view/modify step multipliers",
+    "Admin can view/modify addons",
+    "Admin save button is functional",
+    "'Hintalaskuri' link appears in navbar and navigates to calculator page"
+  ],
+  "test_report_links": [
+    "/app/backend/tests/test_calculator.py",
+    "/app/test_reports/pytest/pytest_calculator.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "PriceCalculatorPage.js is well-structured with proper data-testid attributes for all interactive elements",
+    "CalculatorAdmin.js provides comprehensive admin interface for all calculator settings",
+    "Backend calculator-config endpoints properly handle authentication and config persistence",
+    "Price calculation logic correctly applies multipliers, addons, tax, and kotitalousvähennys",
+    "All 6 services have proper step configurations with cards and slider types"
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_calculator.py"
+  ],
+  "success_rate": {
+    "backend": "100% (16/16 tests passed)",
+    "frontend": "100% - All UI flows verified via Playwright"
+  },
+  "test_credentials": {
+    "admin_username": "admin",
+    "admin_password": "jbadmin2024"
+  },
+  "seed_data_creation": "Calculator config with 6 services auto-seeded on first access",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Price Calculator (Hintalaskuri) feature is complete and working. The calculator page at /hintalaskuri allows users to select from 6 services, go through a multi-step wizard (service -> options -> area -> condition -> addons -> result), and see real-time price calculations including kotitalousvähennys. Admin panel 'Laskuri' tab (between 'Alueet' and 'Palvelut') allows configuring global settings and per-service pricing. Key data-testids: price-calculator-page, calculator-title, service-selection, service-card-{id}, step-{id}, option-{id}, area-slider, addons-step, addon-{id}, price-result, final-price, calc-next-btn, calc-back-btn, request-quote-btn, recalculate-btn, calculator-admin, calc-save-btn, calc-global-settings, calc-service-{id}.",
+  "feature_verification": {
+    "calculator_page": {
+      "url": "/hintalaskuri",
+      "data_testid": "price-calculator-page",
+      "services": ["Sisämaalaus", "Tasoitustyöt", "Mikrosementti", "Julkisivumaalaus", "Kattomaalaus", "Julkisivurappaus"]
+    },
+    "wizard_flow": {
+      "steps": ["Service selection", "Target type (cards)", "Area (slider)", "Condition (cards)", "Addons", "Result"],
+      "navigation": "calc-next-btn, calc-back-btn",
+      "result_elements": ["price-result", "final-price", "request-quote-btn", "recalculate-btn"]
+    },
+    "price_breakdown": {
+      "components": ["Labor portion (70%)", "Materials (30%)", "Addons", "ALV (25.5%)", "Total", "Kotitalousvähennys (35%)", "Final price"]
+    },
+    "admin_panel": {
+      "tab": "Laskuri",
+      "data_testid": "calculator-admin",
+      "global_settings": ["ALV %", "Kotitalousvähennys %", "Max vähennys/hlö €", "Työn osuus %", "CTA otsikko", "CTA alaotsikko"],
+      "service_settings": ["Perushinta €/m²", "Järjestys", "Käytössä", "Step multipliers", "Addons"]
+    },
+    "api_endpoints": {
+      "public": "GET /api/calculator-config",
+      "admin_get": "GET /api/admin/calculator-config",
+      "admin_update": "PUT /api/admin/calculator-config"
+    }
+  }
+}
