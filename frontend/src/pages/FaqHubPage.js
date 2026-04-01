@@ -332,6 +332,43 @@ const FaqHubPage = () => {
         </div>
       </section>
       
+      {/* Services Links Section for SEO */}
+      <section className="py-12 md:py-16 bg-[#F8F5F1]">
+        <div className="container-custom">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-8"
+          >
+            <h2 className="text-xl md:text-2xl font-bold text-[#0F172A] mb-2">
+              Tutustu palveluihimme
+            </h2>
+            <p className="text-[#64748B]">Tarjoamme laadukkaita maalaus- ja tasoituspalveluita</p>
+          </motion.div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
+            <Link to="/maalaustyot-helsinki" className="bg-white p-4 rounded-lg text-center hover:shadow-md transition-shadow">
+              <p className="text-sm font-medium text-[#0F172A]">Maalaustyöt</p>
+            </Link>
+            <Link to="/tasoitustyot-helsinki" className="bg-white p-4 rounded-lg text-center hover:shadow-md transition-shadow">
+              <p className="text-sm font-medium text-[#0F172A]">Tasoitustyöt</p>
+            </Link>
+            <Link to="/mikrosementti-helsinki" className="bg-white p-4 rounded-lg text-center hover:shadow-md transition-shadow">
+              <p className="text-sm font-medium text-[#0F172A]">Mikrosementti</p>
+            </Link>
+            <Link to="/julkisivurappaus-helsinki" className="bg-white p-4 rounded-lg text-center hover:shadow-md transition-shadow">
+              <p className="text-sm font-medium text-[#0F172A]">Julkisivurappaus</p>
+            </Link>
+            <Link to="/julkisivumaalaus-helsinki" className="bg-white p-4 rounded-lg text-center hover:shadow-md transition-shadow">
+              <p className="text-sm font-medium text-[#0F172A]">Julkisivumaalaus</p>
+            </Link>
+            <Link to="/kattomaalaus-helsinki" className="bg-white p-4 rounded-lg text-center hover:shadow-md transition-shadow">
+              <p className="text-sm font-medium text-[#0F172A]">Kattomaalaus</p>
+            </Link>
+          </div>
+        </div>
+      </section>
+      
       <Footer logoUrl={settings?.logo_url} />
     </>
   );

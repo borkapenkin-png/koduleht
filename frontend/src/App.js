@@ -881,13 +881,16 @@ const Footer = ({ logoUrl, settings }) => {
             </p>
           </div>
           
-          {/* Services list - SEO keywords */}
+          {/* Services list - with internal links for SEO */}
           <div>
-            <p className="text-white/80 text-sm font-medium mb-3">Tarjoamme:</p>
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs md:text-sm text-white/60">
-              {servicesList.map((service, idx) => (
-                <li key={idx}>{service}</li>
-              ))}
+            <p className="text-white/80 text-sm font-medium mb-3">Palvelumme:</p>
+            <ul className="grid grid-cols-1 gap-y-2 text-xs md:text-sm text-white/60">
+              <li><Link to="/maalaustyot-helsinki" className="hover:text-white transition-colors">Maalaustyöt Helsinki</Link></li>
+              <li><Link to="/tasoitustyot-helsinki" className="hover:text-white transition-colors">Tasoitustyöt Helsinki</Link></li>
+              <li><Link to="/mikrosementti-helsinki" className="hover:text-white transition-colors">Mikrosementti Helsinki</Link></li>
+              <li><Link to="/julkisivurappaus-helsinki" className="hover:text-white transition-colors">Julkisivurappaus Helsinki</Link></li>
+              <li><Link to="/julkisivumaalaus-helsinki" className="hover:text-white transition-colors">Julkisivumaalaus Helsinki</Link></li>
+              <li><Link to="/kattomaalaus-helsinki" className="hover:text-white transition-colors">Kattomaalaus Helsinki</Link></li>
             </ul>
           </div>
           
