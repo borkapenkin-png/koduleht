@@ -617,9 +617,7 @@ const AboutSection = ({ settings }) => {
             {allBadges.length > 0 && (
               <div className="flex items-center justify-center gap-4 md:gap-6 flex-wrap mt-6 md:mt-8 pt-6 border-t border-white/20" data-testid="about-trust-badges">
                 {allBadges.map((badge, i) => (
-                  <div key={i} className="bg-white rounded-lg p-2 md:p-3">
-                    <img src={getImageUrl(badge.url)} alt={badge.alt || 'Trust badge'} className="h-10 md:h-14 object-contain" />
-                  </div>
+                  <img key={i} src={getImageUrl(badge.url)} alt={badge.alt || 'Trust badge'} className="h-10 md:h-14 object-contain" />
                 ))}
               </div>
             )}
@@ -906,15 +904,12 @@ const ContactSection = ({ settings }) => {
 };
 
 // ========== FOOTER ==========
-const Footer = ({ logoUrl, settings }) => {
+const Footer = ({ logoUrl, settings, servicePages = [] }) => {
   const logo = logoUrl || settings?.logo_url || LOGO_URL;
   const companyName = settings?.company_name || 'J&B Tasoitus ja Maalaus Oy';
   const footerDescription = settings?.footer_description || 'Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla.';
-  const footerServices = settings?.footer_services || 'Tasoitustyöt,Sisämaalaus,Julkisivumaalaus,Julkisivurappaus,Mikrosementti,Kattomaalaus,Huoltomaalaus,Parvekemaalaus';
   const footerServiceArea = settings?.footer_service_area || 'Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella.';
   const city = settings?.company_city || 'Helsinki';
-  
-  const servicesList = footerServices.split(',').map(s => s.trim()).filter(s => s);
   
   return (
     <footer data-testid="footer" className="footer-bg text-white py-10 md:py-14">
@@ -929,34 +924,31 @@ const Footer = ({ logoUrl, settings }) => {
             <p className="text-white/60 text-xs md:text-sm leading-relaxed">
               {footerDescription}
             </p>
+            <p className="text-white/50 text-xs mt-4 leading-relaxed">
+              {footerServiceArea}
+            </p>
           </div>
           
-          {/* Services list - with internal links for SEO */}
+          {/* Services list - dynamic from service pages */}
           <div>
             <p className="text-white/80 text-sm font-medium mb-3">Palvelumme:</p>
             <ul className="grid grid-cols-1 gap-y-2 text-xs md:text-sm text-white/60">
-              <li><Link to="/maalaustyot-helsinki" className="hover:text-white transition-colors">Maalaustyöt Helsinki</Link></li>
-              <li><Link to="/tasoitustyot-helsinki" className="hover:text-white transition-colors">Tasoitustyöt Helsinki</Link></li>
-              <li><Link to="/mikrosementti-helsinki" className="hover:text-white transition-colors">Mikrosementti Helsinki</Link></li>
-              <li><Link to="/julkisivurappaus-helsinki" className="hover:text-white transition-colors">Julkisivurappaus Helsinki</Link></li>
-              <li><Link to="/julkisivumaalaus-helsinki" className="hover:text-white transition-colors">Julkisivumaalaus Helsinki</Link></li>
-              <li><Link to="/kattomaalaus-helsinki" className="hover:text-white transition-colors">Kattomaalaus Helsinki</Link></li>
+              {servicePages.map((sp) => (
+                <li key={sp.slug}><Link to={`/${sp.slug}`} className="hover:text-white transition-colors">{sp.hero_title || sp.title || sp.slug}</Link></li>
+              ))}
             </ul>
           </div>
           
-          {/* Navigation links + Trust badges */}
+          {/* Navigation links */}
           <div>
             <p className="text-white/80 text-sm font-medium mb-3">Sivusto</p>
             <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs md:text-sm text-white/60">
               <a href="#palvelut" className="hover:text-white transition-colors">Palvelut</a>
               <a href="#meista" className="hover:text-white transition-colors">Meistä</a>
-              <a href="#referenssit" className="hover:text-white transition-colors">Referenssit</a>
+              <Link to="/referenssit" className="hover:text-white transition-colors">Referenssit</Link>
               <Link to="/ukk" className="hover:text-white transition-colors">UKK</Link>
               <a href="#yhteystiedot" className="hover:text-white transition-colors">Yhteystiedot</a>
             </div>
-            <p className="text-white/50 text-xs mt-4 leading-relaxed">
-              {footerServiceArea}
-            </p>
           </div>
           
         </div>
@@ -2342,22 +2334,25 @@ const HomePage = () => {
   const [services, setServices] = useState([]);
   const [references, setReferences] = useState([]);
   const [partners, setPartners] = useState([]);
+  const [servicePages, setServicePages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [settingsRes, servicesRes, refsRes, partnersRes] = await Promise.all([
+        const [settingsRes, servicesRes, refsRes, partnersRes, servicePagesRes] = await Promise.all([
           axios.get(`${API}/settings`),
           axios.get(`${API}/services`),
           axios.get(`${API}/references`),
-          axios.get(`${API}/partners`)
+          axios.get(`${API}/partners`),
+          axios.get(`${API}/service-pages`)
         ]);
         const mergedSettings = { ...defaultSettings, ...settingsRes.data };
         setSettings(mergedSettings);
         setServices(servicesRes.data);
         setReferences(refsRes.data);
         setPartners(partnersRes.data);
+        setServicePages(servicePagesRes.data || []);
         // Apply theme
         applyTheme(mergedSettings);
       } catch {
@@ -2443,7 +2438,7 @@ const HomePage = () => {
         <LocationSection settings={settings} />
         <ContactSection settings={settings} />
       </main>
-      <Footer logoUrl={settings.logo_url} settings={settings} />
+      <Footer logoUrl={settings.logo_url} settings={settings} servicePages={servicePages} />
     </>
   );
 };

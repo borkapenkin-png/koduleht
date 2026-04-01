@@ -206,7 +206,7 @@ const ReferencesPage = () => {
                       <p className="text-sm text-primary font-medium mb-3">{ref.type}</p>
                       
                       {ref.description && (
-                        <p className="text-sm text-[#64748B] mb-3 line-clamp-3">{ref.description}</p>
+                        <p className="text-sm text-[#64748B] mb-3">{ref.description}</p>
                       )}
                       
                       {/* Spacer to push footer to bottom */}
