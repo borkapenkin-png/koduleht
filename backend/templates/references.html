@@ -1,2 +1,59 @@
 {% extends "base.html" %}
-{# References page - SEO meta is in base.html, React renders the UI #}
+{% block seo_content %}
+<div data-seo-prerender="true">
+    <!-- Navigation -->
+    <nav aria-label="Paanavigaatio">
+        <a href="/">{{ company_name }}</a>
+        <ul>
+            <li><a href="/#palvelut">Palvelut</a></li>
+            <li><a href="/#meista">Meista</a></li>
+            <li><a href="/referenssit">Referenssit</a></li>
+            <li><a href="/ukk">UKK</a></li>
+            <li><a href="/#yhteystiedot">Yhteystiedot</a></li>
+        </ul>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="Murupolku">
+        <ol>
+            <li><a href="/">Etusivu</a></li>
+            <li>Referenssit</li>
+        </ol>
+    </nav>
+
+    <!-- Page Header -->
+    <header>
+        <h1>Referenssit - {{ company_name }}</h1>
+        <p>{{ subtitle }}</p>
+    </header>
+
+    <!-- References List -->
+    <main>
+        {% for ref in references %}
+        <article>
+            <h2>{{ ref.get('name', '') }}</h2>
+            {% if ref.get('type') %}<p><strong>Tyyppi:</strong> {{ ref.get('type') }}</p>{% endif %}
+            {% if ref.get('description') %}<p>{{ ref.get('description') }}</p>{% endif %}
+            {% if ref.get('main_contractor') %}<p><strong>Paaurakoitsija:</strong> {{ ref.get('main_contractor') }}</p>{% endif %}
+            {% if ref.get('location') %}<p><strong>Sijainti:</strong> {{ ref.get('location') }}</p>{% endif %}
+            {% if ref.get('year') %}<p><strong>Vuosi:</strong> {{ ref.get('year') }}</p>{% endif %}
+            {% if ref.get('cover_image_url') %}<img src="{{ ref.get('cover_image_url') }}" alt="{{ ref.get('name', '') }} - {{ ref.get('type', 'maalaus- ja tasoitustyot') }}" loading="lazy" />{% endif %}
+        </article>
+        {% endfor %}
+
+        {% if not references %}
+        <p>Referensseja ei ole viela lisatty.</p>
+        {% endif %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; {{ company_name }}. Kaikki oikeudet pidätetään.</p>
+        <nav aria-label="Alatunnisteen linkit">
+            <a href="/">Etusivu</a>
+            <a href="/ukk">Usein kysytyt kysymykset</a>
+            <a href="/#yhteystiedot">Yhteystiedot</a>
+        </nav>
+    </footer>
+</div>
+{% endblock %}

@@ -450,10 +450,12 @@ async def main():
                 build_path.parent.mkdir(parents=True, exist_ok=True)
                 build_path.write_text(html, encoding="utf-8")
                 
-                # Also write to public directory for persistence
-                public_path = PUBLIC_DIR / output_file
-                public_path.parent.mkdir(parents=True, exist_ok=True)
-                public_path.write_text(html, encoding="utf-8")
+                # Write subpages to public directory for persistence
+                # SKIP public/index.html to avoid breaking CRA dev server
+                if output_file != "index.html":
+                    public_path = PUBLIC_DIR / output_file
+                    public_path.parent.mkdir(parents=True, exist_ok=True)
+                    public_path.write_text(html, encoding="utf-8")
                 
                 # ALSO create /slug.html for Nginx clean URL support
                 # This allows Nginx's try_files $uri $uri.html to work

@@ -1,2 +1,59 @@
 {% extends "base.html" %}
-{# FAQ page - SEO meta is in base.html, React renders the UI #}
+{% block seo_content %}
+<div data-seo-prerender="true">
+    <!-- Navigation -->
+    <nav aria-label="Paanavigaatio">
+        <a href="/">{{ company_name }}</a>
+        <ul>
+            <li><a href="/#palvelut">Palvelut</a></li>
+            <li><a href="/#meista">Meista</a></li>
+            <li><a href="/referenssit">Referenssit</a></li>
+            <li><a href="/ukk">UKK</a></li>
+            <li><a href="/#yhteystiedot">Yhteystiedot</a></li>
+        </ul>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="Murupolku">
+        <ol>
+            <li><a href="/">Etusivu</a></li>
+            <li>Usein kysytyt kysymykset</li>
+        </ol>
+    </nav>
+
+    <!-- Page Header -->
+    <header>
+        <h1>Usein kysytyt kysymykset - UKK</h1>
+        <p>Vastauksia yleisimpiin kysymyksiin maalaus- ja tasoituspalveluistamme. Kotitalousvähennys, aikataulut, takuu ja palvelualueet.</p>
+    </header>
+
+    <!-- FAQ Content -->
+    <main>
+        {% for category in faq_categories %}
+        <section>
+            <h2>{{ category.name }}</h2>
+            {% for faq in category.faqs %}
+            <article>
+                <h3>{{ faq.question }}</h3>
+                <p>{{ faq.answer }}</p>
+            </article>
+            {% endfor %}
+        </section>
+        {% endfor %}
+
+        {% if not faq_categories %}
+        <p>Ei usein kysyttyja kysymyksia viela.</p>
+        {% endif %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; {{ company_name }}. Kaikki oikeudet pidätetään.</p>
+        <nav aria-label="Alatunnisteen linkit">
+            <a href="/">Etusivu</a>
+            <a href="/referenssit">Referenssit</a>
+            <a href="/#yhteystiedot">Yhteystiedot</a>
+        </nav>
+    </footer>
+</div>
+{% endblock %}

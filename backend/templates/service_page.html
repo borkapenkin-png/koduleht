@@ -1,2 +1,107 @@
 {% extends "base.html" %}
-{# Service page - SEO meta is in base.html, React renders the UI #}
+{% block seo_content %}
+<div data-seo-prerender="true">
+    <!-- Navigation -->
+    <nav aria-label="Paanavigaatio">
+        <a href="/">{{ company_name }}</a>
+        <ul>
+            <li><a href="/#palvelut">Palvelut</a></li>
+            <li><a href="/#meista">Meista</a></li>
+            <li><a href="/referenssit">Referenssit</a></li>
+            <li><a href="/ukk">UKK</a></li>
+            <li><a href="/#yhteystiedot">Yhteystiedot</a></li>
+        </ul>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="Murupolku">
+        <ol>
+            <li><a href="/">Etusivu</a></li>
+            <li><a href="/#palvelut">Palvelut</a></li>
+            <li>{{ page.get('hero_title', 'Palvelu') }}</li>
+        </ol>
+    </nav>
+
+    <!-- Hero Section -->
+    <header>
+        <h1>{{ page.get('hero_title', 'Palvelu') }}</h1>
+        <p>{{ page.get('hero_subtitle', '') }}</p>
+        <a href="#yhteystiedot">Pyydä tarjous</a>
+        <a href="tel:{{ phone }}">{{ phone }}</a>
+    </header>
+
+    <!-- Service Description -->
+    {% if page.get('description_text') %}
+    <section>
+        <h2>{{ page.get('description_title', 'Palvelun kuvaus') }}</h2>
+        {{ page.get('description_text', '') | safe }}
+    </section>
+    {% endif %}
+
+    <!-- Features / What Service Includes -->
+    {% if page.get('features') %}
+    <section>
+        <h2>{{ page.get('features_title', 'Mita palvelu sisaltaa') }}</h2>
+        {% for feature in page.get('features', []) %}
+        <article>
+            <h3>{{ feature.get('title', '') }}</h3>
+            <p>{{ feature.get('description', '') }}</p>
+        </article>
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    <!-- Why Choose Us -->
+    {% if why_items %}
+    <section>
+        <h2>{{ page.get('why_title', 'Miksi valita meidat') }}</h2>
+        <ul>
+            {% for item in why_items %}
+            <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+    <!-- Process Steps -->
+    {% if settings.get('process_steps') %}
+    <section>
+        <h2>{{ page.get('process_title', 'Nain projekti etenee') }}</h2>
+        <ol>
+            {% for step in settings.get('process_steps', []) %}
+            <li>
+                <strong>{{ step.get('title', '') }}</strong>
+                <p>{{ step.get('description', '') }}</p>
+            </li>
+            {% endfor %}
+        </ol>
+    </section>
+    {% endif %}
+
+    <!-- Service Areas -->
+    <section>
+        <h2>{{ page.get('areas_title', 'Palvelualueet') }}</h2>
+        <p>{{ page.get('areas_text', areas_description) }}</p>
+        <ul>
+            {% for area in service_areas %}
+            <li>{{ area }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <!-- Contact -->
+    <section id="yhteystiedot">
+        <h2>Ota yhteytta</h2>
+        <p>Pyydä maksuton arviokaynti tai tarjous.</p>
+        <address>
+            <p>Puhelin: <a href="tel:{{ phone }}">{{ phone }}</a></p>
+            <p>Sahkoposti: <a href="mailto:{{ email }}">{{ email }}</a></p>
+        </address>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; {{ company_name }}. Kaikki oikeudet pidätetään.</p>
+    </footer>
+</div>
+{% endblock %}

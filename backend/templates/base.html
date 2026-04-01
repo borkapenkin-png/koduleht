@@ -84,15 +84,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 </head>
 <body>
-    <!-- SEO content is in meta tags, JSON-LD, etc. React renders the visible UI -->
     <div id="root">
-        <!-- Minimal loading placeholder that matches React's initial render -->
+        {% block seo_content %}
+        {% endblock %}
         <noscript>
-            <div style="padding: 2rem; text-align: center; font-family: system-ui, sans-serif;">
-                <h1>Ammattitaitoista maalausta ja tasoitusta</h1>
-                <p>{{ description }}</p>
-                <p>JavaScript on vajalik selle lehe vaatamiseks.</p>
-            </div>
+            <p>Tarvitset JavaScriptin taman sivun interaktiivisten ominaisuuksien kayttamiseen.</p>
         </noscript>
     </div>
     
