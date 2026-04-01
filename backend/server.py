@@ -592,6 +592,30 @@ class ServicePage(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
+# ========== AREA / CITY MODEL ==========
+class AreaCreate(BaseModel):
+    name: str  # Helsinki
+    slug: str  # helsinki
+    name_inessive: str  # Helsingissä (used in titles: "Maalaustyöt Helsingissä")
+    is_default: bool = False
+    order: int = 0
+
+class AreaUpdate(BaseModel):
+    name: Optional[str] = None
+    slug: Optional[str] = None
+    name_inessive: Optional[str] = None
+    is_default: Optional[bool] = None
+    order: Optional[int] = None
+
+class Area(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    slug: str
+    name_inessive: str
+    is_default: bool = False
+    order: int = 0
+
 # Reference - Enhanced with images and contractor support
 class ReferenceCreate(BaseModel):
     name: str  # Project title
@@ -1345,6 +1369,66 @@ async def admin_delete_service_page(page_id: str, username: str = Depends(get_cu
         raise HTTPException(status_code=404, detail="Not found")
     return {"message": "Deleted"}
 
+
+# ========== AREAS / CITIES API ==========
+
+@api_router.get("/areas", response_model=List[Area])
+async def get_areas():
+    """Get all areas/cities."""
+    areas = await db.areas.find({}, {"_id": 0}).sort("order", 1).to_list(100)
+    return areas
+
+@api_router.get("/admin/areas", response_model=List[Area])
+async def admin_get_areas(username: str = Depends(get_current_admin)):
+    """Get all areas for admin."""
+    areas = await db.areas.find({}, {"_id": 0}).sort("order", 1).to_list(100)
+    return areas
+
+@api_router.post("/admin/areas", response_model=Area)
+async def admin_create_area(area: AreaCreate, username: str = Depends(get_current_admin)):
+    """Create a new area/city."""
+    existing = await db.areas.find_one({"slug": area.slug})
+    if existing:
+        raise HTTPException(status_code=400, detail="Area with this slug already exists")
+    # If marking as default, unset other defaults
+    if area.is_default:
+        await db.areas.update_many({}, {"$set": {"is_default": False}})
+    doc = Area(**area.model_dump()).model_dump()
+    await db.areas.insert_one(doc)
+    return {k: v for k, v in doc.items() if k != "_id"}
+
+@api_router.put("/admin/areas/{area_id}", response_model=Area)
+async def admin_update_area(area_id: str, update: AreaUpdate, username: str = Depends(get_current_admin)):
+    """Update an area/city."""
+    update_data = {k: v for k, v in update.model_dump().items() if v is not None}
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    # If marking as default, unset other defaults
+    if update_data.get("is_default"):
+        await db.areas.update_many({"id": {"$ne": area_id}}, {"$set": {"is_default": False}})
+    # Check slug uniqueness
+    if "slug" in update_data:
+        existing = await db.areas.find_one({"slug": update_data["slug"], "id": {"$ne": area_id}})
+        if existing:
+            raise HTTPException(status_code=400, detail="Area with this slug already exists")
+    result = await db.areas.update_one({"id": area_id}, {"$set": update_data})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Area not found")
+    area = await db.areas.find_one({"id": area_id}, {"_id": 0})
+    return area
+
+@api_router.delete("/admin/areas/{area_id}")
+async def admin_delete_area(area_id: str, username: str = Depends(get_current_admin)):
+    """Delete an area/city."""
+    area = await db.areas.find_one({"id": area_id}, {"_id": 0})
+    if not area:
+        raise HTTPException(status_code=404, detail="Area not found")
+    if area.get("is_default"):
+        raise HTTPException(status_code=400, detail="Cannot delete the default area")
+    await db.areas.delete_one({"id": area_id})
+    return {"message": "Deleted"}
+
+
 # Admin - Seed Data
 @api_router.post("/admin/seed")
 async def seed_initial_data(username: str = Depends(get_current_admin)):
@@ -1390,6 +1474,17 @@ async def seed_initial_data(username: str = Depends(get_current_admin)):
         ]
         await db.partners.insert_many(partners)
         seeded["partners"] = 4
+    
+    # Seed areas/cities
+    if await db.areas.count_documents({}) == 0:
+        areas = [
+            {"id": str(uuid.uuid4()), "name": "Helsinki", "slug": "helsinki", "name_inessive": "Helsingissä", "is_default": True, "order": 0},
+            {"id": str(uuid.uuid4()), "name": "Espoo", "slug": "espoo", "name_inessive": "Espoossa", "is_default": False, "order": 1},
+            {"id": str(uuid.uuid4()), "name": "Vantaa", "slug": "vantaa", "name_inessive": "Vantaalla", "is_default": False, "order": 2},
+            {"id": str(uuid.uuid4()), "name": "Kauniainen", "slug": "kauniainen", "name_inessive": "Kauniaisissa", "is_default": False, "order": 3},
+        ]
+        await db.areas.insert_many(areas)
+        seeded["areas"] = 4
     
     # Seed FAQs
     if await db.faqs.count_documents({}) == 0:

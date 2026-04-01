@@ -6,7 +6,7 @@ import pytest
 import requests
 import os
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://nginx-seo-fix.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://area-admin-panel.preview.emergentagent.com')
 
 # Expected service page slugs (Finnish SEO-friendly URLs)
 EXPECTED_SLUGS = [

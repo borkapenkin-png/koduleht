@@ -1,28 +1,13 @@
 {
   "redirects": [
     {
-      "source": "/tasoitustyot-helsinki/",
-      "destination": "/tasoitustyot-helsinki",
+      "source": "/julkisivumaalaus/",
+      "destination": "/julkisivumaalaus",
       "permanent": true
     },
     {
-      "source": "/maalaustyot-helsinki/",
-      "destination": "/maalaustyot-helsinki",
-      "permanent": true
-    },
-    {
-      "source": "/mikrosementti-helsinki/",
-      "destination": "/mikrosementti-helsinki",
-      "permanent": true
-    },
-    {
-      "source": "/julkisivurappaus-helsinki/",
-      "destination": "/julkisivurappaus-helsinki",
-      "permanent": true
-    },
-    {
-      "source": "/kattomaalaus-helsinki/",
-      "destination": "/kattomaalaus-helsinki",
+      "source": "/julkisivumaalaus-espoo/",
+      "destination": "/julkisivumaalaus-espoo",
       "permanent": true
     },
     {
@@ -31,48 +16,279 @@
       "permanent": true
     },
     {
-      "source": "/ukk/",
-      "destination": "/ukk",
+      "source": "/julkisivumaalaus-kauniainen/",
+      "destination": "/julkisivumaalaus-kauniainen",
+      "permanent": true
+    },
+    {
+      "source": "/julkisivumaalaus-vantaa/",
+      "destination": "/julkisivumaalaus-vantaa",
+      "permanent": true
+    },
+    {
+      "source": "/julkisivurappaus/",
+      "destination": "/julkisivurappaus",
+      "permanent": true
+    },
+    {
+      "source": "/julkisivurappaus-espoo/",
+      "destination": "/julkisivurappaus-espoo",
+      "permanent": true
+    },
+    {
+      "source": "/julkisivurappaus-helsinki/",
+      "destination": "/julkisivurappaus-helsinki",
+      "permanent": true
+    },
+    {
+      "source": "/julkisivurappaus-kauniainen/",
+      "destination": "/julkisivurappaus-kauniainen",
+      "permanent": true
+    },
+    {
+      "source": "/julkisivurappaus-vantaa/",
+      "destination": "/julkisivurappaus-vantaa",
+      "permanent": true
+    },
+    {
+      "source": "/kattomaalaus/",
+      "destination": "/kattomaalaus",
+      "permanent": true
+    },
+    {
+      "source": "/kattomaalaus-espoo/",
+      "destination": "/kattomaalaus-espoo",
+      "permanent": true
+    },
+    {
+      "source": "/kattomaalaus-helsinki/",
+      "destination": "/kattomaalaus-helsinki",
+      "permanent": true
+    },
+    {
+      "source": "/kattomaalaus-kauniainen/",
+      "destination": "/kattomaalaus-kauniainen",
+      "permanent": true
+    },
+    {
+      "source": "/kattomaalaus-vantaa/",
+      "destination": "/kattomaalaus-vantaa",
+      "permanent": true
+    },
+    {
+      "source": "/maalaustyot/",
+      "destination": "/maalaustyot",
+      "permanent": true
+    },
+    {
+      "source": "/maalaustyot-espoo/",
+      "destination": "/maalaustyot-espoo",
+      "permanent": true
+    },
+    {
+      "source": "/maalaustyot-helsinki/",
+      "destination": "/maalaustyot-helsinki",
+      "permanent": true
+    },
+    {
+      "source": "/maalaustyot-kauniainen/",
+      "destination": "/maalaustyot-kauniainen",
+      "permanent": true
+    },
+    {
+      "source": "/maalaustyot-vantaa/",
+      "destination": "/maalaustyot-vantaa",
+      "permanent": true
+    },
+    {
+      "source": "/mikrosementti/",
+      "destination": "/mikrosementti",
+      "permanent": true
+    },
+    {
+      "source": "/mikrosementti-espoo/",
+      "destination": "/mikrosementti-espoo",
+      "permanent": true
+    },
+    {
+      "source": "/mikrosementti-helsinki/",
+      "destination": "/mikrosementti-helsinki",
+      "permanent": true
+    },
+    {
+      "source": "/mikrosementti-kauniainen/",
+      "destination": "/mikrosementti-kauniainen",
+      "permanent": true
+    },
+    {
+      "source": "/mikrosementti-vantaa/",
+      "destination": "/mikrosementti-vantaa",
       "permanent": true
     },
     {
       "source": "/referenssit/",
       "destination": "/referenssit",
       "permanent": true
+    },
+    {
+      "source": "/tasoitustyot/",
+      "destination": "/tasoitustyot",
+      "permanent": true
+    },
+    {
+      "source": "/tasoitustyot-espoo/",
+      "destination": "/tasoitustyot-espoo",
+      "permanent": true
+    },
+    {
+      "source": "/tasoitustyot-helsinki/",
+      "destination": "/tasoitustyot-helsinki",
+      "permanent": true
+    },
+    {
+      "source": "/tasoitustyot-kauniainen/",
+      "destination": "/tasoitustyot-kauniainen",
+      "permanent": true
+    },
+    {
+      "source": "/tasoitustyot-vantaa/",
+      "destination": "/tasoitustyot-vantaa",
+      "permanent": true
+    },
+    {
+      "source": "/ukk/",
+      "destination": "/ukk",
+      "permanent": true
     }
   ],
   "rewrites": [
     {
-      "source": "/tasoitustyot-helsinki",
-      "destination": "/tasoitustyot-helsinki/index.html"
+      "source": "/julkisivumaalaus",
+      "destination": "/julkisivumaalaus/index.html"
     },
     {
-      "source": "/maalaustyot-helsinki",
-      "destination": "/maalaustyot-helsinki/index.html"
-    },
-    {
-      "source": "/mikrosementti-helsinki",
-      "destination": "/mikrosementti-helsinki/index.html"
-    },
-    {
-      "source": "/julkisivurappaus-helsinki",
-      "destination": "/julkisivurappaus-helsinki/index.html"
-    },
-    {
-      "source": "/kattomaalaus-helsinki",
-      "destination": "/kattomaalaus-helsinki/index.html"
+      "source": "/julkisivumaalaus-espoo",
+      "destination": "/julkisivumaalaus-espoo/index.html"
     },
     {
       "source": "/julkisivumaalaus-helsinki",
       "destination": "/julkisivumaalaus-helsinki/index.html"
     },
     {
-      "source": "/ukk",
-      "destination": "/ukk/index.html"
+      "source": "/julkisivumaalaus-kauniainen",
+      "destination": "/julkisivumaalaus-kauniainen/index.html"
+    },
+    {
+      "source": "/julkisivumaalaus-vantaa",
+      "destination": "/julkisivumaalaus-vantaa/index.html"
+    },
+    {
+      "source": "/julkisivurappaus",
+      "destination": "/julkisivurappaus/index.html"
+    },
+    {
+      "source": "/julkisivurappaus-espoo",
+      "destination": "/julkisivurappaus-espoo/index.html"
+    },
+    {
+      "source": "/julkisivurappaus-helsinki",
+      "destination": "/julkisivurappaus-helsinki/index.html"
+    },
+    {
+      "source": "/julkisivurappaus-kauniainen",
+      "destination": "/julkisivurappaus-kauniainen/index.html"
+    },
+    {
+      "source": "/julkisivurappaus-vantaa",
+      "destination": "/julkisivurappaus-vantaa/index.html"
+    },
+    {
+      "source": "/kattomaalaus",
+      "destination": "/kattomaalaus/index.html"
+    },
+    {
+      "source": "/kattomaalaus-espoo",
+      "destination": "/kattomaalaus-espoo/index.html"
+    },
+    {
+      "source": "/kattomaalaus-helsinki",
+      "destination": "/kattomaalaus-helsinki/index.html"
+    },
+    {
+      "source": "/kattomaalaus-kauniainen",
+      "destination": "/kattomaalaus-kauniainen/index.html"
+    },
+    {
+      "source": "/kattomaalaus-vantaa",
+      "destination": "/kattomaalaus-vantaa/index.html"
+    },
+    {
+      "source": "/maalaustyot",
+      "destination": "/maalaustyot/index.html"
+    },
+    {
+      "source": "/maalaustyot-espoo",
+      "destination": "/maalaustyot-espoo/index.html"
+    },
+    {
+      "source": "/maalaustyot-helsinki",
+      "destination": "/maalaustyot-helsinki/index.html"
+    },
+    {
+      "source": "/maalaustyot-kauniainen",
+      "destination": "/maalaustyot-kauniainen/index.html"
+    },
+    {
+      "source": "/maalaustyot-vantaa",
+      "destination": "/maalaustyot-vantaa/index.html"
+    },
+    {
+      "source": "/mikrosementti",
+      "destination": "/mikrosementti/index.html"
+    },
+    {
+      "source": "/mikrosementti-espoo",
+      "destination": "/mikrosementti-espoo/index.html"
+    },
+    {
+      "source": "/mikrosementti-helsinki",
+      "destination": "/mikrosementti-helsinki/index.html"
+    },
+    {
+      "source": "/mikrosementti-kauniainen",
+      "destination": "/mikrosementti-kauniainen/index.html"
+    },
+    {
+      "source": "/mikrosementti-vantaa",
+      "destination": "/mikrosementti-vantaa/index.html"
     },
     {
       "source": "/referenssit",
       "destination": "/referenssit/index.html"
+    },
+    {
+      "source": "/tasoitustyot",
+      "destination": "/tasoitustyot/index.html"
+    },
+    {
+      "source": "/tasoitustyot-espoo",
+      "destination": "/tasoitustyot-espoo/index.html"
+    },
+    {
+      "source": "/tasoitustyot-helsinki",
+      "destination": "/tasoitustyot-helsinki/index.html"
+    },
+    {
+      "source": "/tasoitustyot-kauniainen",
+      "destination": "/tasoitustyot-kauniainen/index.html"
+    },
+    {
+      "source": "/tasoitustyot-vantaa",
+      "destination": "/tasoitustyot-vantaa/index.html"
+    },
+    {
+      "source": "/ukk",
+      "destination": "/ukk/index.html"
     },
     {
       "source": "/((?!api|static|.*\\.).*)",

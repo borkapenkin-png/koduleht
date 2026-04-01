@@ -230,9 +230,18 @@ async def generate_home_page(db, css_files, js_files):
     )
 
 
-async def generate_service_page(db, slug: str, css_files, js_files):
-    """Generate service page HTML."""
-    page = await db.service_pages.find_one({"slug": slug})
+async def generate_service_page(db, slug: str, css_files, js_files, area_override=None):
+    """Generate service page HTML. If area_override is provided, generate a city variant."""
+    # For city variants, find the base (Helsinki) page
+    if area_override:
+        # Find the Helsinki version of this page
+        default_area = await db.areas.find_one({"is_default": True}, {"_id": 0})
+        default_slug = default_area.get("slug", "helsinki") if default_area else "helsinki"
+        base_slug = slug.replace(f"-{area_override['slug']}", f"-{default_slug}")
+        page = await db.service_pages.find_one({"slug": base_slug})
+    else:
+        page = await db.service_pages.find_one({"slug": slug})
+    
     if not page:
         print(f"  Warning: Page not found for slug: {slug}")
         return None
@@ -248,6 +257,31 @@ async def generate_service_page(db, slug: str, css_files, js_files):
     phone = settings.get("company_phone_primary", COMPANY_PHONE)
     email = settings.get("company_email", COMPANY_EMAIL)
     service_areas = settings.get("service_areas", ["Helsinki", "Espoo", "Vantaa", "Kauniainen", "Uusimaa"])
+    
+    # For city variants, replace city references in content
+    if area_override:
+        default_area = await db.areas.find_one({"is_default": True}, {"_id": 0})
+        default_name = default_area.get("name", "Helsinki") if default_area else "Helsinki"
+        default_inessive = default_area.get("name_inessive", "Helsingissä") if default_area else "Helsingissä"
+        target_name = area_override["name"]
+        target_inessive = area_override["name_inessive"]
+        
+        def replace_city(text):
+            if not text or not isinstance(text, str):
+                return text
+            return text.replace(default_inessive, target_inessive).replace(default_name, target_name).replace(default_inessive.lower(), target_inessive.lower()).replace(default_name.lower(), target_name.lower())
+        
+        # Clone page and replace city references
+        page = dict(page)
+        for key in ["hero_title", "hero_subtitle", "seo_title", "seo_description", "description_text", "description_title", "areas_text", "areas_title", "features_title", "why_title", "process_title"]:
+            if key in page and page[key]:
+                page[key] = replace_city(page[key])
+        # Replace in features
+        if page.get("features"):
+            page["features"] = [{"title": replace_city(f.get("title", "")), "description": replace_city(f.get("description", ""))} for f in page["features"]]
+    
+    # Get all areas for "other areas" section
+    areas = await db.areas.find({}, {"_id": 0}).sort("order", 1).to_list(100)
     
     service_json_ld = build_json_ld_service(page, settings)
     breadcrumb_json_ld = build_json_ld_breadcrumb([
@@ -275,12 +309,19 @@ async def generate_service_page(db, slug: str, css_files, js_files):
     else:
         page_title = f"{seo_title} | {company_name}"
     
+    # Compute base_slug for linking to other city variants
+    base_slug = slug
+    for area in areas:
+        if slug.endswith(f"-{area['slug']}"):
+            base_slug = slug.replace(f"-{area['slug']}", "")
+            break
+    
     return template.render(
         title=page_title,
         description=page.get("seo_description", page.get("hero_subtitle", "")),
         keywords=page.get("seo_keywords", ""),
         canonical_url=f"{SITE_URL}/{slug}",
-        og_title=seo_title,  # OG title without company suffix for cleaner sharing
+        og_title=seo_title,
         og_description=page.get("seo_description", page.get("hero_subtitle", "")),
         og_image=page.get("hero_image_url"),
         company_name=company_name,
@@ -292,6 +333,62 @@ async def generate_service_page(db, slug: str, css_files, js_files):
         service_areas=service_areas,
         areas_description=areas_description,
         why_items=why_items,
+        areas=areas,
+        base_slug=base_slug,
+        current_area_slug=area_override["slug"] if area_override else None,
+        css_files=css_files,
+        js_files=js_files
+    )
+
+
+async def generate_general_service_page(db, base_slug: str, base_page, css_files, js_files):
+    """Generate general service overview page (e.g., /maalaustyot) with area selection."""
+    settings = await db.site_settings.find_one({}) or {}
+    if '_id' in settings:
+        del settings['_id']
+    
+    company_name = settings.get("company_name", COMPANY_NAME)
+    areas = await db.areas.find({}, {"_id": 0}).sort("order", 1).to_list(100)
+    
+    # Use the base page info but make it general (no city name)
+    page = dict(base_page)
+    if '_id' in page:
+        del page['_id']
+    
+    # Remove city from title for general page
+    default_area = await db.areas.find_one({"is_default": True}, {"_id": 0})
+    default_name = default_area.get("name", "Helsinki") if default_area else "Helsinki"
+    default_inessive = default_area.get("name_inessive", "Helsingissä") if default_area else "Helsingissä"
+    
+    def remove_city(text):
+        if not text or not isinstance(text, str):
+            return text
+        result = text.replace(f" {default_inessive}", "").replace(f" {default_name}", "")
+        result = result.replace(f" {default_inessive.lower()}", "").replace(f" {default_name.lower()}", "")
+        return result.strip()
+    
+    general_title = remove_city(page.get("hero_title", ""))
+    general_subtitle = page.get("hero_subtitle", "")
+    
+    seo_title = f"{general_title} | {company_name}"
+    seo_description = f"{general_title} - ammattitaitoiset palvelut Helsingissä, Espoossa, Vantaalla ja koko Uudellamaalla. Valitse alue."
+    
+    template = jinja_env.get_template("service_general.html")
+    return template.render(
+        title=seo_title,
+        description=seo_description,
+        canonical_url=f"{SITE_URL}/{base_slug}",
+        og_title=seo_title,
+        og_description=seo_description,
+        og_image=page.get("hero_image_url"),
+        company_name=company_name,
+        json_ld=build_json_ld_service(page, settings),
+        page=page,
+        general_title=general_title,
+        general_subtitle=general_subtitle,
+        settings=settings,
+        areas=areas,
+        base_slug=base_slug,
         css_files=css_files,
         js_files=js_files
     )
@@ -422,6 +519,12 @@ async def main():
     slugs = [p.get("slug") for p in service_pages if p.get("slug")]
     print(f"Found {len(slugs)} service pages in database")
     
+    # Get all areas from DB
+    areas = await db.areas.find({}, {"_id": 0}).sort("order", 1).to_list(100)
+    default_area = next((a for a in areas if a.get("is_default")), areas[0] if areas else {"slug": "helsinki", "name": "Helsinki", "name_inessive": "Helsingissä"})
+    non_default_areas = [a for a in areas if not a.get("is_default")]
+    print(f"Found {len(areas)} areas: {', '.join(a['name'] for a in areas)}")
+    
     # Pages to generate
     pages_to_generate = [
         ("Home", "/", "index.html", lambda: generate_home_page(db, css_files, js_files)),
@@ -429,12 +532,39 @@ async def main():
         ("FAQ", "/ukk", "ukk/index.html", lambda: generate_faq_page(db, css_files, js_files)),
     ]
     
-    # Add service pages
-    for slug in slugs:
+    # For each service page (Helsinki/default version):
+    # 1. Generate the original city-specific page (e.g., /maalaustyot-helsinki)
+    # 2. Generate the general page (e.g., /maalaustyot)
+    # 3. Generate city variants (e.g., /maalaustyot-espoo, /maalaustyot-vantaa)
+    for sp in service_pages:
+        slug = sp.get("slug")
+        if not slug:
+            continue
+        
+        # Compute base_slug (remove default area suffix)
+        base_slug = slug
+        if slug.endswith(f"-{default_area['slug']}"):
+            base_slug = slug[:-len(f"-{default_area['slug']}")]
+        
+        # 1. Original page (e.g., /maalaustyot-helsinki)
         pages_to_generate.append(
-            (f"Service: {slug}", f"/{slug}", f"{slug}/index.html", 
+            (f"Service: {slug}", f"/{slug}", f"{slug}/index.html",
              lambda s=slug: generate_service_page(db, s, css_files, js_files))
         )
+        
+        # 2. General page (e.g., /maalaustyot) - without city
+        pages_to_generate.append(
+            (f"Service General: {base_slug}", f"/{base_slug}", f"{base_slug}/index.html",
+             lambda bs=base_slug, p=sp: generate_general_service_page(db, bs, p, css_files, js_files))
+        )
+        
+        # 3. City variants for non-default areas
+        for area in non_default_areas:
+            variant_slug = f"{base_slug}-{area['slug']}"
+            pages_to_generate.append(
+                (f"Service: {variant_slug}", f"/{variant_slug}", f"{variant_slug}/index.html",
+                 lambda vs=variant_slug, a=area: generate_service_page(db, vs, css_files, js_files, area_override=a))
+            )
     
     print(f"\nTotal pages to generate: {len(pages_to_generate)}")
     print()
@@ -475,22 +605,21 @@ async def main():
     
     client.close()
     
-    # Copy serve.json for proper routing to both directories
-    # cleanUrls: true allows /slug to serve /slug.html
-    # trailingSlash: false redirects /slug/ to /slug
+    # Collect all generated page slugs for routing configs
+    all_slugs = set()
+    for name, path, output_file, generator in pages_to_generate:
+        if path != "/" and path.startswith("/"):
+            all_slugs.add(path.lstrip("/"))
+    
+    # Copy serve.json for proper routing
+    serve_redirects = []
+    for slug in sorted(all_slugs):
+        serve_redirects.append({"source": f"/{slug}/", "destination": f"/{slug}", "type": 301})
+    
     serve_json_obj = {
         "cleanUrls": True,
         "trailingSlash": False,
-        "redirects": [
-            { "source": "/maalaustyot-helsinki/", "destination": "/maalaustyot-helsinki", "type": 301 },
-            { "source": "/tasoitustyot-helsinki/", "destination": "/tasoitustyot-helsinki", "type": 301 },
-            { "source": "/mikrosementti-helsinki/", "destination": "/mikrosementti-helsinki", "type": 301 },
-            { "source": "/julkisivurappaus-helsinki/", "destination": "/julkisivurappaus-helsinki", "type": 301 },
-            { "source": "/kattomaalaus-helsinki/", "destination": "/kattomaalaus-helsinki", "type": 301 },
-            { "source": "/julkisivumaalaus-helsinki/", "destination": "/julkisivumaalaus-helsinki", "type": 301 },
-            { "source": "/ukk/", "destination": "/ukk", "type": 301 },
-            { "source": "/referenssit/", "destination": "/referenssit", "type": 301 }
-        ],
+        "redirects": serve_redirects,
         "rewrites": [
             { "source": "/admin", "destination": "/index.html" },
             { "source": "/admin/**", "destination": "/index.html" },
@@ -500,35 +629,25 @@ async def main():
     serve_json_content = json.dumps(serve_json_obj, indent=2)
     (BUILD_DIR / "serve.json").write_text(serve_json_content, encoding="utf-8")
     (PUBLIC_DIR / "serve.json").write_text(serve_json_content, encoding="utf-8")
-    print(f"  ✓ serve.json")
+    print(f"  ✓ serve.json ({len(serve_redirects)} redirects)")
     
-    # Create _redirects for Netlify-style routing (if platform supports it)
+    # Create _redirects 
     redirects_lines = []
-    # Redirect trailing slash versions to clean URLs (301 redirect)
-    for slug in slugs:
+    for slug in sorted(all_slugs):
         redirects_lines.append(f"/{slug}/ /{slug} 301")
         redirects_lines.append(f"/{slug} /{slug}/index.html 200")
-    redirects_lines.append("/ukk/ /ukk 301")
-    redirects_lines.append("/ukk /ukk/index.html 200")
-    redirects_lines.append("/referenssit/ /referenssit 301")
-    redirects_lines.append("/referenssit /referenssit/index.html 200")
     redirects_lines.append("/* /index.html 200")
     redirects_content = "\n".join(redirects_lines)
     (BUILD_DIR / "_redirects").write_text(redirects_content, encoding="utf-8")
     (PUBLIC_DIR / "_redirects").write_text(redirects_content, encoding="utf-8")
     print(f"  ✓ _redirects")
     
-    # Create vercel.json for Vercel-style routing (if platform supports it)
+    # Create vercel.json
     vercel_rewrites = []
     vercel_redirects = []
-    # Add trailing slash redirects first (301)
-    for slug in slugs:
+    for slug in sorted(all_slugs):
         vercel_redirects.append({"source": f"/{slug}/", "destination": f"/{slug}", "permanent": True})
         vercel_rewrites.append({"source": f"/{slug}", "destination": f"/{slug}/index.html"})
-    vercel_redirects.append({"source": "/ukk/", "destination": "/ukk", "permanent": True})
-    vercel_redirects.append({"source": "/referenssit/", "destination": "/referenssit", "permanent": True})
-    vercel_rewrites.append({"source": "/ukk", "destination": "/ukk/index.html"})
-    vercel_rewrites.append({"source": "/referenssit", "destination": "/referenssit/index.html"})
     vercel_rewrites.append({"source": "/((?!api|static|.*\\.).*)", "destination": "/index.html"})
     vercel_json_obj = {"redirects": vercel_redirects, "rewrites": vercel_rewrites}
     vercel_json_content = json.dumps(vercel_json_obj, indent=2)
@@ -536,7 +655,7 @@ async def main():
     (PUBLIC_DIR / "vercel.json").write_text(vercel_json_content, encoding="utf-8")
     print(f"  ✓ vercel.json")
     
-    # Create .htaccess for Apache-style routing with trailing slash removal
+    # Create .htaccess
     htaccess_lines = [
         "<IfModule mod_rewrite.c>",
         "  RewriteEngine On",
@@ -548,11 +667,8 @@ async def main():
         "  RewriteRule ^ %1 [R=301,L]",
         "  "
     ]
-    # Add service page rules
-    for slug in slugs:
+    for slug in sorted(all_slugs):
         htaccess_lines.append(f"  RewriteRule ^{slug}$ {slug}/index.html [L]")
-    htaccess_lines.append("  RewriteRule ^ukk$ ukk/index.html [L]")
-    htaccess_lines.append("  RewriteRule ^referenssit$ referenssit/index.html [L]")
     htaccess_lines.extend([
         "  ",
         "  # SPA fallback",
@@ -565,6 +681,23 @@ async def main():
     (BUILD_DIR / ".htaccess").write_text(htaccess_content, encoding="utf-8")
     (PUBLIC_DIR / ".htaccess").write_text(htaccess_content, encoding="utf-8")
     print(f"  ✓ .htaccess")
+    
+    # Generate sitemap.xml
+    sitemap_urls = [SITE_URL]
+    for slug in sorted(all_slugs):
+        sitemap_urls.append(f"{SITE_URL}/{slug}")
+    
+    sitemap_entries = []
+    for url in sitemap_urls:
+        sitemap_entries.append(f'  <url><loc>{url}</loc><changefreq>weekly</changefreq></url>')
+    
+    sitemap_xml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{chr(10).join(sitemap_entries)}
+</urlset>'''
+    (BUILD_DIR / "sitemap.xml").write_text(sitemap_xml, encoding="utf-8")
+    (PUBLIC_DIR / "sitemap.xml").write_text(sitemap_xml, encoding="utf-8")
+    print(f"  ✓ sitemap.xml ({len(sitemap_urls)} URLs)")
     
     print()
     print("=" * 60)

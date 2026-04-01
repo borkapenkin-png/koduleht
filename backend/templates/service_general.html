@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block seo_content %}
+<div data-seo-prerender="true">
+    <!-- Navigation -->
+    <nav aria-label="Paanavigaatio">
+        <a href="/">{{ company_name }}</a>
+        <ul>
+            <li><a href="/#palvelut">Palvelut</a></li>
+            <li><a href="/#meista">Meista</a></li>
+            <li><a href="/referenssit">Referenssit</a></li>
+            <li><a href="/ukk">UKK</a></li>
+            <li><a href="/#yhteystiedot">Yhteystiedot</a></li>
+        </ul>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="Murupolku">
+        <ol>
+            <li><a href="/">Etusivu</a></li>
+            <li><a href="/#palvelut">Palvelut</a></li>
+            <li>{{ general_title }}</li>
+        </ol>
+    </nav>
+
+    <!-- Hero Section -->
+    <header>
+        <h1>{{ general_title }}</h1>
+        <p>{{ general_subtitle }}</p>
+    </header>
+
+    <!-- Service Description -->
+    {% if page.get('description_text') %}
+    <section>
+        <h2>{{ page.get('description_title', 'Palvelun kuvaus') }}</h2>
+        {{ page.get('description_text', '') | safe }}
+    </section>
+    {% endif %}
+
+    <!-- Area Selection -->
+    <section>
+        <h2>Valitse alue</h2>
+        <p>Tarjoamme palvelua seuraavilla alueilla. Valitse alue saadaksesi lisatietoja.</p>
+        <ul>
+            {% for area in areas %}
+            <li>
+                <a href="/{{ base_slug }}-{{ area.slug }}">{{ general_title }} {{ area.name_inessive }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; {{ company_name }}. Kaikki oikeudet pidätetään.</p>
+    </footer>
+</div>
+{% endblock %}

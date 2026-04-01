@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <!-- SEO URL Normalization: redirect www, trailing slash, and /index.html to clean URLs -->
+    <script>
+      (function() {
+        var host = window.location.hostname;
+        var path = window.location.pathname;
+        var search = window.location.search;
+        var needsRedirect = false;
+        var newUrl = 'https://jbtasoitusmaalaus.fi';
+        
+        // Redirect www to non-www
+        if (host === 'www.jbtasoitusmaalaus.fi') {
+          needsRedirect = true;
+        }
+        
+        // Remove trailing slash (except for root)
+        if (path !== '/' && path.endsWith('/')) {
+          path = path.slice(0, -1);
+          needsRedirect = true;
+        }
+        
+        // Remove /index.html
+        if (path.endsWith('/index.html')) {
+          path = path.replace('/index.html', '') || '/';
+          needsRedirect = true;
+        }
+        
+        if (needsRedirect) {
+          window.location.replace(newUrl + path + search);
+        }
+      })();
+    </script>
+    
+    <!-- SEO Meta Tags -->
+    <title>Kattomaalaus | J&amp;B Tasoitus ja Maalaus Oy</title>
+    <meta name="description" content="Kattomaalaus - ammattitaitoiset palvelut Helsingissä, Espoossa, Vantaalla ja koko Uudellamaalla. Valitse alue." />
+    
+    <link rel="canonical" href="https://jbtasoitusmaalaus.fi/kattomaalaus" />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Kattomaalaus | J&amp;B Tasoitus ja Maalaus Oy" />
+    <meta property="og:description" content="Kattomaalaus - ammattitaitoiset palvelut Helsingissä, Espoossa, Vantaalla ja koko Uudellamaalla. Valitse alue." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://jbtasoitusmaalaus.fi/kattomaalaus" />
+    <meta property="og:image" content="/api/images/2951c088-0208-43a2-9c7e-71a90d1385a8" />
+    <meta property="og:site_name" content="J&amp;B Tasoitus ja Maalaus Oy" />
+    <meta property="og:locale" content="fi_FI" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Kattomaalaus | J&amp;B Tasoitus ja Maalaus Oy" />
+    <meta name="twitter:description" content="Kattomaalaus - ammattitaitoiset palvelut Helsingissä, Espoossa, Vantaalla ja koko Uudellamaalla. Valitse alue." />
+    <meta name="twitter:image" content="/api/images/2951c088-0208-43a2-9c7e-71a90d1385a8" />
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" />
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZP42XN14NG"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-ZP42XN14NG');
+    </script>
+    
+    <!-- JSON-LD Structured Data -->
+    
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Service", "name": "Kattomaalaus Helsingissä", "description": "Kattomaalaus Helsingissä, Espoossa ja Vantaalla. Katon pesu, huoltomaalaus ja suojakäsittely ammattitaidolla. Pyydä maksuton arvio!", "provider": {"@type": "LocalBusiness", "@id": "https://jbtasoitusmaalaus.fi/#organization", "name": "J&B Tasoitus ja Maalaus Oy", "telephone": "+358 40 054 7270", "address": {"@type": "PostalAddress", "addressLocality": "Helsinki", "addressCountry": "FI"}}, "areaServed": [{"@type": "City", "name": "Helsinki"}, {"@type": "City", "name": "Espoo"}, {"@type": "City", "name": "Vantaa"}], "serviceType": "Kattomaalaus Helsingissä", "offers": {"@type": "Offer", "availability": "https://schema.org/InStock", "priceSpecification": {"@type": "PriceSpecification", "priceCurrency": "EUR"}}, "termsOfService": "https://jbtasoitusmaalaus.fi/#yhteystiedot"}</script>
+    
+    
+    <!-- React App CSS - loaded from build -->
+    
+    <link rel="stylesheet" href="/static/css/main.c9f5e8e3.css?v=20260319" />
+    
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+    <div id="root">
+        
+<div data-seo-prerender="true">
+    <!-- Navigation -->
+    <nav aria-label="Paanavigaatio">
+        <a href="/">J&amp;B Tasoitus ja Maalaus Oy</a>
+        <ul>
+            <li><a href="/#palvelut">Palvelut</a></li>
+            <li><a href="/#meista">Meista</a></li>
+            <li><a href="/referenssit">Referenssit</a></li>
+            <li><a href="/ukk">UKK</a></li>
+            <li><a href="/#yhteystiedot">Yhteystiedot</a></li>
+        </ul>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="Murupolku">
+        <ol>
+            <li><a href="/">Etusivu</a></li>
+            <li><a href="/#palvelut">Palvelut</a></li>
+            <li>Kattomaalaus</li>
+        </ol>
+    </nav>
+
+    <!-- Hero Section -->
+    <header>
+        <h1>Kattomaalaus</h1>
+        <p>Kattomaalaus suojaa kattoa säältä ja pidentää sen käyttöikää. Toteutamme katon pesun ja maalaustyöt Helsingissä, Espoossa ja Vantaalla ammattitaidolla.</p>
+    </header>
+
+    <!-- Service Description -->
+    
+    <section>
+        <h2>Palvelun kuvaus</h2>
+        <p>Kattomaalaus on tärkeä osa rakennuksen kunnossapitoa. Säännöllinen katon huoltomaalaus suojaa kattoa kosteudelta, ruosteelta ja muilta sääolosuhteiden aiheuttamilta vaurioilta. Hyvin hoidettu katto säilyttää ulkonäkönsä ja kestää käytössä huomattavasti pidempään.</p>
+
+<p>J&B Tasoitus ja Maalaus toteuttaa kattomaalaukset Helsingissä, Espoossa ja Vantaalla niin omakotitaloihin kuin taloyhtiöihin. Huolellinen pohjatyö ja laadukkaat maalit takaavat kestävän lopputuloksen.</p>
+
+<h3>Katon pesu ja pohjatyöt</h3>
+
+<p>Ennen maalausta katto pestään huolellisesti, jotta lika, sammal ja muut epäpuhtaudet poistuvat pinnalta. Tarvittaessa poistamme myös ruostekohdat ja teemme tarvittavat korjaukset ennen maalausta.</p>
+
+<p>Hyvin tehty pohjatyö varmistaa, että maali tarttuu kunnolla ja suojaa kattoa tehokkaasti.</p>
+
+<h3>Peltikaton ja muiden kattojen maalaus</h3>
+
+<p>Kattomaalaus sopii erityisesti peltikatoille, mutta sitä voidaan tehdä myös muille kattotyypeille kohteesta riippuen. Oikein tehty kattomaalaus parantaa katon ulkonäköä ja pidentää sen käyttöikää.</p>
+
+<p>Teemme kattomaalaukset esimerkiksi seuraaviin kohteisiin:</p>
+
+<ul>
+<li>peltikattojen maalaus</li>
+<li>katon pesu ja puhdistus</li>
+<li>katon huoltomaalaus</li>
+<li>ruostekohtien käsittely</li>
+<li>katon suojaava pintamaalaus</li>
+</ul>
+
+<h3>Kattomaalaus Helsingissä, Espoossa ja Vantaalla</h3>
+
+<p>Laadukas kattomaalaus suojaa kattoa ja parantaa rakennuksen ulkonäköä. J&B Tasoitus ja Maalaus toteuttaa kattomaalaukset ammattitaidolla koko pääkaupunkiseudulla.</p>
+
+<p>Palvelemme asiakkaita Helsingissä, Espoossa ja Vantaalla ja toteutamme työt sovitussa aikataulussa.</p>
+    </section>
+    
+
+    <!-- Area Selection -->
+    <section>
+        <h2>Valitse alue</h2>
+        <p>Tarjoamme palvelua seuraavilla alueilla. Valitse alue saadaksesi lisatietoja.</p>
+        <ul>
+            
+            <li>
+                <a href="/kattomaalaus-helsinki">Kattomaalaus Helsingissä</a>
+            </li>
+            
+            <li>
+                <a href="/kattomaalaus-espoo">Kattomaalaus Espoossa</a>
+            </li>
+            
+            <li>
+                <a href="/kattomaalaus-vantaa">Kattomaalaus Vantaalla</a>
+            </li>
+            
+            <li>
+                <a href="/kattomaalaus-kauniainen">Kattomaalaus Kauniaisissa</a>
+            </li>
+            
+        </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; J&amp;B Tasoitus ja Maalaus Oy. Kaikki oikeudet pidätetään.</p>
+    </footer>
+</div>
+
+        <noscript>
+            <p>Tarvitset JavaScriptin taman sivun interaktiivisten ominaisuuksien kayttamiseen.</p>
+        </noscript>
+    </div>
+    
+    <!-- React App JS - loaded from build -->
+    
+    <script src="/static/js/main.365daaff.js?v=20260319"></script>
+    
+</body>
+</html>

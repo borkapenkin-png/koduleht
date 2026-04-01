@@ -89,6 +89,21 @@
         </ul>
     </section>
 
+    <!-- Other Areas -->
+    {% if areas and base_slug %}
+    <section>
+        <h2>Muut alueet</h2>
+        <ul>
+            {% for area in areas %}
+            {% if current_area_slug != area.slug %}
+            <li><a href="/{{ base_slug }}-{{ area.slug }}">{{ page.get('hero_title', '').split(' ')[0] if page.get('hero_title') else 'Palvelu' }} {{ area.name_inessive }}</a></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        <p><a href="/{{ base_slug }}">Katso kaikki alueet</a></p>
+    </section>
+    {% endif %}
+
     <!-- Contact -->
     <section id="yhteystiedot">
         <h2>Ota yhteytta</h2>

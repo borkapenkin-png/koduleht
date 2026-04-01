@@ -10,6 +10,7 @@ import ReferencesPage from "./pages/ReferencesPage";
 import FaqHubPage from "./pages/FaqHubPage";
 import ServicePagesAdmin from "./components/admin/ServicePagesAdmin";
 import GlobalSettingsAdmin from "./components/admin/GlobalSettingsAdmin";
+import AreasAdmin from "./components/admin/AreasAdmin";
 import StructuredData from "./components/StructuredData";
 import FAQSection from "./components/FAQSection";
 import QuoteRequestForm from "./components/QuoteRequestForm";
@@ -1368,6 +1369,7 @@ const AdminPanel = () => {
     { id: "global", label: "Yleiset", icon: Globe },
     { id: "settings", label: "Etusivu", icon: Home },
     { id: "servicepages", label: "Palvelusivut", icon: FileText },
+    { id: "areas", label: "Alueet", icon: MapPin },
     { id: "services", label: "Palvelut", icon: Briefcase },
     { id: "references", label: "Referenssit", icon: Building2 },
     { id: "faqs", label: "UKK", icon: HelpCircle },
@@ -1632,6 +1634,14 @@ const AdminPanel = () => {
             {/* SERVICE PAGES TAB */}
             {activeTab === "servicepages" && (
               <ServicePagesAdmin 
+                token={token}
+                onRefresh={loadData}
+              />
+            )}
+
+            {/* AREAS TAB */}
+            {activeTab === "areas" && (
+              <AreasAdmin 
                 token={token}
                 onRefresh={loadData}
               />

@@ -731,9 +731,14 @@ const DynamicServicePage = () => {
   const [allPages, setAllPages] = useState([]);
   const [services, setServices] = useState([]);
   const [serviceFaqs, setServiceFaqs] = useState([]);
+  const [areas, setAreas] = useState([]);
+  const [currentArea, setCurrentArea] = useState(null);
+  const [baseSlug, setBaseSlug] = useState(null);
+  const [isGeneralPage, setIsGeneralPage] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [servicePages, setServicePages] = useState([]);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -746,36 +751,111 @@ const DynamicServicePage = () => {
     if (reservedSlugs.includes(slug?.toLowerCase())) { setError('not_found'); setLoading(false); return; }
 
     const fetchData = async () => {
-      setLoading(true); setError(null);
+      setLoading(true); setError(null); setIsGeneralPage(false); setCurrentArea(null);
       try {
-        const [settingsRes, pageRes, allPagesRes, servicesRes] = await Promise.all([
+        // Fetch settings, all service pages, services, and areas in parallel
+        const [settingsRes, allPagesRes, servicesRes, areasRes] = await Promise.all([
           fetch(`${API_URL}/api/settings`),
-          fetch(`${API_URL}/api/service-pages/${slug}`),
           fetch(`${API_URL}/api/service-pages`),
-          fetch(`${API_URL}/api/services`)
+          fetch(`${API_URL}/api/services`),
+          fetch(`${API_URL}/api/areas`)
         ]);
         if (!settingsRes.ok) throw new Error('Settings error');
         const settingsData = await settingsRes.json();
         setSettings(settingsData);
         if (settingsData.theme_color) document.documentElement.style.setProperty('--color-primary', settingsData.theme_color);
-        if (!pageRes.ok) { setError('not_found'); setLoading(false); return; }
-        const pageData = await pageRes.json();
-        setPage(pageData);
-        // Title is now set by useServicePageSEO hook
-        if (allPagesRes.ok) setAllPages(await allPagesRes.json());
-        if (servicesRes.ok) setServices(await servicesRes.json());
         
-        // Fetch service-specific FAQs if page has linked service
-        if (pageData.service_id) {
-          try {
-            const faqsRes = await fetch(`${API_URL}/api/faqs?service_id=${pageData.service_id}`);
-            if (faqsRes.ok) {
-              const faqsData = await faqsRes.json();
-              setServiceFaqs(faqsData);
-            }
-          } catch (faqErr) {
-            console.error('Error fetching FAQs:', faqErr);
+        const allPagesData = allPagesRes.ok ? await allPagesRes.json() : [];
+        setAllPages(allPagesData);
+        setServicePages(allPagesData);
+        if (servicesRes.ok) setServices(await servicesRes.json());
+        const areasData = areasRes.ok ? await areasRes.json() : [];
+        setAreas(areasData);
+        
+        // Try to find the exact page first
+        const exactPage = allPagesData.find(p => p.slug === slug);
+        
+        if (exactPage) {
+          // Exact match found (e.g., /maalaustyot-helsinki)
+          setPage(exactPage);
+          // Determine current area and base slug
+          const matchedArea = areasData.find(a => slug.endsWith(`-${a.slug}`));
+          if (matchedArea) {
+            setCurrentArea(matchedArea);
+            setBaseSlug(slug.replace(`-${matchedArea.slug}`, ''));
           }
+        } else {
+          // No exact match - check if it's a city variant or general page
+          const defaultArea = areasData.find(a => a.is_default) || areasData[0];
+          
+          // Check if slug matches a general page pattern (no city suffix)
+          const matchedBaseFromGeneral = allPagesData.find(p => {
+            if (!defaultArea) return false;
+            return p.slug === `${slug}-${defaultArea.slug}`;
+          });
+          
+          if (matchedBaseFromGeneral) {
+            // This is a general page (e.g., /maalaustyot → base is maalaustyot-helsinki)
+            setIsGeneralPage(true);
+            setBaseSlug(slug);
+            // Remove city from the page title for display
+            const generalPage = { ...matchedBaseFromGeneral };
+            if (defaultArea) {
+              const replacer = (text) => {
+                if (!text) return text;
+                return text.replace(new RegExp(`\\s*${defaultArea.name_inessive}`, 'gi'), '')
+                           .replace(new RegExp(`\\s*${defaultArea.name}`, 'gi'), '').trim();
+              };
+              generalPage.hero_title = replacer(generalPage.hero_title);
+              generalPage.seo_title = replacer(generalPage.seo_title);
+            }
+            setPage(generalPage);
+          } else {
+            // Check if slug matches a city variant (e.g., /maalaustyot-espoo)
+            const targetArea = areasData.find(a => slug.endsWith(`-${a.slug}`));
+            if (targetArea && defaultArea) {
+              const computedBaseSlug = slug.replace(`-${targetArea.slug}`, '');
+              const basePage = allPagesData.find(p => p.slug === `${computedBaseSlug}-${defaultArea.slug}`);
+              
+              if (basePage) {
+                // Found base page - create city variant by replacing city references
+                setCurrentArea(targetArea);
+                setBaseSlug(computedBaseSlug);
+                const variantPage = { ...basePage, slug: slug };
+                const replacer = (text) => {
+                  if (!text) return text;
+                  return text.replace(new RegExp(defaultArea.name_inessive, 'gi'), targetArea.name_inessive)
+                             .replace(new RegExp(defaultArea.name, 'gi'), targetArea.name);
+                };
+                variantPage.hero_title = replacer(variantPage.hero_title);
+                variantPage.hero_subtitle = replacer(variantPage.hero_subtitle);
+                variantPage.seo_title = replacer(variantPage.seo_title);
+                variantPage.seo_description = replacer(variantPage.seo_description);
+                variantPage.description_text = replacer(variantPage.description_text);
+                variantPage.description_title = replacer(variantPage.description_title);
+                variantPage.areas_text = replacer(variantPage.areas_text);
+                if (variantPage.features) {
+                  variantPage.features = variantPage.features.map(f => ({
+                    ...f, title: replacer(f.title), description: replacer(f.description)
+                  }));
+                }
+                setPage(variantPage);
+              } else {
+                setError('not_found');
+              }
+            } else {
+              setError('not_found');
+            }
+          }
+        }
+        
+        // Fetch FAQs for the service if available
+        const resolvedPage = exactPage || allPagesData.find(p => p.slug === slug) || allPagesData[0];
+        if (resolvedPage?.service_id) {
+          try {
+            const faqsRes = await fetch(`${API_URL}/api/faqs?service_id=${resolvedPage.service_id}`);
+            if (faqsRes.ok) setServiceFaqs(await faqsRes.json());
+          } catch (e) { /* ignore */ }
         }
       } catch (err) { setError('error'); }
       setLoading(false);
@@ -797,6 +877,50 @@ const DynamicServicePage = () => {
     </div>
   );
 
+  // General page - show area selection
+  if (isGeneralPage && baseSlug) {
+    return (
+      <div className="App">
+        <Navbar isScrolled={isScrolled} settings={settings} />
+        <ServiceHero page={page} settings={settings} />
+        <TrustBadges settings={settings} />
+        <DescriptionSection page={page} settings={settings} services={services} />
+        
+        {/* Area Selection Section */}
+        <section className="section-padding bg-[#FAFAFA]" data-testid="area-selection">
+          <div className="container-custom">
+            <div className="text-center mb-8 md:mb-12">
+              <p className="uppercase text-sm font-medium text-primary tracking-wide mb-2">Valitse alue</p>
+              <h2 className="section-title">Palvelemme seuraavilla alueilla</h2>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+              {areas.map((area) => (
+                <Link 
+                  key={area.slug} 
+                  to={`/${baseSlug}-${area.slug}`}
+                  className="bg-white border border-gray-200 p-6 md:p-8 text-center hover:border-primary hover:shadow-lg transition-all group"
+                  data-testid={`area-card-${area.slug}`}
+                >
+                  <MapPin size={24} className="mx-auto mb-3 text-primary opacity-60 group-hover:opacity-100 transition-opacity" />
+                  <h3 className="font-bold text-[#0F172A] text-lg mb-1">{area.name}</h3>
+                  <p className="text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                    Lue lisää <ArrowRight size={14} />
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <FeaturesSection page={page} settings={settings} />
+        <ContactFormSection page={page} settings={settings} />
+        <RelatedServices allPages={allPages} currentSlug={slug} settings={settings} services={services} />
+        <StrongCTA settings={settings} />
+        <Footer logoUrl={settings?.logo_url} settings={settings} servicePages={servicePages} />
+      </div>
+    );
+  }
+
   return (
     <div className="App">
       <Navbar isScrolled={isScrolled} settings={settings} />
@@ -807,12 +931,33 @@ const DynamicServicePage = () => {
       <WhyChooseSection page={page} settings={settings} />
       {page.use_global_process !== false && <ProcessSection page={page} settings={settings} />}
       <ServiceAreasSection page={page} settings={settings} />
-      {/* Service-specific FAQ Section */}
+      
+      {/* Other Areas Section */}
+      {baseSlug && areas.length > 1 && (
+        <section className="section-padding bg-[#FAFAFA]" data-testid="other-areas">
+          <div className="container-custom">
+            <div className="text-center mb-6">
+              <h2 className="section-title text-xl md:text-2xl">Muut alueet</h2>
+            </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link to={`/${baseSlug}`} className="px-4 py-2 border border-gray-300 text-sm hover:border-primary hover:text-primary transition-colors">
+                Kaikki alueet
+              </Link>
+              {areas.filter(a => !currentArea || a.slug !== currentArea.slug).map(area => (
+                <Link key={area.slug} to={`/${baseSlug}-${area.slug}`} className="px-4 py-2 border border-gray-300 text-sm hover:border-primary hover:text-primary transition-colors">
+                  {area.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+      
       <ServiceFAQSection faqs={serviceFaqs} settings={settings} serviceName={page.hero_title || page.seo_title} />
       <ContactFormSection page={page} settings={settings} />
       <RelatedServices allPages={allPages} currentSlug={slug} settings={settings} services={services} />
       <StrongCTA settings={settings} />
-      <Footer logoUrl={settings?.logo_url} settings={settings} />
+      <Footer logoUrl={settings?.logo_url} settings={settings} servicePages={servicePages} />
     </div>
   );
 };

@@ -3,28 +3,13 @@
   "trailingSlash": false,
   "redirects": [
     {
-      "source": "/maalaustyot-helsinki/",
-      "destination": "/maalaustyot-helsinki",
+      "source": "/julkisivumaalaus/",
+      "destination": "/julkisivumaalaus",
       "type": 301
     },
     {
-      "source": "/tasoitustyot-helsinki/",
-      "destination": "/tasoitustyot-helsinki",
-      "type": 301
-    },
-    {
-      "source": "/mikrosementti-helsinki/",
-      "destination": "/mikrosementti-helsinki",
-      "type": 301
-    },
-    {
-      "source": "/julkisivurappaus-helsinki/",
-      "destination": "/julkisivurappaus-helsinki",
-      "type": 301
-    },
-    {
-      "source": "/kattomaalaus-helsinki/",
-      "destination": "/kattomaalaus-helsinki",
+      "source": "/julkisivumaalaus-espoo/",
+      "destination": "/julkisivumaalaus-espoo",
       "type": 301
     },
     {
@@ -33,13 +18,148 @@
       "type": 301
     },
     {
-      "source": "/ukk/",
-      "destination": "/ukk",
+      "source": "/julkisivumaalaus-kauniainen/",
+      "destination": "/julkisivumaalaus-kauniainen",
+      "type": 301
+    },
+    {
+      "source": "/julkisivumaalaus-vantaa/",
+      "destination": "/julkisivumaalaus-vantaa",
+      "type": 301
+    },
+    {
+      "source": "/julkisivurappaus/",
+      "destination": "/julkisivurappaus",
+      "type": 301
+    },
+    {
+      "source": "/julkisivurappaus-espoo/",
+      "destination": "/julkisivurappaus-espoo",
+      "type": 301
+    },
+    {
+      "source": "/julkisivurappaus-helsinki/",
+      "destination": "/julkisivurappaus-helsinki",
+      "type": 301
+    },
+    {
+      "source": "/julkisivurappaus-kauniainen/",
+      "destination": "/julkisivurappaus-kauniainen",
+      "type": 301
+    },
+    {
+      "source": "/julkisivurappaus-vantaa/",
+      "destination": "/julkisivurappaus-vantaa",
+      "type": 301
+    },
+    {
+      "source": "/kattomaalaus/",
+      "destination": "/kattomaalaus",
+      "type": 301
+    },
+    {
+      "source": "/kattomaalaus-espoo/",
+      "destination": "/kattomaalaus-espoo",
+      "type": 301
+    },
+    {
+      "source": "/kattomaalaus-helsinki/",
+      "destination": "/kattomaalaus-helsinki",
+      "type": 301
+    },
+    {
+      "source": "/kattomaalaus-kauniainen/",
+      "destination": "/kattomaalaus-kauniainen",
+      "type": 301
+    },
+    {
+      "source": "/kattomaalaus-vantaa/",
+      "destination": "/kattomaalaus-vantaa",
+      "type": 301
+    },
+    {
+      "source": "/maalaustyot/",
+      "destination": "/maalaustyot",
+      "type": 301
+    },
+    {
+      "source": "/maalaustyot-espoo/",
+      "destination": "/maalaustyot-espoo",
+      "type": 301
+    },
+    {
+      "source": "/maalaustyot-helsinki/",
+      "destination": "/maalaustyot-helsinki",
+      "type": 301
+    },
+    {
+      "source": "/maalaustyot-kauniainen/",
+      "destination": "/maalaustyot-kauniainen",
+      "type": 301
+    },
+    {
+      "source": "/maalaustyot-vantaa/",
+      "destination": "/maalaustyot-vantaa",
+      "type": 301
+    },
+    {
+      "source": "/mikrosementti/",
+      "destination": "/mikrosementti",
+      "type": 301
+    },
+    {
+      "source": "/mikrosementti-espoo/",
+      "destination": "/mikrosementti-espoo",
+      "type": 301
+    },
+    {
+      "source": "/mikrosementti-helsinki/",
+      "destination": "/mikrosementti-helsinki",
+      "type": 301
+    },
+    {
+      "source": "/mikrosementti-kauniainen/",
+      "destination": "/mikrosementti-kauniainen",
+      "type": 301
+    },
+    {
+      "source": "/mikrosementti-vantaa/",
+      "destination": "/mikrosementti-vantaa",
       "type": 301
     },
     {
       "source": "/referenssit/",
       "destination": "/referenssit",
+      "type": 301
+    },
+    {
+      "source": "/tasoitustyot/",
+      "destination": "/tasoitustyot",
+      "type": 301
+    },
+    {
+      "source": "/tasoitustyot-espoo/",
+      "destination": "/tasoitustyot-espoo",
+      "type": 301
+    },
+    {
+      "source": "/tasoitustyot-helsinki/",
+      "destination": "/tasoitustyot-helsinki",
+      "type": 301
+    },
+    {
+      "source": "/tasoitustyot-kauniainen/",
+      "destination": "/tasoitustyot-kauniainen",
+      "type": 301
+    },
+    {
+      "source": "/tasoitustyot-vantaa/",
+      "destination": "/tasoitustyot-vantaa",
+      "type": 301
+    },
+    {
+      "source": "/ukk/",
+      "destination": "/ukk",
       "type": 301
     }
   ],
