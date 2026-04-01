@@ -280,6 +280,9 @@ class SiteSettings(BaseModel):
         {"value": "40 000+", "label": "Neliömetriä maalattu"}
     ]
     
+    # ========== TRUST BADGES ==========
+    trust_badges: List[dict] = []
+    
     # ========== CONTACT SECTION ==========
     contact_subtitle: str = "OTA YHTEYTTÄ"
     contact_title: str = "Yhteystiedot"
@@ -380,6 +383,8 @@ class SiteSettingsUpdate(BaseModel):
     about_info_text: Optional[str] = None
     # Company Stats
     company_stats: Optional[List[dict]] = None
+    # Trust Badges
+    trust_badges: Optional[List[dict]] = None
     # Contact
     contact_subtitle: Optional[str] = None
     contact_title: Optional[str] = None

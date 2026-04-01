@@ -546,8 +546,14 @@ const AboutSection = ({ settings }) => {
   const s = { ...defaultSettings, ...settings };
   const aboutImage = s.about_image_url || defaultSettings.about_image_url;
   const stats = s.company_stats || [];
-  const trustBadge1 = s.footer_trust_badge_1 || '';
-  const trustBadge2 = s.footer_trust_badge_2 || '';
+  const trustBadges = s.trust_badges || [];
+  // Fallback to old footer_trust_badge fields if trust_badges array is empty
+  const legacyBadges = [];
+  if (trustBadges.length === 0) {
+    if (s.footer_trust_badge_1) legacyBadges.push({ url: s.footer_trust_badge_1, alt: 'Luotettava kumppani' });
+    if (s.footer_trust_badge_2) legacyBadges.push({ url: s.footer_trust_badge_2, alt: 'Asiakastieto' });
+  }
+  const allBadges = trustBadges.length > 0 ? trustBadges : legacyBadges;
   return (
     <section id="meista" data-testid="about-section" className="section-padding" aria-labelledby="about-heading">
       <div className="container-custom">
@@ -580,16 +586,18 @@ const AboutSection = ({ settings }) => {
             </div>
           </motion.div>
         </div>
+      </div>
 
-        {/* Company Stats Bar */}
-        {stats.length > 0 && (
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }}
-            className="mt-12 md:mt-16 bg-[#0F172A] p-6 md:p-10"
-            data-testid="company-stats-bar"
-          >
+      {/* Company Stats Bar - Full Width */}
+      {stats.length > 0 && (
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true }}
+          className="mt-12 md:mt-16 bg-primary p-6 md:p-10"
+          data-testid="company-stats-bar"
+        >
+          <div className="container-custom">
             <div className={`grid grid-cols-2 ${stats.length >= 4 ? 'md:grid-cols-4' : stats.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-6 md:gap-8`}>
               {stats.map((stat, i) => (
                 <motion.div 
@@ -601,20 +609,23 @@ const AboutSection = ({ settings }) => {
                   className="text-center"
                 >
                   <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1">{stat.value}</p>
-                  <p className="text-xs sm:text-sm text-white/60">{stat.label}</p>
+                  <p className="text-xs sm:text-sm text-white/70">{stat.label}</p>
                 </motion.div>
               ))}
             </div>
-            {/* Trust badges inside stats bar */}
-            {(trustBadge1 || trustBadge2) && (
-              <div className="flex items-center justify-center gap-6 mt-6 md:mt-8 pt-6 border-t border-white/10" data-testid="about-trust-badges">
-                {trustBadge1 && <div className="bg-white rounded-lg p-3"><img src={getImageUrl(trustBadge1)} alt="Luotettava kumppani" className="h-12 md:h-16 object-contain" /></div>}
-                {trustBadge2 && <div className="bg-white rounded-lg p-3"><img src={getImageUrl(trustBadge2)} alt="Asiakastieto" className="h-12 md:h-16 object-contain" /></div>}
+            {/* Trust badges */}
+            {allBadges.length > 0 && (
+              <div className="flex items-center justify-center gap-4 md:gap-6 flex-wrap mt-6 md:mt-8 pt-6 border-t border-white/20" data-testid="about-trust-badges">
+                {allBadges.map((badge, i) => (
+                  <div key={i} className="bg-white rounded-lg p-2 md:p-3">
+                    <img src={getImageUrl(badge.url)} alt={badge.alt || 'Trust badge'} className="h-10 md:h-14 object-contain" />
+                  </div>
+                ))}
               </div>
             )}
-          </motion.div>
-        )}
-      </div>
+          </div>
+        </motion.div>
+      )}
     </section>
   );
 };
@@ -1690,27 +1701,33 @@ const AdminPanel = () => {
                     </div>
                     <div className="space-y-2">
                       {(settings.company_stats || []).map((stat, i) => (
-                        <div key={i} className="flex items-center gap-2">
-                          <input 
-                            value={stat.value} 
-                            onChange={(e) => {
-                              const stats = [...(settings.company_stats || [])];
-                              stats[i] = {...stats[i], value: e.target.value};
-                              setSettings({...settings, company_stats: stats});
-                            }} 
-                            className="form-input text-sm w-32" 
-                            placeholder="300+"
-                          />
-                          <input 
-                            value={stat.label} 
-                            onChange={(e) => {
-                              const stats = [...(settings.company_stats || [])];
-                              stats[i] = {...stats[i], label: e.target.value};
-                              setSettings({...settings, company_stats: stats});
-                            }} 
-                            className="form-input text-sm flex-1" 
-                            placeholder="Toteutettua kohdetta"
-                          />
+                        <div key={i} className="grid grid-cols-[120px_1fr_32px] gap-2 items-center">
+                          <div>
+                            <label className="block text-xs text-[#64748B] mb-0.5">Luku</label>
+                            <input 
+                              value={stat.value} 
+                              onChange={(e) => {
+                                const stats = [...(settings.company_stats || [])];
+                                stats[i] = {...stats[i], value: e.target.value};
+                                setSettings({...settings, company_stats: stats});
+                              }} 
+                              className="form-input text-sm w-full" 
+                              placeholder="300+"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs text-[#64748B] mb-0.5">Teksti</label>
+                            <input 
+                              value={stat.label} 
+                              onChange={(e) => {
+                                const stats = [...(settings.company_stats || [])];
+                                stats[i] = {...stats[i], label: e.target.value};
+                                setSettings({...settings, company_stats: stats});
+                              }} 
+                              className="form-input text-sm w-full" 
+                              placeholder="Toteutettua kohdetta"
+                            />
+                          </div>
                           <button 
                             type="button"
                             onClick={() => {
@@ -1718,7 +1735,7 @@ const AdminPanel = () => {
                               stats.splice(i, 1);
                               setSettings({...settings, company_stats: stats});
                             }} 
-                            className="text-red-500 hover:text-red-700 p-1"
+                            className="text-red-500 hover:text-red-700 p-1 mt-4"
                           ><Trash2 size={14} /></button>
                         </div>
                       ))}
@@ -1728,26 +1745,61 @@ const AdminPanel = () => {
                     </div>
                   </div>
                   
-                  {/* Trust badges - moved from footer to about section */}
+                  {/* Trust badges - dynamic array */}
                   <div className="border-t pt-4 mt-4">
-                    <p className="text-sm font-medium mb-3">Luotettavuusmerkit (näkyvät avainlukujen alla)</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium mb-1">Merkki 1</label>
-                        <ImageUpload 
-                          currentImage={settings.footer_trust_badge_1 || ''} 
-                          onImageChange={(url) => setSettings({...settings, footer_trust_badge_1: url})} 
-                          token={token}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-1">Merkki 2</label>
-                        <ImageUpload 
-                          currentImage={settings.footer_trust_badge_2 || ''} 
-                          onImageChange={(url) => setSettings({...settings, footer_trust_badge_2: url})} 
-                          token={token}
-                        />
-                      </div>
+                    <div className="flex justify-between items-center mb-3">
+                      <p className="text-sm font-medium">Luotettavuusmerkit</p>
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          const badges = [...(settings.trust_badges || [])];
+                          badges.push({ url: '', alt: '' });
+                          setSettings({...settings, trust_badges: badges});
+                        }} 
+                        className="text-xs bg-primary text-white px-3 py-1.5 hover:bg-primary/90 flex items-center gap-1"
+                      ><Plus size={12} />Lisää merkki</button>
+                    </div>
+                    <div className="space-y-3">
+                      {(settings.trust_badges || []).map((badge, i) => (
+                        <div key={i} className="flex items-start gap-3 p-3 bg-gray-50 rounded">
+                          <div className="flex-1 space-y-2">
+                            <div>
+                              <label className="block text-xs text-[#64748B] mb-0.5">Nimi</label>
+                              <input 
+                                value={badge.alt || ''} 
+                                onChange={(e) => {
+                                  const badges = [...(settings.trust_badges || [])];
+                                  badges[i] = {...badges[i], alt: e.target.value};
+                                  setSettings({...settings, trust_badges: badges});
+                                }} 
+                                className="form-input text-sm w-full" 
+                                placeholder="Luotettava kumppani"
+                              />
+                            </div>
+                            <ImageUpload 
+                              currentImage={badge.url || ''} 
+                              onImageChange={(url) => {
+                                const badges = [...(settings.trust_badges || [])];
+                                badges[i] = {...badges[i], url: url};
+                                setSettings({...settings, trust_badges: badges});
+                              }} 
+                              token={token}
+                            />
+                          </div>
+                          <button 
+                            type="button"
+                            onClick={() => {
+                              const badges = [...(settings.trust_badges || [])];
+                              badges.splice(i, 1);
+                              setSettings({...settings, trust_badges: badges});
+                            }} 
+                            className="text-red-500 hover:text-red-700 p-1"
+                          ><Trash2 size={14} /></button>
+                        </div>
+                      ))}
+                      {(!settings.trust_badges || settings.trust_badges.length === 0) && (
+                        <p className="text-xs text-[#64748B]">Ei merkkejä. Lisää painamalla "Lisää merkki". Vanhat merkit näkyvät automaattisesti.</p>
+                      )}
                     </div>
                   </div>
                 </div>
