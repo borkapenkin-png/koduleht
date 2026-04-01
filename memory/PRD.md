@@ -5,37 +5,46 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
 ## Latest Update: April 1, 2026
 
-### Session 3: Areas Admin Panel + Navigation Fix (April 1, 2026)
+### Session 3b: Price Calculator (Hintalaskuri) - COMPLETED (April 1, 2026)
 
-#### Areas (Locations) Admin Panel - COMPLETED
-- Created `AreasAdmin.js` component with full CRUD (Add/Edit/Delete cities)
-- New "Alueet" tab in Admin Panel
-- Info box explaining how area pages work
-- "Päivitä SEO-sivut" regeneration button
+#### Premium Multi-Step Price Calculator
+**Problem:** No online price estimation tool. Competitors require contact info before showing prices.
 
-#### Service Navigation Fix - COMPLETED
-**Problem:** Hero section linked directly to city-specific pages (e.g., `/maalaustyot-helsinki`) instead of general pages.
+**Solution:** Built a premium multi-step wizard calculator at `/hintalaskuri`:
+- **6 services** with service-specific fields: Sisämaalaus, Tasoitustyöt, Mikrosementti, Julkisivumaalaus, Kattomaalaus, Julkisivurappaus
+- **Multi-step wizard** with smooth animations (Framer Motion)
+- **Real-time price preview** during wizard steps
+- **Detailed price breakdown:** Labor, Materials, Addons, ALV 25.5%, Kotitalousvähennys (-35%)
+- **No contact info required** to see price (competitor differentiator!)
+- **Contact form** available optionally after seeing price
+- **Admin panel "Laskuri" tab** for full configurability:
+  - Global settings (ALV %, kotitalousvähennys, labor %, CTA texts)
+  - Per-service base prices (€/m²)
+  - Step multipliers for each option
+  - Addon prices and toggles
 
-**Solution:**
-- Updated service `link_url` values in DB: `maalaustyot-helsinki` → `maalaustyot`
-- Fixed city variant page logic: only `hero_title` and `seo_title` get city name, all other content stays identical
-- **Flow:** Hero → `/maalaustyot` (general) → "Valitse alue" cards → `/maalaustyot-espoo` (city-specific)
+**Files Created/Modified:**
+- `/app/frontend/src/pages/PriceCalculatorPage.js` - NEW
+- `/app/frontend/src/components/admin/CalculatorAdmin.js` - NEW
+- `/app/frontend/src/App.js` - Added imports, route, admin tab, navbar link
+- `/app/backend/server.py` - Added calculator-config endpoints + default config
+- `/app/backend/generate_static_direct.py` - Added /hintalaskuri rewrite
 
-**Files Modified:**
-- `/app/frontend/src/components/admin/AreasAdmin.js` - NEW
-- `/app/frontend/src/App.js` - Added AreasAdmin import, tab, render
-- `/app/frontend/src/pages/DynamicServicePage.js` - Fixed city variant replacement logic
+**Testing:** 100% pass rate (16 backend + full Playwright UI verification)
 
-### Session 2: SEO Pre-rendering + Company Stats Bar (April 1, 2026)
-- P0 SEO Fix: Pre-rendered HTML Content for Google Crawler
-- Company Stats Bar + Trust Badge Relocation to Meistä section
-- Dynamic Footer Service Links from DB
-- Location-Specific SEO Pages Backend + SSG (33 pages for 4 cities × services)
+### Session 3a: Areas Admin Panel + Navigation Fix (April 1, 2026)
+- AreasAdmin.js CRUD component for managing cities
+- Fixed service navigation: Hero → general page → city-specific pages
+- Fixed city variant page logic (only title gets city name)
 
-### Session 1: Production SEO & Technical Fixes (March 2026)
-- Flat HTML files for Nginx clean URLs
-- Technical SEO cleanup (canonicals, sitemap, JSON-LD)
-- Reference card pagination, internal service links
+### Session 2: SEO Pre-rendering + Company Stats Bar
+- P0 SEO Fix: Pre-rendered HTML for Google crawler
+- Company Stats Bar + Trust Badges in Meistä section
+- Dynamic Footer Service Links
+- Location-Specific SEO Pages (33 pages × 4 cities)
+
+### Session 1: Production SEO & Technical Fixes
+- Flat HTML for Nginx, Technical SEO, Reference pagination
 
 ## Tech Stack
 - Frontend: React 18, TailwindCSS, Framer Motion
@@ -53,15 +62,14 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 ### P1 (High Priority)
 - Import 52 FAQs to production via admin panel
 - Google Reviews + Review JSON-LD schema
-- Google Ads appeal ("Compromised Site" suspension) - USER VERIFICATION PENDING
+- Google Ads appeal - USER VERIFICATION PENDING
 
 ### P2 (Medium Priority)
 - Blog section for content marketing
 - Backend refactoring (split server.py into modules)
-- www to non-www redirect via Cloudflare Page Rule - USER VERIFICATION PENDING
+- www to non-www redirect via Cloudflare - USER VERIFICATION PENDING
 - Hero section upgrade (add stats to hero)
 
 ### P3 (Low Priority)
-- Price calculator feature
 - Video testimonials integration
 - Additional schema types
