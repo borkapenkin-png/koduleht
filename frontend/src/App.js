@@ -608,8 +608,8 @@ const AboutSection = ({ settings }) => {
             {/* Trust badges inside stats bar */}
             {(trustBadge1 || trustBadge2) && (
               <div className="flex items-center justify-center gap-6 mt-6 md:mt-8 pt-6 border-t border-white/10" data-testid="about-trust-badges">
-                {trustBadge1 && <img src={getImageUrl(trustBadge1)} alt="Luotettava kumppani" className="h-12 md:h-16 object-contain brightness-0 invert opacity-70" />}
-                {trustBadge2 && <img src={getImageUrl(trustBadge2)} alt="Asiakastieto" className="h-12 md:h-16 object-contain brightness-0 invert opacity-70" />}
+                {trustBadge1 && <div className="bg-white rounded-lg p-3"><img src={getImageUrl(trustBadge1)} alt="Luotettava kumppani" className="h-12 md:h-16 object-contain" /></div>}
+                {trustBadge2 && <div className="bg-white rounded-lg p-3"><img src={getImageUrl(trustBadge2)} alt="Asiakastieto" className="h-12 md:h-16 object-contain" /></div>}
               </div>
             )}
           </motion.div>
