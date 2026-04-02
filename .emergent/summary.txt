@@ -1,20 +1,29 @@
 <analysis>**original_problem_statement:**
-Modernize the jbtasoitusmaalaus.fi website with an admin panel. Recent goal: Fix a critical SEO issue where Google crawled a blank SPA fallback page (JavaScript is required) instead of the pre-rendered HTML. Additional requirements included adding trust badges and company statistics to a Meistä section, making footer service links dynamic, and heavily expanding the SEO strategy by creating location-specific service pages (e.g., Helsinki, Espoo, Vantaa) managed via the admin panel. 
+Modernize the jbtasoitusmaalaus.fi website with an admin panel. Recent goal: Fix SEO SPA fallback issues, add trust badges/company statistics, make location-specific service pages (Helsinki, Espoo, Vantaa, etc.) managed via the admin panel, and build a Premium Price Calculator (Hintalaskuri) capable of calculating exact painting/renovation costs (including ALV and Kotitalousvähennys) with full SEO optimization and responsive design.
 
-**User's preferred language**: Estonian (User communicates primarily in Estonian: alusta tööga, kuidas sellest aru saad). INSTRUCT the next agent to respond in Estonian.
+**User's preferred language**: **Estonian** (User communicates primarily in Estonian: teeme körge prioriteedi ylesanded, kirjuta mulle kogu laskuri systeem). INSTRUCT the next agent to respond in Estonian only.
 
 **what currently exists?** 
-A full-stack React/FastAPI/MongoDB app with a custom SSG script () for SEO. The SSG script now successfully pre-renders complete HTML content for the crawler. The app features a dynamic Meistä section with customizable company statistics and trust badges. The backend and SSG have just been updated to support Location-Specific Service Pages (Areas), successfully generating 33 permutations of service pages based on default cities (Helsinki, Espoo, Vantaa, Kauniainen). 
+A full-stack React/FastAPI/MongoDB app with a custom SSG script () for SEO. The Admin Panel now supports Areas (Locations) management and Laskuri (Calculator) configuration. The frontend routing has been refined so the Hero section leads to general service pages (e.g., ), which contain links to city-specific SEO variants (). A fully responsive, multi-step Hintalaskuri (Price Calculator) has been built at  with accurate Finnish tax logic (ALV 25.5%, Kotitalousvähennys 35% minus 150€ deductible). 
 
 **Last working item**:
-    - **Last item agent was working:** Implementing Location-Specific Service Pages (Areas). The agent completed the backend API (), seeded the database with default cities, updated the SSG script to generate 33 area-specific HTML pages, and updated  to handle both general services and city-specific variants. The agent was just about to add the Admin Panel UI for managing these Areas when the session ended.
+    - **Last item agent was working:** The user requested a complete breakdown of the new Price Calculator's structure (services, multipliers, add-ons, step configurations, and texts) so they can review it and suggest enhancements to make it look/feel more Premium. The agent ran a bash script to fetch this structure but the session ended before the agent could formulate and send the response to the user.
     - **Status:** IN PROGRESS
-    - **Agent Testing Done:** N (Backend/SSG tested via bash, but Admin UI is not yet built).
-    - **Which testing method agent to use?** testing_agent_v3_fork (to verify the new Admin panel UI for areas and frontend routing).
+    - **Agent Testing Done:** Y (Tested calculator via  iteration 20, and manual screenshots for responsiveness).
+    - **Which testing method agent to use?** NA (Awaiting user review on the structure).
     - **User Testing Done:** N
 
 **All Pending/In progress Issue list**:
-  - **Issue 1: Google Ads account suspension (Vaarantunut sivusto / Compromised Site)**
+  - **Issue 1: Present Calculator Structure to User**
+     - **Attempted fixes:** Agent successfully dumped the structure via bash in the last step but hasn't sent it yet.
+     - **Next debug checklist:** Read the output from the last bash command (Message 429) and present it clearly to the user in Estonian, asking for their premium suggestions.
+     - **Why fix this issue and what will be achieved with the fix?** Answers the user's direct pending question and moves the project forward to refinement.
+     - **Status:** IN PROGRESS
+     - **Is recurring issue?** N
+     - **Should Test frontend/backend/both after fix?** NA
+     - **Blocked on other issue:** NA
+
+  - **Issue 2: Google Ads account suspension (Vaarantunut sivusto / Compromised Site)**
      - **Attempted fixes:** No code changes needed. It was triggered by an older platform caching glitch.
      - **Next debug checklist:** User needs to wait for Google Ads appeal review.
      - **Why fix this issue and what will be achieved with the fix?** Restores user's paid marketing.
@@ -23,20 +32,15 @@ A full-stack React/FastAPI/MongoDB app with a custom SSG script () for SEO. The 
      - **Should Test frontend/backend/both after fix?** NA
      - **Blocked on other issue:** NA
 
-  - **Issue 2:  to  redirect handled via JS**
+  - **Issue 3:  to  redirect handled via JS**
      - **Attempted fixes:** JS fallback exists in templates.
      - **Next debug checklist:** User advised to set up Cloudflare Page Rules.
-     - **Why fix this issue and what will be achieved with the fix?** Better SEO via 301 server-side redirect.
      - **Status:** USER VERIFICATION PENDING
      - **Is recurring issue?** N
      - **Should Test frontend/backend/both after fix?** NA
 
 **In progress Task List**:
-  - **Task 1: Admin Panel UI for Areas (Location Management)**
-     - **Where to resume:** Create/update the frontend admin panel (likely inside  or ) to consume the newly created  backend endpoints. Allow the user to Add/Edit/Delete cities. 
-     - **What will be achieved with this?** The user will be able to dynamically add new cities (e.g., Sipoo, Kerava), which will automatically generate new SEO pages upon the next SSG build.
-     - **Status:** IN PROGRESS
-     - **Should Test frontend/backend/both after fix?** Both
+  None currently in progress code-wise. The agent must first answer the user's pending query.
 
 **Upcoming and Future Tasks**
     - **P1: Import FAQs into Production:** 52 FAQs currently reside in the preview database and need to be synced to production via the admin panel.
@@ -45,19 +49,17 @@ A full-stack React/FastAPI/MongoDB app with a custom SSG script () for SEO. The 
     - **P2: Complete Backend Refactoring:** Break down  into , , and .
     - **Future Tasks:**
       - Hero section upgrade (integrate company numbers directly into the hero).
-      - Price calculator.
       - Video reviews section.
 
 **Completed work in this session**
-- Fixed SPA SEO Issue: Generated full HTML content inside SSG templates (, , , ) instead of a blank SPA fallback. (DONE)
-- Re-architected Trust Badges: Moved from Footer to a dedicated full-width Meistä section, made dynamically manageable via Admin. (DONE)
-- Added Company Stats: Added dynamic stat numbers (Liikevaihto, Toteutettua kohdetta) to the Meistä section. (DONE)
-- Dynamic Footer: Footer service links are now fetched directly from the DB (). (DONE)
-- UI Fix: Removed  from  to ensure long descriptions are fully readable. (DONE)
-- Backend Location Pages: Added  DB schema, updated SSG script to generate 33 specific location pages, and updated sitemap generation. (DONE)
+- Areas Admin Panel UI: Created  for CMS area management (DONE).
+- Dynamic Service Pages Routing Fix: Clicking services in Hero now redirects to general pages (), which then feature links to city-specific variants (DONE).
+- Missing Sections added: General pages now show Why Choose Us, Process, etc., matching city-variant pages (DONE).
+- Hintalaskuri (Price Calculator): Built premium multi-step  with admin UI (), correct Finnish tax logic, SEO text, and CTA backlinks across the site (DONE).
+- Responsive UI Fixes: Re-configured Navbars ( and ) to show hamburger menu on tablets (768px), and fixed trust badges grid wrapping on small screens (DONE).
 
 **Earlier issues found/mentioned but not fixed**
-  - **Issue 1:** Backend  monolith remains a significant piece of technical debt.
+  - **Issue 1:** Backend  monolith remains a significant piece of technical debt (1800+ lines).
     - **Debug checklist:** Plan a structural refactor to modularize endpoints.
     - **Why to solve this issue:** Scalability and code maintainability.
     - **Should Test frontend/backend/both after fix:** Both
@@ -74,45 +76,50 @@ A full-stack React/FastAPI/MongoDB app with a custom SSG script () for SEO. The 
 **Key Technical Concepts**
 - Static Site Generation (SSG) with React Hydration
 - Technical SEO (JSON-LD, Canonical tags, sitemap auto-generation)
+- Finnish Tax calculation logic (ALV and Kotitalousvähennys)
 - React Frontend + FastAPI Backend + MongoDB
 
 **key DB schema**
-  - : Added , .
-  - :  (NEW)
-  - : Existing base services.
+  - : Now contains extensive  (services, add-ons, base prices).
+  - : CMS area locations.
+  - : Base service texts.
 
 **changes in tech stack**
   - None
 
 **All files of reference** 
-  -  (API logic for Areas, Stats, Badges)
-  -  (Critical for SSG building)
-  -  (HTML templates)
-  -  (Frontend routing, Admin Panel, sections)
-  -  (Service render logic)
+  -  (Calculator implementation)
+  -  (Calculator config UI)
+  -  (Areas config UI)
+  -  (Services view & routing)
+  -  (Routes, Navbars, Footers)
+  -  (API endpoints)
+  -  (SSG Generator)
 
 **Areas that need refactoring**
-  -  is over 1800 lines long and handles all schemas, auth, and routing.
+  -  (Over 1800 lines, handles everything).
 
 **key api endpoints**
-  -  (GET, POST, PUT, DELETE) - Newly added for location management
+  -  (GET, POST, PUT, DELETE) 
   -  (GET)
-  -  (GET/PUT)
+  -  (GET, PUT)
 
 **Critical Info for New Agent**
-  - **SSG Generation is Mandatory:** Any time routing, SEO logic, or service logic changes, you MUST run  in the backend folder to regenerate static files. This outputs to .
-  - **Admin Area UI:** The backend for Areas (Helsinki, Espoo, Vantaa) is completely done. Your immediate next task is strictly hooking up an Admin Panel tab on the frontend to allow the user to modify these locations.
-  - **Preview vs Production:** Images uploaded in preview will break or disappear in production due to separate databases. Be careful to use relative or absolute logic correctly ( helper in ).
+  - **SSG Generation is Mandatory:** Any time routing, SEO logic, navigation, or service logic changes, you MUST run  in the backend folder to regenerate static files. The preview/production URLs read directly from .
+  - **Finnish Tax Logic:** Price Calculator prices include 25.5% ALV. Kotitalousvähennys applies to 35% of the labor share (which is calculated from the price *excluding* ALV) minus a 150€ deductible. Do not break this.
+  - **Respond in Estonian:** The user communicates entirely in Estonian.
 
 **documents and test reports created in this job** 
   -  (Updated)
-  -  (Created)
-  - 
-  - 
+  -  (Area Admin UI test)
+  -  (Calculator UI/API test)
 
 **Last 10 User Messages and any pending HUMAN messages** 
- - User: kui mulle google search engine lisatud sitemap kas ta uuendab ja haeb uut ise, vöi peab sinna lisama uuesti ise? -> ADDRESSED
- - User: alusta tööga -> IN PROGRESS (Agent executed backend and SSG scripts for location pages; Admin frontend is pending).
+ - User: nii algus hea, laskuri peab olema sama designiga... -> ADDRESSED
+ - User: samuti peaks olema backlinke oma lehele SEO... -> ADDRESSED
+ - User: jah, saad, teeme ära -> ADDRESSED
+ - User: kontrolli et koik lehed tootaks koikide elraanidega, hetkel tekefonis natuke vajab parandamist -> ADDRESSED
+ - User: kirjuta mulle kogu laskuri systeem mis lisa variandid jne struktuur / teksti muodus mos mida teeb ja ma kirjutan mida voiks muuta et tunduks rohkem premium -> **PENDING HUMAN MESSAGE**. The user wants a written summary of the current calculator's structure (services, add-ons, texts, steps) so they can review and suggest premium changes. 
 
 **Project Health Check:**
 Broken: None.
@@ -123,7 +130,7 @@ Mocked: None.
   - Cloudflare (Platform managed)
 
 **Testing status**
-  - Testing agent used after significant changes: YES (Iterations 17 & 18)
+  - Testing agent used after significant changes: YES (Iterations 19 & 20)
   - Troubleshoot agent used after agent stuck in loop: NO
   - Test files created: None
   - Known regressions: None
@@ -133,10 +140,4 @@ Mocked: None.
   - Production Admin:  / 
 
 **What agent forgot to execute**
-The agent stopped exactly after successfully implementing the backend API, DB schemas, and SSG generator for the new Location/Area pages. It forgot to build the frontend Admin Panel UI to allow the user to actually manage (Add/Edit/Delete) these new Areas.
-
-**Debugging checklist for current issue**
-    Issue: Complete the Area (Locations) Admin Panel UI
-    Frontend files to check: 
-    Backend files to check:  (Endpoints already exist at )
-    Action: Add a new tab or section in the Admin Panel view (in ) to fetch from  and provide a simple CRUD UI. Update  after completion.</analysis>
+The agent fetched the structure of the calculator using a python script printout (Message 429) but the session ended before the agent could parse the output and actually send the message to the user in Estonian. The new agent must start by fulfilling this request.</analysis>
