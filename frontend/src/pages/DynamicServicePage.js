@@ -452,48 +452,52 @@ const ProcessSection = ({ page, settings }) => {
 };
 
 // ========== SERVICE AREAS - Centered, themed background with impact ==========
-const ServiceAreasSection = ({ page, settings }) => {
-  const areas = settings?.service_areas || ['Helsinki', 'Espoo', 'Vantaa', 'Kauniainen', 'Uusimaa'];
+const ServiceAreasSection = ({ page, settings, areas: areasProp, currentSlug }) => {
+  const [areas, setAreas] = useState(areasProp || []);
   const phone = settings?.company_phone_primary || settings?.contact_phone_1 || '+358 40 054 7270';
-  const serviceTitle = page.hero_title || 'Tasoitustyöt';
+  const serviceTitle = page?.hero_title || 'Palvelumme';
   
-  // Use global template or generate default description
+  useEffect(() => {
+    if (!areasProp || areasProp.length === 0) {
+      fetch(`${API_URL}/api/areas`).then(r => r.json()).then(setAreas).catch(() => {});
+    }
+  }, [areasProp]);
+
+  // Determine base slug for linking (e.g., "maalaustyot" from "maalaustyot-helsinki")
+  const baseSlug = (currentSlug || page?.slug || '').replace(/-helsinki$|-espoo$|-vantaa$|-kauniainen$/, '');
+  
   const defaultText = `Tarjoamme ammattitaitoisia ${serviceTitle.toLowerCase()} Helsingissä, Espoossa, Vantaalla, Kauniaisissa ja koko Uudenmaan alueella.`;
   const descriptionTemplate = settings?.areas_description_template || defaultText;
   const description = descriptionTemplate.replace(/{palvelu}/gi, serviceTitle.toLowerCase());
 
+  if (!areas || areas.length === 0) return null;
+
   return (
-    <section className="service-area-themed">
+    <section className="service-area-themed" data-testid="service-areas-section">
       <div className="container-custom">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center max-w-3xl mx-auto">
-          {/* Label */}
           <p className="text-white/60 uppercase text-sm font-medium tracking-wider mb-3">TOIMIALUE</p>
-          
-          {/* Main heading */}
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
             {serviceTitle} Uudellamaalla
           </h2>
-          
-          {/* Description */}
           <p className="text-white/80 text-sm md:text-base mb-8 leading-relaxed max-w-xl mx-auto">
             {description}
           </p>
           
-          {/* Area badges */}
+          {/* Area badges as links */}
           <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-10">
-            {areas.map((area, index) => (
-              <motion.span 
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
-                className="service-area-badge"
-              >
-                <MapPin size={14} className="opacity-70" />
-                {area}
-              </motion.span>
-            ))}
+            {areas.map((area, index) => {
+              const areaSlug = area.slug || area.name?.toLowerCase();
+              const linkTarget = baseSlug ? `/${baseSlug}-${areaSlug}` : `/#palvelut`;
+              return (
+                <motion.div key={areaSlug || index} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.05 }}>
+                  <Link to={linkTarget} className="service-area-badge inline-flex items-center gap-1.5 hover:bg-white/20 transition-all" data-testid={`area-link-${areaSlug}`}>
+                    <MapPin size={14} className="opacity-70" />
+                    {area.name || area}
+                  </Link>
+                </motion.div>
+              );
+            })}
           </div>
           
           {/* CTA Buttons */}
@@ -501,7 +505,7 @@ const ServiceAreasSection = ({ page, settings }) => {
             <a href="#tarjouspyynto" className="inline-flex items-center justify-center gap-2 bg-white text-[#0F172A] px-6 py-3 rounded-lg font-semibold text-sm hover:bg-white/90 transition-all hover:scale-105 shadow-lg">
               Pyydä ilmainen arvio <ArrowRight size={16} />
             </a>
-            <a href={`tel:${phone.replace(/\s/g, '')}`} className="inline-flex items-center justify-center gap-2 bg-white/10 text-white px-6 py-3 rounded-lg font-semibold text-sm hover:bg-white/20 transition-all border border-white/20">
+            <a href={`tel:${(phone || '').replace(/\s/g, '')}`} className="inline-flex items-center justify-center gap-2 bg-white/10 text-white px-6 py-3 rounded-lg font-semibold text-sm hover:bg-white/20 transition-all border border-white/20">
               <Phone size={16} /> Soita nyt
             </a>
           </div>
@@ -938,7 +942,7 @@ const DynamicServicePage = () => {
         <FeaturesSection page={page} settings={settings} />
         <WhyChooseSection page={page} settings={settings} />
         {page.use_global_process !== false && <ProcessSection page={page} settings={settings} />}
-        <ServiceAreasSection page={page} settings={settings} />
+        <ServiceAreasSection page={page} settings={settings} currentSlug={slug} />
         <ServiceFAQSection faqs={serviceFaqs} settings={settings} serviceName={page.hero_title || page.seo_title} />
         <ContactFormSection page={page} settings={settings} />
         <CalculatorCTA />

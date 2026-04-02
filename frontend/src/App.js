@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-do
 import { HelmetProvider } from "react-helmet-async";
 import { SEOHead, COMPANY } from "./seo/SEOHead";
 import { serviceSlugMap } from "./seo/serviceContent";
-import DynamicServicePage from "./pages/DynamicServicePage";
+import DynamicServicePage, { ServiceAreasSection } from "./pages/DynamicServicePage";
 import ReferencesPage from "./pages/ReferencesPage";
 import FaqHubPage from "./pages/FaqHubPage";
 import PriceCalculatorPage from "./pages/PriceCalculatorPage";
@@ -2456,6 +2456,7 @@ const HomePage = () => {
         <ServicesSection settings={settings} services_data={services} />
         <AboutSection settings={settings} />
         <ReferencesSection settings={settings} references={references} />
+        <ServiceAreasSection page={{ hero_title: 'Palvelumme' }} settings={settings} />
         <LocationSection settings={settings} />
         <ContactSection settings={settings} />
       </main>
