@@ -464,7 +464,8 @@ const PriceCalculatorPage = () => {
   };
 
   const phone = settings?.company_phone_primary || settings?.contact_phone_1 || '+358 40 054 7270';
-  const showPriceBox = currentStep > 0 && service && priceData && !showResult;
+  const areaStepIdx = service ? service.steps.findIndex(s => s.type === 'slider' || s.type === 'size_cards') : -1;
+  const showPriceBox = currentStep > 0 && service && priceData && !showResult && areaStepIdx >= 0 && (currentStep - 1) >= areaStepIdx;
 
   if (loading) {
     return (
