@@ -877,7 +877,19 @@ const DynamicServicePage = () => {
         }
         
         // Fetch FAQs for the service if available
-        const resolvedPage = exactPage || allPagesData.find(p => p.slug === slug) || allPagesData[0];
+        // For city variants, find the base page by computing base slug
+        let resolvedPage = exactPage || allPagesData.find(p => p.slug === slug);
+        if (!resolvedPage && areasData.length > 0) {
+          const faqTargetArea = areasData.find(a => slug.endsWith(`-${a.slug}`));
+          const faqDefaultArea = areasData.find(a => a.is_default) || areasData[0];
+          if (faqTargetArea && faqDefaultArea) {
+            const computedBase = slug.replace(`-${faqTargetArea.slug}`, '');
+            resolvedPage = allPagesData.find(p => p.slug === `${computedBase}-${faqDefaultArea.slug}`);
+          }
+          if (!resolvedPage && faqDefaultArea) {
+            resolvedPage = allPagesData.find(p => p.slug === `${slug}-${faqDefaultArea.slug}`);
+          }
+        }
         if (resolvedPage?.service_id) {
           try {
             const faqsRes = await fetch(`${API_URL}/api/faqs?service_id=${resolvedPage.service_id}`);
