@@ -70,6 +70,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--background);
   color: var(--text-primary);
+  opacity: 1 !important;
 }
 
 /* Override Tailwind's bg-white to use warm off-white */
