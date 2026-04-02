@@ -235,6 +235,9 @@ const ServiceHero = ({ page, settings }) => {
             <Link to="/hintalaskuri" className="btn-secondary inline-flex items-center justify-center gap-2 text-sm" data-testid="hero-calculator-btn">
               <Calculator size={16} /> Hintalaskuri
             </Link>
+            <a href={`tel:${phone.replace(/\s/g, '')}`} className="btn-secondary inline-flex items-center justify-center gap-2 text-sm">
+              <Phone size={16} /> Soita nyt
+            </a>
           </motion.div>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-6 md:mt-8 flex flex-wrap items-center gap-4 md:gap-6">
             <div className="flex items-center gap-2 text-sm md:text-base text-[#64748B]">
