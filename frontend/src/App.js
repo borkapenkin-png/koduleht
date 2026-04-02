@@ -876,11 +876,11 @@ const ContactSection = ({ settings }) => {
                     <div className="text-[#64748B] space-y-2 text-sm mt-1">
                       <div>
                         <p className="text-xs text-[#94A3B8]">{s.contact_phone_1_name}</p>
-                        <a href={`tel:${s.contact_phone_1.replace(/\s/g, '')}`} className="text-primary hover:underline whitespace-nowrap">{s.contact_phone_1}</a>
+                        <a href={`tel:${(s.contact_phone_1 || '').replace(/\s/g, '')}`} className="text-primary hover:underline whitespace-nowrap">{s.contact_phone_1}</a>
                       </div>
                       <div>
                         <p className="text-xs text-[#94A3B8]">{s.contact_phone_2_name}</p>
-                        <a href={`tel:${s.contact_phone_2.replace(/\s/g, '')}`} className="text-primary hover:underline whitespace-nowrap">{s.contact_phone_2}</a>
+                        <a href={`tel:${(s.contact_phone_2 || '').replace(/\s/g, '')}`} className="text-primary hover:underline whitespace-nowrap">{s.contact_phone_2}</a>
                       </div>
                     </div>
                   </div>

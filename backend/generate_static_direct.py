@@ -287,6 +287,19 @@ async def generate_service_page(db, slug: str, css_files, js_files, area_overrid
         # Replace in features
         if page.get("features"):
             page["features"] = [{"title": replace_city(f.get("title", "")), "description": replace_city(f.get("description", ""))} for f in page["features"]]
+        
+        # Add city-specific custom text to description
+        # Get the full area doc from DB with custom_texts
+        full_area = await db.areas.find_one({"slug": area_override["slug"]}, {"_id": 0})
+        if full_area:
+            custom_texts = full_area.get("custom_texts", {})
+            # Find base service slug (e.g., "maalaustyot" from "maalaustyot-espoo")
+            area_suffix = f"-{area_override['slug']}"
+            base_service = slug[:-len(area_suffix)] if slug.endswith(area_suffix) else slug
+            custom_text = custom_texts.get(base_service, "")
+            if custom_text:
+                existing_desc = page.get("description_text", "") or ""
+                page["description_text"] = existing_desc + f'<div class="city-specific-content"><p>{custom_text}</p></div>'
     
     # Get all areas for "other areas" section
     areas = await db.areas.find({}, {"_id": 0}).sort("order", 1).to_list(100)

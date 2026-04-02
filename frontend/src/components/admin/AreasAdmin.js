@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { 
-  MapPin, Plus, Edit2, Save, Trash2, X, GripVertical, Star, RefreshCw
+  MapPin, Plus, Edit2, Save, Trash2, X, GripVertical, Star, RefreshCw, FileText
 } from 'lucide-react';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -19,20 +19,31 @@ const generateSlug = (name) => {
     .replace(/^-|-$/g, '');
 };
 
-const emptyArea = { name: '', slug: '', name_inessive: '', is_default: false, order: 0 };
+const emptyArea = { name: '', slug: '', name_inessive: '', is_default: false, order: 0, custom_texts: {} };
 
 const AreasAdmin = ({ token, onRefresh }) => {
   const [areas, setAreas] = useState([]);
+  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState({ ...emptyArea });
   const [saving, setSaving] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
+  const [showTexts, setShowTexts] = useState(null);
 
   const headers = { headers: { Authorization: `Bearer ${token}` } };
 
-  useEffect(() => { loadAreas(); }, []);
+  useEffect(() => { loadAreas(); loadServices(); }, []);
+
+  const loadServices = async () => {
+    try {
+      const res = await axios.get(`${API}/service-pages`, headers);
+      setServices(res.data);
+    } catch (err) {
+      console.error('Failed to load service pages:', err);
+    }
+  };
 
   const loadAreas = async () => {
     setLoading(true);
@@ -82,7 +93,8 @@ const AreasAdmin = ({ token, onRefresh }) => {
           slug: form.slug,
           name_inessive: form.name_inessive,
           is_default: form.is_default,
-          order: form.order
+          order: form.order,
+          custom_texts: form.custom_texts || {}
         }, headers);
       } else {
         await axios.put(`${API}/admin/areas/${editing}`, {
@@ -90,7 +102,8 @@ const AreasAdmin = ({ token, onRefresh }) => {
           slug: form.slug,
           name_inessive: form.name_inessive,
           is_default: form.is_default,
-          order: form.order
+          order: form.order,
+          custom_texts: form.custom_texts || {}
         }, headers);
       }
       cancelEdit();
@@ -215,6 +228,7 @@ const AreasAdmin = ({ token, onRefresh }) => {
                 </div>
               </div>
             ) : (
+              <>
               <div className="flex items-center justify-between p-4">
                 <div className="flex items-center gap-3">
                   <GripVertical size={16} className="text-[#CBD5E1]" />
@@ -237,6 +251,9 @@ const AreasAdmin = ({ token, onRefresh }) => {
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
+                  <button onClick={() => setShowTexts(showTexts === area.id ? null : area.id)} className={`p-2 rounded-lg transition-colors ${showTexts === area.id ? 'text-primary bg-primary/10' : 'text-[#64748B] hover:text-primary hover:bg-[#F1F5F9]'}`} data-testid={`area-texts-${area.slug}`} title="Linna-spetsiifilised tekstid">
+                    <FileText size={16} />
+                  </button>
                   <button onClick={() => startEdit(area)} className="p-2 text-[#64748B] hover:text-primary rounded-lg hover:bg-[#F1F5F9] transition-colors" data-testid={`area-edit-${area.slug}`}>
                     <Edit2 size={16} />
                   </button>
@@ -247,6 +264,11 @@ const AreasAdmin = ({ token, onRefresh }) => {
                   )}
                 </div>
               </div>
+              {/* City-specific custom texts panel */}
+              {showTexts === area.id && (
+                <CityTextsPanel area={area} services={services} token={token} onSave={loadAreas} />
+              )}
+            </>
             )}
           </div>
         ))}
@@ -322,5 +344,63 @@ const AreaForm = ({ form, setForm, onNameChange }) => (
     </div>
   </div>
 );
+
+// City-specific custom texts panel
+const CityTextsPanel = ({ area, services, token, onSave }) => {
+  const [texts, setTexts] = useState(area.custom_texts || {});
+  const [saving, setSaving] = useState(false);
+  const apiHeaders = { headers: { Authorization: `Bearer ${token}` } };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await axios.put(`${API}/admin/areas/${area.id}`, { custom_texts: texts }, apiHeaders);
+      await onSave();
+    } catch (err) {
+      alert(err.response?.data?.detail || 'Virhe tallennuksessa');
+    }
+    setSaving(false);
+  };
+
+  // Get base service slugs from service pages (remove city suffix)
+  const serviceList = services.map(sp => {
+    const baseSlug = (sp.slug || '').replace(/-helsinki$|-espoo$|-vantaa$|-kauniainen$/, '');
+    const baseTitle = (sp.hero_title || sp.seo_title || baseSlug).replace(/ Helsingissä| Espoossa| Vantaalla| Kauniaisissa/gi, '').trim();
+    return { slug: baseSlug, title: baseTitle };
+  }).filter((s, i, arr) => arr.findIndex(x => x.slug === s.slug) === i && s.slug);
+
+  return (
+    <div className="border-t border-[#E2E8F0] p-4 bg-[#F8FAFC] space-y-4" data-testid={`city-texts-${area.slug}`}>
+      <div className="flex items-center justify-between">
+        <h4 className="text-sm font-semibold text-[#334155]">
+          Linna-spetsiifilised tekstid: {area.name}
+        </h4>
+        <button onClick={handleSave} disabled={saving} className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-primary text-white rounded-lg hover:bg-primary/90" data-testid={`city-texts-save-${area.slug}`}>
+          <Save size={12} />{saving ? 'Tallennetaan...' : 'Tallenna'}
+        </button>
+      </div>
+      <p className="text-xs text-[#94A3B8]">
+        Lisää jokaiselle palvelulle uniikkia sisältöä tämän kaupungin palvelusivuille. Teksti näkyy palvelun kuvauksen lopussa.
+      </p>
+      <div className="space-y-3">
+        {serviceList.map(service => (
+          <div key={service.slug}>
+            <label className="block text-xs font-medium text-[#475569] mb-1">
+              {service.title} <span className="text-[#94A3B8]">({service.slug}-{area.slug})</span>
+            </label>
+            <textarea
+              value={texts[service.slug] || ''}
+              onChange={(e) => setTexts(prev => ({ ...prev, [service.slug]: e.target.value }))}
+              placeholder={`Uniikki teksti: ${service.title} ${area.name_inessive}...`}
+              rows={3}
+              className="w-full px-3 py-2 text-sm border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              data-testid={`city-text-${area.slug}-${service.slug}`}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default AreasAdmin;

@@ -855,6 +855,13 @@ const DynamicServicePage = () => {
                 variantPage.hero_title = `${baseTitle} ${targetArea.name_inessive}`;
                 const baseSeoTitle = stripCity(variantPage.seo_title);
                 variantPage.seo_title = `${baseSeoTitle} ${targetArea.name_inessive}`;
+                // Add city-specific custom text if available
+                const customTexts = targetArea.custom_texts || {};
+                const cityCustomText = customTexts[computedBaseSlug] || '';
+                if (cityCustomText) {
+                  const existingDesc = variantPage.description_text || '';
+                  variantPage.description_text = existingDesc + `<div class="city-specific-content"><p>${cityCustomText}</p></div>`;
+                }
                 setPage(variantPage);
               } else {
                 setError('not_found');

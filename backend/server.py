@@ -599,6 +599,7 @@ class AreaCreate(BaseModel):
     name_inessive: str  # Helsingissä (used in titles: "Maalaustyöt Helsingissä")
     is_default: bool = False
     order: int = 0
+    custom_texts: dict = {}  # {service_slug: "unique text for this city+service"}
 
 class AreaUpdate(BaseModel):
     name: Optional[str] = None
@@ -606,6 +607,7 @@ class AreaUpdate(BaseModel):
     name_inessive: Optional[str] = None
     is_default: Optional[bool] = None
     order: Optional[int] = None
+    custom_texts: Optional[dict] = None
 
 class Area(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -615,6 +617,7 @@ class Area(BaseModel):
     name_inessive: str
     is_default: bool = False
     order: int = 0
+    custom_texts: dict = {}  # {service_slug: "unique text for this city+service"}
 
 # Reference - Enhanced with images and contractor support
 class ReferenceCreate(BaseModel):
