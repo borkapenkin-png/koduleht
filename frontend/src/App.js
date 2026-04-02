@@ -1087,7 +1087,15 @@ const AdminPanel = () => {
         axios.get(`${API}/references`),
         axios.get(`${API}/partners`)
       ]);
-      setSettings({ ...defaultSettings, ...settingsRes.data });
+      const loadedSettings = { ...defaultSettings, ...settingsRes.data };
+      // Migrate legacy trust badges into trust_badges array if empty
+      if ((!loadedSettings.trust_badges || loadedSettings.trust_badges.length === 0)) {
+        const migrated = [];
+        if (loadedSettings.footer_trust_badge_1) migrated.push({ url: loadedSettings.footer_trust_badge_1, alt: 'Luotettava kumppani' });
+        if (loadedSettings.footer_trust_badge_2) migrated.push({ url: loadedSettings.footer_trust_badge_2, alt: 'Asiakastieto' });
+        if (migrated.length > 0) loadedSettings.trust_badges = migrated;
+      }
+      setSettings(loadedSettings);
       setServices(servicesRes.data);
       setReferences(refsRes.data);
       setPartners(partnersRes.data);
