@@ -478,7 +478,7 @@ const ServiceAreasSection = ({ page, settings, areas: areasProp, currentSlug }) 
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center max-w-3xl mx-auto">
           <p className="text-white/60 uppercase text-sm font-medium tracking-wider mb-3">TOIMIALUE</p>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
-            {serviceTitle} Uudellamaalla
+            {serviceTitle} ja Uudellamaalla
           </h2>
           <p className="text-white/80 text-sm md:text-base mb-8 leading-relaxed max-w-xl mx-auto">
             {description}
