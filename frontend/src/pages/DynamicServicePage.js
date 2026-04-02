@@ -237,12 +237,12 @@ const ServiceHero = ({ page, settings }) => {
             </Link>
           </motion.div>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-6 md:mt-8 flex flex-wrap items-center gap-4 md:gap-6">
-            <div className="flex items-center gap-2 text-xs md:text-sm text-[#64748B]">
-              <CheckCircle size={16} className="text-primary" />
+            <div className="flex items-center gap-2 text-sm md:text-base text-[#64748B]">
+              <CheckCircle size={21} className="text-primary" />
               <span>{settings?.trust_badge_3_title || 'Kotitalousvähennys'}</span>
             </div>
-            <div className="flex items-center gap-2 text-xs md:text-sm text-[#64748B]">
-              <CheckCircle size={16} className="text-primary" />
+            <div className="flex items-center gap-2 text-sm md:text-base text-[#64748B]">
+              <CheckCircle size={21} className="text-primary" />
               <span>{settings?.trust_badge_4_title || 'Tyytyväisyystakuu'}</span>
             </div>
           </motion.div>
