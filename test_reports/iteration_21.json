@@ -1,0 +1,100 @@
+{
+  "summary": "Premium Hintalaskuri v2 fully tested. All 14 backend API tests passed. Frontend wizard flow works correctly with all new features: 5-step progress bar, live sticky price box (desktop right / mobile bottom), price shown as RANGE (×0.9 – ×1.15), size_cards step type for Julkisivumaalaus and Kattomaalaus, 'En tiedä pinta-alaa' option for sliders, addons as cards with hints, result page with breakdown/CTAs/expandable price explanation, and contact form submission. Fixed contact form API field mapping issue.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "GET /api/calculator-config returns 200 with correct structure",
+    "Calculator config has 6 services with correct names and prices",
+    "Global settings has required fields: tax_rate (25.5%), kotitalousvahennys_rate (35%), labor_percentage (70%)",
+    "Julkisivumaalaus has size_cards step type with 4 options (Alle 100m², 100-150m², 150-200m², 200m²+)",
+    "Kattomaalaus has size_cards step type with 4 options (Pieni, Keskikokoinen, Suuri, Erittäin suuri)",
+    "Sisämaalaus slider has dont_know_options (Pieni, Keskikokoinen, Suuri)",
+    "Tasoitustyöt slider has dont_know_options",
+    "Sisämaalaus flow: target_type → area → condition",
+    "Julkisivumaalaus flow: target_type → area → floors → condition",
+    "Kattomaalaus flow: target_type → area → condition",
+    "Addons have hints and correct pricing",
+    "Contact form submission works",
+    "Service selection shows all 6 services with correct data-testids",
+    "Progress bar shows 5 stages (Palvelu → Kohde → Tarkennukset → Lisävalinnat → Hinta-arvio)",
+    "Progress bar hidden before service selection, visible after",
+    "'En tiedä tarkkaa pinta-alaa' button shows size categories",
+    "'Syötä tarkka pinta-ala' button returns to slider",
+    "Live price box on desktop (sticky right sidebar) shows range and updates in real-time",
+    "Live price box shows 'Täytä tiedot...' when no area selected",
+    "Mobile sticky bottom price bar appears and shows range",
+    "Price shown as RANGE (×0.9 – ×1.15 of calculated total)",
+    "Kotitalousvähennys shown in green on both price box and result page",
+    "Result page: price range heading, 'Mihin arvio perustuu' breakdown",
+    "Result page: 'Miten hinta muodostuu' expandable section",
+    "Result page: 2 CTA buttons ('Kysy tarkka tarjous' + 'Lähetä kuvat arviota varten')",
+    "Back navigation works without resetting selections",
+    "Contact form submission works from result page"
+  ],
+  "test_report_links": [
+    "/app/backend/tests/test_calculator_v2.py",
+    "/app/test_reports/pytest/pytest_calculator_v2.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "PriceCalculatorPage.js is well-structured with proper data-testid attributes for all interactive elements",
+    "Price calculation correctly applies ×0.9 – ×1.15 range multipliers",
+    "Kotitalousvähennys calculation follows Finnish tax rules (35% of labor - 150€ omavastuu)",
+    "size_cards step type correctly implemented for Julkisivumaalaus and Kattomaalaus",
+    "dont_know_options feature provides good UX for users who don't know exact area"
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_calculator_v2.py",
+    "/app/frontend/src/pages/PriceCalculatorPage.js"
+  ],
+  "success_rate": {
+    "backend": "100% (14/14 tests passed)",
+    "frontend": "100% - All UI flows verified via Playwright"
+  },
+  "test_credentials": {
+    "admin_username": "admin",
+    "admin_password": "jbadmin2024"
+  },
+  "seed_data_creation": "Calculator config with 6 services auto-seeded on first access",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Premium Hintalaskuri v2 is complete and working. Key new features tested: (1) Price shown as RANGE (×0.9 – ×1.15), (2) size_cards step type for Julkisivumaalaus/Kattomaalaus, (3) 'En tiedä pinta-alaa' option for sliders, (4) Split layout with sticky price box (desktop right / mobile bottom), (5) Expandable breakdown section. Fixed contact form API field mapping (name → firstName). Key data-testids: price-calculator-page, calculator-title, service-selection, service-card-{id}, step-{id}, option-{id}, area-slider, dont-know-btn, dontknow-{id}, show-slider-btn, addons-step, addon-{id}, price-result, final-price, kotitalousvahennys, breakdown-toggle, request-quote-btn, send-photos-btn, recalculate-btn, mobile-price-bar, desktop-price-box, progress-bar, calc-next-btn, calc-back-btn.",
+  "feature_verification": {
+    "calculator_page": {
+      "url": "/hintalaskuri",
+      "data_testid": "price-calculator-page",
+      "services": ["Sisämaalaus", "Tasoitustyöt", "Mikrosementti", "Julkisivumaalaus", "Kattomaalaus", "Julkisivurappaus"]
+    },
+    "progress_bar": {
+      "stages": ["Palvelu", "Kohde", "Tarkennukset", "Lisävalinnat", "Hinta-arvio"],
+      "data_testid": "progress-bar"
+    },
+    "price_display": {
+      "format": "RANGE (×0.9 – ×1.15)",
+      "example": "1 073 – 1 371 €",
+      "kotitalousvahennys": "noin 960 – 1 185 €"
+    },
+    "new_features": {
+      "size_cards": "Used for Julkisivumaalaus and Kattomaalaus area selection",
+      "dont_know_options": "Available on slider steps for users who don't know exact area",
+      "sticky_price_box": "Desktop: right sidebar, Mobile: bottom bar"
+    },
+    "api_endpoints": {
+      "public": "GET /api/calculator-config",
+      "admin_get": "GET /api/admin/calculator-config",
+      "admin_update": "PUT /api/admin/calculator-config"
+    }
+  },
+  "bug_fix": {
+    "issue": "Contact form in calculator was sending wrong field names (name instead of firstName)",
+    "fix": "Updated handleContactSubmit to map name → firstName, added default lastName and email",
+    "file": "/app/frontend/src/pages/PriceCalculatorPage.js"
+  }
+}

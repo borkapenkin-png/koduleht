@@ -1448,10 +1448,10 @@ def get_default_calculator_config():
                 "steps": [
                     {
                         "id": "target_type",
-                        "title": "Kohteen tyyppi",
+                        "title": "Millaisesta kohteesta on kyse?",
                         "type": "cards",
                         "options": [
-                            {"id": "room", "label": "Yksittäinen huone", "multiplier": 1.1},
+                            {"id": "room", "label": "Huone", "multiplier": 1.1},
                             {"id": "studio", "label": "Yksiö", "multiplier": 1.0},
                             {"id": "2room", "label": "Kaksio", "multiplier": 0.95},
                             {"id": "3room", "label": "Kolmio", "multiplier": 0.92},
@@ -1460,29 +1460,34 @@ def get_default_calculator_config():
                     },
                     {
                         "id": "area",
-                        "title": "Pinta-ala",
+                        "title": "Kuinka suuri pinta-ala on?",
                         "type": "slider",
                         "min": 10,
                         "max": 200,
                         "default": 50,
                         "step": 5,
-                        "unit": "m²"
+                        "unit": "m²",
+                        "dont_know_options": [
+                            {"id": "small", "label": "Pieni", "area_value": 25},
+                            {"id": "medium", "label": "Keskikokoinen", "area_value": 55},
+                            {"id": "large", "label": "Suuri", "area_value": 90}
+                        ]
                     },
                     {
                         "id": "condition",
-                        "title": "Pintojen kunto",
+                        "title": "Missä kunnossa pinnat ovat?",
                         "type": "cards",
                         "options": [
-                            {"id": "good", "label": "Moitteeton", "description": "Pinnat hyvässä kunnossa", "multiplier": 1.0},
-                            {"id": "minor", "label": "Pieniä korjauksia", "description": "Kolhuja ja pieniä reikiä", "multiplier": 1.15},
-                            {"id": "leveling", "label": "Tasoitettava", "description": "Seinät vaativat tasoituksen", "multiplier": 1.4}
+                            {"id": "good", "label": "Hyvässä kunnossa", "description": "Pinnat tasaiset ja siistit", "multiplier": 1.0},
+                            {"id": "minor", "label": "Pieniä epätasaisuuksia", "description": "Kolhuja tai pieniä reikiä", "multiplier": 1.15},
+                            {"id": "leveling", "label": "Selvästi epätasainen", "description": "Pinnat vaativat käsittelyä", "multiplier": 1.4}
                         ]
                     }
                 ],
                 "addons": [
-                    {"id": "ceiling", "label": "Katon maalaus", "price_per_m2": 22, "enabled": True},
-                    {"id": "wall_leveling", "label": "Seinien tasoitus", "price_per_m2": 23, "enabled": True},
-                    {"id": "extra_color", "label": "Lisäsävy (+1 väri)", "fixed_price": 100, "enabled": True}
+                    {"id": "ceiling", "label": "Katon maalaus", "hint": "Usein tehdään samalla", "price_per_m2": 22, "enabled": True},
+                    {"id": "wall_leveling", "label": "Seinien tasoitus", "hint": "Suositellaan epätasaisille pinnoille", "price_per_m2": 23, "enabled": True},
+                    {"id": "extra_color", "label": "Lisäsävy", "hint": "Korosteseinä tai toinen väri", "fixed_price": 100, "enabled": True}
                 ]
             },
             {
@@ -1496,7 +1501,7 @@ def get_default_calculator_config():
                 "steps": [
                     {
                         "id": "target_type",
-                        "title": "Tasoituskohde",
+                        "title": "Mitä tasoitetaan?",
                         "type": "cards",
                         "options": [
                             {"id": "walls", "label": "Seinät", "multiplier": 1.0},
@@ -1506,28 +1511,33 @@ def get_default_calculator_config():
                     },
                     {
                         "id": "area",
-                        "title": "Pinta-ala",
+                        "title": "Kuinka suuri pinta-ala on?",
                         "type": "slider",
                         "min": 10,
                         "max": 200,
                         "default": 50,
                         "step": 5,
-                        "unit": "m²"
+                        "unit": "m²",
+                        "dont_know_options": [
+                            {"id": "small", "label": "Pieni", "area_value": 25},
+                            {"id": "medium", "label": "Keskikokoinen", "area_value": 55},
+                            {"id": "large", "label": "Suuri", "area_value": 90}
+                        ]
                     },
                     {
                         "id": "condition",
-                        "title": "Pinnan kunto",
+                        "title": "Kuinka sileä lopputulos halutaan?",
                         "type": "cards",
                         "options": [
-                            {"id": "partial", "label": "Osatasoitus", "description": "Pienet korjaukset", "multiplier": 0.6},
-                            {"id": "full", "label": "Tasoitus", "description": "Koko pinta tasoitettava", "multiplier": 1.0},
-                            {"id": "heavy", "label": "Ylitasoitus", "description": "Paksu tasoitekerros", "multiplier": 1.5}
+                            {"id": "partial", "label": "Perustaso", "description": "Pienet korjaukset", "multiplier": 0.6},
+                            {"id": "full", "label": "Sileä pinta", "description": "Tasainen ja siisti", "multiplier": 1.0},
+                            {"id": "heavy", "label": "Erittäin sileä (maalivalmis)", "description": "Huippusileä lopputulos", "multiplier": 1.5}
                         ]
                     }
                 ],
                 "addons": [
-                    {"id": "primer", "label": "Pohjamaalaus", "price_per_m2": 8, "enabled": True},
-                    {"id": "reinforcement", "label": "Vahvikekangas", "price_per_m2": 12, "enabled": True}
+                    {"id": "primer", "label": "Pohjamaalaus", "hint": "Parantaa maalin tarttuvuutta", "price_per_m2": 8, "enabled": True},
+                    {"id": "reinforcement", "label": "Vahvikekangas", "hint": "Estää halkeamien uusiutumisen", "price_per_m2": 12, "enabled": True}
                 ]
             },
             {
@@ -1541,7 +1551,7 @@ def get_default_calculator_config():
                 "steps": [
                     {
                         "id": "target_type",
-                        "title": "Kohteen tyyppi",
+                        "title": "Mihin mikrosementti tulee?",
                         "type": "cards",
                         "options": [
                             {"id": "floor", "label": "Lattia", "multiplier": 1.0},
@@ -1552,26 +1562,31 @@ def get_default_calculator_config():
                     },
                     {
                         "id": "area",
-                        "title": "Pinta-ala",
+                        "title": "Kuinka suuri pinta-ala on?",
                         "type": "slider",
                         "min": 2,
                         "max": 80,
                         "default": 15,
                         "step": 1,
-                        "unit": "m²"
+                        "unit": "m²",
+                        "dont_know_options": [
+                            {"id": "small", "label": "Pieni", "area_value": 8},
+                            {"id": "medium", "label": "Keskikokoinen", "area_value": 20},
+                            {"id": "large", "label": "Suuri", "area_value": 45}
+                        ]
                     },
                     {
                         "id": "condition",
-                        "title": "Alustan kunto",
+                        "title": "Minkälainen alusta on?",
                         "type": "cards",
                         "options": [
-                            {"id": "good", "label": "Hyvä alusta", "description": "Tasainen ja puhdas", "multiplier": 1.0},
-                            {"id": "prep", "label": "Esikäsittely", "description": "Alusta vaatii valmistelua", "multiplier": 1.2}
+                            {"id": "good", "label": "Valmis hyvä alusta", "description": "Tasainen ja puhdas", "multiplier": 1.0},
+                            {"id": "prep", "label": "Vaatii esikäsittelyä", "description": "Alusta vaatii valmistelua", "multiplier": 1.2}
                         ]
                     }
                 ],
                 "addons": [
-                    {"id": "sealing", "label": "Suojalakkaus", "price_per_m2": 15, "enabled": True}
+                    {"id": "sealing", "label": "Suojalakkaus", "hint": "Suojaa pintaa kulutukselta", "price_per_m2": 15, "enabled": True}
                 ]
             },
             {
@@ -1585,7 +1600,7 @@ def get_default_calculator_config():
                 "steps": [
                     {
                         "id": "target_type",
-                        "title": "Talon tyyppi",
+                        "title": "Minkälainen talo?",
                         "type": "cards",
                         "options": [
                             {"id": "wood", "label": "Puutalo", "multiplier": 1.0},
@@ -1595,17 +1610,18 @@ def get_default_calculator_config():
                     },
                     {
                         "id": "area",
-                        "title": "Pohjapinta-ala",
-                        "type": "slider",
-                        "min": 50,
-                        "max": 300,
-                        "default": 120,
-                        "step": 10,
-                        "unit": "m²"
+                        "title": "Kuinka suuri talo on?",
+                        "type": "size_cards",
+                        "options": [
+                            {"id": "small", "label": "Alle 100 m²", "area_value": 75},
+                            {"id": "medium", "label": "100–150 m²", "area_value": 125},
+                            {"id": "large", "label": "150–200 m²", "area_value": 175},
+                            {"id": "xlarge", "label": "200 m²+", "area_value": 250}
+                        ]
                     },
                     {
                         "id": "floors",
-                        "title": "Kerrosten määrä",
+                        "title": "Kuinka monta kerrosta?",
                         "type": "cards",
                         "options": [
                             {"id": "1", "label": "1 kerros", "multiplier": 1.0},
@@ -1616,18 +1632,17 @@ def get_default_calculator_config():
                     },
                     {
                         "id": "condition",
-                        "title": "Pinnan kunto",
+                        "title": "Missä kunnossa pinta on?",
                         "type": "cards",
                         "options": [
                             {"id": "good", "label": "Hyvä kunto", "description": "Ei hilseilyä", "multiplier": 1.0},
-                            {"id": "some", "label": "Hieman hilseilyä", "description": "Yhdellä seinällä", "multiplier": 1.2},
-                            {"id": "heavy", "label": "Paljon hilseilyä", "description": "Useammalla seinällä", "multiplier": 1.5}
+                            {"id": "some", "label": "Maali kulunut", "description": "Paikoin kulunut", "multiplier": 1.2},
+                            {"id": "heavy", "label": "Paljon hilseilyä", "description": "Usealla seinällä", "multiplier": 1.5}
                         ]
                     }
                 ],
                 "addons": [
-                    {"id": "scaffolding", "label": "Telineet sis. hintaan", "fixed_price": 0, "enabled": True},
-                    {"id": "wood_repair", "label": "Lautojen vaihto", "price_per_m2": 45, "enabled": True}
+                    {"id": "wood_repair", "label": "Lautojen vaihto", "hint": "Vaihdetaan vaurioituneet laudat", "price_per_m2": 45, "enabled": True}
                 ]
             },
             {
@@ -1641,7 +1656,7 @@ def get_default_calculator_config():
                 "steps": [
                     {
                         "id": "target_type",
-                        "title": "Katon tyyppi",
+                        "title": "Minkälainen katto?",
                         "type": "cards",
                         "options": [
                             {"id": "metal", "label": "Peltikatto", "multiplier": 1.0},
@@ -1650,17 +1665,18 @@ def get_default_calculator_config():
                     },
                     {
                         "id": "area",
-                        "title": "Katon pinta-ala",
-                        "type": "slider",
-                        "min": 50,
-                        "max": 400,
-                        "default": 150,
-                        "step": 10,
-                        "unit": "m²"
+                        "title": "Kuinka suuri katto?",
+                        "type": "size_cards",
+                        "options": [
+                            {"id": "small", "label": "Pieni", "area_value": 80},
+                            {"id": "medium", "label": "Keskikokoinen", "area_value": 150},
+                            {"id": "large", "label": "Suuri", "area_value": 250},
+                            {"id": "xlarge", "label": "Erittäin suuri", "area_value": 350}
+                        ]
                     },
                     {
                         "id": "condition",
-                        "title": "Katon kunto",
+                        "title": "Missä kunnossa katto on?",
                         "type": "cards",
                         "options": [
                             {"id": "good", "label": "Hyvä kunto", "description": "Puhdas pinta", "multiplier": 1.0},
@@ -1670,8 +1686,8 @@ def get_default_calculator_config():
                     }
                 ],
                 "addons": [
-                    {"id": "wash", "label": "Katon pesu", "price_per_m2": 5, "enabled": True},
-                    {"id": "moss_treatment", "label": "Sammalesto", "price_per_m2": 4, "enabled": True}
+                    {"id": "wash", "label": "Katon pesu", "hint": "Pestään ennen maalausta", "price_per_m2": 5, "enabled": True},
+                    {"id": "moss_treatment", "label": "Sammalesto", "hint": "Estää sammalen kasvun", "price_per_m2": 4, "enabled": True}
                 ]
             },
             {
@@ -1685,7 +1701,7 @@ def get_default_calculator_config():
                 "steps": [
                     {
                         "id": "target_type",
-                        "title": "Rappaustyyppi",
+                        "title": "Minkälainen rappaus?",
                         "type": "cards",
                         "options": [
                             {"id": "thin", "label": "Ohutrappaus", "multiplier": 1.0},
@@ -1695,26 +1711,31 @@ def get_default_calculator_config():
                     },
                     {
                         "id": "area",
-                        "title": "Pinta-ala",
+                        "title": "Kuinka suuri pinta-ala?",
                         "type": "slider",
                         "min": 20,
                         "max": 500,
                         "default": 100,
                         "step": 10,
-                        "unit": "m²"
+                        "unit": "m²",
+                        "dont_know_options": [
+                            {"id": "small", "label": "Pieni", "area_value": 50},
+                            {"id": "medium", "label": "Keskikokoinen", "area_value": 120},
+                            {"id": "large", "label": "Suuri", "area_value": 250}
+                        ]
                     },
                     {
                         "id": "condition",
-                        "title": "Alustan kunto",
+                        "title": "Minkälainen alusta on?",
                         "type": "cards",
                         "options": [
                             {"id": "good", "label": "Hyvä alusta", "description": "Puhdas ja kiinteä", "multiplier": 1.0},
-                            {"id": "repair", "label": "Korjattava", "description": "Halkeamia ja irtonaista rappausta", "multiplier": 1.3}
+                            {"id": "repair", "label": "Vaatii korjausta", "description": "Halkeamia tai irtonaista rappausta", "multiplier": 1.3}
                         ]
                     }
                 ],
                 "addons": [
-                    {"id": "color", "label": "Värillinen rappaus", "price_per_m2": 8, "enabled": True}
+                    {"id": "groundwork", "label": "Pohjatyöt", "hint": "Alustan esikäsittely ja puhdistus", "price_per_m2": 15, "enabled": True}
                 ]
             }
         ],
@@ -1724,7 +1745,7 @@ def get_default_calculator_config():
             "kotitalousvahennys_max_per_person": 1600,
             "labor_percentage": 70,
             "material_percentage": 30,
-            "cta_title": "Haluatko tarkemman tarjouksen?",
+            "cta_title": "Kysy tarkka tarjous",
             "cta_subtitle": "Jätä yhteystietosi ja saat tarkan tarjouksen 24h sisällä – maksuton arviokäynti.",
             "disclaimer": "Hinnat ovat suuntaa-antavia ja sisältävät ALV:n. Lopullinen hinta varmistuu kartoituskäynnillä."
         }
