@@ -1,29 +1,43 @@
 # J&B Tasoitus ja Maalaus - Product Requirements Document
 
 ## Original Problem Statement
-Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
+Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga. Hintalaskuri on ehitatud müügifunnelina, mitte lihtsalt kalkulaatorina.
 
 ## Latest Update: April 2, 2026
 
+### Session 4c: Müügifunnel Upgrade (Packages + Smart Logic) - COMPLETED
+- **Good/Better/Best packages**: Perus, Suositeltu (default), Premium per teenus
+- **Smart auto-triggers**: Condition-based auto-selection (sammal → pesu+sammalesto, epätasainen → tasoitus)
+- **Grouped addons**: Esityöt, Tarvittaessa, Lisäpalvelut sections
+- **Soft warnings**: Amber text when deselecting recommended addons
+- **Badges**: "Suositeltu" ja "Usein valitaan" on addon cards
+- **New addons (painter logic)**: 30+ addons across 6 services:
+  - Sisämaalaus: +halkeamien korjaus, listojen maalaus, ovien maalaus
+  - Tasoitustyöt: +kulmasuojat, halkeamien korjaus, hionta
+  - Mikrosementti: +alustan tasoitus, vedeneristys
+  - Julkisivumaalaus: +pesu, vanhan maalin poisto, kaksinkertainen maalaus, ikkunoiden maalaus
+  - Kattomaalaus: +ruostekäsittely, paikkakorjaukset, saumojen tiivistys, kaksinkertainen maalaus, kourujen puhdistus
+  - Julkisivurappaus: +halkeamien korjaus, vanhan rappauksen poisto, pintakäsittely
+- **Updated CTAs**: "Pyydä tarkka tarjous (maksuton)" + "Lähetä kuvat nopeaa arviota varten"
+- **Price box context**: "Hinta tarkentuu yleensä ±10 %"
+
 ### Session 4b: Design & Logic Fixes - COMPLETED
-- Hero section + trust badges added to calculator page (matches rest of site)
-- Room type multipliers all set to 1.0 (Huone/Kaksio/Kolmio give same price at same area)
-- Lisäsävy addon clarified: "100 € / kohde" with hint "Yksi lisävärisävy koko kohteeseen"
+- Hero section + trust badges added to calculator page
+- Room type multipliers set to 1.0
+- Lisäsävy addon clarified: "100 € / kohde"
 
 ### Session 4a: Premium Hintalaskuri v2 - COMPLETED
-- 5-step wizard: Palvelu → Kohde → Tarkennukset → Lisävalinnat → Hinta-arvio
-- Live sticky price box (desktop right / mobile bottom) showing price RANGE (×0.9 – ×1.15)
-- "En tiedä pinta-alaa" option, size_cards step type, addons as cards with hints
-- Result page: breakdown, expandable price explanation, 2 CTAs, localStorage persistence
-- Finnish tax logic: ALV 25.5%, Kotitalousvähennys 35% labor - 150€
+- 5-step wizard, live sticky price box, price as RANGE
+- "En tiedä pinta-alaa", size_cards, localStorage persistence
 
-### Session 3: Areas Admin + Navigation + Calculator v1 (superseded)
-### Session 2: SEO Pre-rendering + Stats Bar
-### Session 1: Production SEO & Technical Fixes
+### Earlier Sessions
+- Session 3: Areas Admin + Navigation
+- Session 2: SEO Pre-rendering + Stats Bar
+- Session 1: Production SEO & Technical Fixes
 
 ## Key Files
-- `/app/frontend/src/pages/PriceCalculatorPage.js` - Calculator with hero
-- `/app/backend/server.py` - API + calculator config (lines 1436-1731)
+- `/app/frontend/src/pages/PriceCalculatorPage.js` - Calculator with packages, auto-triggers, grouped addons
+- `/app/backend/server.py` - API + calculator config (services, packages, auto_triggers, addons with groups/badges/warnings)
 - `/app/frontend/src/App.js` - Routes, Navbar, Footer
 
 ## Credentials
