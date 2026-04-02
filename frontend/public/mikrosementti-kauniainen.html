@@ -79,11 +79,33 @@
     <link rel="stylesheet" href="/static/css/main.038c2f5b.css?v=20260319" />
     
     
+    <!-- FOUC prevention: hide body until CSS loads -->
+    <style>body{opacity:0}body.css-ready{opacity:1;transition:opacity .15s ease}</style>
+    
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 </head>
 <body>
+    <script>
+      // Show body once CSS is loaded (or after timeout fallback)
+      (function(){
+        var sheets = document.styleSheets;
+        function check() {
+          for (var i = 0; i < sheets.length; i++) {
+            if (sheets[i].href && sheets[i].href.indexOf('/static/css/') !== -1) {
+              document.body.classList.add('css-ready');
+              return true;
+            }
+          }
+          return false;
+        }
+        if (!check()) {
+          var iv = setInterval(function(){ if(check()) clearInterval(iv); }, 20);
+          setTimeout(function(){ document.body.classList.add('css-ready'); clearInterval(iv); }, 1500);
+        }
+      })();
+    </script>
     <div id="root">
         
 <div data-seo-prerender="true">
@@ -253,7 +275,7 @@
     
     <!-- React App JS - loaded from build -->
     
-    <script src="/static/js/main.070109c2.js?v=20260319"></script>
+    <script src="/static/js/main.d6be4082.js?v=20260319"></script>
     
 </body>
 </html>
