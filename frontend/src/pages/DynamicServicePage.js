@@ -845,7 +845,6 @@ const DynamicServicePage = () => {
               
               if (basePage) {
                 // Found base page - create city variant
-                // Only hero_title and seo_title get the city name; all other content stays identical
                 setCurrentArea(targetArea);
                 setBaseSlug(computedBaseSlug);
                 const variantPage = { ...basePage, slug: slug };
@@ -859,12 +858,19 @@ const DynamicServicePage = () => {
                 variantPage.hero_title = `${baseTitle} ${targetArea.name_inessive}`;
                 const baseSeoTitle = stripCity(variantPage.seo_title);
                 variantPage.seo_title = `${baseSeoTitle} ${targetArea.name_inessive}`;
-                // Add city-specific custom text if available
+                // Apply city-specific overrides from custom_texts (object or legacy string)
                 const customTexts = targetArea.custom_texts || {};
-                const cityCustomText = customTexts[computedBaseSlug] || '';
-                if (cityCustomText) {
+                const cityEntry = customTexts[computedBaseSlug];
+                if (cityEntry && typeof cityEntry === 'object') {
+                  if (cityEntry.seo_title) variantPage.seo_title = cityEntry.seo_title;
+                  if (cityEntry.hero_title) variantPage.hero_title = cityEntry.hero_title;
+                  if (cityEntry.text) {
+                    const existingDesc = variantPage.description_text || '';
+                    variantPage.description_text = existingDesc + `<div class="city-specific-content"><p>${cityEntry.text}</p></div>`;
+                  }
+                } else if (typeof cityEntry === 'string' && cityEntry) {
                   const existingDesc = variantPage.description_text || '';
-                  variantPage.description_text = existingDesc + `<div class="city-specific-content"><p>${cityCustomText}</p></div>`;
+                  variantPage.description_text = existingDesc + `<div class="city-specific-content"><p>${cityEntry}</p></div>`;
                 }
                 setPage(variantPage);
               } else {

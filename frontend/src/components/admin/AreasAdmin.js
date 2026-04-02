@@ -345,9 +345,23 @@ const AreaForm = ({ form, setForm, onNameChange }) => (
   </div>
 );
 
+// Helper: normalize custom_texts entry (backward compat: string → object)
+const normalizeCustomEntry = (val) => {
+  if (!val) return { text: '', seo_title: '', hero_title: '' };
+  if (typeof val === 'string') return { text: val, seo_title: '', hero_title: '' };
+  return { text: val.text || '', seo_title: val.seo_title || '', hero_title: val.hero_title || '' };
+};
+
 // City-specific custom texts panel
 const CityTextsPanel = ({ area, services, token, onSave }) => {
-  const [texts, setTexts] = useState(area.custom_texts || {});
+  // Normalize all entries on load
+  const initTexts = () => {
+    const raw = area.custom_texts || {};
+    const normalized = {};
+    Object.keys(raw).forEach(k => { normalized[k] = normalizeCustomEntry(raw[k]); });
+    return normalized;
+  };
+  const [texts, setTexts] = useState(initTexts);
   const [saving, setSaving] = useState(false);
   const apiHeaders = { headers: { Authorization: `Bearer ${token}` } };
 
@@ -360,6 +374,13 @@ const CityTextsPanel = ({ area, services, token, onSave }) => {
       alert(err.response?.data?.detail || 'Virhe tallennuksessa');
     }
     setSaving(false);
+  };
+
+  const updateField = (serviceSlug, field, value) => {
+    setTexts(prev => ({
+      ...prev,
+      [serviceSlug]: { ...normalizeCustomEntry(prev[serviceSlug]), [field]: value }
+    }));
   };
 
   // Get base service slugs from service pages (remove city suffix)
@@ -380,24 +401,56 @@ const CityTextsPanel = ({ area, services, token, onSave }) => {
         </button>
       </div>
       <p className="text-xs text-[#94A3B8]">
-        Lisää jokaiselle palvelulle uniikkia sisältöä tämän kaupungin palvelusivuille. Teksti näkyy palvelun kuvauksen lopussa.
+        Lisää jokaiselle palvelulle uniikkia sisältöä tämän kaupungin palvelusivuille.
+        SEO-otsikko ja Hero-otsikko korvaavat automaattisen kaupunginvaihtologiikan.
       </p>
-      <div className="space-y-3">
-        {serviceList.map(service => (
-          <div key={service.slug}>
-            <label className="block text-xs font-medium text-[#475569] mb-1">
-              {service.title} <span className="text-[#94A3B8]">({service.slug}-{area.slug})</span>
-            </label>
-            <textarea
-              value={texts[service.slug] || ''}
-              onChange={(e) => setTexts(prev => ({ ...prev, [service.slug]: e.target.value }))}
-              placeholder={`Uniikki teksti: ${service.title} ${area.name_inessive}...`}
-              rows={3}
-              className="w-full px-3 py-2 text-sm border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
-              data-testid={`city-text-${area.slug}-${service.slug}`}
-            />
-          </div>
-        ))}
+      <div className="space-y-5">
+        {serviceList.map(service => {
+          const entry = normalizeCustomEntry(texts[service.slug]);
+          return (
+            <div key={service.slug} className="bg-white border border-[#E2E8F0] rounded-lg p-3 space-y-2">
+              <label className="block text-xs font-semibold text-[#334155]">
+                {service.title} <span className="text-[#94A3B8]">({service.slug}-{area.slug})</span>
+              </label>
+              {/* SEO Title override */}
+              <div>
+                <label className="block text-xs text-[#64748B] mb-0.5">SEO-otsikko (title-tagi)</label>
+                <input
+                  type="text"
+                  value={entry.seo_title}
+                  onChange={(e) => updateField(service.slug, 'seo_title', e.target.value)}
+                  placeholder={`esim. ${service.title} ${area.name_inessive} - Ammattitaitoinen palvelu`}
+                  className="w-full px-3 py-1.5 text-sm border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  data-testid={`city-seo-title-${area.slug}-${service.slug}`}
+                />
+              </div>
+              {/* Hero Title override */}
+              <div>
+                <label className="block text-xs text-[#64748B] mb-0.5">Hero-otsikko (h1 sivulla)</label>
+                <input
+                  type="text"
+                  value={entry.hero_title}
+                  onChange={(e) => updateField(service.slug, 'hero_title', e.target.value)}
+                  placeholder={`esim. ${service.title} ${area.name_inessive}`}
+                  className="w-full px-3 py-1.5 text-sm border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  data-testid={`city-hero-title-${area.slug}-${service.slug}`}
+                />
+              </div>
+              {/* Description text */}
+              <div>
+                <label className="block text-xs text-[#64748B] mb-0.5">Uniikki teksti (kuvauksen lopussa)</label>
+                <textarea
+                  value={entry.text}
+                  onChange={(e) => updateField(service.slug, 'text', e.target.value)}
+                  placeholder={`Uniikki teksti: ${service.title} ${area.name_inessive}...`}
+                  rows={3}
+                  className="w-full px-3 py-2 text-sm border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  data-testid={`city-text-${area.slug}-${service.slug}`}
+                />
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

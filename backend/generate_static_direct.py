@@ -288,18 +288,25 @@ async def generate_service_page(db, slug: str, css_files, js_files, area_overrid
         if page.get("features"):
             page["features"] = [{"title": replace_city(f.get("title", "")), "description": replace_city(f.get("description", ""))} for f in page["features"]]
         
-        # Add city-specific custom text to description
-        # Get the full area doc from DB with custom_texts
+        # Apply city-specific overrides from custom_texts
         full_area = await db.areas.find_one({"slug": area_override["slug"]}, {"_id": 0})
         if full_area:
             custom_texts = full_area.get("custom_texts", {})
-            # Find base service slug (e.g., "maalaustyot" from "maalaustyot-espoo")
             area_suffix = f"-{area_override['slug']}"
             base_service = slug[:-len(area_suffix)] if slug.endswith(area_suffix) else slug
-            custom_text = custom_texts.get(base_service, "")
-            if custom_text:
+            city_entry = custom_texts.get(base_service, "")
+            # Handle both new object format and legacy string format
+            if isinstance(city_entry, dict):
+                if city_entry.get("seo_title"):
+                    page["seo_title"] = city_entry["seo_title"]
+                if city_entry.get("hero_title"):
+                    page["hero_title"] = city_entry["hero_title"]
+                if city_entry.get("text"):
+                    existing_desc = page.get("description_text", "") or ""
+                    page["description_text"] = existing_desc + f'<div class="city-specific-content"><p>{city_entry["text"]}</p></div>'
+            elif isinstance(city_entry, str) and city_entry:
                 existing_desc = page.get("description_text", "") or ""
-                page["description_text"] = existing_desc + f'<div class="city-specific-content"><p>{custom_text}</p></div>'
+                page["description_text"] = existing_desc + f'<div class="city-specific-content"><p>{city_entry}</p></div>'
     
     # Get all areas for "other areas" section
     areas = await db.areas.find({}, {"_id": 0}).sort("order", 1).to_list(100)

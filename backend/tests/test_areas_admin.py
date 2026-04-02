@@ -6,7 +6,7 @@ import pytest
 import requests
 import os
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://hintalaskuri-dynamic.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://variant-seo-control.preview.emergentagent.com')
 
 # Test credentials
 ADMIN_USERNAME = "admin"
