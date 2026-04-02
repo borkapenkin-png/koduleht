@@ -465,10 +465,6 @@ const ServiceAreasSection = ({ page, settings, areas: areasProp, currentSlug }) 
 
   // Determine base slug for linking (e.g., "maalaustyot" from "maalaustyot-helsinki")
   const baseSlug = (currentSlug || page?.slug || '').replace(/-helsinki$|-espoo$|-vantaa$|-kauniainen$/, '');
-  
-  const defaultText = `Tarjoamme ammattitaitoisia ${serviceTitle.toLowerCase()} Helsingissä, Espoossa, Vantaalla, Kauniaisissa ja koko Uudenmaan alueella.`;
-  const descriptionTemplate = settings?.areas_description_template || defaultText;
-  const description = descriptionTemplate.replace(/{palvelu}/gi, serviceTitle.toLowerCase());
 
   if (!areas || areas.length === 0) return null;
 
@@ -477,12 +473,9 @@ const ServiceAreasSection = ({ page, settings, areas: areasProp, currentSlug }) 
       <div className="container-custom">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center max-w-3xl mx-auto">
           <p className="text-white/60 uppercase text-sm font-medium tracking-wider mb-3">TOIMIALUE</p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6">
             {serviceTitle} ja Uudellamaalla
           </h2>
-          <p className="text-white/80 text-sm md:text-base mb-8 leading-relaxed max-w-xl mx-auto">
-            {description}
-          </p>
           
           {/* Area badges as links */}
           <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-10">
