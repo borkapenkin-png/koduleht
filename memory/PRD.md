@@ -5,27 +5,24 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga. Hintalaskuri
 
 ## Latest Update: April 2, 2026
 
+### Session 4e: Conditional Step Options - COMPLETED
+- **Kattomaalaus dynamic condition**: Peltikatto shows rust options (ruoste), Tiilikatto shows moss options (sammal)
+- Uses `conditional_on` + `conditional_options` in step config
+- Auto-triggers: rust conditions → ruostekäsittely ON, moss conditions → pesu+sammalesto ON
+- Downstream selections auto-clear when target_type changes
+
 ### Session 4d: Admin Panel + Slider Upgrade - COMPLETED
-- **Admin: Packages management** (3 tabs per service: Perustiedot/Lisäpalvelut/Paketit)
-  - Package names/descriptions editable
-  - Addon checkbox grid per package
-  - "Aseta oletukseksi" button
-- **Admin: Full addon CRUD** - add/edit/delete with all fields:
-  - Label, hint, price (€/m² or fixed), group, badge, warning, price_label
-- **Katto+Julkisivu slider**: Changed from size_cards to slider with dont_know_options
-  - Client can enter exact house floor area (pohjapinta-ala)
-  - "En tiedä" fallback shows size categories
+- Admin packages management (3 tabs per service)
+- Admin addon CRUD (label, hint, price, group, badge, warning)
+- Katto+Julkisivu slider for floor area input
 
 ### Session 4c: Müügifunnel Upgrade - COMPLETED
-- Good/Better/Best packages, smart auto-triggers, grouped addons, soft warnings, badges
-
 ### Session 4b: Design & Logic Fixes - COMPLETED
 ### Session 4a: Premium Hintalaskuri v2 - COMPLETED
-### Earlier Sessions: Areas Admin, SEO, Navigation fixes
 
 ## Key Files
+- `/app/frontend/src/pages/PriceCalculatorPage.js` - Calculator with conditional options
 - `/app/frontend/src/components/admin/CalculatorAdmin.js` - Admin with tabs + CRUD
-- `/app/frontend/src/pages/PriceCalculatorPage.js` - Calculator with packages
 - `/app/backend/server.py` - API + calculator config
 
 ## Credentials

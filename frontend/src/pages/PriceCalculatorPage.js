@@ -234,6 +234,17 @@ const PriceCalculatorPage = () => {
 
   const totalSteps = service ? service.steps.length + 2 : 1; // +1 for service select, +1 for addons
 
+  // Resolve step options (handles conditional_options)
+  const getStepOptions = useCallback((step) => {
+    if (step.conditional_on && step.conditional_options) {
+      const refValue = selections[step.conditional_on];
+      if (refValue && step.conditional_options[refValue]) {
+        return step.conditional_options[refValue];
+      }
+    }
+    return step.options || [];
+  }, [selections]);
+
   // Calculate active stage for progress bar
   const activeStage = useMemo(() => {
     if (showResult) return 4;
@@ -272,7 +283,8 @@ const PriceCalculatorPage = () => {
         if (opt && opt.area_value) area = opt.area_value;
       } else if (step.type === 'cards') {
         const selected = selections[step.id];
-        const opt = step.options.find(o => o.id === selected);
+        const opts = getStepOptions(step);
+        const opt = opts.find(o => o.id === selected);
         if (opt) multiplier *= opt.multiplier;
       }
     }
@@ -307,7 +319,8 @@ const PriceCalculatorPage = () => {
         const opt = step.options.find(o => o.id === val);
         if (opt) selectedLabels.push({ title: step.title, value: opt.label });
       } else if (step.type === 'cards') {
-        const opt = step.options.find(o => o.id === val);
+        const opts = getStepOptions(step);
+        const opt = opts.find(o => o.id === val);
         if (opt) selectedLabels.push({ title: step.title, value: opt.label });
       }
     }
@@ -604,15 +617,24 @@ const PriceCalculatorPage = () => {
                               <h2 className="text-lg md:text-xl font-bold text-[#0F172A] mb-6">{step.title}</h2>
 
                               {/* CARDS type */}
-                              {step.type === 'cards' && (
+                              {step.type === 'cards' && (() => {
+                                const opts = getStepOptions(step);
+                                return (
                                 <div className={`grid gap-3 ${
-                                  step.options.length <= 3 ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-2'
+                                  opts.length <= 3 ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-2'
                                 }`} data-testid={`step-${step.id}`}>
-                                  {step.options.map(opt => {
+                                  {opts.map(opt => {
                                     const sel = selections[step.id] === opt.id;
                                     return (
                                       <motion.button key={opt.id} whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}
-                                        onClick={() => setSelections(prev => ({ ...prev, [step.id]: opt.id }))}
+                                        onClick={() => setSelections(prev => {
+                                          const next = { ...prev, [step.id]: opt.id };
+                                          // Clear downstream conditional selections
+                                          service.steps.forEach(s => {
+                                            if (s.conditional_on === step.id) delete next[s.id];
+                                          });
+                                          return next;
+                                        })}
                                         className={`p-4 md:p-5 rounded-2xl border text-left transition-all duration-200 ${
                                           sel
                                             ? 'border-[#0F172A] bg-[#0F172A]/[0.03] shadow-md'
@@ -636,9 +658,10 @@ const PriceCalculatorPage = () => {
                                     );
                                   })}
                                 </div>
-                              )}
+                                );
+                              })()}
 
-                              {/* SIZE CARDS type (Julkisivumaalaus, Kattomaalaus) */}
+                              {/* SIZE CARDS type */}
                               {step.type === 'size_cards' && (
                                 <div className={`grid gap-3 ${
                                   step.options.length <= 3 ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-2'

@@ -1737,6 +1737,19 @@ def get_default_calculator_config():
                         "id": "condition",
                         "title": "Missä kunnossa katto on?",
                         "type": "cards",
+                        "conditional_on": "target_type",
+                        "conditional_options": {
+                            "metal": [
+                                {"id": "good", "label": "Hyvä kunto", "description": "Ei ruostetta", "multiplier": 1.0},
+                                {"id": "some_rust", "label": "Vähän ruostetta", "description": "Paikoin pintaruostetta", "multiplier": 1.2},
+                                {"id": "heavy_rust", "label": "Paljon ruostetta", "description": "Laajaa ruostumista", "multiplier": 1.45}
+                            ],
+                            "tile": [
+                                {"id": "good", "label": "Hyvä kunto", "description": "Puhdas pinta", "multiplier": 1.0},
+                                {"id": "moss", "label": "Vähän sammalta", "description": "Pieni sammalkasvusto", "multiplier": 1.15},
+                                {"id": "heavy_moss", "label": "Paljon sammalta", "description": "Laaja sammalkasvusto", "multiplier": 1.35}
+                            ]
+                        },
                         "options": [
                             {"id": "good", "label": "Hyvä kunto", "description": "Puhdas pinta", "multiplier": 1.0},
                             {"id": "moss", "label": "Vähän sammalta", "description": "Pieni sammalkasvusto", "multiplier": 1.15},
@@ -1759,7 +1772,8 @@ def get_default_calculator_config():
                     {"id": "premium", "label": "Premium", "description": "Täydellinen katon kunnostus", "addon_ids": ["wash", "moss_treatment", "ruostekaesittely", "kaksinkertainen_maalaus", "kourujen_puhdistus", "saumojen_tiivistys"]}
                 ],
                 "auto_triggers": [
-                    {"if_step": "condition", "if_values": ["moss", "heavy_moss"], "enable_addons": ["wash", "moss_treatment"]}
+                    {"if_step": "condition", "if_values": ["moss", "heavy_moss"], "enable_addons": ["wash", "moss_treatment"]},
+                    {"if_step": "condition", "if_values": ["some_rust", "heavy_rust"], "enable_addons": ["wash", "ruostekaesittely"]}
                 ]
             },
             {
