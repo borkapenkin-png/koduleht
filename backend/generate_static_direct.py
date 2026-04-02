@@ -235,11 +235,18 @@ async def generate_service_page(db, slug: str, css_files, js_files, area_overrid
     """Generate service page HTML. If area_override is provided, generate a city variant."""
     # For city variants, find the base (Helsinki) page
     if area_override:
-        # Find the Helsinki version of this page
-        default_area = await db.areas.find_one({"is_default": True}, {"_id": 0})
-        default_slug = default_area.get("slug", "helsinki") if default_area else "helsinki"
-        base_slug = slug.replace(f"-{area_override['slug']}", f"-{default_slug}")
-        page = await db.service_pages.find_one({"slug": base_slug})
+        # Find the base page - remove the area suffix to get the original slug
+        area_suffix = f"-{area_override['slug']}"
+        if slug.endswith(area_suffix):
+            base_page_slug = slug[:-len(area_suffix)]
+        else:
+            base_page_slug = slug
+        # Try the base slug first, then the Helsinki-suffixed version
+        page = await db.service_pages.find_one({"slug": base_page_slug})
+        if not page:
+            default_area = await db.areas.find_one({"is_default": True}, {"_id": 0})
+            default_slug = default_area.get("slug", "helsinki") if default_area else "helsinki"
+            page = await db.service_pages.find_one({"slug": f"{base_page_slug}-{default_slug}"})
     else:
         page = await db.service_pages.find_one({"slug": slug})
     
@@ -565,6 +572,15 @@ async def main():
             pages_to_generate.append(
                 (f"Service: {variant_slug}", f"/{variant_slug}", f"{variant_slug}/index.html",
                  lambda vs=variant_slug, a=area: generate_service_page(db, vs, css_files, js_files, area_override=a))
+            )
+        
+        # 4. Default city variant if slug doesn't already end with default area
+        #    e.g., /hintalaskuri needs /hintalaskuri-helsinki too
+        if not slug.endswith(f"-{default_area['slug']}"):
+            default_variant_slug = f"{base_slug}-{default_area['slug']}"
+            pages_to_generate.append(
+                (f"Service: {default_variant_slug}", f"/{default_variant_slug}", f"{default_variant_slug}/index.html",
+                 lambda dvs=default_variant_slug, da=default_area: generate_service_page(db, dvs, css_files, js_files, area_override=da))
             )
     
     print(f"\nTotal pages to generate: {len(pages_to_generate)}")

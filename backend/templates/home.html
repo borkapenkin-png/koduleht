@@ -2,11 +2,11 @@
 {% block seo_content %}
 <div data-seo-prerender="true">
     <!-- Navigation for crawlers -->
-    <nav aria-label="Paanavigaatio">
+    <nav aria-label="Päänavigaatio">
         <a href="/">{{ company_name }}</a>
         <ul>
             <li><a href="/#palvelut">Palvelut</a></li>
-            <li><a href="/#meista">Meista</a></li>
+            <li><a href="/#meista">Meistä</a></li>
             <li><a href="/referenssit">Referenssit</a></li>
             <li><a href="/ukk">UKK</a></li>
             <li><a href="/#yhteystiedot">Yhteystiedot</a></li>
@@ -16,15 +16,16 @@
     <!-- Hero Section -->
     <header>
         <h1>{{ settings.get('hero_title_1', 'Ammattitaitoista') }} {{ settings.get('hero_title_2', 'maalausta') }} {{ settings.get('hero_title_3', 'ja tasoitusta') }}</h1>
-        <p>{{ settings.get('hero_description', 'Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisa- ja ulkomaalaukset, julkisivurappaukset seka tapetoinnit avaimet kateen -periaatteella.') }}</p>
+        <p>{{ settings.get('hero_description', 'Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella.') }}</p>
         <a href="/#yhteystiedot">Pyydä tarjous</a>
+        <a href="/hintalaskuri">Hintalaskuri</a>
         <a href="tel:{{ settings.get('company_phone_primary', '+358 40 054 7270') }}">{{ settings.get('company_phone_primary', '+358 40 054 7270') }}</a>
     </header>
 
     <!-- Services Section -->
     <section id="palvelut">
         <h2>Palvelumme</h2>
-        <p>Tarjoamme laajan valikoiman maalaus- ja tasoituspalveluita Helsingissa ja Uudellamaalla.</p>
+        <p>Tarjoamme laajan valikoiman maalaus- ja tasoituspalveluita Helsingissä ja Uudellamaalla.</p>
         {% for service in services %}
         <article>
             <h3><a href="/{{ service.slug }}">{{ service.title }}</a></h3>
@@ -36,9 +37,9 @@
     <!-- About Section -->
     <section id="meista">
         <h2>{{ settings.get('about_title', 'Luotettava kumppani pintaremontteihin') }}</h2>
-        <p>{{ settings.get('about_text_1', 'J&B Tasoitus Ja Maalaus Oy on Uudellamaalla toimiva luotettava maalaustöiden ammattilainen. Olemme tehneet sisa- ja ulkomaalauksia vuodesta 2018.') }}</p>
-        <p>{{ settings.get('about_text_2', 'Meilta sujuu myos katto- ja julkisivumaalaukset, julkisivurappaukset seka sisapintojen tapetoinnit.') }}</p>
-        <p>{{ settings.get('about_text_3', 'Teemme tyot avaimet kateen -periaatteella ja tarjoamme asiakkaillemme tyytyvaisyystakuun.') }}</p>
+        <p>{{ settings.get('about_text_1', 'J&B Tasoitus Ja Maalaus Oy on Uudellamaalla toimiva luotettava maalaustöiden ammattilainen. Olemme tehneet sisä- ja ulkomaalauksia vuodesta 2018.') }}</p>
+        <p>{{ settings.get('about_text_2', 'Meiltä sujuu myös katto- ja julkisivumaalaukset, julkisivurappaukset sekä sisäpintojen tapetoinnit.') }}</p>
+        <p>{{ settings.get('about_text_3', 'Teemme työt avaimet käteen -periaatteella ja tarjoamme asiakkaillemme tyytyväisyystakuun.') }}</p>
         {% if settings.get('about_info_title') %}
         <aside>
             <strong>{{ settings.get('about_info_title') }}</strong>
@@ -50,13 +51,13 @@
     <!-- Contact Section -->
     <section id="yhteystiedot">
         <h2>{{ settings.get('contact_title', 'Yhteystiedot') }}</h2>
-        <p>{{ settings.get('contact_description', 'Lahetä tarjouspyyntö tai pyydä meidät ilmaiselle arviokaynnille.') }}</p>
+        <p>{{ settings.get('contact_description', 'Lähetä tarjouspyyntö tai pyydä meidät ilmaiselle arviokäynnille.') }}</p>
         <address>
             <p>Puhelin: <a href="tel:{{ settings.get('company_phone_primary', '+358 40 054 7270') }}">{{ settings.get('contact_phone_1_name', 'Boris Penkin') }} - {{ settings.get('company_phone_primary', '+358 40 054 7270') }}</a></p>
             {% if settings.get('contact_phone_2') %}
             <p>Puhelin: <a href="tel:{{ settings.get('contact_phone_2') }}">{{ settings.get('contact_phone_2_name', '') }} - {{ settings.get('contact_phone_2') }}</a></p>
             {% endif %}
-            <p>Sahkoposti: <a href="mailto:{{ settings.get('company_email', 'info@jbtasoitusmaalaus.fi') }}">{{ settings.get('company_email', 'info@jbtasoitusmaalaus.fi') }}</a></p>
+            <p>Sähköposti: <a href="mailto:{{ settings.get('company_email', 'info@jbtasoitusmaalaus.fi') }}">{{ settings.get('company_email', 'info@jbtasoitusmaalaus.fi') }}</a></p>
             <p>Osoite: {{ settings.get('contact_address', 'Sienitie 52, 00760 Helsinki') }}</p>
         </address>
     </section>

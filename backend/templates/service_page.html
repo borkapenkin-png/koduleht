@@ -2,11 +2,11 @@
 {% block seo_content %}
 <div data-seo-prerender="true">
     <!-- Navigation -->
-    <nav aria-label="Paanavigaatio">
+    <nav aria-label="Päänavigaatio">
         <a href="/">{{ company_name }}</a>
         <ul>
             <li><a href="/#palvelut">Palvelut</a></li>
-            <li><a href="/#meista">Meista</a></li>
+            <li><a href="/#meista">Meistä</a></li>
             <li><a href="/referenssit">Referenssit</a></li>
             <li><a href="/ukk">UKK</a></li>
             <li><a href="/#yhteystiedot">Yhteystiedot</a></li>
@@ -41,7 +41,7 @@
     <!-- Features / What Service Includes -->
     {% if page.get('features') %}
     <section>
-        <h2>{{ page.get('features_title', 'Mita palvelu sisaltaa') }}</h2>
+        <h2>{{ page.get('features_title', 'Mitä palvelu sisältää') }}</h2>
         {% for feature in page.get('features', []) %}
         <article>
             <h3>{{ feature.get('title', '') }}</h3>
@@ -66,7 +66,7 @@
     <!-- Process Steps -->
     {% if settings.get('process_steps') %}
     <section>
-        <h2>{{ page.get('process_title', 'Nain projekti etenee') }}</h2>
+        <h2>{{ page.get('process_title', 'Näin projekti etenee') }}</h2>
         <ol>
             {% for step in settings.get('process_steps', []) %}
             <li>
@@ -106,11 +106,11 @@
 
     <!-- Contact -->
     <section id="yhteystiedot">
-        <h2>Ota yhteytta</h2>
-        <p>Pyydä maksuton arviokaynti tai tarjous.</p>
+        <h2>Ota yhteyttä</h2>
+        <p>Pyydä maksuton arviokäynti tai tarjous.</p>
         <address>
             <p>Puhelin: <a href="tel:{{ phone }}">{{ phone }}</a></p>
-            <p>Sahkoposti: <a href="mailto:{{ email }}">{{ email }}</a></p>
+            <p>Sähköposti: <a href="mailto:{{ email }}">{{ email }}</a></p>
         </address>
     </section>
 

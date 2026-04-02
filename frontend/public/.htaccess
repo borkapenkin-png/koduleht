@@ -9,6 +9,7 @@
   
   RewriteRule ^hintalaskuri$ hintalaskuri/index.html [L]
   RewriteRule ^hintalaskuri-espoo$ hintalaskuri-espoo/index.html [L]
+  RewriteRule ^hintalaskuri-helsinki$ hintalaskuri-helsinki/index.html [L]
   RewriteRule ^hintalaskuri-kauniainen$ hintalaskuri-kauniainen/index.html [L]
   RewriteRule ^hintalaskuri-vantaa$ hintalaskuri-vantaa/index.html [L]
   RewriteRule ^julkisivumaalaus$ julkisivumaalaus/index.html [L]

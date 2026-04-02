@@ -13,6 +13,11 @@
       "type": 301
     },
     {
+      "source": "/hintalaskuri-helsinki/",
+      "destination": "/hintalaskuri-helsinki",
+      "type": 301
+    },
+    {
       "source": "/hintalaskuri-kauniainen/",
       "destination": "/hintalaskuri-kauniainen",
       "type": 301

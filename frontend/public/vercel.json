@@ -11,6 +11,11 @@
       "permanent": true
     },
     {
+      "source": "/hintalaskuri-helsinki/",
+      "destination": "/hintalaskuri-helsinki",
+      "permanent": true
+    },
+    {
       "source": "/hintalaskuri-kauniainen/",
       "destination": "/hintalaskuri-kauniainen",
       "permanent": true
@@ -189,6 +194,10 @@
     {
       "source": "/hintalaskuri-espoo",
       "destination": "/hintalaskuri-espoo/index.html"
+    },
+    {
+      "source": "/hintalaskuri-helsinki",
+      "destination": "/hintalaskuri-helsinki/index.html"
     },
     {
       "source": "/hintalaskuri-kauniainen",
