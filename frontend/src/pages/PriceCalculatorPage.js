@@ -408,24 +408,85 @@ const PriceCalculatorPage = () => {
       <CalculatorSEO />
       {config && <CalculatorSchema config={config} />}
 
-      {/* Calculator Section */}
-      <section id="laskuri" className="min-h-screen bg-white pt-20 md:pt-24 pb-32 lg:pb-16" data-testid="price-calculator-page">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-
-          {/* Header */}
-          <div className="mb-6 md:mb-8">
-            <nav className="flex items-center gap-2 text-sm text-[#94A3B8] mb-4">
-              <Link to="/" className="hover:text-[#0F172A] transition-colors">Etusivu</Link>
-              <ChevronRight size={14} />
-              <span className="text-[#0F172A] font-medium">Hintalaskuri</span>
-            </nav>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#0F172A] mb-2" data-testid="calculator-title">
+      {/* HERO - matching site design */}
+      <section className="relative min-h-[45vh] md:min-h-[50vh] flex items-center pt-16" data-testid="price-calculator-page">
+        <div className="absolute inset-0">
+          <img src={settings?.hero_image_url || 'https://images.pexels.com/photos/5493669/pexels-photo-5493669.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'}
+            alt="Hintalaskuri - maalaus ja tasoitustyöt" className="w-full h-full object-cover" loading="eager" />
+          <div className="hero-overlay absolute inset-0"></div>
+        </div>
+        <div className="container-custom relative z-10 py-10 md:py-16">
+          <motion.nav initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-2 text-sm text-[#64748B] mb-4 md:mb-6">
+            <Link to="/" className="hover:text-primary transition-colors">Etusivu</Link>
+            <ChevronRight size={14} />
+            <span className="text-[#0F172A] font-medium">Hintalaskuri</span>
+          </motion.nav>
+          <div className="max-w-[600px]">
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              className="uppercase text-primary mb-2 md:mb-3 text-xs md:text-sm font-semibold tracking-wider">
+              HINTALASKURI
+            </motion.p>
+            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+              className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0F172A] mb-4 leading-tight" data-testid="calculator-title">
               Laske hinta-arvio hetkessä
-            </h1>
-            <p className="text-sm md:text-base text-[#64748B] max-w-xl">
+            </motion.h1>
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+              className="text-base md:text-lg text-[#64748B] mb-6 leading-relaxed">
               Saat suuntaa-antavan hinnan heti &ndash; ilman rekisteröitymistä tai yhteystietoja.
-            </p>
+            </motion.p>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+              className="flex flex-col sm:flex-row gap-3">
+              <a href="#laskuri" className="btn-primary inline-flex items-center justify-center gap-2 text-sm">
+                Aloita laskeminen <ArrowRight size={16} />
+              </a>
+              <a href={`tel:${phone.replace(/\s/g, '')}`} className="btn-secondary inline-flex items-center justify-center gap-2 text-sm">
+                <Phone size={16} /> Soita nyt
+              </a>
+            </motion.div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+              className="mt-6 md:mt-8 flex flex-wrap items-center gap-4 md:gap-6">
+              <div className="flex items-center gap-2 text-xs md:text-sm text-[#64748B]">
+                <CheckCircle size={16} className="text-primary" />
+                <span>Kotitalousvähennys lasketaan</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs md:text-sm text-[#64748B]">
+                <CheckCircle size={16} className="text-primary" />
+                <span>Ei vaadi rekisteröitymistä</span>
+              </div>
+            </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* Trust Badges - matching site design */}
+      <section className="bg-[#F8FAFC] border-y border-[#E2E8F0] py-5 md:py-6">
+        <div className="container-custom">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            {[
+              { icon: Clock, title: settings?.trust_badge_1_title || 'Vuodesta 2018', sub: settings?.trust_badge_1_subtitle || 'Luotettava kokemus' },
+              { icon: Award, title: settings?.trust_badge_2_title || 'Ammattitaitoinen työ', sub: settings?.trust_badge_2_subtitle || 'Laadukas lopputulos' },
+              { icon: Shield, title: settings?.trust_badge_3_title || 'Kotitalousvähennys', sub: settings?.trust_badge_3_subtitle || 'Hyödynnä veroetu' },
+              { icon: Star, title: settings?.trust_badge_4_title || 'Tyytyväisyystakuu', sub: settings?.trust_badge_4_subtitle || '100% tyytyväisyys' },
+            ].map((b, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                className="flex items-center gap-2 md:gap-3">
+                <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <b.icon size={16} className="text-primary" />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-semibold text-[#0F172A] text-xs md:text-sm truncate">{b.title}</p>
+                  <p className="text-[#64748B] text-xs hidden lg:block">{b.sub}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Calculator Section */}
+      <section id="laskuri" className="section-padding bg-white pb-32 lg:pb-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
 
           {/* Progress bar */}
           {selectedService && <ProgressBar activeStage={activeStage} />}
@@ -638,7 +699,7 @@ const PriceCalculatorPage = () => {
                                       <p className="text-xs text-[#94A3B8] mt-1 leading-relaxed">{addon.hint}</p>
                                     )}
                                     <p className="text-xs font-semibold text-[#0F172A] mt-2">
-                                      {addon.price_per_m2 ? `+${addon.price_per_m2} €/m²` : addon.fixed_price > 0 ? `+${addon.fixed_price} €` : ''}
+                                      {addon.price_label ? addon.price_label : addon.price_per_m2 ? `+${addon.price_per_m2} €/m²` : addon.fixed_price > 0 ? `+${addon.fixed_price} €` : ''}
                                     </p>
                                   </div>
                                   <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all ${

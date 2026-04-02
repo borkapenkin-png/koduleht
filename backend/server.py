@@ -1451,11 +1451,11 @@ def get_default_calculator_config():
                         "title": "Millaisesta kohteesta on kyse?",
                         "type": "cards",
                         "options": [
-                            {"id": "room", "label": "Huone", "multiplier": 1.1},
+                            {"id": "room", "label": "Huone", "multiplier": 1.0},
                             {"id": "studio", "label": "Yksiö", "multiplier": 1.0},
-                            {"id": "2room", "label": "Kaksio", "multiplier": 0.95},
-                            {"id": "3room", "label": "Kolmio", "multiplier": 0.92},
-                            {"id": "4room", "label": "4h+", "multiplier": 0.88}
+                            {"id": "2room", "label": "Kaksio", "multiplier": 1.0},
+                            {"id": "3room", "label": "Kolmio", "multiplier": 1.0},
+                            {"id": "4room", "label": "4h+", "multiplier": 1.0}
                         ]
                     },
                     {
@@ -1487,7 +1487,7 @@ def get_default_calculator_config():
                 "addons": [
                     {"id": "ceiling", "label": "Katon maalaus", "hint": "Usein tehdään samalla", "price_per_m2": 22, "enabled": True},
                     {"id": "wall_leveling", "label": "Seinien tasoitus", "hint": "Suositellaan epätasaisille pinnoille", "price_per_m2": 23, "enabled": True},
-                    {"id": "extra_color", "label": "Lisäsävy", "hint": "Korosteseinä tai toinen väri", "fixed_price": 100, "enabled": True}
+                    {"id": "extra_color", "label": "Lisäsävy (+1 väri)", "hint": "Yksi lisävärisävy koko kohteeseen, esim. korosteseinä", "fixed_price": 100, "price_label": "100 € / kohde", "enabled": True}
                 ]
             },
             {
