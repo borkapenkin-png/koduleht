@@ -17,8 +17,9 @@ import {
   ServiceAreasSection,
   ServiceFAQSection,
   ContactFormSection,
-  RelatedServices,
-  StrongCTA
+  StrongCTA,
+  Subtitle,
+  getImageUrl
 } from './DynamicServicePage';
 
 const API = process.env.REACT_APP_BACKEND_URL || '';
@@ -177,6 +178,7 @@ const PriceCalculatorPage = () => {
   const [pageData, setPageData] = useState(null);
   const [services, setServices] = useState([]);
   const [serviceFaqs, setServiceFaqs] = useState([]);
+  const [references, setReferences] = useState([]);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -207,14 +209,16 @@ const PriceCalculatorPage = () => {
       fetch(`${API}/api/service-pages`).then(r => r.json()).catch(() => []),
       fetch(`${API}/api/service-pages/hintalaskuri`).then(r => r.ok ? r.json() : null).catch(() => null),
       fetch(`${API}/api/services`).then(r => r.json()).catch(() => []),
-      fetch(`${API}/api/faqs?service_id=hintalaskuri`).then(r => r.ok ? r.json() : []).catch(() => [])
-    ]).then(([calcData, settingsData, spData, hintaPage, servicesData, faqsData]) => {
+      fetch(`${API}/api/faqs?service_id=hintalaskuri`).then(r => r.ok ? r.json() : []).catch(() => []),
+      fetch(`${API}/api/references`).then(r => r.json()).catch(() => [])
+    ]).then(([calcData, settingsData, spData, hintaPage, servicesData, faqsData, refsData]) => {
       setConfig(calcData);
       setSettings(settingsData);
       setServicePages(spData);
       setPageData(hintaPage);
       setServices(servicesData);
       setServiceFaqs(faqsData);
+      setReferences(refsData);
       if (settingsData.theme_color) {
         document.documentElement.style.setProperty('--color-primary', settingsData.theme_color);
       }
@@ -1133,7 +1137,43 @@ const PriceCalculatorPage = () => {
           <ServiceAreasSection page={pageData} settings={settings} />
           <ServiceFAQSection faqs={serviceFaqs} settings={settings} serviceName="Hintalaskuri" />
           <ContactFormSection page={pageData} settings={settings} />
-          <RelatedServices allPages={servicePages} currentSlug="hintalaskuri" settings={settings} services={services} />
+          {/* References section instead of Related Services */}
+          {references.length > 0 && (
+            <section className="service-section-grey" data-testid="references-section">
+              <div className="container-custom">
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10 md:mb-14">
+                  <Subtitle settings={settings} className="mb-3">REFERENSSIT</Subtitle>
+                  <h2 className="section-title">Tutustu referensseihimme</h2>
+                </motion.div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+                  {references.slice(0, 3).map((ref, index) => (
+                    <motion.div key={ref.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }}>
+                      <Link to={ref.slug ? `/referenssit/${ref.slug}` : '/referenssit'} className="project-card block h-full group">
+                        <div className="overflow-hidden">
+                          <img
+                            src={getImageUrl(ref.cover_image_url) || 'https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg'}
+                            alt={ref.cover_image_alt || ref.name}
+                            onError={(e) => { e.target.src = 'https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg'; }}
+                          />
+                        </div>
+                        <div className="p-5">
+                          <p className="text-xs text-primary font-medium uppercase tracking-wide mb-2">{ref.type}</p>
+                          <h3 className="font-semibold text-[#0F172A] mb-2 text-base group-hover:text-primary transition-colors">{ref.name}</h3>
+                          {ref.description && <p className="text-[#64748B] text-sm line-clamp-2 mb-3">{ref.description}</p>}
+                          <span className="inline-flex items-center text-primary text-sm font-medium link-underline">Lue lisää <ArrowRight size={14} className="ml-1" /></span>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+                <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mt-8">
+                  <Link to="/referenssit" className="btn-primary inline-flex items-center gap-2 text-sm">
+                    Katso kaikki referenssit <ArrowRight size={16} />
+                  </Link>
+                </motion.div>
+              </div>
+            </section>
+          )}
           <StrongCTA settings={settings} />
         </>
       )}
