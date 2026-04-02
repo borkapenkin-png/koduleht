@@ -1,5 +1,5 @@
 # Robots.txt for J&B Tasoitus ja Maalaus Oy
-# https://jbtasoitusmaalaus.fi/
+# https://www.jbtasoitusmaalaus.fi/
 
 User-agent: *
 Allow: /
@@ -13,4 +13,4 @@ Disallow: /preview
 Disallow: /dashboard
 
 # Sitemap location
-Sitemap: https://jbtasoitusmaalaus.fi/sitemap.xml
+Sitemap: https://www.jbtasoitusmaalaus.fi/sitemap.xml

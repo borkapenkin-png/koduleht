@@ -6,17 +6,17 @@
     <noscript><style>body{opacity:1!important}</style></noscript>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     
-    <!-- SEO URL Normalization: redirect www, trailing slash, and /index.html to clean URLs -->
+    <!-- SEO URL Normalization: redirect non-www to www, trailing slash, and /index.html to clean URLs -->
     <script>
       (function() {
         var host = window.location.hostname;
         var path = window.location.pathname;
         var search = window.location.search;
         var needsRedirect = false;
-        var newUrl = 'https://jbtasoitusmaalaus.fi';
+        var newUrl = 'https://www.jbtasoitusmaalaus.fi';
         
-        // Redirect www to non-www
-        if (host === 'www.jbtasoitusmaalaus.fi') {
+        // Redirect non-www to www
+        if (host === 'jbtasoitusmaalaus.fi') {
           needsRedirect = true;
         }
         

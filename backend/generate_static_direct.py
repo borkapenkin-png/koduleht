@@ -9,6 +9,7 @@ import asyncio
 import os
 import json
 import glob
+from datetime import datetime
 from pathlib import Path
 from motor.motor_asyncio import AsyncIOMotorClient
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -22,7 +23,7 @@ BACKEND_DIR = Path(__file__).parent
 TEMPLATES_DIR = BACKEND_DIR / "templates"
 BUILD_DIR = Path("/app/frontend/build")
 PUBLIC_DIR = Path("/app/frontend/public")
-SITE_URL = os.environ.get("SITE_URL", "https://jbtasoitusmaalaus.fi")
+SITE_URL = os.environ.get("SITE_URL", "https://www.jbtasoitusmaalaus.fi")
 
 # Company defaults
 COMPANY_NAME = "J&B Tasoitus ja Maalaus Oy"
@@ -684,13 +685,14 @@ async def main():
     print(f"  ✓ .htaccess")
     
     # Generate sitemap.xml
+    today = datetime.now().strftime('%Y-%m-%d')
     sitemap_urls = [SITE_URL]
     for slug in sorted(all_slugs):
         sitemap_urls.append(f"{SITE_URL}/{slug}")
     
     sitemap_entries = []
     for url in sitemap_urls:
-        sitemap_entries.append(f'  <url><loc>{url}</loc><changefreq>weekly</changefreq></url>')
+        sitemap_entries.append(f'  <url>\n    <loc>{url}</loc>\n    <lastmod>{today}</lastmod>\n    <changefreq>monthly</changefreq>\n  </url>')
     
     sitemap_xml = f'''<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

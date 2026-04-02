@@ -6,17 +6,17 @@
     <noscript><style>body{opacity:1!important}</style></noscript>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     
-    <!-- SEO URL Normalization: redirect www, trailing slash, and /index.html to clean URLs -->
+    <!-- SEO URL Normalization: redirect non-www to www, trailing slash, and /index.html to clean URLs -->
     <script>
       (function() {
         var host = window.location.hostname;
         var path = window.location.pathname;
         var search = window.location.search;
         var needsRedirect = false;
-        var newUrl = 'https://jbtasoitusmaalaus.fi';
+        var newUrl = 'https://www.jbtasoitusmaalaus.fi';
         
-        // Redirect www to non-www
-        if (host === 'www.jbtasoitusmaalaus.fi') {
+        // Redirect non-www to www
+        if (host === 'jbtasoitusmaalaus.fi') {
           needsRedirect = true;
         }
         
@@ -42,13 +42,13 @@
     <title>Julkisivumaalaus | J&amp;B Tasoitus ja Maalaus Oy</title>
     <meta name="description" content="Julkisivumaalaus - ammattitaitoiset palvelut Helsingissä, Espoossa, Vantaalla ja koko Uudellamaalla. Valitse alue." />
     
-    <link rel="canonical" href="https://jbtasoitusmaalaus.fi/julkisivumaalaus" />
+    <link rel="canonical" href="https://www.jbtasoitusmaalaus.fi/julkisivumaalaus" />
     
     <!-- Open Graph -->
     <meta property="og:title" content="Julkisivumaalaus | J&amp;B Tasoitus ja Maalaus Oy" />
     <meta property="og:description" content="Julkisivumaalaus - ammattitaitoiset palvelut Helsingissä, Espoossa, Vantaalla ja koko Uudellamaalla. Valitse alue." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://jbtasoitusmaalaus.fi/julkisivumaalaus" />
+    <meta property="og:url" content="https://www.jbtasoitusmaalaus.fi/julkisivumaalaus" />
     <meta property="og:image" content="/api/images/2792851f-5a14-4c44-b533-e9c8fba06c3a" />
     <meta property="og:site_name" content="J&amp;B Tasoitus ja Maalaus Oy" />
     <meta property="og:locale" content="fi_FI" />
@@ -73,7 +73,7 @@
     
     <!-- JSON-LD Structured Data -->
     
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Service", "name": "Julkisivumaalaus Helsingissä", "description": "Julkisivumaalaus Helsingissä, Espoossa ja Vantaalla. Talojen ja taloyhtiöiden ulkomaalaus ammattitaidolla. Pyydä maksuton arvio!", "provider": {"@type": "LocalBusiness", "@id": "https://jbtasoitusmaalaus.fi/#organization", "name": "J&B Tasoitus ja Maalaus Oy", "telephone": "+358 40 054 7270", "address": {"@type": "PostalAddress", "addressLocality": "Helsinki", "addressCountry": "FI"}}, "areaServed": [{"@type": "City", "name": "Helsinki"}, {"@type": "City", "name": "Espoo"}, {"@type": "City", "name": "Vantaa"}], "serviceType": "Julkisivumaalaus Helsingissä", "offers": {"@type": "Offer", "availability": "https://schema.org/InStock", "priceSpecification": {"@type": "PriceSpecification", "priceCurrency": "EUR"}}, "termsOfService": "https://jbtasoitusmaalaus.fi/#yhteystiedot"}</script>
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Service", "name": "Julkisivumaalaus Helsingissä", "description": "Julkisivumaalaus Helsingissä, Espoossa ja Vantaalla. Talojen ja taloyhtiöiden ulkomaalaus ammattitaidolla. Pyydä maksuton arvio!", "provider": {"@type": "LocalBusiness", "@id": "https://www.jbtasoitusmaalaus.fi/#organization", "name": "J&B Tasoitus ja Maalaus Oy", "telephone": "+358 40 054 7270", "address": {"@type": "PostalAddress", "addressLocality": "Helsinki", "addressCountry": "FI"}}, "areaServed": [{"@type": "City", "name": "Helsinki"}, {"@type": "City", "name": "Espoo"}, {"@type": "City", "name": "Vantaa"}], "serviceType": "Julkisivumaalaus Helsingissä", "offers": {"@type": "Offer", "availability": "https://schema.org/InStock", "priceSpecification": {"@type": "PriceSpecification", "priceCurrency": "EUR"}}, "termsOfService": "https://www.jbtasoitusmaalaus.fi/#yhteystiedot"}</script>
     
     
     <!-- React App CSS - loaded from build -->
