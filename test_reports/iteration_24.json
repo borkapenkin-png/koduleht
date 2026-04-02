@@ -1,0 +1,97 @@
+{
+  "summary": "Tested Calculator Admin Panel v4 features: 3 tabs (Perustiedot/Lisäpalvelut/Paketit), addon CRUD, package management, and area step changes. Kattomaalaus slider works correctly. ISSUE FOUND: Julkisivumaalaus area step still uses size_cards instead of slider with dont_know_options.",
+  "backend_issues": {
+    "critical": [
+      {
+        "endpoint": "/api/calculator-config",
+        "issue": "Julkisivumaalaus area step type is 'size_cards' instead of 'slider' with dont_know_options",
+        "priority": "HIGH",
+        "expected": "type: 'slider' with dont_know_options array and title containing 'pohjapinta-ala'",
+        "actual": "type: 'size_cards' with options array, title: 'Kuinka suuri talo on?'",
+        "location": "/app/backend/server.py lines 1646-1656"
+      }
+    ],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "Admin login with correct credentials (admin/jbadmin2024)",
+    "Admin login rejects invalid credentials",
+    "Public /api/calculator-config returns 6 services",
+    "Admin /api/admin/calculator-config accessible with token",
+    "All 6 services have 3 packages (Perus, Suositeltu, Premium)",
+    "All packages have correct structure with addon_ids array",
+    "Suositeltu package has default=true in all services",
+    "All addons have valid group field (esityot/tarvittaessa/lisapalvelut)",
+    "Kattomaalaus area step type is 'slider'",
+    "Kattomaalaus area step has 4 dont_know_options",
+    "Kattomaalaus area title contains 'pohjapinta-ala'",
+    "All services have auto_triggers with correct structure",
+    "Admin panel: Laskuri tab shows calculator config",
+    "Admin panel: Expanding service shows 3 tabs (Perustiedot, Lisäpalvelut, Paketit)",
+    "Admin panel: Lisäpalvelut tab shows addons with all fields (name, hint, price, group, badge, warning)",
+    "Admin panel: 'Lisää palvelu' button visible for adding new addons",
+    "Admin panel: Paketit tab shows 3 packages with checkbox grid of addons",
+    "Admin panel: 'Aseta oletukseksi' button works, 'Oletus' badge shown on default package",
+    "Admin panel: Tallenna button visible for saving config",
+    "Calculator: Full flow works end-to-end with packages and auto-triggers",
+    "Calculator: Package selector shows 3 packages with 'ENITEN VALITTU' badge on Suositeltu",
+    "Calculator: Addons grouped into ESITYÖT, TARVITTAESSA, LISÄPALVELUT sections",
+    "Calculator: Badges 'SUOSITELTU' and 'USEIN VALITAAN' displayed on addons",
+    "Calculator: Warning message shown when deselecting addon with warning field",
+    "Calculator: Auto-triggers fire correctly (e.g., 'Pieniä epätasaisuuksia' enables 'Halkeamien korjaus')",
+    "Calculator: Price result shows kotitalousvähennys",
+    "Calculator: CTAs 'Pyydä tarkka tarjous (maksuton)' and 'Lähetä kuvat nopeaa arviota varten' visible"
+  ],
+  "failed_tests": [
+    "Julkisivumaalaus area step type should be 'slider' - FAILED (got 'size_cards')",
+    "Julkisivumaalaus area step should have dont_know_options - FAILED (got 0 options)"
+  ],
+  "test_report_links": [
+    "/app/backend/tests/test_calculator_admin_v4.py",
+    "/app/test_reports/iteration_24.json"
+  ],
+  "action_items": [
+    "FIX REQUIRED: Change Julkisivumaalaus area step from 'size_cards' to 'slider' with dont_know_options in /app/backend/server.py lines 1646-1656",
+    "Update Julkisivumaalaus area step title to 'Kuinka suuri talo on? (pohjapinta-ala)'",
+    "Add dont_know_options array with fallback size categories (e.g., Pieni ~75m², Keskikokoinen ~125m², Suuri ~175m², Erittäin suuri ~250m²)"
+  ],
+  "critical_code_review_comments": [
+    "Julkisivumaalaus area step config at lines 1646-1656 needs to match Kattomaalaus pattern (lines 1715-1730)",
+    "Current Julkisivumaalaus area step uses size_cards with fixed options, should use slider with min/max/default/step/unit and dont_know_options"
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_calculator_admin_v4.py"
+  ],
+  "success_rate": {
+    "backend": "83% - 10/12 tests passed (2 failed for Julkisivumaalaus area step)",
+    "frontend": "100% - All Playwright tests passed"
+  },
+  "test_credentials": {
+    "admin_username": "admin",
+    "admin_password": "jbadmin2024"
+  },
+  "seed_data_creation": "Calculator config auto-seeded with packages, auto_triggers, and grouped addons",
+  "retest_needed": true,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Iteration 24 tested admin panel v4 features. All features work EXCEPT Julkisivumaalaus area step which still uses size_cards instead of slider. The fix requires changing server.py lines 1646-1656 to match the Kattomaalaus pattern (lines 1715-1730). Key data-testids: calc-service-{id}, admin-addon-{id}, admin-package-{id}, add-addon-{id}, calc-save-btn, area-slider, dont-know-btn, dontknow-{id}.",
+  "fix_reference": {
+    "kattomaalaus_correct_pattern": {
+      "location": "/app/backend/server.py lines 1715-1730",
+      "type": "slider",
+      "title": "Kuinka suuri katto? (pohjapinta-ala)",
+      "has_dont_know_options": true
+    },
+    "julkisivumaalaus_needs_fix": {
+      "location": "/app/backend/server.py lines 1646-1656",
+      "current_type": "size_cards",
+      "required_type": "slider",
+      "required_title": "Kuinka suuri talo on? (pohjapinta-ala)",
+      "required_dont_know_options": true
+    }
+  }
+}

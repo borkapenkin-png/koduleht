@@ -1714,9 +1714,14 @@ def get_default_calculator_config():
                     },
                     {
                         "id": "area",
-                        "title": "Kuinka suuri katto?",
-                        "type": "size_cards",
-                        "options": [
+                        "title": "Kuinka suuri katto? (pohjapinta-ala)",
+                        "type": "slider",
+                        "min": 50,
+                        "max": 400,
+                        "default": 150,
+                        "step": 10,
+                        "unit": "m²",
+                        "dont_know_options": [
                             {"id": "small", "label": "Pieni", "area_value": 80},
                             {"id": "medium", "label": "Keskikokoinen", "area_value": 150},
                             {"id": "large", "label": "Suuri", "area_value": 250},
