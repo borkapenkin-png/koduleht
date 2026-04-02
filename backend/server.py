@@ -2263,9 +2263,56 @@ app.add_middleware(
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
+async def seed_hintalaskuri_page():
+    """Create a default hintalaskuri service page if not exists."""
+    existing = await db.service_pages.find_one({"slug": "hintalaskuri"})
+    if not existing:
+        page = {
+            "id": str(uuid.uuid4()),
+            "service_id": "hintalaskuri",
+            "slug": "hintalaskuri",
+            "is_published": True,
+            "seo_title": "Hintalaskuri – Maalaus- ja tasoitustöiden hinta-arvio",
+            "seo_description": "Laske maalaus- ja tasoitustöiden hinta-arvio hetkessä. Sisämaalaus, ulkomaalaus, tasoitustyöt, mikrosementti, kattomaalaus ja julkisivurappaus.",
+            "seo_keywords": "hintalaskuri, maalaus hinta, tasoitus hinta, sisämaalaus hinta, ulkomaalaus hinta",
+            "hero_title": "Hintalaskuri",
+            "hero_subtitle": "Laske maalaus- ja tasoitustöiden hinta-arvio hetkessä",
+            "description_title": "Maalaus- ja tasoitustöiden hinnat",
+            "description_text": "<p>Maalaus- ja tasoitustöiden hinta riippuu useista tekijöistä: pinta-alasta, pinnan kunnosta, valitusta palvelusta ja mahdollisista lisätöistä. Hintalaskurimme antaa suuntaa-antavan arvion, joka sisältää työn, materiaalit ja arvonlisäveron (ALV 25,5 %). Lopullinen hinta varmistetaan aina maksuttomalla kartoituskäynnillä.</p><h3>Sisämaalaus hinnat</h3><p>Sisämaalauksen hinta alkaa noin 19 €/m² ja sisältää seinien maalauksen ammattimaisilla materiaaleilla. Katon maalaus maksaa lisäksi noin 22 €/m². Hintaan vaikuttavat huoneen koko, seinien kunto ja tarvittavat esikäsittelyt.</p><h3>Tasoitustyöt hinnat</h3><p>Tasoitustyöt hinnoitellaan pinta-alan ja vaadittavan tasoituksen laajuuden mukaan. Osatasoitus on edullisempi vaihtoehto, kun taas ylitasoitus kattaa koko pinnan käsittelyn. Tasoitustöiden hinta alkaa 25 €/m².</p><h3>Julkisivumaalaus ja kattomaalaus</h3><p>Talon ulkomaalauksen hinta riippuu talon koosta, kerrosluvusta ja pinnan kunnosta. Julkisivumaalaus alkaa 35 €/m² ja kattomaalaus 18 €/m². Peltikaton maalaus on edullisempaa kuin tiilikaton käsittely.</p><h3>Mikrosementti hinnat</h3><p>Mikrosementti on moderni pintamateriaali, joka sopii lattioihin, seiniin ja kylpyhuoneisiin. Mikrosementin hinta alkaa 120 €/m² ja vaihtelee kohteen tyypin ja alustan kunnon mukaan.</p><h3>Kotitalousvähennys</h3><p>Voit hyödyntää kotitalousvähennystä maalaus- ja tasoitustöissä. Vuonna 2025–2026 vähennys on 35 % työn osuudesta, ja enimmäismäärä on 1 600 € henkilöä kohti vuodessa. Omavastuu on 150 €. Hintalaskurimme laskee kotitalousvähennyksen automaattisesti.</p>",
+            "features_title": "Mitä hintalaskuri kattaa",
+            "features": [
+                {"icon": "Paintbrush", "title": "Sisämaalaus", "description": "Seinien ja kattojen maalaus ammattimaisilla materiaaleilla"},
+                {"icon": "Layers", "title": "Tasoitustyöt", "description": "Osatasoitus ja ylitasoitus kaikille pinnoille"},
+                {"icon": "Building2", "title": "Julkisivumaalaus", "description": "Talon ulkopintojen maalaus ja rappaus"},
+                {"icon": "Square", "title": "Mikrosementti", "description": "Moderni pintamateriaali lattioihin ja seiniin"}
+            ],
+            "why_title": "Miksi käyttää hintalaskuria",
+            "why_items": [
+                "Saat hinta-arvion heti ilman rekisteröitymistä",
+                "Kotitalousvähennys lasketaan automaattisesti",
+                "Valitse palvelupaketit tarpeen mukaan",
+                "Selkeä erittely hinnan muodostumisesta",
+                "Maksuton kartoituskäynti tarkan hinnan varmistamiseksi",
+                "Ammattitaitoinen toteutus yli 5 vuoden kokemuksella"
+            ],
+            "process_title": "Näin saat tarkan tarjouksen",
+            "use_global_process": True,
+            "areas_title": "Palvelualueet",
+            "areas_text": "",
+            "use_global_areas": True,
+            "related_service_ids": [],
+            "cta_title": "Haluatko tarkan tarjouksen?",
+            "cta_text": "Hintalaskuri antaa suuntaa-antavan arvion. Tarkka hinta varmistuu kartoituskäynnillä – se on aina maksuton ja ei sido sinua mihinkään.",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.service_pages.insert_one(page)
+        logging.info("Seeded hintalaskuri service page")
+
 @app.on_event("startup")
 async def startup_event():
     await init_admin_user()
+    await seed_hintalaskuri_page()
 
 @app.on_event("shutdown")
 async def shutdown_db_client():

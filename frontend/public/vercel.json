@@ -1,6 +1,26 @@
 {
   "redirects": [
     {
+      "source": "/hintalaskuri/",
+      "destination": "/hintalaskuri",
+      "permanent": true
+    },
+    {
+      "source": "/hintalaskuri-espoo/",
+      "destination": "/hintalaskuri-espoo",
+      "permanent": true
+    },
+    {
+      "source": "/hintalaskuri-kauniainen/",
+      "destination": "/hintalaskuri-kauniainen",
+      "permanent": true
+    },
+    {
+      "source": "/hintalaskuri-vantaa/",
+      "destination": "/hintalaskuri-vantaa",
+      "permanent": true
+    },
+    {
       "source": "/julkisivumaalaus/",
       "destination": "/julkisivumaalaus",
       "permanent": true
@@ -162,6 +182,22 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/hintalaskuri",
+      "destination": "/hintalaskuri/index.html"
+    },
+    {
+      "source": "/hintalaskuri-espoo",
+      "destination": "/hintalaskuri-espoo/index.html"
+    },
+    {
+      "source": "/hintalaskuri-kauniainen",
+      "destination": "/hintalaskuri-kauniainen/index.html"
+    },
+    {
+      "source": "/hintalaskuri-vantaa",
+      "destination": "/hintalaskuri-vantaa/index.html"
+    },
     {
       "source": "/julkisivumaalaus",
       "destination": "/julkisivumaalaus/index.html"

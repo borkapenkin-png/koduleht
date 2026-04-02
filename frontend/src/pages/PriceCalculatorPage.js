@@ -8,6 +8,18 @@ import {
   HelpCircle, ChevronDown, Camera, Info
 } from 'lucide-react';
 import { Navbar, Footer } from '../App';
+import {
+  TrustBadges,
+  DescriptionSection,
+  FeaturesSection,
+  WhyChooseSection,
+  ProcessSection,
+  ServiceAreasSection,
+  ServiceFAQSection,
+  ContactFormSection,
+  RelatedServices,
+  StrongCTA
+} from './DynamicServicePage';
 
 const API = process.env.REACT_APP_BACKEND_URL || '';
 const iconMap = { Paintbrush, Layers, Gem, Home, Triangle, Building2 };
@@ -162,6 +174,9 @@ const PriceCalculatorPage = () => {
   const [settings, setSettings] = useState({});
   const [servicePages, setServicePages] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [pageData, setPageData] = useState(null);
+  const [services, setServices] = useState([]);
+  const [serviceFaqs, setServiceFaqs] = useState([]);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -189,11 +204,17 @@ const PriceCalculatorPage = () => {
     Promise.all([
       fetch(`${API}/api/calculator-config`).then(r => r.json()),
       fetch(`${API}/api/settings`).then(r => r.json()).catch(() => ({})),
-      fetch(`${API}/api/service-pages`).then(r => r.json()).catch(() => [])
-    ]).then(([calcData, settingsData, spData]) => {
+      fetch(`${API}/api/service-pages`).then(r => r.json()).catch(() => []),
+      fetch(`${API}/api/service-pages/hintalaskuri`).then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch(`${API}/api/services`).then(r => r.json()).catch(() => []),
+      fetch(`${API}/api/faqs?service_id=hintalaskuri`).then(r => r.ok ? r.json() : []).catch(() => [])
+    ]).then(([calcData, settingsData, spData, hintaPage, servicesData, faqsData]) => {
       setConfig(calcData);
       setSettings(settingsData);
       setServicePages(spData);
+      setPageData(hintaPage);
+      setServices(servicesData);
+      setServiceFaqs(faqsData);
       if (settingsData.theme_color) {
         document.documentElement.style.setProperty('--color-primary', settingsData.theme_color);
       }
@@ -1101,98 +1122,55 @@ const PriceCalculatorPage = () => {
       {/* Mobile bottom sticky price bar */}
       <LivePriceBox priceData={priceData} visible={showPriceBox} isMobile />
 
-      {/* SEO CONTENT */}
-      <section className="py-16 md:py-20 bg-[#F8FAFC]">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 prose prose-sm prose-slate">
-          <h2 className="text-2xl font-bold text-[#0F172A] mb-6">Maalaus- ja tasoitustöiden hinnat</h2>
-          <p className="text-[#64748B] leading-relaxed">
-            Maalaus- ja tasoitustöiden hinta riippuu useista tekijöistä: pinta-alasta, pinnan kunnosta, valitusta palvelusta
-            ja mahdollisista lisätöistä. Hintalaskurimme antaa suuntaa-antavan arvion, joka sisältää työn, materiaalit ja
-            arvonlisäveron (ALV 25,5 %). Lopullinen hinta varmistetaan aina maksuttomalla kartoituskäynnillä.
-          </p>
+      {/* DYNAMIC SERVICE PAGE SECTIONS */}
+      {pageData && (
+        <>
+          <TrustBadges settings={settings} />
+          <DescriptionSection page={pageData} settings={settings} services={services} />
+          <FeaturesSection page={pageData} settings={settings} />
+          <WhyChooseSection page={pageData} settings={settings} />
+          {pageData.use_global_process !== false && <ProcessSection page={pageData} settings={settings} />}
+          <ServiceAreasSection page={pageData} settings={settings} />
+          <ServiceFAQSection faqs={serviceFaqs} settings={settings} serviceName="Hintalaskuri" />
+          <ContactFormSection page={pageData} settings={settings} />
+          <RelatedServices allPages={servicePages} currentSlug="hintalaskuri" settings={settings} services={services} />
+          <StrongCTA settings={settings} />
+        </>
+      )}
 
-          <h3 className="text-lg font-bold text-[#0F172A] mt-8 mb-3">Sisämaalaus hinnat</h3>
-          <p className="text-[#64748B] leading-relaxed">
-            Sisämaalauksen hinta alkaa noin 19 &euro;/m&sup2; ja sisältää seinien maalauksen ammattimaisilla materiaaleilla.
-            Katon maalaus maksaa lisäksi noin 22 &euro;/m&sup2;. Hintaan vaikuttavat huoneen koko, seinien kunto ja tarvittavat
-            esikäsittelyt. Yksiön (30–40 m&sup2;) maalaus maksaa tyypillisesti 800–1 500 &euro; ja kolmion (70–90 m&sup2;) 1 800–3 500 &euro;.
-          </p>
+      {/* Fallback: show hardcoded content if no page data */}
+      {!pageData && (
+        <>
+          <section className="py-16 md:py-20 bg-[#F8FAFC]">
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 prose prose-sm prose-slate">
+              <h2 className="text-2xl font-bold text-[#0F172A] mb-6">Maalaus- ja tasoitustöiden hinnat</h2>
+              <p className="text-[#64748B] leading-relaxed">
+                Maalaus- ja tasoitustöiden hinta riippuu useista tekijöistä: pinta-alasta, pinnan kunnosta, valitusta palvelusta
+                ja mahdollisista lisätöistä.
+              </p>
+            </div>
+          </section>
 
-          <h3 className="text-lg font-bold text-[#0F172A] mt-8 mb-3">Tasoitustyöt hinnat</h3>
-          <p className="text-[#64748B] leading-relaxed">
-            Tasoitustyöt hinnoitellaan pinta-alan ja vaadittavan tasoituksen laajuuden mukaan. Osatasoitus
-            (pienten korjausten paikkaus) on edullisempi vaihtoehto, kun taas ylitasoitus kattaa koko pinnan käsittelyn.
-            Tasoitustöiden hinta alkaa 25 &euro;/m&sup2;.
-          </p>
-
-          <h3 className="text-lg font-bold text-[#0F172A] mt-8 mb-3">Julkisivumaalaus ja kattomaalaus</h3>
-          <p className="text-[#64748B] leading-relaxed">
-            Talon ulkomaalauksen hinta riippuu talon koosta, kerrosluvusta ja pinnan kunnosta.
-            Julkisivumaalaus alkaa 35 &euro;/m&sup2; ja kattomaalaus 18 &euro;/m&sup2;. Peltikaton maalaus on edullisempaa kuin
-            tiilikaton käsittely. Telineet sisältyvät yleensä julkisivumaalauksen hintaan.
-          </p>
-
-          <h3 className="text-lg font-bold text-[#0F172A] mt-8 mb-3">Mikrosementti hinnat</h3>
-          <p className="text-[#64748B] leading-relaxed">
-            Mikrosementti on moderni pintamateriaali, joka sopii lattioihin, seiniin ja kylpyhuoneisiin.
-            Mikrosementin hinta alkaa 120 &euro;/m&sup2; ja vaihtelee kohteen tyypin ja alustan kunnon mukaan.
-            Kylpyhuoneen mikrosementtipinta on yleensä kalliimpi erikoiskäsittelyn vuoksi.
-          </p>
-
-          <h3 className="text-lg font-bold text-[#0F172A] mt-8 mb-3">Kotitalousvähennys maalaus- ja tasoitustöissä</h3>
-          <p className="text-[#64748B] leading-relaxed">
-            Voit hyödyntää kotitalousvähennystä maalaus- ja tasoitustöissä. Vuonna 2025–2026 vähennys on 35 %
-            työn osuudesta, ja enimmäismäärä on 1 600 &euro; henkilöä kohti vuodessa. Omavastuu on 150 &euro;.
-            Hintalaskurimme laskee kotitalousvähennyksen automaattisesti.
-          </p>
-
-          <h3 className="text-lg font-bold text-[#0F172A] mt-8 mb-3">Palvelualueet</h3>
-          <p className="text-[#64748B] leading-relaxed">
-            Palvelemme pääkaupunkiseudulla: <Link to="/maalaustyot-helsinki" className="text-primary hover:underline">Helsingissä</Link>,{' '}
-            <Link to="/maalaustyot-espoo" className="text-primary hover:underline">Espoossa</Link>,{' '}
-            <Link to="/maalaustyot-vantaa" className="text-primary hover:underline">Vantaalla</Link> ja{' '}
-            <Link to="/maalaustyot-kauniainen" className="text-primary hover:underline">Kauniaisissa</Link>.
-            Pyydä maksuton arvio – tulemme mielellämme kartoittamaan kohteenne.
-          </p>
-
-          <h3 className="text-lg font-bold text-[#0F172A] mt-8 mb-3">Palvelumme</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 not-prose">
-            {[
-              { name: 'Sisämaalaus', slug: 'maalaustyot' },
-              { name: 'Tasoitustyöt', slug: 'tasoitustyot' },
-              { name: 'Mikrosementti', slug: 'mikrosementti' },
-              { name: 'Julkisivumaalaus', slug: 'julkisivumaalaus' },
-              { name: 'Kattomaalaus', slug: 'kattomaalaus' },
-              { name: 'Julkisivurappaus', slug: 'julkisivurappaus' },
-            ].map(s => (
-              <Link key={s.slug} to={`/${s.slug}`}
-                className="flex items-center gap-2 p-3 bg-white border border-[#E2E8F0] rounded-lg hover:border-[#0F172A] hover:shadow-sm transition-all text-sm text-[#0F172A] font-medium">
-                <ArrowRight size={14} className="text-[#94A3B8]" /> {s.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 md:py-20 bg-[#0F172A] text-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Haluatko tarkan tarjouksen?</h2>
-          <p className="text-white/50 mb-8 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
-            Hintalaskuri antaa suuntaa-antavan arvion. Tarkka hinta varmistuu kartoituskäynnillä – se on aina maksuton ja ei sido sinua mihinkään.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link to="/#yhteystiedot"
-              className="inline-flex items-center justify-center gap-2 bg-white text-[#0F172A] font-semibold px-6 py-3.5 rounded-xl hover:bg-white/90 transition-colors text-sm">
-              Pyydä tarjous <ArrowRight size={16} />
-            </Link>
-            <a href={`tel:${phone.replace(/\s/g, '')}`}
-              className="inline-flex items-center justify-center gap-2 border border-white/20 text-white px-6 py-3.5 rounded-xl hover:bg-white/10 transition-colors text-sm">
-              <Phone size={16} /> {phone}
-            </a>
-          </div>
-        </div>
-      </section>
+          <section className="py-16 md:py-20 bg-[#0F172A] text-white">
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">Haluatko tarkan tarjouksen?</h2>
+              <p className="text-white/50 mb-8 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+                Hintalaskuri antaa suuntaa-antavan arvion. Tarkka hinta varmistuu kartoituskäynnillä.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link to="/#yhteystiedot"
+                  className="inline-flex items-center justify-center gap-2 bg-white text-[#0F172A] font-semibold px-6 py-3.5 rounded-xl hover:bg-white/90 transition-colors text-sm">
+                  Pyydä tarjous <ArrowRight size={16} />
+                </Link>
+                <a href={`tel:${phone.replace(/\s/g, '')}`}
+                  className="inline-flex items-center justify-center gap-2 border border-white/20 text-white px-6 py-3.5 rounded-xl hover:bg-white/10 transition-colors text-sm">
+                  <Phone size={16} /> {phone}
+                </a>
+              </div>
+            </div>
+          </section>
+        </>
+      )}
 
       <Footer logoUrl={settings?.logo_url} settings={settings} servicePages={servicePages} />
     </>

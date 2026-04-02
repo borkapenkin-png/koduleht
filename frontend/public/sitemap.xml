@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://jbtasoitusmaalaus.fi</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://jbtasoitusmaalaus.fi/hintalaskuri</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://jbtasoitusmaalaus.fi/hintalaskuri-espoo</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://jbtasoitusmaalaus.fi/hintalaskuri-kauniainen</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://jbtasoitusmaalaus.fi/hintalaskuri-vantaa</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://jbtasoitusmaalaus.fi/julkisivumaalaus</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://jbtasoitusmaalaus.fi/julkisivumaalaus-espoo</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://jbtasoitusmaalaus.fi/julkisivumaalaus-helsinki</loc><changefreq>weekly</changefreq></url>

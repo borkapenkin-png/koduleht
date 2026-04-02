@@ -3,6 +3,26 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/hintalaskuri/",
+      "destination": "/hintalaskuri",
+      "type": 301
+    },
+    {
+      "source": "/hintalaskuri-espoo/",
+      "destination": "/hintalaskuri-espoo",
+      "type": 301
+    },
+    {
+      "source": "/hintalaskuri-kauniainen/",
+      "destination": "/hintalaskuri-kauniainen",
+      "type": 301
+    },
+    {
+      "source": "/hintalaskuri-vantaa/",
+      "destination": "/hintalaskuri-vantaa",
+      "type": 301
+    },
+    {
       "source": "/julkisivumaalaus/",
       "destination": "/julkisivumaalaus",
       "type": 301

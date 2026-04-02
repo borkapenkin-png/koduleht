@@ -982,3 +982,21 @@ const DynamicServicePage = () => {
 };
 
 export default DynamicServicePage;
+
+// Named exports for reuse in PriceCalculatorPage
+export {
+  TrustBadges,
+  DescriptionSection,
+  FeaturesSection,
+  WhyChooseSection,
+  ProcessSection,
+  ServiceAreasSection,
+  ServiceFAQSection,
+  ContactFormSection,
+  RelatedServices,
+  StrongCTA,
+  getImageUrl,
+  Subtitle,
+  getSubtitleClasses,
+  iconMap
+};
