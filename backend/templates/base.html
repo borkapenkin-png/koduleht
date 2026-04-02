@@ -2,6 +2,7 @@
 <html lang="fi">
 <head>
     <meta charset="utf-8" />
+    <style>body{opacity:0}</style>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     
     <!-- SEO URL Normalization: redirect www, trailing slash, and /index.html to clean URLs -->
@@ -87,25 +88,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 </head>
 <body>
-    <script>
-      // Show body once CSS is loaded (or after timeout fallback)
-      (function(){
-        var sheets = document.styleSheets;
-        function check() {
-          for (var i = 0; i < sheets.length; i++) {
-            if (sheets[i].href && sheets[i].href.indexOf('/static/css/') !== -1) {
-              document.body.classList.add('css-ready');
-              return true;
-            }
-          }
-          return false;
-        }
-        if (!check()) {
-          var iv = setInterval(function(){ if(check()) clearInterval(iv); }, 20);
-          setTimeout(function(){ document.body.classList.add('css-ready'); clearInterval(iv); }, 1500);
-        }
-      })();
-    </script>
     <div id="root">
         {% block seo_content %}
         {% endblock %}
