@@ -200,10 +200,6 @@
     {
       "source": "/login",
       "destination": "/index.html"
-    },
-    {
-      "source": "/hintalaskuri",
-      "destination": "/index.html"
     }
   ]
 }
