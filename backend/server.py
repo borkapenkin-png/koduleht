@@ -1645,9 +1645,14 @@ def get_default_calculator_config():
                     },
                     {
                         "id": "area",
-                        "title": "Kuinka suuri talo on?",
-                        "type": "size_cards",
-                        "options": [
+                        "title": "Kuinka suuri talo on? (pohjapinta-ala)",
+                        "type": "slider",
+                        "min": 50,
+                        "max": 300,
+                        "default": 120,
+                        "step": 5,
+                        "unit": "m²",
+                        "dont_know_options": [
                             {"id": "small", "label": "Alle 100 m²", "area_value": 75},
                             {"id": "medium", "label": "100–150 m²", "area_value": 125},
                             {"id": "large", "label": "150–200 m²", "area_value": 175},
