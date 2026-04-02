@@ -3,24 +3,27 @@
 ## Original Problem Statement
 Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga.
 
-## Latest Update: April 1, 2026
+## Latest Update: April 2, 2026
 
-### Session 3b: Price Calculator (Hintalaskuri) - COMPLETED
-
-#### Premium Multi-Step Price Calculator
-- 6 services with service-specific fields
-- Correct Finnish tax calculation: ALV 25.5%, Kotitalousvähennys (35% of labor - 150€ omavastuu, max 1600€/hlö)
-- Navbar + Footer matching site design
-- Admin panel "Laskuri" tab for full configurability
-- Price shown without requiring contact info (competitor differentiator)
+### Session 4: Premium Hintalaskuri v2 - COMPLETED
+Complete rewrite of the Price Calculator with premium UX:
+- 5-step wizard flow: Palvelu → Kohde → Tarkennukset → Lisävalinnat → Hinta-arvio
+- Live sticky price box (desktop right sidebar / mobile bottom bar) showing price RANGE
+- Price displayed as range (×0.9 – ×1.15) not exact amount
+- "En tiedä pinta-alaa" option for slider steps (shows Pieni/Keskikokoinen/Suuri cards)
+- `size_cards` step type for Julkisivumaalaus and Kattomaalaus (categories instead of slider)
+- Addons as cards with hint descriptions (e.g., "Usein tehdään samalla")
+- Result page: price range, "Mihin arvio perustuu" breakdown, expandable "Miten hinta muodostuu"
+- 2 CTAs: "Kysy tarkka tarjous" + "Lähetä kuvat arviota varten"
+- localStorage persistence
+- Updated Finnish labels for premium feel (no technical jargon in UI)
+- Correct Finnish tax logic (ALV 25.5%, Kotitalousvähennys 35% labor - 150€ omavastuu)
 
 **Files:**
-- `/app/frontend/src/pages/PriceCalculatorPage.js`
-- `/app/frontend/src/components/admin/CalculatorAdmin.js`
-- `/app/frontend/src/App.js` (route, import, admin tab, navbar link)
-- `/app/backend/server.py` (calculator-config endpoints + default config)
-- `/app/backend/generate_static_direct.py` (/hintalaskuri rewrite)
+- `/app/frontend/src/pages/PriceCalculatorPage.js` (Complete rewrite)
+- `/app/backend/server.py` (Updated calculator config with size_cards, dont_know_options, hints)
 
+### Session 3b: Price Calculator v1 (Hintalaskuri) - SUPERSEDED by v2
 ### Session 3a: Areas Admin Panel + Navigation Fix
 - AreasAdmin.js CRUD for managing cities
 - Service navigation: Hero → general page → city-specific pages
