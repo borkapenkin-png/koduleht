@@ -5,29 +5,28 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga. Hintalaskuri
 
 ## Latest Update: April 2, 2026
 
-### Session 6: City Variant SEO/Hero Title Overrides - COMPLETED
-- **Fixed SEO/Hero title string replacement bug**: When Helsinki base page contains "Helsinki, Espoo ja Vantaa", city variants no longer get corrupted (e.g., "Espoo, Espoo ja Vantaa")
-- **Added structured custom_texts format**: Changed from `{service_slug: "text"}` to `{service_slug: {text, seo_title, hero_title}}`
-- **Admin UI**: Each service in the "Alueet" → city custom texts panel now shows 3 fields: SEO-otsikko, Hero-otsikko, Uniikki teksti
-- **Backward compatibility**: Legacy string format still works (normalized to object on load)
-- **Files changed**: AreasAdmin.js, DynamicServicePage.js, generate_static_direct.py, server.py (comment)
+### Session 6: City Variant SEO/Hero Title + Description Overrides - COMPLETED
+- **Fixed SEO/Hero title string replacement bug**: City variants no longer get corrupted titles
+- **Added structured custom_texts format**: `{service_slug: {text, seo_title, hero_title, seo_description}}`
+- **Admin UI**: 4 fields per service in "Alueet" → custom texts: SEO-otsikko, Hero-otsikko, Meta-kuvaus, Uniikki teksti
+- **Helsinki support**: Custom texts now also apply to default city (Helsinki) pages
+- **Backward compatibility**: Legacy string format still works
+- **Files changed**: AreasAdmin.js, DynamicServicePage.js, generate_static_direct.py, server.py
 
-### Session 5a: Hintalaskuri Page Sections - COMPLETED
-- Added DynamicServicePage sections below calculator: TrustBadges, Description, Features, WhyChooseUs, Process, ServiceAreas, FAQ, ContactForm, RelatedServices, StrongCTA
-- Content is CMS-editable via admin panel (Palvelusivut > Hintalaskuri)
+### How it works:
+1. **Palvelusivut** = Edit Helsinki base page (template for all cities)
+2. **Alueet → custom texts** = Override per city: seo_title, hero_title, seo_description, text
 
-### Session 4e: Conditional Step Options - COMPLETED
-### Session 4d: Admin Panel + Slider Upgrade - COMPLETED
-### Session 4c: Müügifunnel Upgrade - COMPLETED
-### Session 4b: Design & Logic Fixes - COMPLETED
-### Session 4a: Premium Hintalaskuri v2 - COMPLETED
+### Previous Sessions: COMPLETED
+- Session 5a: Hintalaskuri Page Sections
+- Session 4e-4a: Calculator features
+- Custom_texts feature, FAQ fixes, 301 redirects, FOUC fix, Sitemap/Canonical fixes
 
 ## Key Files
-- `/app/frontend/src/components/admin/AreasAdmin.js` - Areas admin with custom_texts UI (SEO/Hero/Text per city/service)
+- `/app/frontend/src/components/admin/AreasAdmin.js` - Areas admin with custom_texts UI
 - `/app/frontend/src/pages/DynamicServicePage.js` - City variant rendering with custom_texts overrides
 - `/app/backend/generate_static_direct.py` - SSG with custom_texts overrides
-- `/app/frontend/src/pages/PriceCalculatorPage.js` - Calculator + service page sections
-- `/app/backend/server.py` - API + calculator config
+- `/app/backend/server.py` - API
 
 ## Credentials
 - Preview Admin: admin / jbadmin2024
@@ -37,11 +36,9 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga. Hintalaskuri
 ### P1
 - Import 52 FAQs to production
 - Google Reviews + Review JSON-LD schema
-- Add FAQs specific to Hintalaskuri
 ### P2
 - Blog section
-- Backend refactoring (server.py modulaarseks → routes/, models/, utils/)
-- Hero upgrade
+- Backend refactoring (server.py → routes/, models/, utils/)
 ### P3
 - Video testimonials
 - Additional schema types

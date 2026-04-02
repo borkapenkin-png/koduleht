@@ -301,6 +301,8 @@ async def generate_service_page(db, slug: str, css_files, js_files, area_overrid
                     page["seo_title"] = city_entry["seo_title"]
                 if city_entry.get("hero_title"):
                     page["hero_title"] = city_entry["hero_title"]
+                if city_entry.get("seo_description"):
+                    page["seo_description"] = city_entry["seo_description"]
                 if city_entry.get("text"):
                     existing_desc = page.get("description_text", "") or ""
                     page["description_text"] = existing_desc + f'<div class="city-specific-content"><p>{city_entry["text"]}</p></div>'
@@ -310,6 +312,28 @@ async def generate_service_page(db, slug: str, css_files, js_files, area_overrid
     
     # Get all areas for "other areas" section
     areas = await db.areas.find({}, {"_id": 0}).sort("order", 1).to_list(100)
+    
+    # Apply custom_texts for default area pages (e.g., Helsinki) - not handled by area_override
+    if not area_override:
+        for area in areas:
+            if slug.endswith(f"-{area['slug']}"):
+                custom_texts = area.get("custom_texts", {})
+                base_service = slug[:-len(f"-{area['slug']}")]
+                city_entry = custom_texts.get(base_service, "")
+                if isinstance(city_entry, dict):
+                    if city_entry.get("seo_title"):
+                        page["seo_title"] = city_entry["seo_title"]
+                    if city_entry.get("hero_title"):
+                        page["hero_title"] = city_entry["hero_title"]
+                    if city_entry.get("seo_description"):
+                        page["seo_description"] = city_entry["seo_description"]
+                    if city_entry.get("text"):
+                        existing_desc = page.get("description_text", "") or ""
+                        page["description_text"] = existing_desc + f'<div class="city-specific-content"><p>{city_entry["text"]}</p></div>'
+                elif isinstance(city_entry, str) and city_entry:
+                    existing_desc = page.get("description_text", "") or ""
+                    page["description_text"] = existing_desc + f'<div class="city-specific-content"><p>{city_entry}</p></div>'
+                break
     
     service_json_ld = build_json_ld_service(page, settings)
     breadcrumb_json_ld = build_json_ld_breadcrumb([

@@ -803,13 +803,30 @@ const DynamicServicePage = () => {
         
         if (exactPage) {
           // Exact match found (e.g., /maalaustyot-helsinki)
-          setPage(exactPage);
+          let finalPage = { ...exactPage };
           // Determine current area and base slug
           const matchedArea = areasData.find(a => slug.endsWith(`-${a.slug}`));
           if (matchedArea) {
             setCurrentArea(matchedArea);
-            setBaseSlug(slug.replace(`-${matchedArea.slug}`, ''));
+            const computedBase = slug.replace(`-${matchedArea.slug}`, '');
+            setBaseSlug(computedBase);
+            // Apply custom_texts overrides for default area too
+            const customTexts = matchedArea.custom_texts || {};
+            const cityEntry = customTexts[computedBase];
+            if (cityEntry && typeof cityEntry === 'object') {
+              if (cityEntry.seo_title) finalPage.seo_title = cityEntry.seo_title;
+              if (cityEntry.hero_title) finalPage.hero_title = cityEntry.hero_title;
+              if (cityEntry.seo_description) finalPage.seo_description = cityEntry.seo_description;
+              if (cityEntry.text) {
+                const existingDesc = finalPage.description_text || '';
+                finalPage.description_text = existingDesc + `<div class="city-specific-content"><p>${cityEntry.text}</p></div>`;
+              }
+            } else if (typeof cityEntry === 'string' && cityEntry) {
+              const existingDesc = finalPage.description_text || '';
+              finalPage.description_text = existingDesc + `<div class="city-specific-content"><p>${cityEntry}</p></div>`;
+            }
           }
+          setPage(finalPage);
         } else {
           // No exact match - check if it's a city variant or general page
           const defaultArea = areasData.find(a => a.is_default) || areasData[0];
@@ -864,6 +881,7 @@ const DynamicServicePage = () => {
                 if (cityEntry && typeof cityEntry === 'object') {
                   if (cityEntry.seo_title) variantPage.seo_title = cityEntry.seo_title;
                   if (cityEntry.hero_title) variantPage.hero_title = cityEntry.hero_title;
+                  if (cityEntry.seo_description) variantPage.seo_description = cityEntry.seo_description;
                   if (cityEntry.text) {
                     const existingDesc = variantPage.description_text || '';
                     variantPage.description_text = existingDesc + `<div class="city-specific-content"><p>${cityEntry.text}</p></div>`;

@@ -347,9 +347,9 @@ const AreaForm = ({ form, setForm, onNameChange }) => (
 
 // Helper: normalize custom_texts entry (backward compat: string → object)
 const normalizeCustomEntry = (val) => {
-  if (!val) return { text: '', seo_title: '', hero_title: '' };
-  if (typeof val === 'string') return { text: val, seo_title: '', hero_title: '' };
-  return { text: val.text || '', seo_title: val.seo_title || '', hero_title: val.hero_title || '' };
+  if (!val) return { text: '', seo_title: '', hero_title: '', seo_description: '' };
+  if (typeof val === 'string') return { text: val, seo_title: '', hero_title: '', seo_description: '' };
+  return { text: val.text || '', seo_title: val.seo_title || '', hero_title: val.hero_title || '', seo_description: val.seo_description || '' };
 };
 
 // City-specific custom texts panel
@@ -434,6 +434,18 @@ const CityTextsPanel = ({ area, services, token, onSave }) => {
                   placeholder={`esim. ${service.title} ${area.name_inessive}`}
                   className="w-full px-3 py-1.5 text-sm border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
                   data-testid={`city-hero-title-${area.slug}-${service.slug}`}
+                />
+              </div>
+              {/* SEO Description override */}
+              <div>
+                <label className="block text-xs text-[#64748B] mb-0.5">Meta-kuvaus (meta description)</label>
+                <textarea
+                  value={entry.seo_description}
+                  onChange={(e) => updateField(service.slug, 'seo_description', e.target.value)}
+                  placeholder={`esim. Ammattitaitoiset ${service.title.toLowerCase()} ${area.name_inessive}. Pyydä maksuton arvio.`}
+                  rows={2}
+                  className="w-full px-3 py-2 text-sm border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  data-testid={`city-seo-desc-${area.slug}-${service.slug}`}
                 />
               </div>
               {/* Description text */}
