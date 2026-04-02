@@ -1485,9 +1485,21 @@ def get_default_calculator_config():
                     }
                 ],
                 "addons": [
-                    {"id": "ceiling", "label": "Katon maalaus", "hint": "Usein tehdään samalla", "price_per_m2": 22, "enabled": True},
-                    {"id": "wall_leveling", "label": "Seinien tasoitus", "hint": "Suositellaan epätasaisille pinnoille", "price_per_m2": 23, "enabled": True},
-                    {"id": "extra_color", "label": "Lisäsävy (+1 väri)", "hint": "Yksi lisävärisävy koko kohteeseen, esim. korosteseinä", "fixed_price": 100, "price_label": "100 € / kohde", "enabled": True}
+                    {"id": "halkeamien_korjaus", "label": "Halkeamien korjaus", "hint": "Korjataan seinien kolhut ja reiät ennen maalausta", "price_per_m2": 12, "enabled": True, "group": "esityot", "badge": "Suositeltu", "warning": "Ilman korjausta epätasaisuudet näkyvät maalipinnan läpi", "auto_trigger": {"step": "condition", "values": ["minor", "leveling"]}},
+                    {"id": "wall_leveling", "label": "Seinien tasoitus", "hint": "Tasoitetaan epätasaiset pinnat ennen maalausta", "price_per_m2": 23, "enabled": True, "group": "tarvittaessa", "badge": "Suositeltu", "warning": "Ilman tasoitusta lopputulos ei ole tasainen", "auto_trigger": {"step": "condition", "values": ["leveling"]}},
+                    {"id": "ceiling", "label": "Katon maalaus", "hint": "Usein tehdään samalla — säästää kokonaiskustannuksia", "price_per_m2": 22, "enabled": True, "group": "lisapalvelut", "badge": "Usein valitaan"},
+                    {"id": "listojen_maalaus", "label": "Listojen maalaus", "hint": "Jalka- ja kattolistan maalaus viimeistelee kokonaisuuden", "price_per_m2": 5, "enabled": True, "group": "lisapalvelut", "badge": "Usein valitaan"},
+                    {"id": "ovien_maalaus", "label": "Ovien ja karmien maalaus", "hint": "Ovet ja karmit maalataan samalla kertaa", "fixed_price": 120, "price_label": "120 € / ovipaketti", "enabled": True, "group": "lisapalvelut"},
+                    {"id": "extra_color", "label": "Lisäsävy (+1 väri)", "hint": "Yksi lisävärisävy koko kohteeseen, esim. korosteseinä", "fixed_price": 100, "price_label": "100 € / kohde", "enabled": True, "group": "lisapalvelut"}
+                ],
+                "packages": [
+                    {"id": "perus", "label": "Perus", "description": "Perustason maalaustyö", "addon_ids": []},
+                    {"id": "suositeltu", "label": "Suositeltu", "description": "Eniten valittu — siisti lopputulos", "addon_ids": ["halkeamien_korjaus", "extra_color"], "default": True},
+                    {"id": "premium", "label": "Premium", "description": "Kokonaisvaltainen pintaremontti", "addon_ids": ["halkeamien_korjaus", "wall_leveling", "ceiling", "listojen_maalaus", "extra_color"]}
+                ],
+                "auto_triggers": [
+                    {"if_step": "condition", "if_values": ["minor", "leveling"], "enable_addons": ["halkeamien_korjaus"]},
+                    {"if_step": "condition", "if_values": ["leveling"], "enable_addons": ["wall_leveling"]}
                 ]
             },
             {
@@ -1536,8 +1548,20 @@ def get_default_calculator_config():
                     }
                 ],
                 "addons": [
-                    {"id": "primer", "label": "Pohjamaalaus", "hint": "Parantaa maalin tarttuvuutta", "price_per_m2": 8, "enabled": True},
-                    {"id": "reinforcement", "label": "Vahvikekangas", "hint": "Estää halkeamien uusiutumisen", "price_per_m2": 12, "enabled": True}
+                    {"id": "primer", "label": "Pohjamaalaus", "hint": "Parantaa maalin tarttuvuutta merkittävästi", "price_per_m2": 8, "enabled": True, "group": "esityot", "badge": "Suositeltu", "warning": "Ilman pohjamaalausta maali ei tartu kunnolla"},
+                    {"id": "halkeamien_korjaus", "label": "Halkeamien korjaus", "hint": "Korjataan halkeamat ennen tasoitusta", "price_per_m2": 10, "enabled": True, "group": "tarvittaessa", "badge": "Suositeltu", "auto_trigger": {"step": "condition", "values": ["full", "heavy"]}},
+                    {"id": "reinforcement", "label": "Vahvikekangas", "hint": "Estää halkeamien uusiutumisen tehokkaasti", "price_per_m2": 12, "enabled": True, "group": "tarvittaessa", "auto_trigger": {"step": "condition", "values": ["heavy"]}},
+                    {"id": "kulmasuojat", "label": "Kulmasuojat", "hint": "Suojaavat ulkonurkat kolhuilta", "price_per_m2": 3, "enabled": True, "group": "tarvittaessa"},
+                    {"id": "hionta", "label": "Hionta ja pölynhallinta", "hint": "Sileämpi lopputulos ja siistimpi työmaa", "price_per_m2": 6, "enabled": True, "group": "lisapalvelut", "badge": "Usein valitaan"}
+                ],
+                "packages": [
+                    {"id": "perus", "label": "Perus", "description": "Perustason tasoitustyö", "addon_ids": ["primer"]},
+                    {"id": "suositeltu", "label": "Suositeltu", "description": "Laadukas lopputulos — eniten valittu", "addon_ids": ["primer", "halkeamien_korjaus", "hionta"], "default": True},
+                    {"id": "premium", "label": "Premium", "description": "Huippusileä ja kestävä pinta", "addon_ids": ["primer", "halkeamien_korjaus", "reinforcement", "kulmasuojat", "hionta"]}
+                ],
+                "auto_triggers": [
+                    {"if_step": "condition", "if_values": ["full", "heavy"], "enable_addons": ["halkeamien_korjaus"]},
+                    {"if_step": "condition", "if_values": ["heavy"], "enable_addons": ["reinforcement"]}
                 ]
             },
             {
@@ -1586,7 +1610,18 @@ def get_default_calculator_config():
                     }
                 ],
                 "addons": [
-                    {"id": "sealing", "label": "Suojalakkaus", "hint": "Suojaa pintaa kulutukselta", "price_per_m2": 15, "enabled": True}
+                    {"id": "sealing", "label": "Suojalakkaus", "hint": "Suojaa pintaa kulutukselta — välttämätön lattioille", "price_per_m2": 15, "enabled": True, "group": "esityot", "badge": "Suositeltu", "warning": "Ilman suojalakkausta pinta kuluu ja likaantuu nopeasti"},
+                    {"id": "alustan_tasoitus", "label": "Alustan tasoitus", "hint": "Tasoitetaan epätasainen alusta ennen mikrosementtiä", "price_per_m2": 20, "enabled": True, "group": "tarvittaessa", "badge": "Suositeltu", "auto_trigger": {"step": "condition", "values": ["prep"]}},
+                    {"id": "vedeneristys", "label": "Vedeneristys", "hint": "Pakollinen märkätiloissa — estää kosteusvauriot", "price_per_m2": 35, "enabled": True, "group": "tarvittaessa", "badge": "Suositeltu", "auto_trigger": {"step": "target_type", "values": ["bathroom"]}}
+                ],
+                "packages": [
+                    {"id": "perus", "label": "Perus", "description": "Mikrosementtipinta suojalakkauksella", "addon_ids": ["sealing"]},
+                    {"id": "suositeltu", "label": "Suositeltu", "description": "Kestävä lopputulos — eniten valittu", "addon_ids": ["sealing", "alustan_tasoitus"], "default": True},
+                    {"id": "premium", "label": "Premium", "description": "Täydellinen kokonaisuus märkätiloihin", "addon_ids": ["sealing", "alustan_tasoitus", "vedeneristys"]}
+                ],
+                "auto_triggers": [
+                    {"if_step": "condition", "if_values": ["prep"], "enable_addons": ["alustan_tasoitus"]},
+                    {"if_step": "target_type", "if_values": ["bathroom"], "enable_addons": ["vedeneristys"]}
                 ]
             },
             {
@@ -1642,7 +1677,21 @@ def get_default_calculator_config():
                     }
                 ],
                 "addons": [
-                    {"id": "wood_repair", "label": "Lautojen vaihto", "hint": "Vaihdetaan vaurioituneet laudat", "price_per_m2": 45, "enabled": True}
+                    {"id": "pesu", "label": "Julkisivun pesu", "hint": "Pestään pinta ennen maalausta — parantaa tarttuvuutta", "price_per_m2": 3, "enabled": True, "group": "esityot", "badge": "Suositeltu", "warning": "Ilman pesua maali tarttuu huonommin ja voi hilseillä aiemmin"},
+                    {"id": "vanhan_maalin_poisto", "label": "Vanhan maalin poisto", "hint": "Poistetaan irtonainen ja hilseilevä maali", "price_per_m2": 12, "enabled": True, "group": "tarvittaessa", "badge": "Suositeltu", "auto_trigger": {"step": "condition", "values": ["some", "heavy"]}},
+                    {"id": "halkeamien_korjaus", "label": "Halkeamien korjaus", "hint": "Korjataan seinien halkeamat ja vauriot", "price_per_m2": 15, "enabled": True, "group": "tarvittaessa", "auto_trigger": {"step": "condition", "values": ["heavy"]}},
+                    {"id": "kaksinkertainen_maalaus", "label": "Kaksinkertainen maalaus", "hint": "Kaksi maalikerrosta kestää pidempään ja näyttää paremmalta", "price_per_m2": 12, "enabled": True, "group": "lisapalvelut", "badge": "Suositeltu", "warning": "Yksi kerros kuluu nopeammin ja vaatii huoltomaalauksen aiemmin"},
+                    {"id": "ikkunoiden_maalaus", "label": "Ikkunoiden ja listojen maalaus", "hint": "Viimeistelee ulkonäön — usein tehty samalla", "fixed_price": 150, "price_label": "150 € / kohde", "enabled": True, "group": "lisapalvelut", "badge": "Usein valitaan"},
+                    {"id": "wood_repair", "label": "Lautojen vaihto", "hint": "Vaihdetaan vaurioituneet laudat ennen maalausta", "price_per_m2": 45, "enabled": True, "group": "tarvittaessa"}
+                ],
+                "packages": [
+                    {"id": "perus", "label": "Perus", "description": "Perustason julkisivumaalaus", "addon_ids": ["pesu"]},
+                    {"id": "suositeltu", "label": "Suositeltu", "description": "Kestävä lopputulos — eniten valittu", "addon_ids": ["pesu", "vanhan_maalin_poisto", "kaksinkertainen_maalaus"], "default": True},
+                    {"id": "premium", "label": "Premium", "description": "Kokonaisvaltainen julkisivuremontti", "addon_ids": ["pesu", "vanhan_maalin_poisto", "halkeamien_korjaus", "kaksinkertainen_maalaus", "ikkunoiden_maalaus"]}
+                ],
+                "auto_triggers": [
+                    {"if_step": "condition", "if_values": ["some", "heavy"], "enable_addons": ["vanhan_maalin_poisto"]},
+                    {"if_step": "condition", "if_values": ["heavy"], "enable_addons": ["halkeamien_korjaus"]}
                 ]
             },
             {
@@ -1686,8 +1735,21 @@ def get_default_calculator_config():
                     }
                 ],
                 "addons": [
-                    {"id": "wash", "label": "Katon pesu", "hint": "Pestään ennen maalausta", "price_per_m2": 5, "enabled": True},
-                    {"id": "moss_treatment", "label": "Sammalesto", "hint": "Estää sammalen kasvun", "price_per_m2": 4, "enabled": True}
+                    {"id": "wash", "label": "Katon pesu", "hint": "Pestään katto ennen maalausta — välttämätön tartunnan kannalta", "price_per_m2": 5, "enabled": True, "group": "esityot", "badge": "Suositeltu", "warning": "Ilman pesua maali ei tartu kunnolla ja irtoaa nopeammin"},
+                    {"id": "moss_treatment", "label": "Sammalesto", "hint": "Pidentää katon käyttöikää merkittävästi", "price_per_m2": 4, "enabled": True, "group": "esityot", "badge": "Suositeltu", "auto_trigger": {"step": "condition", "values": ["moss", "heavy_moss"]}},
+                    {"id": "ruostekaesittely", "label": "Ruostekäsittely", "hint": "Pysäyttää ruosteen etenemisen ja suojaa peltiä", "price_per_m2": 8, "enabled": True, "group": "tarvittaessa", "badge": "Suositeltu"},
+                    {"id": "paikkakorjaukset", "label": "Paikkakorjaukset", "hint": "Korjataan kolhut, reiät ja vauriot ennen maalausta", "price_per_m2": 15, "enabled": True, "group": "tarvittaessa"},
+                    {"id": "saumojen_tiivistys", "label": "Saumojen tiivistys", "hint": "Tiivistetään vuotavat saumat — estää vesivauriot", "price_per_m2": 6, "enabled": True, "group": "tarvittaessa"},
+                    {"id": "kaksinkertainen_maalaus", "label": "Kaksinkertainen maalaus", "hint": "Kaksi kerrosta kestää huomattavasti pidempään", "price_per_m2": 10, "enabled": True, "group": "lisapalvelut", "badge": "Suositeltu", "warning": "Yksi kerros kuluu nopeammin ja vaatii huoltomaalauksen aiemmin"},
+                    {"id": "kourujen_puhdistus", "label": "Kourujen puhdistus", "hint": "Puhdistetaan räystäskourut samalla kertaa", "fixed_price": 150, "price_label": "150 €", "enabled": True, "group": "lisapalvelut", "badge": "Usein valitaan"}
+                ],
+                "packages": [
+                    {"id": "perus", "label": "Perus", "description": "Pesu ja yksi maalikerros", "addon_ids": ["wash"]},
+                    {"id": "suositeltu", "label": "Suositeltu", "description": "Kestävä lopputulos — eniten valittu", "addon_ids": ["wash", "moss_treatment", "kaksinkertainen_maalaus"], "default": True},
+                    {"id": "premium", "label": "Premium", "description": "Täydellinen katon kunnostus", "addon_ids": ["wash", "moss_treatment", "ruostekaesittely", "kaksinkertainen_maalaus", "kourujen_puhdistus", "saumojen_tiivistys"]}
+                ],
+                "auto_triggers": [
+                    {"if_step": "condition", "if_values": ["moss", "heavy_moss"], "enable_addons": ["wash", "moss_treatment"]}
                 ]
             },
             {
@@ -1735,7 +1797,18 @@ def get_default_calculator_config():
                     }
                 ],
                 "addons": [
-                    {"id": "groundwork", "label": "Pohjatyöt", "hint": "Alustan esikäsittely ja puhdistus", "price_per_m2": 15, "enabled": True}
+                    {"id": "groundwork", "label": "Pohjatyöt", "hint": "Alustan esikäsittely ja puhdistus — parantaa tartuntaa", "price_per_m2": 15, "enabled": True, "group": "esityot", "badge": "Suositeltu", "warning": "Ilman pohjatyötä rappaus ei tartu kunnolla"},
+                    {"id": "halkeamien_korjaus", "label": "Halkeamien korjaus", "hint": "Korjataan vanhat halkeamat ennen rappausta", "price_per_m2": 18, "enabled": True, "group": "tarvittaessa", "badge": "Suositeltu", "auto_trigger": {"step": "condition", "values": ["repair"]}},
+                    {"id": "vanhan_rappauksen_poisto", "label": "Vanhan rappauksen poisto", "hint": "Poistetaan irtonainen ja vaurioitunut rappaus", "price_per_m2": 20, "enabled": True, "group": "tarvittaessa", "auto_trigger": {"step": "condition", "values": ["repair"]}},
+                    {"id": "pintakasittely", "label": "Pintakäsittely", "hint": "Viimeistelykäsittely suojaa rappausta ja parantaa ulkonäköä", "price_per_m2": 10, "enabled": True, "group": "lisapalvelut", "badge": "Usein valitaan"}
+                ],
+                "packages": [
+                    {"id": "perus", "label": "Perus", "description": "Perustason rappaus", "addon_ids": ["groundwork"]},
+                    {"id": "suositeltu", "label": "Suositeltu", "description": "Kestävä lopputulos — eniten valittu", "addon_ids": ["groundwork", "halkeamien_korjaus", "pintakasittely"], "default": True},
+                    {"id": "premium", "label": "Premium", "description": "Kokonaisvaltainen julkisivun kunnostus", "addon_ids": ["groundwork", "halkeamien_korjaus", "vanhan_rappauksen_poisto", "pintakasittely"]}
+                ],
+                "auto_triggers": [
+                    {"if_step": "condition", "if_values": ["repair"], "enable_addons": ["halkeamien_korjaus", "vanhan_rappauksen_poisto"]}
                 ]
             }
         ],
@@ -1745,8 +1818,8 @@ def get_default_calculator_config():
             "kotitalousvahennys_max_per_person": 1600,
             "labor_percentage": 70,
             "material_percentage": 30,
-            "cta_title": "Kysy tarkka tarjous",
-            "cta_subtitle": "Jätä yhteystietosi ja saat tarkan tarjouksen 24h sisällä – maksuton arviokäynti.",
+            "cta_title": "Pyydä tarkka tarjous (maksuton)",
+            "cta_subtitle": "Jätä yhteystietosi ja saat tarkan tarjouksen 24h sisällä – maksuton arviokäynti, ei sido mihinkään.",
             "disclaimer": "Hinnat ovat suuntaa-antavia ja sisältävät ALV:n. Lopullinen hinta varmistuu kartoituskäynnillä."
         }
     }

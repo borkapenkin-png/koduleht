@@ -141,7 +141,9 @@ const LivePriceBox = ({ priceData, visible, isMobile }) => {
         ) : (
           <p className="text-lg text-[#CBD5E1] font-medium">Täytä tiedot...</p>
         )}
-        <p className="text-[11px] text-[#94A3B8] leading-relaxed">Sis. ALV 25,5 %</p>
+        <p className="text-[11px] text-[#94A3B8] leading-relaxed">
+          Sis. ALV 25,5 % &middot; Hinta tarkentuu yleensä &plusmn;10 %
+        </p>
       </div>
     </div>
   );
@@ -168,6 +170,8 @@ const PriceCalculatorPage = () => {
   const [activeAddons, setActiveAddons] = useState({});
   const [showResult, setShowResult] = useState(false);
   const [dontKnowMode, setDontKnowMode] = useState({});
+  const [selectedPackage, setSelectedPackage] = useState(null);
+  const [dismissedWarnings, setDismissedWarnings] = useState({});
   const [showContactForm, setShowContactForm] = useState(false);
   const [contactForm, setContactForm] = useState({ name: '', phone: '', email: '' });
   const [contactSent, setContactSent] = useState(false);
@@ -213,7 +217,7 @@ const PriceCalculatorPage = () => {
     if (!config) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        selectedService, selections, activeAddons, currentStep, dontKnowMode
+        selectedService, selections, activeAddons, currentStep, dontKnowMode, selectedPackage
       }));
     } catch {}
   }, [selectedService, selections, activeAddons, currentStep, dontKnowMode, config]);
@@ -324,6 +328,8 @@ const PriceCalculatorPage = () => {
     setSelections({});
     setActiveAddons({});
     setDontKnowMode({});
+    setSelectedPackage(null);
+    setDismissedWarnings({});
     setShowResult(false);
     setShowContactForm(false);
     setContactSent(false);
@@ -352,12 +358,65 @@ const PriceCalculatorPage = () => {
     setSelections({});
     setActiveAddons({});
     setDontKnowMode({});
+    setSelectedPackage(null);
+    setDismissedWarnings({});
     setShowResult(false);
     setShowContactForm(false);
     setContactSent(false);
     setShowBreakdown(false);
     setCurrentStep(0);
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  };
+
+  // Apply auto-triggers + default package when entering addons step
+  const addonsStepIdx = service ? service.steps.length + 1 : -1;
+  const [autoTriggersApplied, setAutoTriggersApplied] = useState(false);
+  useEffect(() => {
+    if (!service || currentStep !== addonsStepIdx || autoTriggersApplied) return;
+    const newAddons = {};
+    // Apply auto-triggers based on selections
+    for (const trigger of (service.auto_triggers || [])) {
+      const selected = selections[trigger.if_step];
+      if (selected && trigger.if_values.includes(selected)) {
+        for (const addonId of trigger.enable_addons) newAddons[addonId] = true;
+      }
+    }
+    // Apply default package (suositeltu)
+    const defaultPkg = (service.packages || []).find(p => p.default);
+    if (defaultPkg) {
+      for (const addonId of defaultPkg.addon_ids) newAddons[addonId] = true;
+      setSelectedPackage(defaultPkg.id);
+    }
+    // Merge: auto-triggers ON TOP of default package
+    setActiveAddons(prev => ({ ...prev, ...newAddons }));
+    setAutoTriggersApplied(true);
+  }, [currentStep, addonsStepIdx, service, selections, autoTriggersApplied]);
+
+  // Reset trigger tracking when service changes
+  useEffect(() => { setAutoTriggersApplied(false); }, [selectedService]);
+
+  const applyPackage = (pkgId) => {
+    if (!service) return;
+    setSelectedPackage(pkgId);
+    setDismissedWarnings({});
+    const pkg = (service.packages || []).find(p => p.id === pkgId);
+    if (!pkg) return;
+    const newAddons = {};
+    for (const addonId of pkg.addon_ids) newAddons[addonId] = true;
+    // Also keep auto-triggered addons
+    for (const trigger of (service.auto_triggers || [])) {
+      const selected = selections[trigger.if_step];
+      if (selected && trigger.if_values.includes(selected)) {
+        for (const addonId of trigger.enable_addons) newAddons[addonId] = true;
+      }
+    }
+    setActiveAddons(newAddons);
+  };
+
+  const toggleAddon = (addonId) => {
+    setSelectedPackage('custom');
+    setActiveAddons(prev => ({ ...prev, [addonId]: !prev[addonId] }));
+    if (activeAddons[addonId]) setDismissedWarnings(prev => ({ ...prev, [addonId]: false }));
   };
 
   const canProceed = () => {
@@ -675,42 +734,136 @@ const PriceCalculatorPage = () => {
                       </motion.div>
                     )}
 
-                    {/* ADDONS (as cards) */}
+                    {/* ADDONS STEP — Packages + Grouped Cards */}
                     {service && currentStep === service.steps.length + 1 && !showResult && (
                       <motion.div key="addons" custom={direction} variants={stepVariants}
                         initial="enter" animate="center" exit="exit" transition={{ duration: 0.25 }}>
                         <h2 className="text-lg md:text-xl font-bold text-[#0F172A] mb-1">Lisävalinnat</h2>
-                        <p className="text-sm text-[#94A3B8] mb-6">Valitse tarvitsemasi lisäpalvelut (valinnainen)</p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" data-testid="addons-step">
-                          {(service.addons || []).filter(a => a.enabled).map(addon => {
-                            const active = activeAddons[addon.id];
+                        <p className="text-sm text-[#94A3B8] mb-5">Valitse paketti tai räätälöi itse</p>
+
+                        {/* Package selector */}
+                        {(service.packages || []).length > 0 && (
+                          <div className="grid grid-cols-3 gap-2 md:gap-3 mb-6" data-testid="package-selector">
+                            {service.packages.map((pkg, i) => {
+                              const isActive = selectedPackage === pkg.id;
+                              const isDefault = pkg.default;
+                              return (
+                                <motion.button key={pkg.id} whileTap={{ scale: 0.97 }}
+                                  onClick={() => applyPackage(pkg.id)}
+                                  className={`relative p-3 md:p-4 rounded-xl border text-left transition-all duration-200 ${
+                                    isActive
+                                      ? i === 2 ? 'border-[#7C3AED] bg-[#7C3AED]/[0.04] shadow-md' : i === 1 ? 'border-[#0F172A] bg-[#0F172A]/[0.03] shadow-md' : 'border-[#10B981] bg-[#10B981]/[0.04] shadow-md'
+                                      : 'border-[#E2E8F0] hover:border-[#CBD5E1]'
+                                  }`} data-testid={`package-${pkg.id}`}>
+                                  {isDefault && (
+                                    <span className="absolute -top-2.5 left-3 bg-[#0F172A] text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                      Eniten valittu
+                                    </span>
+                                  )}
+                                  <h4 className={`font-bold text-sm ${i === 2 ? 'text-[#7C3AED]' : i === 1 ? 'text-[#0F172A]' : 'text-[#10B981]'}`}>
+                                    {pkg.label}
+                                  </h4>
+                                  <p className="text-[11px] text-[#94A3B8] mt-0.5 leading-snug hidden sm:block">{pkg.description}</p>
+                                </motion.button>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        {/* Grouped addon cards */}
+                        <div className="space-y-5" data-testid="addons-step">
+                          {['esityot', 'tarvittaessa', 'lisapalvelut'].map(groupId => {
+                            const groupAddons = (service.addons || []).filter(a => a.enabled && a.group === groupId);
+                            if (groupAddons.length === 0) return null;
+                            const groupLabel = groupId === 'esityot' ? 'Esityöt' : groupId === 'tarvittaessa' ? 'Tarvittaessa' : 'Lisäpalvelut';
                             return (
-                              <motion.button key={addon.id} whileTap={{ scale: 0.98 }}
-                                onClick={() => setActiveAddons(prev => ({ ...prev, [addon.id]: !prev[addon.id] }))}
-                                className={`p-5 rounded-2xl border text-left transition-all duration-200 ${
-                                  active
-                                    ? 'border-[#0F172A] bg-[#0F172A]/[0.03] shadow-md'
-                                    : 'border-[#E2E8F0] hover:border-[#CBD5E1] hover:shadow-sm'
-                                }`} data-testid={`addon-${addon.id}`}>
-                                <div className="flex items-start justify-between gap-3">
-                                  <div className="min-w-0">
-                                    <h3 className="font-semibold text-[#0F172A] text-sm">{addon.label}</h3>
-                                    {addon.hint && (
-                                      <p className="text-xs text-[#94A3B8] mt-1 leading-relaxed">{addon.hint}</p>
-                                    )}
-                                    <p className="text-xs font-semibold text-[#0F172A] mt-2">
-                                      {addon.price_label ? addon.price_label : addon.price_per_m2 ? `+${addon.price_per_m2} €/m²` : addon.fixed_price > 0 ? `+${addon.fixed_price} €` : ''}
-                                    </p>
-                                  </div>
-                                  <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all ${
-                                    active ? 'bg-[#0F172A] border-[#0F172A]' : 'border-[#CBD5E1]'
-                                  }`}>
-                                    {active && <Check size={14} className="text-white" />}
-                                  </div>
+                              <div key={groupId}>
+                                <p className="text-[11px] uppercase tracking-wider font-semibold text-[#94A3B8] mb-2">
+                                  {groupLabel}
+                                </p>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                  {groupAddons.map(addon => {
+                                    const active = activeAddons[addon.id];
+                                    const showWarning = !active && addon.warning && !dismissedWarnings[addon.id];
+                                    return (
+                                      <div key={addon.id}>
+                                        <motion.button whileTap={{ scale: 0.98 }}
+                                          onClick={() => toggleAddon(addon.id)}
+                                          className={`w-full p-4 rounded-xl border text-left transition-all duration-200 ${
+                                            active
+                                              ? 'border-[#0F172A] bg-[#0F172A]/[0.03] shadow-sm'
+                                              : 'border-[#E2E8F0] hover:border-[#CBD5E1]'
+                                          }`} data-testid={`addon-${addon.id}`}>
+                                          <div className="flex items-start justify-between gap-2">
+                                            <div className="min-w-0 flex-1">
+                                              <div className="flex items-center gap-2 flex-wrap">
+                                                <h3 className="font-semibold text-[#0F172A] text-sm">{addon.label}</h3>
+                                                {addon.badge && (
+                                                  <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider ${
+                                                    addon.badge === 'Suositeltu' ? 'bg-[#0F172A]/10 text-[#0F172A]' : 'bg-amber-100 text-amber-700'
+                                                  }`}>{addon.badge}</span>
+                                                )}
+                                              </div>
+                                              <p className="text-xs text-[#94A3B8] mt-0.5 leading-relaxed">{addon.hint}</p>
+                                              <p className="text-xs font-semibold text-[#0F172A] mt-1.5">
+                                                {addon.price_label ? addon.price_label : addon.price_per_m2 ? `+${addon.price_per_m2} €/m²` : addon.fixed_price > 0 ? `+${addon.fixed_price} €` : ''}
+                                              </p>
+                                            </div>
+                                            <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all ${
+                                              active ? 'bg-[#0F172A] border-[#0F172A]' : 'border-[#CBD5E1]'
+                                            }`}>
+                                              {active && <Check size={12} className="text-white" />}
+                                            </div>
+                                          </div>
+                                        </motion.button>
+                                        {/* Soft warning when deselected */}
+                                        <AnimatePresence>
+                                          {showWarning && (
+                                            <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
+                                              exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.2 }}
+                                              className="text-[11px] text-amber-600 mt-1 ml-1 flex items-start gap-1">
+                                              <Info size={11} className="flex-shrink-0 mt-0.5" />
+                                              {addon.warning}
+                                            </motion.p>
+                                          )}
+                                        </AnimatePresence>
+                                      </div>
+                                    );
+                                  })}
                                 </div>
-                              </motion.button>
+                              </div>
                             );
                           })}
+                          {/* Fallback: show ungrouped addons too */}
+                          {(service.addons || []).filter(a => a.enabled && !a.group).length > 0 && (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                              {(service.addons || []).filter(a => a.enabled && !a.group).map(addon => {
+                                const active = activeAddons[addon.id];
+                                return (
+                                  <motion.button key={addon.id} whileTap={{ scale: 0.98 }}
+                                    onClick={() => toggleAddon(addon.id)}
+                                    className={`p-4 rounded-xl border text-left transition-all duration-200 ${
+                                      active ? 'border-[#0F172A] bg-[#0F172A]/[0.03] shadow-sm' : 'border-[#E2E8F0] hover:border-[#CBD5E1]'
+                                    }`} data-testid={`addon-${addon.id}`}>
+                                    <div className="flex items-start justify-between gap-2">
+                                      <div className="min-w-0">
+                                        <h3 className="font-semibold text-[#0F172A] text-sm">{addon.label}</h3>
+                                        {addon.hint && <p className="text-xs text-[#94A3B8] mt-0.5">{addon.hint}</p>}
+                                        <p className="text-xs font-semibold text-[#0F172A] mt-1.5">
+                                          {addon.price_label ? addon.price_label : addon.price_per_m2 ? `+${addon.price_per_m2} €/m²` : addon.fixed_price > 0 ? `+${addon.fixed_price} €` : ''}
+                                        </p>
+                                      </div>
+                                      <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all ${
+                                        active ? 'bg-[#0F172A] border-[#0F172A]' : 'border-[#CBD5E1]'
+                                      }`}>
+                                        {active && <Check size={12} className="text-white" />}
+                                      </div>
+                                    </div>
+                                  </motion.button>
+                                );
+                              })}
+                            </div>
+                          )}
                         </div>
                       </motion.div>
                     )}
@@ -822,12 +975,12 @@ const PriceCalculatorPage = () => {
                             <button onClick={() => setShowContactForm(true)}
                               className="w-full py-3.5 bg-[#0F172A] text-white rounded-xl font-semibold hover:bg-[#1E293B] transition-colors flex items-center justify-center gap-2 text-sm"
                               data-testid="request-quote-btn">
-                              Kysy tarkka tarjous <ArrowRight size={16} />
+                              Pyydä tarkka tarjous (maksuton) <ArrowRight size={16} />
                             </button>
                             <button onClick={() => setShowContactForm(true)}
                               className="w-full py-3.5 border border-[#E2E8F0] text-[#0F172A] rounded-xl font-semibold hover:bg-[#F8FAFC] transition-colors flex items-center justify-center gap-2 text-sm"
                               data-testid="send-photos-btn">
-                              <Camera size={16} /> Lähetä kuvat arviota varten
+                              <Camera size={16} /> Lähetä kuvat nopeaa arviota varten
                             </button>
                             <button onClick={resetCalculator}
                               className="w-full py-2 text-sm text-[#94A3B8] hover:text-[#0F172A] transition-colors flex items-center justify-center gap-1"
