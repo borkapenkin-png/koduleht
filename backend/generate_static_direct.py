@@ -573,11 +573,8 @@ async def main():
              lambda s=slug: generate_service_page(db, s, css_files, js_files))
         )
         
-        # 2. General page (e.g., /maalaustyot) - without city
-        pages_to_generate.append(
-            (f"Service General: {base_slug}", f"/{base_slug}", f"{base_slug}/index.html",
-             lambda bs=base_slug, p=sp: generate_general_service_page(db, bs, p, css_files, js_files))
-        )
+        # 2. General page REMOVED (duplicate of Helsinki) - redirect added in serve.json
+        # /maalaustyot → 301 → /maalaustyot-helsinki
         
         # 3. City variants for non-default areas
         for area in non_default_areas:
@@ -645,6 +642,15 @@ async def main():
     serve_redirects = []
     for slug in sorted(all_slugs):
         serve_redirects.append({"source": f"/{slug}/", "destination": f"/{slug}", "type": 301})
+    
+    # Add 301 redirects from general service pages to Helsinki (default) versions
+    # e.g., /maalaustyot → /maalaustyot-helsinki
+    for sp in service_pages:
+        sp_slug = sp.get("slug", "")
+        if sp_slug.endswith(f"-{default_area['slug']}"):
+            base = sp_slug[:-len(f"-{default_area['slug']}")]
+            serve_redirects.append({"source": f"/{base}", "destination": f"/{sp_slug}", "type": 301})
+            serve_redirects.append({"source": f"/{base}/", "destination": f"/{sp_slug}", "type": 301})
     
     serve_json_obj = {
         "cleanUrls": True,

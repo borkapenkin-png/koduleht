@@ -31,11 +31,6 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://www.jbtasoitusmaalaus.fi/julkisivumaalaus</loc>
-    <lastmod>2026-04-02</lastmod>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
     <loc>https://www.jbtasoitusmaalaus.fi/julkisivumaalaus-espoo</loc>
     <lastmod>2026-04-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -52,11 +47,6 @@
   </url>
   <url>
     <loc>https://www.jbtasoitusmaalaus.fi/julkisivumaalaus-vantaa</loc>
-    <lastmod>2026-04-02</lastmod>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.jbtasoitusmaalaus.fi/julkisivurappaus</loc>
     <lastmod>2026-04-02</lastmod>
     <changefreq>monthly</changefreq>
   </url>
@@ -81,11 +71,6 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://www.jbtasoitusmaalaus.fi/kattomaalaus</loc>
-    <lastmod>2026-04-02</lastmod>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
     <loc>https://www.jbtasoitusmaalaus.fi/kattomaalaus-espoo</loc>
     <lastmod>2026-04-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -106,11 +91,6 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://www.jbtasoitusmaalaus.fi/maalaustyot</loc>
-    <lastmod>2026-04-02</lastmod>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
     <loc>https://www.jbtasoitusmaalaus.fi/maalaustyot-espoo</loc>
     <lastmod>2026-04-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -127,11 +107,6 @@
   </url>
   <url>
     <loc>https://www.jbtasoitusmaalaus.fi/maalaustyot-vantaa</loc>
-    <lastmod>2026-04-02</lastmod>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.jbtasoitusmaalaus.fi/mikrosementti</loc>
     <lastmod>2026-04-02</lastmod>
     <changefreq>monthly</changefreq>
   </url>
@@ -157,11 +132,6 @@
   </url>
   <url>
     <loc>https://www.jbtasoitusmaalaus.fi/referenssit</loc>
-    <lastmod>2026-04-02</lastmod>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.jbtasoitusmaalaus.fi/tasoitustyot</loc>
     <lastmod>2026-04-02</lastmod>
     <changefreq>monthly</changefreq>
   </url>
