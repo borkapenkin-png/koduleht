@@ -61,6 +61,22 @@ async def regenerate_static_pages():
         logging.error(f"Error regenerating static pages: {e}")
         return False
 
+def trigger_ssg_background():
+    """Fire-and-forget SSG regeneration using subprocess.Popen."""
+    try:
+        import sys
+        script_path = ROOT_DIR / "generate_static_direct.py"
+        if script_path.exists():
+            subprocess.Popen(
+                [sys.executable, str(script_path)],
+                cwd=str(ROOT_DIR),
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
+            logging.info("SSG background regeneration triggered")
+    except Exception as e:
+        logging.error(f"Failed to trigger SSG: {e}")
+
 # JWT Configuration
 JWT_SECRET = os.environ.get('JWT_SECRET', secrets.token_hex(32))
 JWT_ALGORITHM = "HS256"
@@ -1097,12 +1113,7 @@ async def update_site_settings(input: SiteSettingsUpdate, username: str = Depend
     )
     
     # Regenerate static pages in background
-    import sys
-    python_path = sys.executable
-    asyncio.create_task(asyncio.to_thread(lambda: subprocess.run(
-        [python_path, str(ROOT_DIR / "generate_static_direct.py")],
-        capture_output=True, cwd=str(ROOT_DIR), timeout=60
-    )))
+    trigger_ssg_background()
     
     settings = await db.site_settings.find_one({"id": "site_settings"}, {"_id": 0})
     return SiteSettings(**settings)
@@ -1438,12 +1449,7 @@ async def admin_update_area(area_id: str, update: AreaUpdate, username: str = De
     area = await db.areas.find_one({"id": area_id}, {"_id": 0})
     
     # Regenerate static pages in background
-    import sys
-    python_path = sys.executable
-    asyncio.create_task(asyncio.to_thread(lambda: subprocess.run(
-        [python_path, str(ROOT_DIR / "generate_static_direct.py")],
-        capture_output=True, cwd=str(ROOT_DIR), timeout=60
-    )))
+    trigger_ssg_background()
     
     return area
 
