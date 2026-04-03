@@ -2458,6 +2458,20 @@ const HomePage = () => {
     return () => window.removeEventListener('hashchange', scrollToHash);
   }, [isLoading]);
 
+  // Set homepage SEO from settings
+  useEffect(() => {
+    if (settings && window.location.pathname === '/') {
+      const seoTitle = settings.home_seo_title || `${settings.company_name || 'J&B Tasoitus ja Maalaus Oy'} | Maalaus ja tasoituspalvelut Helsinki`;
+      document.title = seoTitle;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.setAttribute('content', settings.home_seo_description || settings.hero_description || '');
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) ogTitle.setAttribute('content', seoTitle);
+      const ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc) ogDesc.setAttribute('content', settings.home_seo_description || settings.hero_description || '');
+    }
+  }, [settings]);
+
   // Show loading state until data is fetched
   if (isLoading || !settings) {
     return (
