@@ -473,9 +473,11 @@ const ServiceAreasSection = ({ page, settings, areas: areasProp, currentSlug }) 
       <div className="container-custom">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center max-w-3xl mx-auto">
           <p className="text-white/60 uppercase text-sm font-medium tracking-wider mb-3">TOIMIALUE</p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6">
-            {serviceTitle} ja Uudellamaalla
-          </h2>
+          {page?.slug && (
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6">
+              {serviceTitle} ja Uudellamaalla
+            </h2>
+          )}
           
           {/* Area badges as links */}
           <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-10">

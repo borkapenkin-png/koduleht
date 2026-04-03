@@ -2517,7 +2517,7 @@ const HomePage = () => {
         <ServicesSection settings={settings} services_data={services} />
         <AboutSection settings={settings} />
         <ReferencesSection settings={settings} references={references} />
-        <ServiceAreasSection page={{ hero_title: 'Tasoitustyöt Helsingissä' }} settings={settings} />
+        <ServiceAreasSection page={{}} settings={settings} />
         <LocationSection settings={settings} />
         <ContactSection settings={settings} />
       </main>
