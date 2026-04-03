@@ -1849,8 +1849,8 @@ const AdminPanel = () => {
                 <div className="bg-white border p-4 md:p-6 space-y-4">
                   <h3 className="font-bold text-[#0F172A] border-b pb-2">Alatunniste (Footer)</h3>
                   <div><label className="block text-sm font-medium mb-1">Yrityksen kuvaus</label><input value={settings.footer_description || ''} onChange={(e) => setSettings({...settings, footer_description: e.target.value})} className="form-input text-sm" placeholder="Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla." /></div>
-                  <div><label className="block text-sm font-medium mb-1">Palvelut (pilkulla erotettuna)</label><input value={settings.footer_services || ''} onChange={(e) => setSettings({...settings, footer_services: e.target.value})} className="form-input text-sm" placeholder="Tasoitustyöt,Sisämaalaus,Julkisivumaalaus..." /></div>
                   <div><label className="block text-sm font-medium mb-1">Palvelualue teksti</label><input value={settings.footer_service_area || ''} onChange={(e) => setSettings({...settings, footer_service_area: e.target.value})} className="form-input text-sm" placeholder="Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella." /></div>
+                  <p className="text-xs text-[#94A3B8]">Palvelut-linkit tulevat automaattisesti Palvelusivut-välilehdestä.</p>
                 </div>
               </div>
             )}
@@ -2464,7 +2464,7 @@ const HomePage = () => {
         <ServicesSection settings={settings} services_data={services} />
         <AboutSection settings={settings} />
         <ReferencesSection settings={settings} references={references} />
-        <ServiceAreasSection page={{ hero_title: 'Palvelumme' }} settings={settings} />
+        <ServiceAreasSection page={{ hero_title: 'Tasoitustyöt Helsingissä' }} settings={settings} />
         <LocationSection settings={settings} />
         <ContactSection settings={settings} />
       </main>
