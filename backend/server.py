@@ -1995,12 +1995,13 @@ async def export_all_data(username: str = Depends(get_current_admin)):
     try:
         data = {
             "exported_at": datetime.now(timezone.utc).isoformat(),
-            "settings": await db.settings.find_one({}, {"_id": 0}) or {},
+            "settings": await db.site_settings.find_one({}, {"_id": 0}) or {},
             "services": await db.services.find({}, {"_id": 0}).to_list(1000),
             "references": await db.references.find({}, {"_id": 0}).to_list(1000),
             "partners": await db.partners.find({}, {"_id": 0}).to_list(1000),
             "faqs": await db.faqs.find({}, {"_id": 0}).to_list(1000),
             "service_pages": await db.service_pages.find({}, {"_id": 0}).to_list(1000),
+            "areas": await db.areas.find({}, {"_id": 0}).to_list(1000),
         }
         return data
     except Exception as e:
@@ -2021,8 +2022,8 @@ async def import_all_data(request: Request, username: str = Depends(get_current_
         
         # Import settings
         if "settings" in data and data["settings"]:
-            await db.settings.delete_many({})
-            await db.settings.insert_one(data["settings"])
+            await db.site_settings.delete_many({})
+            await db.site_settings.insert_one(data["settings"])
             imported.append("settings")
         
         # Import services
@@ -2059,6 +2060,16 @@ async def import_all_data(request: Request, username: str = Depends(get_current_
             if data["service_pages"]:
                 await db.service_pages.insert_many(data["service_pages"])
             imported.append(f"service_pages ({len(data['service_pages'])})")
+        
+        # Import areas
+        if "areas" in data and data["areas"]:
+            await db.areas.delete_many({})
+            if data["areas"]:
+                await db.areas.insert_many(data["areas"])
+            imported.append(f"areas ({len(data['areas'])})")
+        
+        # Trigger SSG regeneration
+        trigger_ssg_background()
         
         logging.info(f"Data imported: {imported}")
         return {"success": True, "imported": imported}
