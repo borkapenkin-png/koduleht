@@ -62,20 +62,22 @@ async def regenerate_static_pages():
         return False
 
 def trigger_ssg_background():
-    """Fire-and-forget SSG regeneration using subprocess.Popen."""
+    """Trigger SSG regeneration using in-process async task."""
     try:
-        import sys
-        script_path = ROOT_DIR / "generate_static_direct.py"
-        if script_path.exists():
-            subprocess.Popen(
-                [sys.executable, str(script_path)],
-                cwd=str(ROOT_DIR),
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL
-            )
-            logging.info("SSG background regeneration triggered")
+        from generate_static_direct import run_ssg_with_db
+        asyncio.ensure_future(_run_ssg_task())
+        logging.info("SSG in-process regeneration triggered")
     except Exception as e:
         logging.error(f"Failed to trigger SSG: {e}")
+
+async def _run_ssg_task():
+    """Background task that runs SSG with the server's DB connection."""
+    try:
+        from generate_static_direct import run_ssg_with_db
+        count = await run_ssg_with_db(db)
+        logging.info(f"SSG background task completed: {count} pages")
+    except Exception as e:
+        logging.error(f"SSG background task failed: {e}")
 
 # JWT Configuration
 JWT_SECRET = os.environ.get('JWT_SECRET', secrets.token_hex(32))

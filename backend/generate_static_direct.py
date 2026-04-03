@@ -8,6 +8,7 @@ This is used during the build process.
 import asyncio
 import os
 import json
+import logging
 import glob
 from datetime import datetime
 from pathlib import Path
@@ -799,6 +800,67 @@ async def main():
     print("=" * 60)
     print(f"Generation complete: {success_count}/{len(pages_to_generate)} pages")
     print("=" * 60)
+
+
+async def run_ssg_with_db(db):
+    """Run SSG using an existing database connection (called from server.py)."""
+    try:
+        css_files, js_files = get_react_assets()
+        
+        service_pages_cursor = db.service_pages.find({})
+        service_pages = await service_pages_cursor.to_list(100)
+        slugs = [p.get("slug") for p in service_pages if p.get("slug")]
+        
+        areas = await db.areas.find({}, {"_id": 0}).sort("order", 1).to_list(100)
+        default_area = next((a for a in areas if a.get("is_default")), areas[0] if areas else {"slug": "helsinki", "name": "Helsinki", "name_inessive": "Helsingissä"})
+        non_default_areas = [a for a in areas if not a.get("is_default")]
+        
+        pages_to_generate = [
+            ("Home", "/", "index.html", lambda: generate_home_page(db, css_files, js_files)),
+            ("References", "/referenssit", "referenssit/index.html", lambda: generate_references_page(db, css_files, js_files)),
+            ("FAQ", "/ukk", "ukk/index.html", lambda: generate_faq_page(db, css_files, js_files)),
+        ]
+        
+        for sp in service_pages:
+            slug = sp.get("slug")
+            if not slug:
+                continue
+            base_slug = slug
+            if slug.endswith(f"-{default_area['slug']}"):
+                base_slug = slug[:-len(f"-{default_area['slug']}")]
+            
+            pages_to_generate.append(
+                (f"Service: {slug}", f"/{slug}", f"{slug}/index.html",
+                 lambda s=slug: generate_service_page(db, s, css_files, js_files))
+            )
+            
+            for area in non_default_areas:
+                variant_slug = f"{base_slug}-{area['slug']}"
+                pages_to_generate.append(
+                    (f"Variant: {variant_slug}", f"/{variant_slug}", f"{variant_slug}/index.html",
+                     lambda s=base_slug, a=area: generate_service_page(db, f"{s}-{default_area['slug']}", css_files, js_files, area_override=a))
+                )
+        
+        success_count = 0
+        for name, path_str, filename, generator_fn in pages_to_generate:
+            try:
+                html = await generator_fn()
+                if html:
+                    output_path = BUILD_DIR / filename
+                    output_path.parent.mkdir(parents=True, exist_ok=True)
+                    output_path.write_text(html, encoding="utf-8")
+                    alt_path = BUILD_DIR / f"{filename.replace('/index.html', '.html')}"
+                    if filename.endswith('/index.html') and filename != 'index.html':
+                        alt_path.write_text(html, encoding="utf-8")
+                    success_count += 1
+            except Exception as e:
+                logging.error(f"SSG error for {name}: {e}")
+        
+        logging.info(f"SSG in-process complete: {success_count}/{len(pages_to_generate)} pages")
+        return success_count
+    except Exception as e:
+        logging.error(f"SSG run_ssg_with_db error: {e}")
+        return 0
 
 
 if __name__ == "__main__":
