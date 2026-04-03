@@ -1144,6 +1144,26 @@ async def admin_regenerate_static(username: str = Depends(get_current_admin)):
     except Exception as e:
         return {"success": False, "message": str(e)}
 
+@api_router.get("/admin/ssg-status")
+async def ssg_status(username: str = Depends(get_current_admin)):
+    """Check SSG status - what's currently in build/index.html."""
+    try:
+        build_index = ROOT_DIR.parent / "frontend" / "build" / "index.html"
+        if build_index.exists():
+            content = build_index.read_text(encoding="utf-8")
+            import re
+            title_match = re.search(r'<title>([^<]*)</title>', content)
+            desc_match = re.search(r'name="description" content="([^"]*)"', content)
+            return {
+                "build_exists": True,
+                "current_title": title_match.group(1) if title_match else "NOT FOUND",
+                "current_description": desc_match.group(1) if desc_match else "NOT FOUND",
+                "file_size": len(content),
+            }
+        return {"build_exists": False}
+    except Exception as e:
+        return {"error": str(e)}
+
 # Admin - Contact Forms
 @api_router.get("/admin/contacts", response_model=List[ContactForm])
 async def admin_get_contacts(username: str = Depends(get_current_admin)):
@@ -2364,6 +2384,13 @@ async def seed_hintalaskuri_page():
 async def startup_event():
     await init_admin_user()
     await seed_hintalaskuri_page()
+    # Run SSG on startup to ensure static HTML is up-to-date with DB content
+    try:
+        from generate_static_direct import run_ssg_with_db
+        count = await run_ssg_with_db(db)
+        logging.info(f"Startup SSG complete: {count} pages generated")
+    except Exception as e:
+        logging.error(f"Startup SSG failed: {e}")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
