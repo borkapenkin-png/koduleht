@@ -18,6 +18,7 @@ const getImageUrl = (url) => {
 const ReferencesPageSEO = () => {
   useEffect(() => {
     document.title = "Referenssit | J&B Tasoitus ja Maalaus - Toteutetut projektit Helsingissä";
+    document.getElementById('root')?.classList.add('app-ready');
     
     // Update meta description
     const metaDesc = document.querySelector('meta[name="description"]');

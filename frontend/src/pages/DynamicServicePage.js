@@ -36,6 +36,9 @@ const useServicePageSEO = (page, settings, faqs) => {
     // Set page title
     document.title = `${page.seo_title} | ${companyName}`;
     
+    // Reveal page — prevents FOUC
+    document.getElementById('root')?.classList.add('app-ready');
+    
     // Update meta description
     let metaDesc = document.querySelector('meta[name="description"]');
     if (!metaDesc) {

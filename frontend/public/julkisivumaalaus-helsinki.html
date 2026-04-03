@@ -82,6 +82,11 @@
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- FOUC prevention -->
+    <style>#root{opacity:0}#root.app-ready{opacity:1;transition:opacity .15s ease-in}</style>
+    <noscript><style>#root{opacity:1!important}</style></noscript>
+    <script>setTimeout(function(){var r=document.getElementById('root');if(r&&!r.classList.contains('app-ready'))r.classList.add('app-ready')},3000)</script>
 </head>
 <body>
     <div id="root">
@@ -255,7 +260,7 @@
     
     <!-- React App JS - loaded from build -->
     
-    <script src="/static/js/main.83d4646a.js?v=20260319"></script>
+    <script src="/static/js/main.12822d51.js?v=20260319"></script>
     
 </body>
 </html>

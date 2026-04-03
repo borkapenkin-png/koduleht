@@ -10,6 +10,7 @@ const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 const FaqPageSEO = () => {
   useEffect(() => {
     document.title = "Usein kysytyt kysymykset | J&B Tasoitus ja Maalaus - UKK";
+    document.getElementById('root')?.classList.add('app-ready');
     
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {

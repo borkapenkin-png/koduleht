@@ -2480,7 +2480,7 @@ const HomePage = () => {
     return () => window.removeEventListener('hashchange', scrollToHash);
   }, [isLoading]);
 
-  // Set homepage SEO from settings
+  // Set homepage SEO from settings + reveal page (FOUC prevention)
   useEffect(() => {
     if (settings && window.location.pathname === '/') {
       const seoTitle = settings.home_seo_title || `${settings.company_name || 'J&B Tasoitus ja Maalaus Oy'} | Maalaus ja tasoituspalvelut Helsinki`;
@@ -2491,6 +2491,10 @@ const HomePage = () => {
       if (ogTitle) ogTitle.setAttribute('content', seoTitle);
       const ogDesc = document.querySelector('meta[property="og:description"]');
       if (ogDesc) ogDesc.setAttribute('content', settings.home_seo_description || settings.hero_description || '');
+    }
+    // Reveal page after SEO is set — prevents FOUC
+    if (settings) {
+      document.getElementById('root')?.classList.add('app-ready');
     }
   }, [settings]);
 

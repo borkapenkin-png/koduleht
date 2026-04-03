@@ -31,6 +31,7 @@ const STORAGE_KEY = 'jb_calculator_state';
 const CalculatorSEO = () => {
   useEffect(() => {
     document.title = "Hintalaskuri – Laske maalaus- ja tasoitustöiden hinta | J&B Tasoitus ja Maalaus";
+    document.getElementById('root')?.classList.add('app-ready');
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute('content', 'Laske maalaus- ja tasoitustöiden hinta-arvio hetkessä. Sisämaalaus, ulkomaalaus, tasoitustyöt, mikrosementti, kattomaalaus ja julkisivurappaus. Kotitalousvähennys lasketaan automaattisesti.');

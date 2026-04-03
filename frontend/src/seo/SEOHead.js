@@ -102,6 +102,7 @@ export const SEOHead = ({
   useEffect(() => {
     // Set document title
     document.title = pageTitle;
+    document.getElementById('root')?.classList.add('app-ready');
     
     // Update meta tags
     const updateMeta = (name, content, isProperty = false) => {
