@@ -703,6 +703,22 @@ async def main():
             { "source": "/admin", "destination": "/index.html" },
             { "source": "/admin/**", "destination": "/index.html" },
             { "source": "/login", "destination": "/index.html" }
+        ],
+        "headers": [
+            {
+                "source": "**/*.html",
+                "headers": [
+                    { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+                    { "key": "Pragma", "value": "no-cache" }
+                ]
+            },
+            {
+                "source": "index.html",
+                "headers": [
+                    { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+                    { "key": "Pragma", "value": "no-cache" }
+                ]
+            }
         ]
     }
     serve_json_content = json.dumps(serve_json_obj, indent=2)
