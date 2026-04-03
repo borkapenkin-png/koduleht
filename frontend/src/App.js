@@ -622,7 +622,7 @@ const AboutSection = ({ settings }) => {
             {allBadges.length > 0 && (
               <div className="flex items-center justify-center gap-4 md:gap-6 flex-wrap mt-6 md:mt-8 pt-6 border-t border-white/20" data-testid="about-trust-badges">
                 {allBadges.map((badge, i) => (
-                  <img key={i} src={getImageUrl(badge.url)} alt={badge.alt || 'Trust badge'} className="h-10 md:h-14 object-contain" />
+                  <img key={i} src={getImageUrl(badge.url)} alt={badge.alt || 'Trust badge'} style={{ height: `${s.trust_badge_size || 56}px` }} className="object-contain" />
                 ))}
               </div>
             )}
@@ -1796,6 +1796,28 @@ const AdminPanel = () => {
                         }} 
                         className="text-xs bg-primary text-white px-3 py-1.5 hover:bg-primary/90 flex items-center gap-1"
                       ><Plus size={12} />Lisää merkki</button>
+                    </div>
+                    <div className="mb-3">
+                      <label className="block text-xs text-[#64748B] mb-1">Merkkien koko (px)</label>
+                      <div className="flex items-center gap-3">
+                        <input 
+                          type="range" 
+                          min="24" 
+                          max="120" 
+                          value={settings.trust_badge_size || 56} 
+                          onChange={(e) => setSettings({...settings, trust_badge_size: parseInt(e.target.value)})}
+                          className="flex-1"
+                          data-testid="trust-badge-size-slider"
+                        />
+                        <span className="text-sm font-medium text-[#334155] w-12 text-right">{settings.trust_badge_size || 56}px</span>
+                      </div>
+                      <div className="flex items-center gap-2 mt-2">
+                        {[32, 48, 56, 72, 96].map(s => (
+                          <button key={s} type="button" onClick={() => setSettings({...settings, trust_badge_size: s})}
+                            className={`text-xs px-2 py-1 rounded ${(settings.trust_badge_size || 56) === s ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                          >{s}px</button>
+                        ))}
+                      </div>
                     </div>
                     <div className="space-y-3">
                       {(settings.trust_badges || []).map((badge, i) => (

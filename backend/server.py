@@ -303,6 +303,7 @@ class SiteSettings(BaseModel):
     
     # ========== TRUST BADGES ==========
     trust_badges: List[dict] = []
+    trust_badge_size: int = 56
     
     # ========== CONTACT SECTION ==========
     contact_subtitle: str = "OTA YHTEYTTÄ"
@@ -410,6 +411,7 @@ class SiteSettingsUpdate(BaseModel):
     company_stats: Optional[List[dict]] = None
     # Trust Badges
     trust_badges: Optional[List[dict]] = None
+    trust_badge_size: Optional[int] = None
     # Contact
     contact_subtitle: Optional[str] = None
     contact_title: Optional[str] = None
