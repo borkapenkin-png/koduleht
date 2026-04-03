@@ -193,63 +193,9 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
             Lisää alue
           </button>
         </div>
-        {/* Toimialue section description template */}
-        <div className="pt-4 border-t">
-          <label className="block text-sm font-medium mb-2">
-            Toimialue-osion kuvaus
-            <span className="text-[#64748B] font-normal ml-2">(käytä {'{palvelu}'} palvelun nimelle)</span>
-          </label>
-          <textarea
-            value={localSettings.areas_description_template || ''}
-            onChange={(e) => handleChange('areas_description_template', e.target.value)}
-            placeholder="Tarjoamme ammattitaitoisia {palvelu} Helsingissä, Espoossa, Vantaalla, Kauniaisissa ja koko Uudenmaan alueella."
-            className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg text-sm"
-            rows={2}
-          />
-          <p className="text-xs text-[#94A3B8] mt-1">Esim: "Tarjoamme ammattitaitoisia {'{palvelu}'} Helsingissä..."</p>
-        </div>
       </div>
 
-      {/* CTA Texts */}
-      <div className="bg-white border rounded-lg p-6 space-y-4">
-        <h3 className="font-bold text-[#0F172A] border-b pb-2">
-          CTA-tekstit (toimintakutsut)
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Ensisijainen CTA</label>
-            <input
-              type="text"
-              value={localSettings.cta_primary_text || ''}
-              onChange={(e) => handleChange('cta_primary_text', e.target.value)}
-              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
-              placeholder="Pyydä ilmainen arvio"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Toissijainen CTA</label>
-            <input
-              type="text"
-              value={localSettings.cta_secondary_text || ''}
-              onChange={(e) => handleChange('cta_secondary_text', e.target.value)}
-              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
-              placeholder="Soita nyt"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Puhelin-CTA</label>
-            <input
-              type="text"
-              value={localSettings.cta_phone_text || ''}
-              onChange={(e) => handleChange('cta_phone_text', e.target.value)}
-              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
-              placeholder="Pyydä tarjous"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Trust Badges */}
+      {/* Trust Badges (service page badges) */}
       <div className="bg-white border rounded-lg p-6 space-y-4">
         <h3 className="font-bold text-[#0F172A] border-b pb-2">
           Luottamusmerkit
@@ -350,35 +296,6 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
               />
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="bg-white border rounded-lg p-6 space-y-4">
-        <h3 className="font-bold text-[#0F172A] border-b pb-2">
-          Footer-asetukset
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Footer-teksti</label>
-            <input
-              type="text"
-              value={localSettings.footer_text || ''}
-              onChange={(e) => handleChange('footer_text', e.target.value)}
-              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
-              placeholder="Laatujohtajat vuodesta 2018"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Copyright-teksti</label>
-            <input
-              type="text"
-              value={localSettings.footer_copyright || ''}
-              onChange={(e) => handleChange('footer_copyright', e.target.value)}
-              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
-              placeholder="Kaikki oikeudet pidätetään."
-            />
-          </div>
         </div>
       </div>
 

@@ -723,9 +723,9 @@ const ReferencesSection = ({ settings, references }) => {
                 {/* Work Type / Description */}
                 <p className="text-sm text-primary font-medium mb-3">{ref.type}</p>
                 
-                {/* Description - limit to 3 lines */}
+                {/* Description - full text */}
                 {ref.description && (
-                  <p className="text-sm text-[#64748B] mb-3 leading-relaxed line-clamp-3">{ref.description}</p>
+                  <p className="text-sm text-[#64748B] mb-3 leading-relaxed">{ref.description}</p>
                 )}
                 
                 {/* Spacer to push footer to bottom */}
