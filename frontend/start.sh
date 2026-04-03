@@ -12,7 +12,7 @@ cd /app/backend
 source /root/.venv/bin/activate 2>/dev/null || true
 python generate_static_direct.py || echo "Warning: SEO generation failed, using existing files"
 
-# Start the server
-echo "Starting serve..."
+# Start the Express SSR server (NOT serve - it caches HTML)
+echo "Starting Express SSR server..."
 cd /app/frontend
-exec /usr/local/bin/serve build -l 3000
+exec node server.js

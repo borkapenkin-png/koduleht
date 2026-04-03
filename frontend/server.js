@@ -48,7 +48,7 @@ app.use('/sitemap.xml', express.static(path.join(BUILD_DIR, 'sitemap.xml')));
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(BUILD_DIR, 'index.html'));
 });
-app.get('/admin/*', (req, res) => {
+app.get('/admin/{*splat}', (req, res) => {
   res.sendFile(path.join(BUILD_DIR, 'index.html'));
 });
 app.get('/login', (req, res) => {
@@ -56,7 +56,7 @@ app.get('/login', (req, res) => {
 });
 
 // HTML pages - try SSR from backend, fall back to static file
-app.get('*', async (req, res) => {
+app.get('/{*splat}', async (req, res) => {
   const reqPath = req.path;
   
   if (isPageRequest(reqPath)) {
