@@ -174,6 +174,56 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
+// On startup: wait for backend, then refresh build/ files via SSR
+function refreshBuildFiles() {
+  const pages = [
+    { path: '/', file: 'index.html' },
+    { path: '/referenssit', file: 'referenssit/index.html' },
+    { path: '/ukk', file: 'ukk/index.html' },
+  ];
+
+  let attempts = 0;
+  const maxAttempts = 12;
+
+  function tryRefresh() {
+    attempts++;
+    console.log(`[SSG-refresh] Attempt ${attempts}/${maxAttempts} - fetching SSR pages from backend...`);
+
+    let completed = 0;
+    let failed = 0;
+
+    pages.forEach(({ path: pagePath, file }) => {
+      fetchSSR(pagePath)
+        .then((html) => {
+          const filePath = path.join(BUILD_DIR, file);
+          const dir = path.dirname(filePath);
+          if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+          fs.writeFileSync(filePath, html, 'utf-8');
+          console.log(`[SSG-refresh] Updated build/${file}`);
+          completed++;
+        })
+        .catch((err) => {
+          failed++;
+          console.log(`[SSG-refresh] Failed ${pagePath}: ${err.message}`);
+        })
+        .finally(() => {
+          if (completed + failed === pages.length) {
+            if (failed > 0 && attempts < maxAttempts) {
+              console.log(`[SSG-refresh] ${failed} pages failed, retrying in 10s...`);
+              setTimeout(tryRefresh, 10000);
+            } else {
+              console.log(`[SSG-refresh] Done: ${completed} updated, ${failed} failed`);
+            }
+          }
+        });
+    });
+  }
+
+  // Wait 5 seconds for backend to start
+  setTimeout(tryRefresh, 5000);
+}
+
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`Frontend SSR server running on port ${PORT} (no-express, pure Node.js)`);
+  refreshBuildFiles();
 });
