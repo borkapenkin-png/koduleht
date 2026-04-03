@@ -978,6 +978,11 @@ const AdminPanel = () => {
   const [settings, setSettings] = useState(defaultSettings);
   const [services, setServices] = useState([]);
   const [references, setReferences] = useState([]);
+
+  // Reveal page immediately for admin panel (FOUC prevention)
+  useEffect(() => {
+    document.getElementById('root')?.classList.add('app-ready');
+  }, []);
   const [partners, setPartners] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [faqs, setFaqs] = useState([]);
