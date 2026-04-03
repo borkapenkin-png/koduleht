@@ -4,29 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     
-    <!-- SEO Meta Tags - Overwritten by SSG when available -->
-    <title>Maalaus ja tasoitustyöt Helsinki | J&amp;B Tasoitus ja Maalaus</title>
-    <meta name="description" content="Ammattitaitoinen maalaus- ja tasoituspalvelu Helsingissä ja Uudellamaalla vuodesta 2018. Sisämaalaus, ulkomaalaus, tasoitustyöt. Pyydä maksuton arvio!" />
-    
-    <link rel="canonical" href="https://www.jbtasoitusmaalaus.fi" />
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="Maalaus ja tasoitustyöt Helsinki | J&amp;B Tasoitus ja Maalaus" />
-    <meta property="og:description" content="Ammattitaitoinen maalaus- ja tasoituspalvelu Helsingissä ja Uudellamaalla vuodesta 2018. Sisämaalaus, ulkomaalaus, tasoitustyöt. Pyydä maksuton arvio!" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.jbtasoitusmaalaus.fi" />
-    <meta property="og:image" content="" />
-    <meta property="og:site_name" content="J&amp;B Tasoitus ja Maalaus Oy" />
-    <meta property="og:locale" content="fi_FI" />
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Maalaus ja tasoitustyöt Helsinki | J&amp;B Tasoitus ja Maalaus" />
-    <meta name="twitter:description" content="Ammattitaitoinen maalaus- ja tasoituspalvelu Helsingissä ja Uudellamaalla vuodesta 2018. Sisämaalaus, ulkomaalaus, tasoitustyöt. Pyydä maksuton arvio!" />
-    <meta name="twitter:image" content="" />
+    <title>J&amp;B Tasoitus ja Maalaus</title>
+    <meta name="description" content="" />
     
     <!-- Favicon -->
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZP42XN14NG"></script>
@@ -37,105 +19,20 @@
         gtag('config', 'G-ZP42XN14NG');
     </script>
     
-    <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","@id":"https://www.jbtasoitusmaalaus.fi/#organization","name":"J&B Tasoitus ja Maalaus Oy","description":"Ammattitaitoinen maalaus- ja tasoituspalvelu Helsingissä ja Uudellamaalla vuodesta 2018.","url":"https://www.jbtasoitusmaalaus.fi","telephone":"+358 40 054 7270","email":"info@jbtasoitusmaalaus.fi","address":{"@type":"PostalAddress","streetAddress":"Sienitie 25, 00760 Helsinki","addressLocality":"Helsinki","postalCode":"00760","addressCountry":"FI"},"geo":{"@type":"GeoCoordinates","latitude":"60.2341","longitude":"25.0722"},"areaServed":[{"@type":"City","name":"Helsinki"},{"@type":"City","name":"Espoo"},{"@type":"City","name":"Vantaa"},{"@type":"City","name":"Kauniainen"},{"@type":"AdministrativeArea","name":"Uusimaa"}],"priceRange":"$$","openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"07:00","closes":"18:00"},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Maalaus- ja tasoituspalvelut","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Sisämaalaus"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Ulkomaalaus"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Tasoitustyöt"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Julkisivumaalaus"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Mikrosementti"}}]}}</script>
-    
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- FOUC prevention -->
+    <style>
+        #root { opacity: 0; transition: opacity 0.15s ease-in; }
+        #root.loaded { opacity: 1; }
+    </style>
 </head>
 <body>
-    <div id="root">
-        <!-- SEO pre-rendered content for crawlers - React will replace this on hydration -->
-        <div data-seo-prerender="true">
-            <nav aria-label="Päänavigaatio">
-                <a href="/">J&amp;B Tasoitus ja Maalaus Oy</a>
-                <ul>
-                    <li><a href="/#palvelut">Palvelut</a></li>
-                    <li><a href="/#meista">Meistä</a></li>
-                    <li><a href="/referenssit">Referenssit</a></li>
-                    <li><a href="/ukk">UKK</a></li>
-                    <li><a href="/hintalaskuri">Hintalaskuri</a></li>
-                    <li><a href="/#yhteystiedot">Yhteystiedot</a></li>
-                </ul>
-            </nav>
-
-            <header>
-                <h1>Ammattitaitoista maalausta ja tasoitusta</h1>
-                <p>Uudellamaalla toimiva luotettava ammattilainen vuodesta 2018. Sisä- ja ulkomaalaukset, julkisivurappaukset sekä tapetoinnit avaimet käteen -periaatteella.</p>
-                <a href="/#yhteystiedot">Pyydä ilmainen arvio</a>
-                <a href="/hintalaskuri">Hintalaskuri</a>
-                <a href="tel:+358400547270">+358 40 054 7270</a>
-            </header>
-
-            <section id="palvelut">
-                <h2>Palvelumme</h2>
-                <p>Tarjoamme laajan valikoiman maalaus- ja tasoituspalveluita Helsingissä ja Uudellamaalla.</p>
-                <article><h3><a href="/maalaustyot-helsinki">Sisämaalaus</a></h3><p>Ammattitaitoinen sisämaalaus koteihin ja taloyhtiöille. Seinien ja kattojen maalaus laadukkailla materiaaleilla.</p></article>
-                <article><h3><a href="/tasoitustyot-helsinki">Tasoitustyöt</a></h3><p>Seinien ja kattojen tasoitus – osatasoitus ja ylitasoitus. Tasainen pinta maalaukselle.</p></article>
-                <article><h3><a href="/julkisivumaalaus-helsinki">Julkisivumaalaus</a></h3><p>Talon ulkopintojen maalaus ja suojaus. Ammattitaitoiset julkisivumaalaukset.</p></article>
-                <article><h3><a href="/kattomaalaus-helsinki">Kattomaalaus</a></h3><p>Pelti- ja tiilikaton maalaus. Suojaa kattosi ja paranna talon ilmettä.</p></article>
-                <article><h3><a href="/mikrosementti-helsinki">Mikrosementti</a></h3><p>Moderni mikrosementtipinta lattioihin, seiniin ja kylpyhuoneisiin.</p></article>
-                <article><h3><a href="/julkisivurappaus-helsinki">Julkisivurappaus</a></h3><p>Julkisivurappaus suojaa rakennuksen ulkopintoja ja parantaa julkisivun ilmettä.</p></article>
-            </section>
-
-            <section id="meista">
-                <h2>Luotettava kumppani pintaremontteihin</h2>
-                <p>J&amp;B Tasoitus Ja Maalaus Oy on Uudellamaalla toimiva luotettava maalaustöiden ammattilainen. Olemme tehneet sisä- ja ulkomaalauksia vuodesta 2018.</p>
-                <p>Meiltä sujuu myös katto- ja julkisivumaalaukset, julkisivurappaukset sekä sisäpintojen tapetoinnit.</p>
-                <p>Teemme työt avaimet käteen -periaatteella ja tarjoamme asiakkaillemme tyytyväisyystakuun.</p>
-            </section>
-
-            <section id="hintalaskuri-cta">
-                <h2>Laske hinta-arvio hetkessä</h2>
-                <p>Käytä hintalaskuriamme ja saat suuntaa-antavan hinta-arvion maalaus- ja tasoitustöille. Sisältää materiaalit, työn ja ALV:n.</p>
-                <a href="/hintalaskuri">Avaa hintalaskuri</a>
-            </section>
-
-            <section id="yhteystiedot">
-                <h2>Yhteystiedot</h2>
-                <p>Lähetä tarjouspyyntö tai pyydä meidät ilmaiselle arviokäynnille.</p>
-                <address>
-                    <p>Puhelin: <a href="tel:+358400547270">Boris Penkin - +358 40 054 7270</a></p>
-                    <p>Sähköposti: <a href="mailto:info@jbtasoitusmaalaus.fi">info@jbtasoitusmaalaus.fi</a></p>
-                    <p>Osoite: Sienitie 25, 00760 Helsinki</p>
-                </address>
-            </section>
-
-            <section id="palvelualueet">
-                <h2>Palvelualueet</h2>
-                <p>Palvelemme pääkaupunkiseudulla ja Uudellamaalla:</p>
-                <ul>
-                    <li><a href="/maalaustyot-helsinki">Maalaustyöt Helsinki</a></li>
-                    <li><a href="/maalaustyot-espoo">Maalaustyöt Espoo</a></li>
-                    <li><a href="/maalaustyot-vantaa">Maalaustyöt Vantaa</a></li>
-                    <li><a href="/maalaustyot-kauniainen">Maalaustyöt Kauniainen</a></li>
-                    <li><a href="/tasoitustyot-helsinki">Tasoitustyöt Helsinki</a></li>
-                    <li><a href="/julkisivumaalaus-helsinki">Julkisivumaalaus Helsinki</a></li>
-                    <li><a href="/kattomaalaus-helsinki">Kattomaalaus Helsinki</a></li>
-                    <li><a href="/mikrosementti-helsinki">Mikrosementti Helsinki</a></li>
-                    <li><a href="/julkisivurappaus-helsinki">Julkisivurappaus Helsinki</a></li>
-                </ul>
-            </section>
-
-            <footer>
-                <p>&copy; J&amp;B Tasoitus ja Maalaus Oy. Kaikki oikeudet pidätetään.</p>
-                <nav aria-label="Alatunnisteen linkit">
-                    <a href="/referenssit">Referenssit</a>
-                    <a href="/ukk">Usein kysytyt kysymykset</a>
-                    <a href="/hintalaskuri">Hintalaskuri</a>
-                    <a href="/maalaustyot-helsinki">Sisämaalaus</a>
-                    <a href="/tasoitustyot-helsinki">Tasoitustyöt</a>
-                    <a href="/julkisivumaalaus-helsinki">Julkisivumaalaus</a>
-                    <a href="/kattomaalaus-helsinki">Kattomaalaus</a>
-                    <a href="/mikrosementti-helsinki">Mikrosementti</a>
-                    <a href="/julkisivurappaus-helsinki">Julkisivurappaus</a>
-                </nav>
-            </footer>
-        </div>
-        <noscript>
-            <p>Tarvitset JavaScriptin tämän sivun interaktiivisten ominaisuuksien käyttämiseen.</p>
-        </noscript>
-    </div>
+    <div id="root"></div>
+    <noscript>
+        <p>Tarvitset JavaScriptin tämän sivun käyttämiseen.</p>
+    </noscript>
 </body>
 </html>
