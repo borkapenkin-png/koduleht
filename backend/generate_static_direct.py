@@ -196,7 +196,6 @@ def build_json_ld_breadcrumb(items: list) -> str:
 async def generate_home_page(db, css_files, js_files):
     """Generate home page HTML."""
     settings = await db.site_settings.find_one({}) or {}
-    # Remove MongoDB _id to avoid serialization issues
     if '_id' in settings:
         del settings['_id']
     
@@ -211,21 +210,34 @@ async def generate_home_page(db, css_files, js_files):
             "slug": s.get("link_url", s.get("id", ""))
         })
     
+    # Get areas for Palvelualueet section
+    areas = await db.areas.find({}, {"_id": 0}).sort("order", 1).to_list(100)
+    
+    # Get service pages for palvelualueet links
+    service_pages = await db.service_pages.find({}, {"_id": 0, "slug": 1, "hero_title": 1}).to_list(100)
+    
     company_name = settings.get("company_name", COMPANY_NAME)
     json_ld = build_json_ld_local_business(settings)
     
+    # SEO fields - use admin overrides or defaults
+    seo_title = settings.get("home_seo_title") or f"{company_name} | Maalaus ja tasoituspalvelut Helsinki"
+    seo_description = settings.get("home_seo_description") or settings.get("hero_description", "Ammattitaitoinen maalaus- ja tasoituspalvelu Helsingissä ja Uudellamaalla.")
+    canonical_url = settings.get("home_canonical_url") or SITE_URL
+    
     template = jinja_env.get_template("home.html")
     return template.render(
-        title=f"{company_name} | Maalaus ja tasoituspalvelut Helsinki",
-        description=settings.get("hero_description", "Ammattitaitoinen maalaus- ja tasoituspalvelu Helsingissä ja Uudellamaalla."),
-        canonical_url=SITE_URL,
-        og_title=f"{company_name} | Maalaus ja tasoituspalvelut",
-        og_description=settings.get("hero_description", ""),
+        title=seo_title,
+        description=seo_description,
+        canonical_url=canonical_url,
+        og_title=seo_title,
+        og_description=seo_description,
         og_image=settings.get("hero_image_url"),
         company_name=company_name,
         json_ld=json_ld,
         settings=settings,
         services=template_services,
+        areas=areas,
+        service_pages=service_pages,
         css_files=css_files,
         js_files=js_files
     )

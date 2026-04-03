@@ -1674,6 +1674,23 @@ const AdminPanel = () => {
                   <button onClick={saveSettings} disabled={saving} className="btn-primary text-sm flex items-center gap-2"><Save size={16} />{saving ? "..." : "Tallenna"}</button>
                 </div>
                 
+                {/* SEO - Etusivu */}
+                <div className="bg-white border p-4 md:p-6 space-y-4">
+                  <h3 className="font-bold text-[#0F172A] border-b pb-2">Etusivun SEO</h3>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">SEO-otsikko (title) <span className={`text-xs ${(settings.home_seo_title || '').length > 60 ? 'text-red-500 font-bold' : 'text-[#94A3B8]'}`}>{(settings.home_seo_title || '').length}/60</span></label>
+                    <input value={settings.home_seo_title || ''} onChange={(e) => setSettings({...settings, home_seo_title: e.target.value})} className="form-input text-sm" placeholder="J&B Tasoitus ja Maalaus Oy | Maalaus ja tasoituspalvelut Helsinki" data-testid="home-seo-title" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Meta-kuvaus <span className={`text-xs ${(settings.home_seo_description || '').length > 160 ? 'text-red-500 font-bold' : 'text-[#94A3B8]'}`}>{(settings.home_seo_description || '').length}/160</span></label>
+                    <textarea value={settings.home_seo_description || ''} onChange={(e) => setSettings({...settings, home_seo_description: e.target.value})} className="form-input text-sm" rows={2} placeholder="Ammattitaitoinen maalaus- ja tasoituspalvelu Helsingissä ja Uudellamaalla..." data-testid="home-seo-description" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Canonical URL</label>
+                    <input value={settings.home_canonical_url || ''} onChange={(e) => setSettings({...settings, home_canonical_url: e.target.value})} className="form-input text-sm" placeholder="https://www.jbtasoitusmaalaus.fi" data-testid="home-canonical-url" />
+                  </div>
+                </div>
+
                 {/* Hero */}
                 <div className="bg-white border p-4 md:p-6 space-y-4">
                   <h3 className="font-bold text-[#0F172A] border-b pb-2">Hero-osio</h3>

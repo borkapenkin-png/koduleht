@@ -272,6 +272,11 @@ class SiteSettings(BaseModel):
     about_info_title: str = "Muista kotitalousvähennys!"
     about_info_text: str = "Maalaus luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen."
     
+    # ========== HOME SEO ==========
+    home_seo_title: str = ""
+    home_seo_description: str = ""
+    home_canonical_url: str = ""
+    
     # ========== COMPANY STATS ==========
     company_stats: List[dict] = [
         {"value": "300+", "label": "Toteutettua kohdetta"},
@@ -381,6 +386,10 @@ class SiteSettingsUpdate(BaseModel):
     about_year: Optional[str] = None
     about_info_title: Optional[str] = None
     about_info_text: Optional[str] = None
+    # Home SEO
+    home_seo_title: Optional[str] = None
+    home_seo_description: Optional[str] = None
+    home_canonical_url: Optional[str] = None
     # Company Stats
     company_stats: Optional[List[dict]] = None
     # Trust Badges
