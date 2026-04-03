@@ -12,7 +12,7 @@ import pytest
 import requests
 import os
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://variant-seo-control.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://seo-realtime.preview.emergentagent.com')
 
 class TestAdminAuth:
     """Admin authentication tests"""

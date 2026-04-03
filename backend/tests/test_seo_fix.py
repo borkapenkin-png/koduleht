@@ -7,7 +7,7 @@ import requests
 import os
 from pathlib import Path
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://variant-seo-control.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://seo-realtime.preview.emergentagent.com')
 BUILD_DIR = Path("/app/frontend/build")
 
 

@@ -1164,6 +1164,46 @@ async def ssg_status(username: str = Depends(get_current_admin)):
     except Exception as e:
         return {"error": str(e)}
 
+@api_router.get("/ssr/{path:path}")
+async def ssr_page(path: str):
+    """Server-side render any page dynamically from MongoDB."""
+    from generate_static_direct import generate_home_page, generate_service_page, generate_references_page, generate_faq_page, get_react_assets
+    from fastapi.responses import HTMLResponse
+    
+    try:
+        css_files, js_files = get_react_assets()
+        html = None
+        
+        if path in ("", "home", "index"):
+            html = await generate_home_page(db, css_files, js_files)
+        elif path == "referenssit":
+            html = await generate_references_page(db, css_files, js_files)
+        elif path == "ukk":
+            html = await generate_faq_page(db, css_files, js_files)
+        else:
+            # Service page or city variant
+            areas = await db.areas.find({}, {"_id": 0}).sort("order", 1).to_list(100)
+            default_area = next((a for a in areas if a.get("is_default")), areas[0] if areas else None)
+            
+            # Check if it's a city variant
+            area_override = None
+            for area in areas:
+                if not area.get("is_default") and path.endswith(f"-{area['slug']}"):
+                    area_override = area
+                    base_slug = path[:-len(f"-{area['slug']}")]
+                    if default_area:
+                        path = f"{base_slug}-{default_area['slug']}"
+                    break
+            
+            html = await generate_service_page(db, path, css_files, js_files, area_override=area_override)
+        
+        if html:
+            return HTMLResponse(content=html)
+        return HTMLResponse(content="<html><body>Page not found</body></html>", status_code=404)
+    except Exception as e:
+        logging.error(f"SSR error for {path}: {e}")
+        return HTMLResponse(content=f"<html><body>Error: {e}</body></html>", status_code=500)
+
 # Admin - Contact Forms
 @api_router.get("/admin/contacts", response_model=List[ContactForm])
 async def admin_get_contacts(username: str = Depends(get_current_admin)):
