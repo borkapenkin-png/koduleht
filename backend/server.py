@@ -1362,6 +1362,15 @@ async def admin_update_service_page(page_id: str, input: ServicePageUpdate, user
         page['created_at'] = datetime.fromisoformat(page['created_at'])
     if isinstance(page.get('updated_at'), str):
         page['updated_at'] = datetime.fromisoformat(page['updated_at'])
+    
+    # Regenerate static pages in background
+    import sys
+    python_path = sys.executable
+    asyncio.create_task(asyncio.to_thread(lambda: subprocess.run(
+        [python_path, str(ROOT_DIR / "generate_static_direct.py")],
+        capture_output=True, cwd=str(ROOT_DIR), timeout=60
+    )))
+    
     return ServicePage(**page)
 
 @api_router.delete("/admin/service-pages/{page_id}")
@@ -1418,6 +1427,15 @@ async def admin_update_area(area_id: str, update: AreaUpdate, username: str = De
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Area not found")
     area = await db.areas.find_one({"id": area_id}, {"_id": 0})
+    
+    # Regenerate static pages in background
+    import sys
+    python_path = sys.executable
+    asyncio.create_task(asyncio.to_thread(lambda: subprocess.run(
+        [python_path, str(ROOT_DIR / "generate_static_direct.py")],
+        capture_output=True, cwd=str(ROOT_DIR), timeout=60
+    )))
+    
     return area
 
 @api_router.delete("/admin/areas/{area_id}")
