@@ -913,60 +913,125 @@ const ContactSection = ({ settings }) => {
 
 // ========== FOOTER ==========
 const Footer = ({ logoUrl, settings, servicePages = [] }) => {
-  const logo = logoUrl || settings?.logo_url || LOGO_URL;
-  const companyName = settings?.company_name || 'J&B Tasoitus ja Maalaus Oy';
-  const footerDescription = settings?.footer_description || 'Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla.';
-  const footerServiceArea = settings?.footer_service_area || 'Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella.';
-  const city = settings?.company_city || 'Helsinki';
-  const servicesTitle = settings?.footer_services_title || 'Palvelumme:';
-  const navTitle = settings?.footer_nav_title || 'Sivusto';
-  
+  const s = settings || {};
+  const logo = logoUrl || s.logo_url || LOGO_URL;
+  const companyName = s.company_name || 'J&B Tasoitus ja Maalaus Oy';
+  const footerDescription = s.footer_description || 'Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla.';
+  const footerServiceArea = s.footer_service_area || 'Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella.';
+  const city = s.company_city || 'Helsinki';
+  const servicesTitle = s.footer_services_title || 'Palvelumme';
+  const navTitle = s.footer_nav_title || 'Sivusto';
+  const contactTitle = s.footer_contact_title || 'Yhteystiedot';
+  const phone = s.contact_phone_1 || '+358 40 054 7270';
+  const email = s.contact_email || 'info@jbtasoitusmaalaus.fi';
+  const address = s.contact_address || 'Sienitie 52, 00760 Helsinki';
+  const ctaHeading = s.footer_cta_heading || '';
+  const ctaText = s.footer_cta_text || '';
+  const ctaButtonLabel = s.footer_cta_button_label || 'Pyydä tarjous';
+  const ctaButtonLink = s.footer_cta_button_link || '#yhteystiedot';
+  const privacyLink = s.footer_privacy_link || '';
+  const cookieLink = s.footer_cookie_link || '';
+  const copyrightText = s.footer_copyright || '';
+
   return (
-    <footer data-testid="footer" className="footer-bg text-white py-10 md:py-14">
-      <div className="container-custom">
-        {/* Main footer content */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
-          
-          {/* Company info + SEO description */}
-          <div>
-            <img src={logo} alt={companyName} className="h-10 md:h-12 w-auto max-w-[180px] object-contain mb-4" />
-            <p className="text-white/80 text-sm font-medium mb-2">{companyName}</p>
-            <p className="text-white/60 text-xs md:text-sm leading-relaxed">
+    <footer data-testid="footer" className="bg-[#0B1120] text-white">
+      {/* Optional CTA band */}
+      {ctaHeading && (
+        <div className="border-b border-white/[0.06]">
+          <div className="container-custom py-10 md:py-14 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="text-center md:text-left">
+              <h3 className="text-lg md:text-xl font-bold text-white mb-1">{ctaHeading}</h3>
+              {ctaText && <p className="text-white/50 text-sm max-w-md">{ctaText}</p>}
+            </div>
+            <a
+              href={ctaButtonLink}
+              data-testid="footer-cta-btn"
+              className="inline-flex items-center gap-2 bg-white text-[#0B1120] font-semibold text-sm px-7 py-3 rounded-full hover:bg-white/90 transition-colors whitespace-nowrap"
+            >
+              {ctaButtonLabel}
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* Main footer grid */}
+      <div className="container-custom py-12 md:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+
+          {/* Col 1 — Brand */}
+          <div className="sm:col-span-2 lg:col-span-1">
+            <img src={logo} alt={companyName} className="h-9 w-auto max-w-[160px] object-contain mb-5 brightness-0 invert opacity-90" />
+            <p className="text-white/50 text-[13px] leading-relaxed mb-4 max-w-[260px]">
               {footerDescription}
             </p>
-            <p className="text-white/50 text-xs mt-4 leading-relaxed">
+            <p className="text-white/30 text-xs leading-relaxed max-w-[260px]">
               {footerServiceArea}
             </p>
           </div>
-          
-          {/* Services list - dynamic from service pages */}
+
+          {/* Col 2 — Services */}
           <div>
-            <p className="text-white/80 text-sm font-medium mb-3">{servicesTitle}</p>
-            <ul className="grid grid-cols-1 gap-y-2 text-xs md:text-sm text-white/60">
+            <h4 className="text-xs font-semibold tracking-[0.15em] uppercase text-white/40 mb-5">{servicesTitle}</h4>
+            <ul className="space-y-2.5">
               {servicePages.map((sp) => (
-                <li key={sp.slug}><Link to={`/${sp.slug}`} className="hover:text-white transition-colors">{sp.hero_title || sp.title || sp.slug}</Link></li>
+                <li key={sp.slug}>
+                  <Link
+                    to={`/${sp.slug}`}
+                    className="text-[13px] text-white/60 hover:text-white transition-colors duration-200"
+                  >
+                    {sp.hero_title || sp.title || sp.slug}
+                  </Link>
+                </li>
               ))}
             </ul>
           </div>
-          
-          {/* Navigation links */}
+
+          {/* Col 3 — Navigation */}
           <div>
-            <p className="text-white/80 text-sm font-medium mb-3">{navTitle}</p>
-            <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs md:text-sm text-white/60">
-              <a href="#palvelut" className="hover:text-white transition-colors">Palvelut</a>
-              <a href="#meista" className="hover:text-white transition-colors">Meistä</a>
-              <Link to="/referenssit" className="hover:text-white transition-colors">Referenssit</Link>
-              <Link to="/ukk" className="hover:text-white transition-colors">UKK</Link>
-              <Link to="/hintalaskuri" className="hover:text-white transition-colors">Hintalaskuri</Link>
-              <a href="#yhteystiedot" className="hover:text-white transition-colors">Yhteystiedot</a>
+            <h4 className="text-xs font-semibold tracking-[0.15em] uppercase text-white/40 mb-5">{navTitle}</h4>
+            <ul className="space-y-2.5">
+              <li><a href="#palvelut" className="text-[13px] text-white/60 hover:text-white transition-colors duration-200">Palvelut</a></li>
+              <li><a href="#meista" className="text-[13px] text-white/60 hover:text-white transition-colors duration-200">Meistä</a></li>
+              <li><Link to="/referenssit" className="text-[13px] text-white/60 hover:text-white transition-colors duration-200">Referenssit</Link></li>
+              <li><Link to="/ukk" className="text-[13px] text-white/60 hover:text-white transition-colors duration-200">UKK</Link></li>
+              <li><Link to="/hintalaskuri" className="text-[13px] text-white/60 hover:text-white transition-colors duration-200">Hintalaskuri</Link></li>
+              <li><a href="#yhteystiedot" className="text-[13px] text-white/60 hover:text-white transition-colors duration-200">Yhteystiedot</a></li>
+            </ul>
+          </div>
+
+          {/* Col 4 — Contact */}
+          <div>
+            <h4 className="text-xs font-semibold tracking-[0.15em] uppercase text-white/40 mb-5">{contactTitle}</h4>
+            <div className="space-y-3.5">
+              <a href={`tel:${phone.replace(/\s/g, '')}`} className="flex items-start gap-2.5 text-[13px] text-white/60 hover:text-white transition-colors group">
+                <svg className="w-4 h-4 mt-0.5 shrink-0 text-white/30 group-hover:text-white/60 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" /></svg>
+                <span>{phone}</span>
+              </a>
+              <a href={`mailto:${email}`} className="flex items-start gap-2.5 text-[13px] text-white/60 hover:text-white transition-colors group">
+                <svg className="w-4 h-4 mt-0.5 shrink-0 text-white/30 group-hover:text-white/60 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
+                <span>{email}</span>
+              </a>
+              <div className="flex items-start gap-2.5 text-[13px] text-white/40">
+                <svg className="w-4 h-4 mt-0.5 shrink-0 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
+                <span>{address}</span>
+              </div>
             </div>
           </div>
-          
+
         </div>
-        
-        {/* Copyright */}
-        <div className="border-t border-white/10 mt-8 md:mt-10 pt-6 md:pt-8 text-center text-xs text-white/40">
-          <p>© {new Date().getFullYear()} {companyName} · {city}, Finland</p>
+      </div>
+
+      {/* Bottom bar */}
+      <div className="border-t border-white/[0.06]">
+        <div className="container-custom py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-white/30">
+          <p>{copyrightText || `© ${new Date().getFullYear()} ${companyName}`} · {city}</p>
+          {(privacyLink || cookieLink) && (
+            <div className="flex items-center gap-4">
+              {privacyLink && <a href={privacyLink} className="hover:text-white/60 transition-colors">Tietosuojaseloste</a>}
+              {cookieLink && <a href={cookieLink} className="hover:text-white/60 transition-colors">Evästekäytäntö</a>}
+            </div>
+          )}
         </div>
       </div>
     </footer>
@@ -1897,13 +1962,37 @@ const AdminPanel = () => {
                 {/* Footer */}
                 <div className="bg-white border p-4 md:p-6 space-y-4">
                   <h3 className="font-bold text-[#0F172A] border-b pb-2">Alatunniste (Footer)</h3>
+                  
                   <div><label className="block text-sm font-medium mb-1">Yrityksen kuvaus</label><input value={settings.footer_description || ''} onChange={(e) => setSettings({...settings, footer_description: e.target.value})} className="form-input text-sm" placeholder="Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla." /></div>
                   <div><label className="block text-sm font-medium mb-1">Palvelualue teksti</label><input value={settings.footer_service_area || ''} onChange={(e) => setSettings({...settings, footer_service_area: e.target.value})} className="form-input text-sm" placeholder="Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella." /></div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><label className="block text-sm font-medium mb-1">Palvelut-sarake otsikko</label><input value={settings.footer_services_title || ''} onChange={(e) => setSettings({...settings, footer_services_title: e.target.value})} className="form-input text-sm" placeholder="Palvelumme:" /></div>
-                    <div><label className="block text-sm font-medium mb-1">Sivusto-sarake otsikko</label><input value={settings.footer_nav_title || ''} onChange={(e) => setSettings({...settings, footer_nav_title: e.target.value})} className="form-input text-sm" placeholder="Sivusto" /></div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div><label className="block text-sm font-medium mb-1">Palvelut-otsikko</label><input value={settings.footer_services_title || ''} onChange={(e) => setSettings({...settings, footer_services_title: e.target.value})} className="form-input text-sm" placeholder="Palvelumme" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Sivusto-otsikko</label><input value={settings.footer_nav_title || ''} onChange={(e) => setSettings({...settings, footer_nav_title: e.target.value})} className="form-input text-sm" placeholder="Sivusto" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Yhteystiedot-otsikko</label><input value={settings.footer_contact_title || ''} onChange={(e) => setSettings({...settings, footer_contact_title: e.target.value})} className="form-input text-sm" placeholder="Yhteystiedot" /></div>
                   </div>
-                  <p className="text-xs text-[#94A3B8]">Palvelut-linkit tulevat automaattisesti Palvelusivut-välilehdestä.</p>
+
+                  <div className="border-t pt-3 mt-2">
+                    <p className="text-sm font-medium text-[#0F172A] mb-2">CTA-palkki (valikuline)</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div><label className="block text-sm font-medium mb-1">CTA otsikko</label><input value={settings.footer_cta_heading || ''} onChange={(e) => setSettings({...settings, footer_cta_heading: e.target.value})} className="form-input text-sm" placeholder="Pyydä ilmainen arvio" /></div>
+                      <div><label className="block text-sm font-medium mb-1">CTA teksti</label><input value={settings.footer_cta_text || ''} onChange={(e) => setSettings({...settings, footer_cta_text: e.target.value})} className="form-input text-sm" placeholder="Saat tarjouksen 24h sisällä." /></div>
+                      <div><label className="block text-sm font-medium mb-1">Painike teksti</label><input value={settings.footer_cta_button_label || ''} onChange={(e) => setSettings({...settings, footer_cta_button_label: e.target.value})} className="form-input text-sm" placeholder="Pyydä tarjous" /></div>
+                      <div><label className="block text-sm font-medium mb-1">Painike linkki</label><input value={settings.footer_cta_button_link || ''} onChange={(e) => setSettings({...settings, footer_cta_button_link: e.target.value})} className="form-input text-sm" placeholder="#yhteystiedot" /></div>
+                    </div>
+                    <p className="text-xs text-[#94A3B8] mt-1">Jätä CTA otsikko tyhjäksi, jos et halua CTA-palkkia.</p>
+                  </div>
+
+                  <div className="border-t pt-3 mt-2">
+                    <p className="text-sm font-medium text-[#0F172A] mb-2">Alarivi</p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div><label className="block text-sm font-medium mb-1">Copyright-teksti</label><input value={settings.footer_copyright || ''} onChange={(e) => setSettings({...settings, footer_copyright: e.target.value})} className="form-input text-sm" placeholder="Tyhjä = automaattinen" /></div>
+                      <div><label className="block text-sm font-medium mb-1">Tietosuoja-linkki</label><input value={settings.footer_privacy_link || ''} onChange={(e) => setSettings({...settings, footer_privacy_link: e.target.value})} className="form-input text-sm" placeholder="/tietosuoja" /></div>
+                      <div><label className="block text-sm font-medium mb-1">Eväste-linkki</label><input value={settings.footer_cookie_link || ''} onChange={(e) => setSettings({...settings, footer_cookie_link: e.target.value})} className="form-input text-sm" placeholder="/evasteet" /></div>
+                    </div>
+                  </div>
+                  
+                  <p className="text-xs text-[#94A3B8]">Palvelut-linkit tulevat automaattisesti Palvelusivut-välilehdestä. Yhteystiedot tulevat Yhteystiedot-osiosta.</p>
                 </div>
               </div>
             )}

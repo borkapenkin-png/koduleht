@@ -328,6 +328,20 @@ class SiteSettings(BaseModel):
     footer_service_area: str = "Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella."
     footer_trust_badge_1: str = ""
     footer_trust_badge_2: str = ""
+    footer_services_title: str = "Palvelumme"
+    footer_nav_title: str = "Sivusto"
+    footer_contact_title: str = "Yhteystiedot"
+    footer_cta_heading: str = ""
+    footer_cta_text: str = ""
+    footer_cta_button_label: str = "Pyydä tarjous"
+    footer_cta_button_link: str = "#yhteystiedot"
+    footer_privacy_link: str = ""
+    footer_cookie_link: str = ""
+    
+    # ========== KOTITALOUSVÄHENNYS ==========
+    kotitalous_description: str = "Maalaus- ja tasoitustyöt luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen."
+    kotitalous_highlight: str = "Jopa 40% vähennys"
+    kotitalous_details: str = "Työn osuudesta, max 2 250 €/vuosi"
     
     # ========== REFERENCES SECTION SETTINGS ==========
     references_subtitle: str = "TYÖNÄYTTEITÄ"
@@ -434,6 +448,19 @@ class SiteSettingsUpdate(BaseModel):
     footer_service_area: Optional[str] = None
     footer_trust_badge_1: Optional[str] = None
     footer_trust_badge_2: Optional[str] = None
+    footer_services_title: Optional[str] = None
+    footer_nav_title: Optional[str] = None
+    footer_contact_title: Optional[str] = None
+    footer_cta_heading: Optional[str] = None
+    footer_cta_text: Optional[str] = None
+    footer_cta_button_label: Optional[str] = None
+    footer_cta_button_link: Optional[str] = None
+    footer_privacy_link: Optional[str] = None
+    footer_cookie_link: Optional[str] = None
+    # Kotitalousvähennys
+    kotitalous_description: Optional[str] = None
+    kotitalous_highlight: Optional[str] = None
+    kotitalous_details: Optional[str] = None
     # References Section Settings
     references_subtitle: Optional[str] = None
     references_title: Optional[str] = None
