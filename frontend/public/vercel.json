@@ -16,11 +16,6 @@
       "permanent": true
     },
     {
-      "source": "/hintalaskuri-kauniainen/",
-      "destination": "/hintalaskuri-kauniainen",
-      "permanent": true
-    },
-    {
       "source": "/hintalaskuri-vantaa/",
       "destination": "/hintalaskuri-vantaa",
       "permanent": true
@@ -33,11 +28,6 @@
     {
       "source": "/julkisivumaalaus-helsinki/",
       "destination": "/julkisivumaalaus-helsinki",
-      "permanent": true
-    },
-    {
-      "source": "/julkisivumaalaus-kauniainen/",
-      "destination": "/julkisivumaalaus-kauniainen",
       "permanent": true
     },
     {
@@ -56,11 +46,6 @@
       "permanent": true
     },
     {
-      "source": "/julkisivurappaus-kauniainen/",
-      "destination": "/julkisivurappaus-kauniainen",
-      "permanent": true
-    },
-    {
       "source": "/julkisivurappaus-vantaa/",
       "destination": "/julkisivurappaus-vantaa",
       "permanent": true
@@ -73,11 +58,6 @@
     {
       "source": "/kattomaalaus-helsinki/",
       "destination": "/kattomaalaus-helsinki",
-      "permanent": true
-    },
-    {
-      "source": "/kattomaalaus-kauniainen/",
-      "destination": "/kattomaalaus-kauniainen",
       "permanent": true
     },
     {
@@ -96,11 +76,6 @@
       "permanent": true
     },
     {
-      "source": "/maalaustyot-kauniainen/",
-      "destination": "/maalaustyot-kauniainen",
-      "permanent": true
-    },
-    {
       "source": "/maalaustyot-vantaa/",
       "destination": "/maalaustyot-vantaa",
       "permanent": true
@@ -113,11 +88,6 @@
     {
       "source": "/mikrosementti-helsinki/",
       "destination": "/mikrosementti-helsinki",
-      "permanent": true
-    },
-    {
-      "source": "/mikrosementti-kauniainen/",
-      "destination": "/mikrosementti-kauniainen",
       "permanent": true
     },
     {
@@ -138,11 +108,6 @@
     {
       "source": "/tasoitustyot-helsinki/",
       "destination": "/tasoitustyot-helsinki",
-      "permanent": true
-    },
-    {
-      "source": "/tasoitustyot-kauniainen/",
-      "destination": "/tasoitustyot-kauniainen",
       "permanent": true
     },
     {
@@ -170,10 +135,6 @@
       "destination": "/hintalaskuri-helsinki/index.html"
     },
     {
-      "source": "/hintalaskuri-kauniainen",
-      "destination": "/hintalaskuri-kauniainen/index.html"
-    },
-    {
       "source": "/hintalaskuri-vantaa",
       "destination": "/hintalaskuri-vantaa/index.html"
     },
@@ -184,10 +145,6 @@
     {
       "source": "/julkisivumaalaus-helsinki",
       "destination": "/julkisivumaalaus-helsinki/index.html"
-    },
-    {
-      "source": "/julkisivumaalaus-kauniainen",
-      "destination": "/julkisivumaalaus-kauniainen/index.html"
     },
     {
       "source": "/julkisivumaalaus-vantaa",
@@ -202,10 +159,6 @@
       "destination": "/julkisivurappaus-helsinki/index.html"
     },
     {
-      "source": "/julkisivurappaus-kauniainen",
-      "destination": "/julkisivurappaus-kauniainen/index.html"
-    },
-    {
       "source": "/julkisivurappaus-vantaa",
       "destination": "/julkisivurappaus-vantaa/index.html"
     },
@@ -216,10 +169,6 @@
     {
       "source": "/kattomaalaus-helsinki",
       "destination": "/kattomaalaus-helsinki/index.html"
-    },
-    {
-      "source": "/kattomaalaus-kauniainen",
-      "destination": "/kattomaalaus-kauniainen/index.html"
     },
     {
       "source": "/kattomaalaus-vantaa",
@@ -234,10 +183,6 @@
       "destination": "/maalaustyot-helsinki/index.html"
     },
     {
-      "source": "/maalaustyot-kauniainen",
-      "destination": "/maalaustyot-kauniainen/index.html"
-    },
-    {
       "source": "/maalaustyot-vantaa",
       "destination": "/maalaustyot-vantaa/index.html"
     },
@@ -248,10 +193,6 @@
     {
       "source": "/mikrosementti-helsinki",
       "destination": "/mikrosementti-helsinki/index.html"
-    },
-    {
-      "source": "/mikrosementti-kauniainen",
-      "destination": "/mikrosementti-kauniainen/index.html"
     },
     {
       "source": "/mikrosementti-vantaa",
@@ -268,10 +209,6 @@
     {
       "source": "/tasoitustyot-helsinki",
       "destination": "/tasoitustyot-helsinki/index.html"
-    },
-    {
-      "source": "/tasoitustyot-kauniainen",
-      "destination": "/tasoitustyot-kauniainen/index.html"
     },
     {
       "source": "/tasoitustyot-vantaa",

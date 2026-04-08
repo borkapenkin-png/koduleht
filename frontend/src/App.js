@@ -88,6 +88,9 @@ const defaultSettings = {
   about_year: "2018",
   about_info_title: "Muista kotitalousvähennys!",
   about_info_text: "Maalaus luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen.",
+  kotitalous_description: "Maalaus- ja tasoitustyöt luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen.",
+  kotitalous_highlight: "Jopa 40% vähennys",
+  kotitalous_details: "Työn osuudesta, max 2 250 €/vuosi",
   company_stats: [
     { value: "300+", label: "Toteutettua kohdetta" },
     { value: "3,7M€", label: "Liikevaihto" },

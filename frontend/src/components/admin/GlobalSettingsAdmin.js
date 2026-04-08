@@ -398,6 +398,80 @@ const GlobalSettingsAdmin = ({ settings, onChange, onSave, saving }) => {
           </div>
         </div>
       </div>
+
+      {/* Kotitalousvähennys Section Settings */}
+      <div className="bg-white border rounded-lg p-6 space-y-4">
+        <h3 className="font-bold text-[#0F172A] border-b pb-2">
+          Kotitalousvähennys-osion asetukset
+        </h3>
+        <p className="text-sm text-[#64748B]">
+          Hallitse kotitalousvähennys-boksin tekstejä palvelusivuilla
+        </p>
+        <div>
+          <label className="block text-sm font-medium mb-2">Otsikko (palvelusivuilla)</label>
+          <input
+            type="text"
+            value={localSettings.trust_badge_3_title || ''}
+            onChange={(e) => handleChange('trust_badge_3_title', e.target.value)}
+            className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
+            placeholder="Kotitalousvähennys"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Kuvaus</label>
+          <textarea
+            value={localSettings.kotitalous_description || ''}
+            onChange={(e) => handleChange('kotitalous_description', e.target.value)}
+            className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
+            rows={2}
+            placeholder="Maalaus- ja tasoitustyöt luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen."
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Korostusteksti</label>
+            <input
+              type="text"
+              value={localSettings.kotitalous_highlight || ''}
+              onChange={(e) => handleChange('kotitalous_highlight', e.target.value)}
+              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
+              placeholder="Jopa 40% vähennys"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Lisätiedot</label>
+            <input
+              type="text"
+              value={localSettings.kotitalous_details || ''}
+              onChange={(e) => handleChange('kotitalous_details', e.target.value)}
+              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
+              placeholder="Työn osuudesta, max 2 250 €/vuosi"
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Pääsivun info-otsikko</label>
+            <input
+              type="text"
+              value={localSettings.about_info_title || ''}
+              onChange={(e) => handleChange('about_info_title', e.target.value)}
+              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
+              placeholder="Muista kotitalousvähennys!"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Pääsivun info-teksti</label>
+            <input
+              type="text"
+              value={localSettings.about_info_text || ''}
+              onChange={(e) => handleChange('about_info_text', e.target.value)}
+              className="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg"
+              placeholder="Maalaus luokitellaan kunnossapitotyöhön..."
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

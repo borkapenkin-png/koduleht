@@ -402,11 +402,11 @@ const WhyChooseSection = ({ page, settings }) => {
               <h3 className="text-xl font-bold text-[#0F172A]">{settings?.trust_badge_3_title || 'Kotitalousvähennys'}</h3>
             </div>
             <p className="text-[#64748B] text-sm md:text-base mb-5 leading-relaxed">
-              Maalaus- ja tasoitustyöt luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen.
+              {settings?.kotitalous_description || 'Maalaus- ja tasoitustyöt luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen.'}
             </p>
             <div className="bg-white rounded-xl p-5 border border-primary/15 shadow-sm">
-              <p className="text-[#0F172A] font-bold text-xl mb-1">Jopa 40% vähennys</p>
-              <p className="text-[#64748B] text-sm">Työn osuudesta, max 2 250 €/vuosi</p>
+              <p className="text-[#0F172A] font-bold text-xl mb-1">{settings?.kotitalous_highlight || 'Jopa 40% vähennys'}</p>
+              <p className="text-[#64748B] text-sm">{settings?.kotitalous_details || 'Työn osuudesta, max 2 250 €/vuosi'}</p>
             </div>
           </motion.div>
         </div>
