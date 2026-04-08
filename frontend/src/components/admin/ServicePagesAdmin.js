@@ -549,7 +549,7 @@ const ServicePagesAdmin = ({ token, onRefresh }) => {
 
       {/* Existing pages */}
       <div className="space-y-3">
-        {pages.map(page => (
+        {pages.filter(page => page.slug !== 'hintalaskuri').map(page => (
           <div 
             key={page.id} 
             className="bg-white border rounded-lg p-4 flex items-center justify-between"

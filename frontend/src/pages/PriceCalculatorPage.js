@@ -9,12 +9,7 @@ import {
 } from 'lucide-react';
 import { Navbar, Footer } from '../App';
 import {
-  TrustBadges,
-  DescriptionSection,
-  FeaturesSection,
-  WhyChooseSection,
   ProcessSection,
-  ServiceAreasSection,
   ServiceFAQSection,
   ContactFormSection,
   StrongCTA,
@@ -538,7 +533,7 @@ const PriceCalculatorPage = () => {
       {/* HERO - matching site design */}
       <section className="relative min-h-[45vh] md:min-h-[50vh] flex items-center pt-16" data-testid="price-calculator-page">
         <div className="absolute inset-0">
-          <img src={settings?.hero_image_url || 'https://images.pexels.com/photos/5493669/pexels-photo-5493669.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'}
+          <img src={pageData?.hero_image_url || settings?.hero_image_url || 'https://images.pexels.com/photos/5493669/pexels-photo-5493669.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'}
             alt="Hintalaskuri - maalaus ja tasoitustyöt" className="w-full h-full object-cover" loading="eager" />
           <div className="hero-overlay absolute inset-0"></div>
         </div>
@@ -556,11 +551,11 @@ const PriceCalculatorPage = () => {
             </motion.p>
             <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
               className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0F172A] mb-4 leading-tight" data-testid="calculator-title">
-              Laske hinta-arvio hetkessä
+              {pageData?.hero_title || 'Laske hinta-arvio hetkessä'}
             </motion.h1>
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
               className="text-base md:text-lg text-[#64748B] mb-6 leading-relaxed">
-              Saat suuntaa-antavan hinnan heti &ndash; ilman rekisteröitymistä tai yhteystietoja.
+              {pageData?.hero_subtitle || 'Saat suuntaa-antavan hinnan heti \u2013 ilman rekisteröitymistä tai yhteystietoja.'}
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
               className="flex flex-col sm:flex-row gap-3">
@@ -1157,15 +1152,10 @@ const PriceCalculatorPage = () => {
       {/* DYNAMIC SERVICE PAGE SECTIONS */}
       {pageData && (
         <>
-          <TrustBadges settings={settings} />
-          <DescriptionSection page={pageData} settings={settings} services={services} />
-          <FeaturesSection page={pageData} settings={settings} />
-          <WhyChooseSection page={pageData} settings={settings} />
           {pageData.use_global_process !== false && <ProcessSection page={pageData} settings={settings} />}
-          <ServiceAreasSection page={pageData} settings={settings} />
           <ServiceFAQSection faqs={serviceFaqs} settings={settings} serviceName="Hintalaskuri" />
           <ContactFormSection page={pageData} settings={settings} />
-          {/* References section instead of Related Services */}
+          {/* References section */}
           {references.length > 0 && (
             <section className="service-section-grey" data-testid="references-section">
               <div className="container-custom">

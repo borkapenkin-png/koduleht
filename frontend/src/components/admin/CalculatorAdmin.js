@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Calculator, Save, ChevronDown, ChevronUp, Settings, DollarSign, Plus, Trash2, Package, GripVertical } from 'lucide-react';
+import { Calculator, Save, ChevronDown, ChevronUp, Settings, DollarSign, Plus, Trash2, Package, GripVertical, FileText, Image as ImageIcon } from 'lucide-react';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const GROUPS = [
@@ -16,6 +16,8 @@ const CalculatorAdmin = ({ token }) => {
   const [saving, setSaving] = useState(false);
   const [expandedService, setExpandedService] = useState(null);
   const [activeTab, setActiveTab] = useState({});
+  const [pageData, setPageData] = useState(null);
+  const [seoExpanded, setSeoExpanded] = useState(false);
 
   const headers = { headers: { Authorization: `Bearer ${token}` } };
 
@@ -24,18 +26,38 @@ const CalculatorAdmin = ({ token }) => {
   const loadConfig = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API}/admin/calculator-config`, headers);
-      setConfig(res.data);
+      const configRes = await axios.get(`${API}/admin/calculator-config`, headers);
+      setConfig(configRes.data);
     } catch (err) {
       console.error('Failed to load calculator config:', err);
     }
+    try {
+      const pageRes = await axios.get(`${API}/service-pages/hintalaskuri`);
+      if (pageRes.data) setPageData(pageRes.data);
+    } catch (pageErr) {
+      console.warn('Hintalaskuri page not found:', pageErr.message);
+    }
     setLoading(false);
+  };
+
+  const updatePageField = (field, value) => {
+    setPageData(prev => prev ? { ...prev, [field]: value } : prev);
   };
 
   const saveConfig = async () => {
     setSaving(true);
     try {
       await axios.put(`${API}/admin/calculator-config`, config, headers);
+      if (pageData?.id) {
+        await axios.put(`${API}/admin/service-pages/${pageData.id}`, {
+          seo_title: pageData.seo_title,
+          seo_description: pageData.seo_description,
+          hero_title: pageData.hero_title,
+          hero_subtitle: pageData.hero_subtitle,
+          hero_image_url: pageData.hero_image_url,
+          description_text: pageData.description_text,
+        }, headers);
+      }
       alert('Hintalaskuri päivitetty!');
     } catch (err) {
       alert('Virhe tallennuksessa');
@@ -169,6 +191,59 @@ const CalculatorAdmin = ({ token }) => {
           <Save size={14} />{saving ? 'Tallennetaan...' : 'Tallenna'}
         </button>
       </div>
+
+      {/* SEO & Hero Settings */}
+      {pageData && (
+        <div className="bg-white border rounded-lg overflow-hidden" data-testid="calc-seo-settings">
+          <button onClick={() => setSeoExpanded(!seoExpanded)}
+            className="w-full flex items-center justify-between p-4 md:p-6 hover:bg-[#F8FAFC] transition-colors">
+            <h3 className="font-bold text-[#0F172A] flex items-center gap-2">
+              <FileText size={16} className="text-primary" /> Sivun SEO & Hero
+            </h3>
+            {seoExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
+          {seoExpanded && (
+            <div className="px-4 md:px-6 pb-4 md:pb-6 space-y-4 border-t pt-4">
+              <div>
+                <label className="block text-xs font-medium text-[#64748B] mb-1">SEO-otsikko (title)</label>
+                <input type="text" value={pageData.seo_title || ''} onChange={e => updatePageField('seo_title', e.target.value)}
+                  className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Hintalaskuri – Maalaus- ja tasoitustöiden hinta-arvio" />
+                <p className="text-xs text-[#94A3B8] mt-1">{(pageData.seo_title || '').length}/60 merkkiä</p>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[#64748B] mb-1">Meta-kuvaus</label>
+                <textarea value={pageData.seo_description || ''} onChange={e => updatePageField('seo_description', e.target.value)}
+                  className="w-full border rounded-lg px-3 py-2 text-sm resize-none" rows={3} placeholder="Laske maalaus- ja tasoitustöiden hinta-arvio..." />
+                <p className="text-xs text-[#94A3B8] mt-1">{(pageData.seo_description || '').length}/160 merkkiä</p>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[#64748B] mb-1">Hero-otsikko (H1)</label>
+                <input type="text" value={pageData.hero_title || ''} onChange={e => updatePageField('hero_title', e.target.value)}
+                  className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Laske hinta-arvio hetkessä" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[#64748B] mb-1">Hero-alaotsikko</label>
+                <textarea value={pageData.hero_subtitle || ''} onChange={e => updatePageField('hero_subtitle', e.target.value)}
+                  className="w-full border rounded-lg px-3 py-2 text-sm resize-none" rows={2} placeholder="Saat suuntaa-antavan hinnan heti..." />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[#64748B] mb-1">Hero-taustakuva URL</label>
+                <input type="text" value={pageData.hero_image_url || ''} onChange={e => updatePageField('hero_image_url', e.target.value)}
+                  className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="https://..." />
+                {pageData.hero_image_url && (
+                  <img src={pageData.hero_image_url} alt="Preview" className="mt-2 h-24 object-cover rounded-lg" />
+                )}
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[#64748B] mb-1">SEO-teksti (description_text, HTML)</label>
+                <textarea value={pageData.description_text || ''} onChange={e => updatePageField('description_text', e.target.value)}
+                  className="w-full border rounded-lg px-3 py-2 text-sm font-mono resize-none" rows={6} placeholder="<p>Hintaan vaikuttavat tekijät...</p>" />
+                <p className="text-xs text-[#94A3B8] mt-1">Tämä teksti näkyy hintalaskurisivulla hakukoneita varten.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Global Settings */}
       <div className="bg-white border rounded-lg p-4 md:p-6" data-testid="calc-global-settings">
