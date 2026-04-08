@@ -918,6 +918,8 @@ const Footer = ({ logoUrl, settings, servicePages = [] }) => {
   const footerDescription = settings?.footer_description || 'Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla.';
   const footerServiceArea = settings?.footer_service_area || 'Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella.';
   const city = settings?.company_city || 'Helsinki';
+  const servicesTitle = settings?.footer_services_title || 'Palvelumme:';
+  const navTitle = settings?.footer_nav_title || 'Sivusto';
   
   return (
     <footer data-testid="footer" className="footer-bg text-white py-10 md:py-14">
@@ -939,7 +941,7 @@ const Footer = ({ logoUrl, settings, servicePages = [] }) => {
           
           {/* Services list - dynamic from service pages */}
           <div>
-            <p className="text-white/80 text-sm font-medium mb-3">Palvelumme:</p>
+            <p className="text-white/80 text-sm font-medium mb-3">{servicesTitle}</p>
             <ul className="grid grid-cols-1 gap-y-2 text-xs md:text-sm text-white/60">
               {servicePages.map((sp) => (
                 <li key={sp.slug}><Link to={`/${sp.slug}`} className="hover:text-white transition-colors">{sp.hero_title || sp.title || sp.slug}</Link></li>
@@ -949,7 +951,7 @@ const Footer = ({ logoUrl, settings, servicePages = [] }) => {
           
           {/* Navigation links */}
           <div>
-            <p className="text-white/80 text-sm font-medium mb-3">Sivusto</p>
+            <p className="text-white/80 text-sm font-medium mb-3">{navTitle}</p>
             <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs md:text-sm text-white/60">
               <a href="#palvelut" className="hover:text-white transition-colors">Palvelut</a>
               <a href="#meista" className="hover:text-white transition-colors">Meistä</a>
@@ -1897,6 +1899,10 @@ const AdminPanel = () => {
                   <h3 className="font-bold text-[#0F172A] border-b pb-2">Alatunniste (Footer)</h3>
                   <div><label className="block text-sm font-medium mb-1">Yrityksen kuvaus</label><input value={settings.footer_description || ''} onChange={(e) => setSettings({...settings, footer_description: e.target.value})} className="form-input text-sm" placeholder="Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla." /></div>
                   <div><label className="block text-sm font-medium mb-1">Palvelualue teksti</label><input value={settings.footer_service_area || ''} onChange={(e) => setSettings({...settings, footer_service_area: e.target.value})} className="form-input text-sm" placeholder="Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella." /></div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label className="block text-sm font-medium mb-1">Palvelut-sarake otsikko</label><input value={settings.footer_services_title || ''} onChange={(e) => setSettings({...settings, footer_services_title: e.target.value})} className="form-input text-sm" placeholder="Palvelumme:" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Sivusto-sarake otsikko</label><input value={settings.footer_nav_title || ''} onChange={(e) => setSettings({...settings, footer_nav_title: e.target.value})} className="form-input text-sm" placeholder="Sivusto" /></div>
+                  </div>
                   <p className="text-xs text-[#94A3B8]">Palvelut-linkit tulevat automaattisesti Palvelusivut-välilehdestä.</p>
                 </div>
               </div>
