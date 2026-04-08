@@ -1,0 +1,69 @@
+{
+  "summary": "Tested Hintalaskuri (Price Calculator) hard patch features: Sisämaalaus surface options, package removal, and admin-editable texts. All core features working correctly.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {
+        "endpoint": "/api/calculator-config",
+        "issue": "helper_text field missing from area step in Sisämaalaus config. The review request mentions it should show 'Syötä huoneiston pohjapinta-ala — laskuri muuntaa sen maalattavaksi pinta-alaksi.' but this is not in the database config."
+      }
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "Sisämaalaus flow: After selecting Sisämaalaus > Huone > Seuraava, the surface step ('Mitä pintoja maalataan?') appears",
+    "Surface step has 3 options: Seinät, Katot, Seinät + katot",
+    "Surface options have correct descriptions: Seinäpintojen maalaus, Kattopintojen maalaus, Seinä- ja kattopintojen maalaus",
+    "Area multiplier calculation with 'Seinät + katot' (area_multiplier=3.0): 50m² floor area → 150m² effective area → Base price 2850€ → With ALV 25.5% = 3577€ → Range 3219-4113€ ✓",
+    "Area multiplier calculation with 'Katot' (area_multiplier=1.0): 50m² floor area → 50m² effective area → Base price 950€ → With ALV 25.5% = 1192€ → Range 1073-1371€ ✓",
+    "Package selector (Perus/Suositeltu/Premium) is completely removed from addons step",
+    "Addons step shows title 'Lisävalinnat' (correct)",
+    "Addons step shows subtitle 'Valitse tarvitsemasi lisäpalvelut' (correct)",
+    "Addons groups visible and toggleable: Esityöt, Tarvittaessa, Lisäpalvelut",
+    "Tasoitustyöt service does NOT have surface step (correct - only Sisämaalaus has it)",
+    "Full Sisämaalaus flow to result page works without errors or NaN values",
+    "Result page shows correct effective area (150m²) in breakdown, not raw floor area (50m²)",
+    "Admin Laskuri tab: Global settings has 'Lisävalinnat — otsikko' field",
+    "Admin Laskuri tab: Global settings has 'Lisävalinnat — alaotsikko' field",
+    "Admin Laskuri tab: Global settings has 'Vastuuvapauslauseke' textarea",
+    "Admin Laskuri tab: Sisämaalaus service shows surface step 'Mitä pintoja maalataan?'",
+    "Admin Laskuri tab: Surface step options have area_multiplier (×m²) inputs (2.0, 1.0, 3.0)",
+    "Admin Laskuri tab: Step titles are editable",
+    "Admin Laskuri tab: Option labels are editable (Seinät, Katot, Seinät + katot)",
+    "Admin Laskuri tab: Option descriptions are editable"
+  ],
+  "failed_tests": [
+    "Calculator slider helper_text: Sisämaalaus area step does NOT show helper text 'Syötä huoneiston pohjapinta-ala — laskuri muuntaa sen maalattavaksi pinta-alaksi.' - the helper_text field is missing from the database config"
+  ],
+  "test_report_links": [],
+  "action_items": [
+    "Add helper_text field to Sisämaalaus area step in database config: 'Syötä huoneiston pohjapinta-ala — laskuri muuntaa sen maalattavaksi pinta-alaksi.'"
+  ],
+  "critical_code_review_comments": [
+    "PriceCalculatorPage.js correctly implements area_multiplier logic at lines 314-316",
+    "PriceCalculatorPage.js correctly uses effectiveArea for addons calculation at line 324",
+    "PriceCalculatorPage.js correctly shows effectiveArea in breakdown at line 963",
+    "PriceCalculatorPage.js correctly removes package selector - no package UI in addons step",
+    "PriceCalculatorPage.js correctly uses fallback values for addons_step_title and addons_step_subtitle",
+    "CalculatorAdmin.js correctly shows area_multiplier inputs with ×m² label at lines 367-371",
+    "CalculatorAdmin.js correctly shows editable step titles, option labels, and descriptions",
+    "Backend server.py has migrate_calculator_surface_step function that adds surface step to Sisämaalaus"
+  ],
+  "updated_files": [],
+  "success_rate": {
+    "backend": "100% - All API endpoints working",
+    "frontend": "95% - All features working except helper_text display"
+  },
+  "test_credentials": {
+    "admin_username": "admin",
+    "admin_password": "jbadmin2024"
+  },
+  "seed_data_creation": "None - used existing calculator config",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Iteration 28 tested the Hintalaskuri hard patch features. Sisämaalaus now has a surface step with 3 options (Seinät, Katot, Seinät + katot) that apply area_multiplier (2.0, 1.0, 3.0) to convert floor area to paintable area. Package selector (Perus/Suositeltu/Premium) is removed from frontend but kept in admin/DB for backward compatibility. Admin Laskuri tab has new global settings fields (addons_step_title, addons_step_subtitle, disclaimer) and enhanced step option editor with area_multiplier inputs. One minor issue: helper_text for area slider is not in database config."
+}

@@ -272,6 +272,18 @@ const CalculatorAdmin = ({ token }) => {
             <label className="block text-xs font-medium text-[#64748B] mb-1">CTA alaotsikko</label>
             <input type="text" value={config.global_settings.cta_subtitle} onChange={e => updateGlobal('cta_subtitle', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" />
           </div>
+          <div>
+            <label className="block text-xs font-medium text-[#64748B] mb-1">Lisävalinnat — otsikko</label>
+            <input type="text" value={config.global_settings.addons_step_title || ''} onChange={e => updateGlobal('addons_step_title', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Lisävalinnat" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-[#64748B] mb-1">Lisävalinnat — alaotsikko</label>
+            <input type="text" value={config.global_settings.addons_step_subtitle || ''} onChange={e => updateGlobal('addons_step_subtitle', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Valitse tarvitsemasi lisäpalvelut" />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-xs font-medium text-[#64748B] mb-1">Vastuuvapauslauseke</label>
+            <textarea value={config.global_settings.disclaimer || ''} onChange={e => updateGlobal('disclaimer', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm resize-none" rows={2} />
+          </div>
         </div>
       </div>
 
@@ -288,7 +300,7 @@ const CalculatorAdmin = ({ token }) => {
                 <span className={`w-2 h-2 rounded-full ${service.enabled ? 'bg-green-500' : 'bg-gray-300'}`} />
                 <span className="font-medium text-[#0F172A] text-sm">{service.name}</span>
                 <span className="text-xs text-[#94A3B8]">{service.base_price_per_m2} €/m²</span>
-                <span className="text-xs text-[#94A3B8]">({(service.addons || []).length} lisää, {(service.packages || []).length} pakettia)</span>
+                <span className="text-xs text-[#94A3B8]">({(service.addons || []).length} lisäpalvelua)</span>
               </div>
               {expandedService === service.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </button>
@@ -332,13 +344,42 @@ const CalculatorAdmin = ({ token }) => {
                       {/* Step multipliers */}
                       {service.steps.filter(s => s.type === 'cards' || s.type === 'size_cards').map(step => (
                         <div key={step.id}>
-                          <h4 className="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-2">{step.title} — kertoimet</h4>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                          <h4 className="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1">{step.title}</h4>
+                          <div className="flex items-center gap-2 mb-2">
+                            <label className="text-[10px] text-[#94A3B8]">Otsikko:</label>
+                            <input type="text" value={step.title} onChange={e => {
+                              setConfig(prev => ({
+                                ...prev,
+                                services: prev.services.map(s => s.id !== service.id ? s : {
+                                  ...s, steps: s.steps.map(st => st.id !== step.id ? st : { ...st, title: e.target.value })
+                                })
+                              }));
+                            }} className="flex-1 border rounded px-2 py-1 text-xs" />
+                          </div>
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                             {step.options.map(opt => (
-                              <div key={opt.id} className="flex items-center gap-2 bg-[#F8FAFC] p-2 rounded">
-                                <span className="text-xs text-[#334155] flex-1">{opt.label}</span>
+                              <div key={opt.id} className="bg-[#F8FAFC] p-2 rounded space-y-1">
+                                <div className="flex items-center gap-1">
+                                  <input type="text" value={opt.label} onChange={e => updateStepOption(service.id, step.id, opt.id, 'label', e.target.value)}
+                                    className="flex-1 border rounded px-1.5 py-0.5 text-xs min-w-0" title="Nimi" />
+                                </div>
+                                {opt.area_multiplier !== undefined && (
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-[9px] text-[#94A3B8] whitespace-nowrap">×m²</span>
+                                    <input type="number" step="0.1" value={opt.area_multiplier} onChange={e => updateStepOption(service.id, step.id, opt.id, 'area_multiplier', parseFloat(e.target.value) || 0)}
+                                      className="w-14 border rounded px-1.5 py-0.5 text-xs text-center" title="Pinta-alakerroin" />
+                                  </div>
+                                )}
                                 {opt.multiplier !== undefined && (
-                                  <input type="number" step="0.01" value={opt.multiplier} onChange={e => updateStepOption(service.id, step.id, opt.id, 'multiplier', parseFloat(e.target.value))} className="w-16 border rounded px-1.5 py-1 text-xs text-center" />
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-[9px] text-[#94A3B8] whitespace-nowrap">×hinta</span>
+                                    <input type="number" step="0.01" value={opt.multiplier} onChange={e => updateStepOption(service.id, step.id, opt.id, 'multiplier', parseFloat(e.target.value) || 0)}
+                                      className="w-14 border rounded px-1.5 py-0.5 text-xs text-center" title="Hintakerroin" />
+                                  </div>
+                                )}
+                                {opt.description !== undefined && (
+                                  <input type="text" value={opt.description || ''} onChange={e => updateStepOption(service.id, step.id, opt.id, 'description', e.target.value)}
+                                    className="w-full border rounded px-1.5 py-0.5 text-[10px] text-[#64748B]" placeholder="Kuvaus" title="Kuvaus" />
                                 )}
                               </div>
                             ))}

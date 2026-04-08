@@ -2457,10 +2457,39 @@ async def seed_hintalaskuri_page():
         await db.service_pages.insert_one(page)
         logging.info("Seeded hintalaskuri service page")
 
+async def migrate_calculator_surface_step():
+    """Add surface step to sisämaalaus if missing in existing DB config"""
+    config = await db.calculator_config.find_one({"id": "calculator_config"})
+    if not config:
+        return
+    updated = False
+    for service in config.get("services", []):
+        if service["id"] == "sisamaalaus":
+            has_surface = any(s["id"] == "surface" for s in service.get("steps", []))
+            if not has_surface:
+                surface_step = {
+                    "id": "surface",
+                    "title": "Mitä pintoja maalataan?",
+                    "type": "cards",
+                    "options": [
+                        {"id": "walls", "label": "Seinät", "description": "Seinäpintojen maalaus", "area_multiplier": 2.0},
+                        {"id": "ceiling", "label": "Katot", "description": "Kattopintojen maalaus", "area_multiplier": 1.0},
+                        {"id": "both", "label": "Seinät + katot", "description": "Seinä- ja kattopintojen maalaus", "area_multiplier": 3.0}
+                    ]
+                }
+                # Insert after target_type (index 0), before area slider
+                target_idx = next((i for i, s in enumerate(service["steps"]) if s["id"] == "target_type"), 0)
+                service["steps"].insert(target_idx + 1, surface_step)
+                updated = True
+                logging.info("Migrated: Added surface step to sisämaalaus")
+    if updated:
+        await db.calculator_config.replace_one({"id": "calculator_config"}, config)
+
 @app.on_event("startup")
 async def startup_event():
     await init_admin_user()
     await seed_hintalaskuri_page()
+    await migrate_calculator_surface_step()
     # Run SSG on startup to ensure static HTML is up-to-date with DB content
     try:
         from generate_static_direct import run_ssg_with_db

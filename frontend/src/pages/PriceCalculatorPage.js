@@ -187,7 +187,6 @@ const PriceCalculatorPage = () => {
   const [activeAddons, setActiveAddons] = useState({});
   const [showResult, setShowResult] = useState(false);
   const [dontKnowMode, setDontKnowMode] = useState({});
-  const [selectedPackage, setSelectedPackage] = useState(null);
   const [dismissedWarnings, setDismissedWarnings] = useState({});
   const [showContactForm, setShowContactForm] = useState(false);
   const [contactForm, setContactForm] = useState({ name: '', phone: '', email: '' });
@@ -242,7 +241,7 @@ const PriceCalculatorPage = () => {
     if (!config) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        selectedService, selections, activeAddons, currentStep, dontKnowMode, selectedPackage
+        selectedService, selections, activeAddons, currentStep, dontKnowMode
       }));
     } catch {}
   }, [selectedService, selections, activeAddons, currentStep, dontKnowMode, config]);
@@ -299,6 +298,7 @@ const PriceCalculatorPage = () => {
     const g = config.global_settings;
     let area = 0;
     let multiplier = 1;
+    let areaMultiplier = 1;
 
     for (const step of service.steps) {
       if (step.type === 'slider') {
@@ -311,15 +311,19 @@ const PriceCalculatorPage = () => {
         const selected = selections[step.id];
         const opts = getStepOptions(step);
         const opt = opts.find(o => o.id === selected);
-        if (opt) multiplier *= opt.multiplier;
+        if (opt) {
+          if (opt.area_multiplier !== undefined) areaMultiplier *= opt.area_multiplier;
+          if (opt.multiplier !== undefined) multiplier *= opt.multiplier;
+        }
       }
     }
 
-    const basePrice = area * service.base_price_per_m2 * multiplier;
+    const effectiveArea = area * areaMultiplier;
+    const basePrice = effectiveArea * service.base_price_per_m2 * multiplier;
     let addonsTotal = 0;
     for (const addon of (service.addons || [])) {
       if (activeAddons[addon.id]) {
-        if (addon.price_per_m2) addonsTotal += area * addon.price_per_m2;
+        if (addon.price_per_m2) addonsTotal += effectiveArea * addon.price_per_m2;
         if (addon.fixed_price) addonsTotal += addon.fixed_price;
       }
     }
@@ -354,7 +358,7 @@ const PriceCalculatorPage = () => {
     const activeAddonLabels = (service.addons || []).filter(a => a.enabled && activeAddons[a.id]).map(a => a.label);
 
     return {
-      area, basePrice, addonsTotal, total, totalWithAlv, alvRate,
+      area, effectiveArea, basePrice, addonsTotal, total, totalWithAlv, alvRate,
       totalMin, totalMax,
       kotitalousvahennys, kotiMin, kotiMax,
       finalMin, finalMax,
@@ -368,7 +372,6 @@ const PriceCalculatorPage = () => {
     setSelections({});
     setActiveAddons({});
     setDontKnowMode({});
-    setSelectedPackage(null);
     setDismissedWarnings({});
     setShowResult(false);
     setShowContactForm(false);
@@ -420,7 +423,6 @@ const PriceCalculatorPage = () => {
     setSelections({});
     setActiveAddons({});
     setDontKnowMode({});
-    setSelectedPackage(null);
     setDismissedWarnings({});
     setShowResult(false);
     setShowContactForm(false);
@@ -430,7 +432,7 @@ const PriceCalculatorPage = () => {
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
   };
 
-  // Apply auto-triggers + default package when entering addons step
+  // Apply auto-triggers when entering addons step
   const addonsStepIdx = service ? service.steps.length + 1 : -1;
   const [autoTriggersApplied, setAutoTriggersApplied] = useState(false);
   useEffect(() => {
@@ -443,13 +445,6 @@ const PriceCalculatorPage = () => {
         for (const addonId of trigger.enable_addons) newAddons[addonId] = true;
       }
     }
-    // Apply default package (suositeltu)
-    const defaultPkg = (service.packages || []).find(p => p.default);
-    if (defaultPkg) {
-      for (const addonId of defaultPkg.addon_ids) newAddons[addonId] = true;
-      setSelectedPackage(defaultPkg.id);
-    }
-    // Merge: auto-triggers ON TOP of default package
     setActiveAddons(prev => ({ ...prev, ...newAddons }));
     setAutoTriggersApplied(true);
   }, [currentStep, addonsStepIdx, service, selections, autoTriggersApplied]);
@@ -457,26 +452,7 @@ const PriceCalculatorPage = () => {
   // Reset trigger tracking when service changes
   useEffect(() => { setAutoTriggersApplied(false); }, [selectedService]);
 
-  const applyPackage = (pkgId) => {
-    if (!service) return;
-    setSelectedPackage(pkgId);
-    setDismissedWarnings({});
-    const pkg = (service.packages || []).find(p => p.id === pkgId);
-    if (!pkg) return;
-    const newAddons = {};
-    for (const addonId of pkg.addon_ids) newAddons[addonId] = true;
-    // Also keep auto-triggered addons
-    for (const trigger of (service.auto_triggers || [])) {
-      const selected = selections[trigger.if_step];
-      if (selected && trigger.if_values.includes(selected)) {
-        for (const addonId of trigger.enable_addons) newAddons[addonId] = true;
-      }
-    }
-    setActiveAddons(newAddons);
-  };
-
   const toggleAddon = (addonId) => {
-    setSelectedPackage('custom');
     setActiveAddons(prev => ({ ...prev, [addonId]: !prev[addonId] }));
     if (activeAddons[addonId]) setDismissedWarnings(prev => ({ ...prev, [addonId]: false }));
   };
@@ -743,6 +719,9 @@ const PriceCalculatorPage = () => {
                               {/* SLIDER type with "En tiedä" option */}
                               {step.type === 'slider' && (
                                 <div className="max-w-md" data-testid={`step-${step.id}`}>
+                                  {step.helper_text && (
+                                    <p className="text-xs text-[#64748B] mb-4 text-center">{step.helper_text}</p>
+                                  )}
                                   {!dontKnowMode[step.id] ? (
                                     <>
                                       <div className="text-center mb-8">
@@ -810,37 +789,8 @@ const PriceCalculatorPage = () => {
                     {service && currentStep === service.steps.length + 1 && !showResult && (
                       <motion.div key="addons" custom={direction} variants={stepVariants}
                         initial="enter" animate="center" exit="exit" transition={{ duration: 0.25 }}>
-                        <h2 className="text-lg md:text-xl font-bold text-[#0F172A] mb-1">Lisävalinnat</h2>
-                        <p className="text-sm text-[#94A3B8] mb-5">Valitse paketti tai räätälöi itse</p>
-
-                        {/* Package selector */}
-                        {(service.packages || []).length > 0 && (
-                          <div className="grid grid-cols-3 gap-2 md:gap-3 mb-6" data-testid="package-selector">
-                            {service.packages.map((pkg, i) => {
-                              const isActive = selectedPackage === pkg.id;
-                              const isDefault = pkg.default;
-                              return (
-                                <motion.button key={pkg.id} whileTap={{ scale: 0.97 }}
-                                  onClick={() => applyPackage(pkg.id)}
-                                  className={`relative p-3 md:p-4 rounded-xl border text-left transition-all duration-200 ${
-                                    isActive
-                                      ? i === 2 ? 'border-[#7C3AED] bg-[#7C3AED]/[0.04] shadow-md' : i === 1 ? 'border-[#0F172A] bg-[#0F172A]/[0.03] shadow-md' : 'border-[#10B981] bg-[#10B981]/[0.04] shadow-md'
-                                      : 'border-[#E2E8F0] hover:border-[#CBD5E1]'
-                                  }`} data-testid={`package-${pkg.id}`}>
-                                  {isDefault && (
-                                    <span className="absolute -top-2.5 left-3 bg-[#0F172A] text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                                      Eniten valittu
-                                    </span>
-                                  )}
-                                  <h4 className={`font-bold text-sm ${i === 2 ? 'text-[#7C3AED]' : i === 1 ? 'text-[#0F172A]' : 'text-[#10B981]'}`}>
-                                    {pkg.label}
-                                  </h4>
-                                  <p className="text-[11px] text-[#94A3B8] mt-0.5 leading-snug hidden sm:block">{pkg.description}</p>
-                                </motion.button>
-                              );
-                            })}
-                          </div>
-                        )}
+                        <h2 className="text-lg md:text-xl font-bold text-[#0F172A] mb-1">{config?.global_settings?.addons_step_title || 'Lisävalinnat'}</h2>
+                        <p className="text-sm text-[#94A3B8] mb-5">{config?.global_settings?.addons_step_subtitle || 'Valitse tarvitsemasi lisäpalvelut'}</p>
 
                         {/* Grouped addon cards */}
                         <div className="space-y-5" data-testid="addons-step">
@@ -1010,7 +960,7 @@ const PriceCalculatorPage = () => {
                               className="overflow-hidden mb-6">
                               <div className="bg-[#0F172A] rounded-2xl p-5 text-white text-sm space-y-2.5">
                                 <div className="flex justify-between">
-                                  <span className="text-white/60">Perustyö ({service.base_price_per_m2} &euro;/m&sup2; &times; {priceData.area} m&sup2;)</span>
+                                  <span className="text-white/60">Perustyö ({service.base_price_per_m2} &euro;/m&sup2; &times; {priceData.effectiveArea || priceData.area} m&sup2;)</span>
                                   <span>{fmt(priceData.basePrice)} &euro;</span>
                                 </div>
                                 {priceData.addonsTotal > 0 && (
