@@ -339,6 +339,9 @@ class SiteSettings(BaseModel):
     footer_cta2_button_link: str = "/hintalaskuri"
     footer_privacy_link: str = ""
     footer_cookie_link: str = ""
+    footer_bg_color: str = "#0B1120"
+    footer_nav_links: list = []
+    footer_service_links: list = []
     
     # ========== KOTITALOUSVÄHENNYS ==========
     kotitalous_description: str = "Maalaus- ja tasoitustyöt luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen."
@@ -461,6 +464,9 @@ class SiteSettingsUpdate(BaseModel):
     footer_cta2_button_link: Optional[str] = None
     footer_privacy_link: Optional[str] = None
     footer_cookie_link: Optional[str] = None
+    footer_bg_color: Optional[str] = None
+    footer_nav_links: Optional[list] = None
+    footer_service_links: Optional[list] = None
     # Kotitalousvähennys
     kotitalous_description: Optional[str] = None
     kotitalous_highlight: Optional[str] = None

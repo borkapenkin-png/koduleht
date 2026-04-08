@@ -935,8 +935,29 @@ const Footer = ({ logoUrl, settings, servicePages = [] }) => {
   const cookieLink = s.footer_cookie_link || '';
   const copyrightText = s.footer_copyright || '';
 
+  const bgColor = s.footer_bg_color || '#0B1120';
+  const navLinks = (s.footer_nav_links && s.footer_nav_links.length > 0) ? s.footer_nav_links : [
+    { label: 'Palvelut', url: '#palvelut' },
+    { label: 'Meistä', url: '#meista' },
+    { label: 'Referenssit', url: '/referenssit' },
+    { label: 'UKK', url: '/ukk' },
+    { label: 'Hintalaskuri', url: '/hintalaskuri' },
+    { label: 'Yhteystiedot', url: '#yhteystiedot' },
+  ];
+  const serviceLinks = (s.footer_service_links && s.footer_service_links.length > 0)
+    ? s.footer_service_links
+    : servicePages.map(sp => ({ label: sp.hero_title || sp.title || sp.slug, url: `/${sp.slug}` }));
+
+  const renderLink = (link, idx) => {
+    const isInternal = link.url.startsWith('/');
+    const cls = "text-[13px] text-white/60 hover:text-white transition-colors duration-200";
+    return isInternal
+      ? <Link key={idx} to={link.url} className={cls}>{link.label}</Link>
+      : <a key={idx} href={link.url} className={cls}>{link.label}</a>;
+  };
+
   return (
-    <footer data-testid="footer" className="bg-[#0B1120] text-white">
+    <footer data-testid="footer" style={{ backgroundColor: bgColor }}  className="text-white">
       {/* Optional CTA band */}
       {ctaHeading && (
         <div className="border-b border-white/[0.06]">
@@ -982,15 +1003,8 @@ const Footer = ({ logoUrl, settings, servicePages = [] }) => {
           <div>
             <h4 className="text-xs font-semibold tracking-[0.15em] uppercase text-white/40 mb-5">{servicesTitle}</h4>
             <ul className="space-y-2.5">
-              {servicePages.map((sp) => (
-                <li key={sp.slug}>
-                  <Link
-                    to={`/${sp.slug}`}
-                    className="text-[13px] text-white/60 hover:text-white transition-colors duration-200"
-                  >
-                    {sp.hero_title || sp.title || sp.slug}
-                  </Link>
-                </li>
+              {serviceLinks.map((link, idx) => (
+                <li key={idx}>{renderLink(link, idx)}</li>
               ))}
             </ul>
           </div>
@@ -999,12 +1013,9 @@ const Footer = ({ logoUrl, settings, servicePages = [] }) => {
           <div>
             <h4 className="text-xs font-semibold tracking-[0.15em] uppercase text-white/40 mb-5">{navTitle}</h4>
             <ul className="space-y-2.5">
-              <li><a href="#palvelut" className="text-[13px] text-white/60 hover:text-white transition-colors duration-200">Palvelut</a></li>
-              <li><a href="#meista" className="text-[13px] text-white/60 hover:text-white transition-colors duration-200">Meistä</a></li>
-              <li><Link to="/referenssit" className="text-[13px] text-white/60 hover:text-white transition-colors duration-200">Referenssit</Link></li>
-              <li><Link to="/ukk" className="text-[13px] text-white/60 hover:text-white transition-colors duration-200">UKK</Link></li>
-              <li><Link to="/hintalaskuri" className="text-[13px] text-white/60 hover:text-white transition-colors duration-200">Hintalaskuri</Link></li>
-              <li><a href="#yhteystiedot" className="text-[13px] text-white/60 hover:text-white transition-colors duration-200">Yhteystiedot</a></li>
+              {navLinks.map((link, idx) => (
+                <li key={idx}>{renderLink(link, idx)}</li>
+              ))}
             </ul>
           </div>
 
@@ -1971,13 +1982,63 @@ const AdminPanel = () => {
                 <div className="bg-white border p-4 md:p-6 space-y-4">
                   <h3 className="font-bold text-[#0F172A] border-b pb-2">Alatunniste (Footer)</h3>
                   
-                  <div><label className="block text-sm font-medium mb-1">Yrityksen kuvaus</label><input value={settings.footer_description || ''} onChange={(e) => setSettings({...settings, footer_description: e.target.value})} className="form-input text-sm" placeholder="Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla." /></div>
-                  <div><label className="block text-sm font-medium mb-1">Palvelualue teksti</label><input value={settings.footer_service_area || ''} onChange={(e) => setSettings({...settings, footer_service_area: e.target.value})} className="form-input text-sm" placeholder="Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella." /></div>
-                  
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1"><label className="block text-sm font-medium mb-1">Yrityksen kuvaus</label><input value={settings.footer_description || ''} onChange={(e) => setSettings({...settings, footer_description: e.target.value})} className="form-input text-sm" placeholder="Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla." /></div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Taustaväri</label>
+                      <div className="flex items-center gap-2">
+                        <input type="color" value={settings.footer_bg_color || '#0B1120'} onChange={(e) => setSettings({...settings, footer_bg_color: e.target.value})} className="w-10 h-10 rounded cursor-pointer border" />
+                        <input type="text" value={settings.footer_bg_color || '#0B1120'} onChange={(e) => setSettings({...settings, footer_bg_color: e.target.value})} className="form-input text-sm w-28" placeholder="#0B1120" />
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div><label className="block text-sm font-medium mb-1">Palvelut-otsikko</label><input value={settings.footer_services_title || ''} onChange={(e) => setSettings({...settings, footer_services_title: e.target.value})} className="form-input text-sm" placeholder="Palvelumme" /></div>
                     <div><label className="block text-sm font-medium mb-1">Sivusto-otsikko</label><input value={settings.footer_nav_title || ''} onChange={(e) => setSettings({...settings, footer_nav_title: e.target.value})} className="form-input text-sm" placeholder="Sivusto" /></div>
                     <div><label className="block text-sm font-medium mb-1">Yhteystiedot-otsikko</label><input value={settings.footer_contact_title || ''} onChange={(e) => setSettings({...settings, footer_contact_title: e.target.value})} className="form-input text-sm" placeholder="Yhteystiedot" /></div>
+                  </div>
+
+                  {/* Dynamic Service Links */}
+                  <div className="border-t pt-3 mt-2">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm font-medium text-[#0F172A]">Palvelut-linkit</p>
+                      <button type="button" onClick={() => setSettings({...settings, footer_service_links: [...(settings.footer_service_links || []), {label: '', url: ''}]})} className="text-xs bg-[#0F172A] text-white px-3 py-1 rounded hover:bg-[#1E293B]">+ Lisää</button>
+                    </div>
+                    {(settings.footer_service_links && settings.footer_service_links.length > 0) ? (
+                      <div className="space-y-2">
+                        {settings.footer_service_links.map((link, idx) => (
+                          <div key={idx} className="flex items-center gap-2">
+                            <input value={link.label || ''} onChange={(e) => { const links = [...settings.footer_service_links]; links[idx] = {...links[idx], label: e.target.value}; setSettings({...settings, footer_service_links: links}); }} className="form-input text-sm flex-1" placeholder="Teksti" />
+                            <input value={link.url || ''} onChange={(e) => { const links = [...settings.footer_service_links]; links[idx] = {...links[idx], url: e.target.value}; setSettings({...settings, footer_service_links: links}); }} className="form-input text-sm flex-1" placeholder="/linkki" />
+                            <button type="button" onClick={() => { const links = settings.footer_service_links.filter((_, i) => i !== idx); setSettings({...settings, footer_service_links: links}); }} className="text-red-500 hover:text-red-700 text-lg px-1">×</button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-[#94A3B8]">Tyhjä = käytetään Palvelusivut-välilehden sivuja automaattisesti</p>
+                    )}
+                  </div>
+
+                  {/* Dynamic Nav Links */}
+                  <div className="border-t pt-3 mt-2">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm font-medium text-[#0F172A]">Sivusto-linkit</p>
+                      <button type="button" onClick={() => setSettings({...settings, footer_nav_links: [...(settings.footer_nav_links || []), {label: '', url: ''}]})} className="text-xs bg-[#0F172A] text-white px-3 py-1 rounded hover:bg-[#1E293B]">+ Lisää</button>
+                    </div>
+                    {(settings.footer_nav_links && settings.footer_nav_links.length > 0) ? (
+                      <div className="space-y-2">
+                        {settings.footer_nav_links.map((link, idx) => (
+                          <div key={idx} className="flex items-center gap-2">
+                            <input value={link.label || ''} onChange={(e) => { const links = [...settings.footer_nav_links]; links[idx] = {...links[idx], label: e.target.value}; setSettings({...settings, footer_nav_links: links}); }} className="form-input text-sm flex-1" placeholder="Teksti" />
+                            <input value={link.url || ''} onChange={(e) => { const links = [...settings.footer_nav_links]; links[idx] = {...links[idx], url: e.target.value}; setSettings({...settings, footer_nav_links: links}); }} className="form-input text-sm flex-1" placeholder="/linkki" />
+                            <button type="button" onClick={() => { const links = settings.footer_nav_links.filter((_, i) => i !== idx); setSettings({...settings, footer_nav_links: links}); }} className="text-red-500 hover:text-red-700 text-lg px-1">×</button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-[#94A3B8]">Tyhjä = oletuslinkit (Palvelut, Meistä, Referenssit, UKK, Hintalaskuri, Yhteystiedot)</p>
+                    )}
                   </div>
 
                   <div className="border-t pt-3 mt-2">
@@ -2008,7 +2069,7 @@ const AdminPanel = () => {
                     </div>
                   </div>
                   
-                  <p className="text-xs text-[#94A3B8]">Palvelut-linkit tulevat automaattisesti Palvelusivut-välilehdestä. Yhteystiedot tulevat Yhteystiedot-osiosta.</p>
+                  <p className="text-xs text-[#94A3B8]">Yhteystiedot tulevat Yhteystiedot-osiosta.</p>
                 </div>
               </div>
             )}
