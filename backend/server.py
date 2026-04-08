@@ -335,6 +335,8 @@ class SiteSettings(BaseModel):
     footer_cta_text: str = ""
     footer_cta_button_label: str = "Pyydä tarjous"
     footer_cta_button_link: str = "#yhteystiedot"
+    footer_cta2_button_label: str = "Hintalaskuri"
+    footer_cta2_button_link: str = "/hintalaskuri"
     footer_privacy_link: str = ""
     footer_cookie_link: str = ""
     
@@ -455,6 +457,8 @@ class SiteSettingsUpdate(BaseModel):
     footer_cta_text: Optional[str] = None
     footer_cta_button_label: Optional[str] = None
     footer_cta_button_link: Optional[str] = None
+    footer_cta2_button_label: Optional[str] = None
+    footer_cta2_button_link: Optional[str] = None
     footer_privacy_link: Optional[str] = None
     footer_cookie_link: Optional[str] = None
     # Kotitalousvähennys

@@ -929,6 +929,8 @@ const Footer = ({ logoUrl, settings, servicePages = [] }) => {
   const ctaText = s.footer_cta_text || '';
   const ctaButtonLabel = s.footer_cta_button_label || 'Pyydä tarjous';
   const ctaButtonLink = s.footer_cta_button_link || '#yhteystiedot';
+  const cta2Label = s.footer_cta2_button_label || 'Hintalaskuri';
+  const cta2Link = s.footer_cta2_button_link || '/hintalaskuri';
   const privacyLink = s.footer_privacy_link || '';
   const cookieLink = s.footer_cookie_link || '';
   const copyrightText = s.footer_copyright || '';
@@ -943,14 +945,23 @@ const Footer = ({ logoUrl, settings, servicePages = [] }) => {
               <h3 className="text-lg md:text-xl font-bold text-white mb-1">{ctaHeading}</h3>
               {ctaText && <p className="text-white/50 text-sm max-w-md">{ctaText}</p>}
             </div>
-            <a
-              href={ctaButtonLink}
-              data-testid="footer-cta-btn"
-              className="inline-flex items-center gap-2 bg-white text-[#0B1120] font-semibold text-sm px-7 py-3 rounded-full hover:bg-white/90 transition-colors whitespace-nowrap"
-            >
-              {ctaButtonLabel}
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-            </a>
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+              <a
+                href={ctaButtonLink}
+                data-testid="footer-cta-btn"
+                className="btn-primary inline-flex items-center gap-2 text-sm px-7 py-3 whitespace-nowrap"
+              >
+                {ctaButtonLabel}
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </a>
+              <a
+                href={cta2Link}
+                data-testid="footer-cta2-btn"
+                className="inline-flex items-center gap-2 border border-white/20 text-white font-semibold text-sm px-7 py-3 rounded-lg hover:bg-white/10 transition-colors whitespace-nowrap"
+              >
+                {cta2Label}
+              </a>
+            </div>
           </div>
         </div>
       )}
@@ -962,11 +973,8 @@ const Footer = ({ logoUrl, settings, servicePages = [] }) => {
           {/* Col 1 — Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <img src={logo} alt={companyName} className="h-9 w-auto max-w-[160px] object-contain mb-5 brightness-0 invert opacity-90" />
-            <p className="text-white/50 text-[13px] leading-relaxed mb-4 max-w-[260px]">
+            <p className="text-white/50 text-[13px] leading-relaxed max-w-[260px]">
               {footerDescription}
-            </p>
-            <p className="text-white/30 text-xs leading-relaxed max-w-[260px]">
-              {footerServiceArea}
             </p>
           </div>
 
@@ -1977,8 +1985,16 @@ const AdminPanel = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div><label className="block text-sm font-medium mb-1">CTA otsikko</label><input value={settings.footer_cta_heading || ''} onChange={(e) => setSettings({...settings, footer_cta_heading: e.target.value})} className="form-input text-sm" placeholder="Pyydä ilmainen arvio" /></div>
                       <div><label className="block text-sm font-medium mb-1">CTA teksti</label><input value={settings.footer_cta_text || ''} onChange={(e) => setSettings({...settings, footer_cta_text: e.target.value})} className="form-input text-sm" placeholder="Saat tarjouksen 24h sisällä." /></div>
-                      <div><label className="block text-sm font-medium mb-1">Painike teksti</label><input value={settings.footer_cta_button_label || ''} onChange={(e) => setSettings({...settings, footer_cta_button_label: e.target.value})} className="form-input text-sm" placeholder="Pyydä tarjous" /></div>
-                      <div><label className="block text-sm font-medium mb-1">Painike linkki</label><input value={settings.footer_cta_button_link || ''} onChange={(e) => setSettings({...settings, footer_cta_button_link: e.target.value})} className="form-input text-sm" placeholder="#yhteystiedot" /></div>
+                    </div>
+                    <p className="text-xs font-medium text-[#64748B] mt-3 mb-2">Ensimmäinen painike</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div><label className="block text-sm font-medium mb-1">Painike 1 teksti</label><input value={settings.footer_cta_button_label || ''} onChange={(e) => setSettings({...settings, footer_cta_button_label: e.target.value})} className="form-input text-sm" placeholder="Pyydä tarjous" /></div>
+                      <div><label className="block text-sm font-medium mb-1">Painike 1 linkki</label><input value={settings.footer_cta_button_link || ''} onChange={(e) => setSettings({...settings, footer_cta_button_link: e.target.value})} className="form-input text-sm" placeholder="#yhteystiedot" /></div>
+                    </div>
+                    <p className="text-xs font-medium text-[#64748B] mt-3 mb-2">Toinen painike</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div><label className="block text-sm font-medium mb-1">Painike 2 teksti</label><input value={settings.footer_cta2_button_label || ''} onChange={(e) => setSettings({...settings, footer_cta2_button_label: e.target.value})} className="form-input text-sm" placeholder="Hintalaskuri" /></div>
+                      <div><label className="block text-sm font-medium mb-1">Painike 2 linkki</label><input value={settings.footer_cta2_button_link || ''} onChange={(e) => setSettings({...settings, footer_cta2_button_link: e.target.value})} className="form-input text-sm" placeholder="/hintalaskuri" /></div>
                     </div>
                     <p className="text-xs text-[#94A3B8] mt-1">Jätä CTA otsikko tyhjäksi, jos et halua CTA-palkkia.</p>
                   </div>
