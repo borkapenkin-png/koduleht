@@ -68,17 +68,21 @@ const CalculatorSchema = ({ config }) => {
 // Progress bar stages
 const STAGES = ['Palvelu', 'Kohde', 'Tarkennukset', 'Lisävalinnat', 'Hinta-arvio'];
 
-const ProgressBar = ({ activeStage }) => (
+const ProgressBar = ({ activeStage, onStageClick }) => (
   <div className="flex items-center w-full mb-8 md:mb-10" data-testid="progress-bar">
     {STAGES.map((name, i) => {
       const done = i < activeStage;
       const active = i === activeStage;
+      const canClick = done;
       return (
         <React.Fragment key={name}>
           {i > 0 && (
             <div className={`flex-1 h-[2px] mx-1 transition-colors duration-500 ${done ? 'bg-[#0F172A]' : 'bg-[#E2E8F0]'}`} />
           )}
-          <div className="flex flex-col items-center gap-1 min-w-0">
+          <div
+            className={`flex flex-col items-center gap-1 min-w-0 ${canClick ? 'cursor-pointer' : ''}`}
+            onClick={() => canClick && onStageClick && onStageClick(i)}
+          >
             <div className={`w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-400 ${
               done ? 'bg-[#0F172A] text-white' : active ? 'bg-[#0F172A] text-white ring-4 ring-[#0F172A]/10' : 'bg-[#F1F5F9] text-[#94A3B8]'
             }`}>
@@ -282,15 +286,16 @@ const PriceCalculatorPage = () => {
     return 2; // everything else = Tarkennukset
   }, [currentStep, showResult, service]);
 
-  // Kotitalousvähennys helper
-  const calcKoti = useCallback((totalWithAlv, g) => {
+  // Kotitalousvähennys helper — separate calculation per price
+  const calcKoti = useCallback((priceWithAlv, g, personsCount = 1) => {
     if (!g) return 0;
     const laborPct = g.labor_percentage || 70;
     const kotiRate = g.kotitalousvahennys_rate || 35;
-    const kotiMax = g.kotitalousvahennys_max_per_person || 1600;
-    const tyonOsuus = totalWithAlv * (laborPct / 100);
+    const kotiMaxPerPerson = g.kotitalousvahennys_max_per_person || 1600;
+    const kotiMaxTotal = kotiMaxPerPerson * Math.max(1, personsCount);
+    const tyonOsuus = priceWithAlv * (laborPct / 100);
     const raw = tyonOsuus * (kotiRate / 100) - 150;
-    return Math.max(0, Math.min(raw, kotiMax));
+    return Math.max(0, Math.min(raw, kotiMaxTotal));
   }, []);
 
   // Price calculation with RANGES
@@ -329,11 +334,12 @@ const PriceCalculatorPage = () => {
     const totalWithAlv = total * (1 + alvRate / 100);
     const totalMin = Math.round(totalWithAlv * 0.9);
     const totalMax = Math.round(totalWithAlv * 1.15);
-    const kotitalousvahennys = calcKoti(totalWithAlv, g);
-    const kotiMin = calcKoti(totalMin, g);
-    const kotiMax = calcKoti(totalMax, g);
-    const finalMin = Math.round(totalMin - kotiMin);
-    const finalMax = Math.round(totalMax - kotiMax);
+    const personsCount = selections.persons_count || 1;
+    const kotiMin = calcKoti(totalMin, g, personsCount);
+    const kotiMax = calcKoti(totalMax, g, personsCount);
+    const kotitalousvahennys = Math.round((kotiMin + kotiMax) / 2);
+    const finalMin = Math.max(0, Math.round(totalMin - kotiMin));
+    const finalMax = Math.max(0, Math.round(totalMax - kotiMax));
 
     // Summary labels for result page
     const selectedLabels = [];
@@ -390,6 +396,28 @@ const PriceCalculatorPage = () => {
     if (showResult) { setShowResult(false); return; }
     setDirection(-1);
     if (currentStep > 0) setCurrentStep(s => s - 1);
+  };
+
+  // Navigate to a specific stage via progress bar click (backward only)
+  const handleStageClick = (stageIdx) => {
+    if (stageIdx >= activeStage) return; // only backward
+    setDirection(-1);
+    if (stageIdx === 0) {
+      // Back to service selection
+      setCurrentStep(0);
+      setShowResult(false);
+    } else if (stageIdx === 1) {
+      setCurrentStep(1);
+      setShowResult(false);
+    } else if (stageIdx === 2) {
+      // Tarkennukset — step after Kohde
+      setCurrentStep(2);
+      setShowResult(false);
+    } else if (stageIdx === 3) {
+      // Lisävalinnat — last step before result
+      if (service) setCurrentStep(service.steps.length);
+      setShowResult(false);
+    }
   };
 
   const resetCalculator = () => {
@@ -588,7 +616,7 @@ const PriceCalculatorPage = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
 
           {/* Progress bar */}
-          {selectedService && <ProgressBar activeStage={activeStage} />}
+          {selectedService && <ProgressBar activeStage={activeStage} onStageClick={handleStageClick} />}
 
           {/* Main layout: question + sticky price */}
           <div className="flex gap-8 items-start">
@@ -625,7 +653,6 @@ const PriceCalculatorPage = () => {
                                 <Icon size={22} className={sel ? 'text-[#0F172A]' : 'text-[#94A3B8]'} strokeWidth={1.5} />
                                 <h3 className="font-semibold text-[#0F172A] mt-3 text-sm">{s.name}</h3>
                                 <p className="text-xs text-[#94A3B8] mt-1 hidden md:block leading-relaxed">{s.description}</p>
-                                <p className="text-xs font-semibold text-[#0F172A] mt-2">alk. {s.base_price_per_m2} &euro;/m&sup2;</p>
                               </motion.button>
                             );
                           })}
