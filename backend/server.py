@@ -2477,11 +2477,16 @@ async def migrate_calculator_surface_step():
                         {"id": "both", "label": "Seinät + katot", "description": "Seinä- ja kattopintojen maalaus", "area_multiplier": 3.0}
                     ]
                 }
-                # Insert after target_type (index 0), before area slider
                 target_idx = next((i for i, s in enumerate(service["steps"]) if s["id"] == "target_type"), 0)
                 service["steps"].insert(target_idx + 1, surface_step)
                 updated = True
                 logging.info("Migrated: Added surface step to sisämaalaus")
+            # Add helper_text to area slider if missing
+            for step in service.get("steps", []):
+                if step["id"] == "area" and "helper_text" not in step:
+                    step["helper_text"] = "Syötä huoneiston pohjapinta-ala — laskuri muuntaa sen maalattavaksi pinta-alaksi."
+                    updated = True
+                    logging.info("Migrated: Added helper_text to sisämaalaus area step")
     if updated:
         await db.calculator_config.replace_one({"id": "calculator_config"}, config)
 

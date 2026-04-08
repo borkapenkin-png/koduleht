@@ -5,43 +5,43 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga. Hintalaskuri
 
 ## Latest Update: April 8, 2026
 
+### Session 9: Hintalaskuri Hard Patch — Surface Options, Package Removal, Admin Texts - COMPLETED
+**Changes:**
+- **Sisämaalaus surface step**: Added new "Mitä pintoja maalataan?" step with 3 options (Seinät/2.0×, Katot/1.0×, Seinät+katot/3.0×) using `area_multiplier` field
+- **area_multiplier logic**: New calculation: `effectiveArea = floorArea × areaMultiplier`, used for base price and addon pricing
+- **helper_text**: Area slider now supports `helper_text` field from config (Sisämaalaus shows floor area → paintable area guidance)
+- **Package removal**: Removed Perus/Suositeltu/Premium package selector from customer flow. DB/admin data preserved for backward compat.
+- **Admin enhancements**: Step titles editable, option labels/descriptions editable, area_multiplier (×m²) inputs, global settings: addons_step_title, addons_step_subtitle, disclaimer textarea
+- **Backend migration**: `migrate_calculator_surface_step()` auto-adds surface step + helper_text on startup
+- **Files changed**: PriceCalculatorPage.js, CalculatorAdmin.js, server.py
+
 ### Session 8: Hintalaskuri Admin Centralization & Page Restructure - COMPLETED
-- **Laskuri-välilehti**: Lisätty "Sivun SEO & Hero" -osio Laskuri admin-välilehteen. Kentät: SEO-otsikko, Meta-kuvaus, Hero-otsikko (H1), Hero-alaotsikko, Hero-taustakuva URL, SEO-teksti (description_text).
-- **Palvelusivut**: Hintalaskuri piilotettu Palvelusivut-listasta (filter: slug !== 'hintalaskuri')
-- **Hintalaskuri-sivu**: Poistettu turhat markkinointiosiot (2. TrustBadges, DescriptionSection, FeaturesSection, WhyChooseSection, ServiceAreasSection)
-- **Pidetyt osiot**: Hero, 1x Trust-palkki, Laskuri-widget, Työvaiheet (ProcessSection), UKK, Yhteydenottolomake, Referenssit, Footer CTA
-- **Dynaaminen Hero**: Hero-otsikko ja -alaotsikko tulevat nyt tietokannasta
-- **Files changed**: CalculatorAdmin.js, ServicePagesAdmin.js, PriceCalculatorPage.js
+- Laskuri-välilehteen lisätty "Sivun SEO & Hero" -osio
+- Hintalaskuri piilotettu Palvelusivut-listasta
+- Poistettu turhat markkinointiosiot (TrustBadges, Description, Features, WhyChoose, ServiceAreas)
 
-### Session 7: Etusivu SSG Dynamic + SEO Admin Fields - COMPLETED
-- Etusivu SSG dünaamiliseks, SEO väljad admin paneeli, Avainluvut, Palvelualueet
-- Automaatne SSG, Express SSR server
+### Earlier Sessions: COMPLETED
+- Session 7: Etusivu SSG Dynamic + SEO Admin Fields
+- Session 6: City Variant SEO/Hero Title + Description Overrides
+- Sessions 1-5: Calculator features, FAQ, footer redesign, FOUC fix, express SSR server
 
-### Session 6: City Variant SEO/Hero Title + Description Overrides - COMPLETED
-- custom_texts format with seo_title, hero_title, seo_description
+## Data Architecture
+### calculator_config.services[].steps[]
+- `type: "cards"` — options can have `multiplier` (price) and/or `area_multiplier` (area)
+- `type: "slider"` — supports `helper_text` for guidance text
+- `type: "size_cards"` — options with `area_value`
 
-### How it works:
-1. **Palvelusivut** = Edit Helsinki base page (template for all cities)
-2. **Alueet -> custom texts** = Override per city: seo_title, hero_title, seo_description, text
-3. **Etusivu tab** = SEO title, meta description, canonical URL + all content sections
-4. **Laskuri tab** = Calculator pricing + SEO/Hero fields for /hintalaskuri page
-5. **Admin save -> SSG auto-regenerate ~15 sec**
-
-### Previous Sessions: COMPLETED
-- Session 5a: Hintalaskuri Page Sections
-- Session 4e-4a: Calculator features
-- Custom_texts feature, FAQ fixes, 301 redirects, FOUC fix, Sitemap/Canonical fixes
-- Footer redesign, Kotitalousvähennys admin fields, clickable progress bar
+### calculator_config.global_settings
+- tax_rate, kotitalousvahennys_rate, kotitalousvahennys_max_per_person, labor_percentage, material_percentage
+- cta_title, cta_subtitle, disclaimer
+- addons_step_title, addons_step_subtitle
 
 ## Key Files
-- `/app/frontend/src/App.js` - Main app with admin panel, homepage, footer
-- `/app/frontend/src/components/admin/AreasAdmin.js` - Areas admin with custom_texts UI
-- `/app/frontend/src/components/admin/CalculatorAdmin.js` - Calculator config + SEO/Hero admin
-- `/app/frontend/src/components/admin/ServicePagesAdmin.js` - Service pages (hintalaskuri filtered out)
-- `/app/frontend/src/pages/PriceCalculatorPage.js` - Calculator page (simplified layout)
-- `/app/frontend/src/pages/DynamicServicePage.js` - City variant rendering
-- `/app/backend/generate_static_direct.py` - SSG script
-- `/app/backend/server.py` - API
+- `/app/frontend/src/pages/PriceCalculatorPage.js` - Calculator with area_multiplier logic
+- `/app/frontend/src/components/admin/CalculatorAdmin.js` - Calculator admin + SEO/Hero
+- `/app/frontend/src/components/admin/ServicePagesAdmin.js` - Service pages (hintalaskuri filtered)
+- `/app/frontend/src/App.js` - Main app, Footer, FOUC
+- `/app/backend/server.py` - API + migration + SSG
 
 ## Credentials
 - Preview Admin: admin / jbadmin2024
@@ -53,7 +53,7 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga. Hintalaskuri
 - Google Reviews + Review JSON-LD schema
 ### P2
 - Blog section
-- Backend refactoring (server.py -> routes/, models/, utils/)
+- Backend refactoring (server.py → routes/, models/, utils/)
 ### P3
 - Video testimonials
 - Additional schema types
