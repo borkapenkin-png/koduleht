@@ -794,50 +794,73 @@ async def root():
 async def get_sitemap():
     from fastapi.responses import Response
     
-    base_url = "https://jbtasoitusmaalaus.fi"
+    base_url = "https://www.jbtasoitusmaalaus.fi"
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     
-    # Start XML
-    xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    # Get all areas and service pages from DB
+    areas = await db.areas.find({}, {"_id": 0}).sort("order", 1).to_list(100)
+    default_area = next((a for a in areas if a.get("is_default")), areas[0] if areas else None)
+    non_default_areas = [a for a in areas if not a.get("is_default")]
+    
+    service_pages = await db.service_pages.find({}, {"_id": 0, "slug": 1}).to_list(100)
+    
+    urls = []
     
     # Homepage
-    xml += f'''  <url>
-    <loc>{base_url}/</loc>
-    <lastmod>{today}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>\n'''
+    urls.append(("", "weekly", "1.0"))
     
-    # Service pages from database
-    service_pages = await db.service_pages.find({}, {"_id": 0, "slug": 1}).to_list(100)
-    for page in service_pages:
-        xml += f'''  <url>
-    <loc>{base_url}/{page["slug"]}/index.html</loc>
-    <lastmod>{today}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>\n'''
+    # Static pages
+    urls.append(("referenssit", "monthly", "0.7"))
+    urls.append(("ukk", "monthly", "0.7"))
     
-    # References page
-    xml += f'''  <url>
-    <loc>{base_url}/referenssit/index.html</loc>
-    <lastmod>{today}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>\n'''
+    # Service pages + city variants
+    for sp in service_pages:
+        slug = sp.get("slug", "")
+        if not slug:
+            continue
+        
+        # Compute base slug
+        base_slug = slug
+        if default_area and slug.endswith(f"-{default_area['slug']}"):
+            base_slug = slug[:-len(f"-{default_area['slug']}")]
+        
+        # Original page (e.g., /maalaustyot-helsinki)
+        urls.append((slug, "monthly", "0.9"))
+        
+        # City variants for non-default areas
+        for area in non_default_areas:
+            variant_slug = f"{base_slug}-{area['slug']}"
+            if variant_slug != slug:
+                urls.append((variant_slug, "monthly", "0.8"))
+        
+        # Default city variant if slug doesn't end with default area
+        if default_area and not slug.endswith(f"-{default_area['slug']}"):
+            default_variant = f"{base_slug}-{default_area['slug']}"
+            urls.append((default_variant, "monthly", "0.8"))
     
-    # FAQ page
-    xml += f'''  <url>
-    <loc>{base_url}/ukk/index.html</loc>
-    <lastmod>{today}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>\n'''
+    # Build XML
+    entries = []
+    for path, freq, prio in urls:
+        loc = f"{base_url}/{path}" if path else base_url
+        entries.append(f'  <url>\n    <loc>{loc}</loc>\n    <lastmod>{today}</lastmod>\n    <changefreq>{freq}</changefreq>\n    <priority>{prio}</priority>\n  </url>')
     
-    xml += '</urlset>'
+    xml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{chr(10).join(entries)}
+</urlset>'''
     
-    return Response(content=xml, media_type="application/xml")
+    # Also write to build directory for static serving
+    try:
+        sitemap_path = BUILD_DIR / "sitemap.xml"
+        sitemap_path.write_text(xml, encoding="utf-8")
+        public_path = PUBLIC_DIR / "sitemap.xml"
+        public_path.write_text(xml, encoding="utf-8")
+    except Exception as e:
+        logging.warning(f"Failed to write sitemap files: {e}")
+    
+    return Response(content=xml, media_type="application/xml", headers={
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+    })
 
 # Site Settings - Public
 @api_router.get("/settings", response_model=SiteSettings)
@@ -1543,6 +1566,10 @@ async def admin_create_area(area: AreaCreate, username: str = Depends(get_curren
         await db.areas.update_many({}, {"$set": {"is_default": False}})
     doc = Area(**area.model_dump()).model_dump()
     await db.areas.insert_one(doc)
+    
+    # Regenerate static pages in background (new area = new city variant pages + sitemap)
+    trigger_ssg_background()
+    
     return {k: v for k, v in doc.items() if k != "_id"}
 
 @api_router.put("/admin/areas/{area_id}", response_model=Area)
@@ -1578,6 +1605,10 @@ async def admin_delete_area(area_id: str, username: str = Depends(get_current_ad
     if area.get("is_default"):
         raise HTTPException(status_code=400, detail="Cannot delete the default area")
     await db.areas.delete_one({"id": area_id})
+    
+    # Regenerate static pages in background (removed area = update city variant pages + sitemap)
+    trigger_ssg_background()
+    
     return {"message": "Deleted"}
 
 

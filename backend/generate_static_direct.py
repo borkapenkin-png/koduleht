@@ -876,6 +876,34 @@ async def run_ssg_with_db(db):
                 logging.error(f"SSG error for {name}: {e}")
         
         logging.info(f"SSG in-process complete: {success_count}/{len(pages_to_generate)} pages")
+        
+        # Generate sitemap.xml from all generated pages
+        try:
+            all_slugs = set()
+            for name, path_str, filename, generator_fn in pages_to_generate:
+                if path_str != "/" and path_str.startswith("/"):
+                    all_slugs.add(path_str.lstrip("/"))
+            
+            today = datetime.now().strftime('%Y-%m-%d')
+            sitemap_urls = [SITE_URL]
+            for slug in sorted(all_slugs):
+                sitemap_urls.append(f"{SITE_URL}/{slug}")
+            
+            sitemap_entries = []
+            for url in sitemap_urls:
+                sitemap_entries.append(f'  <url>\n    <loc>{url}</loc>\n    <lastmod>{today}</lastmod>\n    <changefreq>monthly</changefreq>\n  </url>')
+            
+            sitemap_xml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{chr(10).join(sitemap_entries)}
+</urlset>'''
+            (BUILD_DIR / "sitemap.xml").write_text(sitemap_xml, encoding="utf-8")
+            if PUBLIC_DIR.exists():
+                (PUBLIC_DIR / "sitemap.xml").write_text(sitemap_xml, encoding="utf-8")
+            logging.info(f"Sitemap updated: {len(sitemap_urls)} URLs")
+        except Exception as e:
+            logging.error(f"Sitemap generation error: {e}")
+        
         return success_count
     except Exception as e:
         logging.error(f"SSG run_ssg_with_db error: {e}")
