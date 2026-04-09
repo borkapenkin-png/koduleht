@@ -273,12 +273,44 @@ const CalculatorAdmin = ({ token }) => {
             <input type="text" value={config.global_settings.cta_subtitle} onChange={e => updateGlobal('cta_subtitle', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" />
           </div>
           <div>
+            <label className="block text-xs font-medium text-[#64748B] mb-1">Palveluvalinta — otsikko</label>
+            <input type="text" value={config.global_settings.service_step_title || ''} onChange={e => updateGlobal('service_step_title', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Valitse palvelu" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-[#64748B] mb-1">Palveluvalinta — alaotsikko</label>
+            <input type="text" value={config.global_settings.service_step_subtitle || ''} onChange={e => updateGlobal('service_step_subtitle', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Minkä tyyppistä työtä tarvitset?" />
+          </div>
+          <div>
             <label className="block text-xs font-medium text-[#64748B] mb-1">Lisävalinnat — otsikko</label>
             <input type="text" value={config.global_settings.addons_step_title || ''} onChange={e => updateGlobal('addons_step_title', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Lisävalinnat" />
           </div>
           <div>
             <label className="block text-xs font-medium text-[#64748B] mb-1">Lisävalinnat — alaotsikko</label>
             <input type="text" value={config.global_settings.addons_step_subtitle || ''} onChange={e => updateGlobal('addons_step_subtitle', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Valitse tarvitsemasi lisäpalvelut" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-[#64748B] mb-1">Tuloksen otsikko</label>
+            <input type="text" value={config.global_settings.result_title || ''} onChange={e => updateGlobal('result_title', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Arvioitu hinta" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-[#64748B] mb-1">Yhteenveto-otsikko</label>
+            <input type="text" value={config.global_settings.summary_title || ''} onChange={e => updateGlobal('summary_title', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Mihin arvio perustuu" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-[#64748B] mb-1">Erittely-otsikko</label>
+            <input type="text" value={config.global_settings.breakdown_title || ''} onChange={e => updateGlobal('breakdown_title', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Miten hinta muodostuu" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-[#64748B] mb-1">Ryhmä: Esityöt</label>
+            <input type="text" value={config.global_settings.group_label_esityot || ''} onChange={e => updateGlobal('group_label_esityot', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Esityöt" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-[#64748B] mb-1">Ryhmä: Tarvittaessa</label>
+            <input type="text" value={config.global_settings.group_label_tarvittaessa || ''} onChange={e => updateGlobal('group_label_tarvittaessa', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Tarvittaessa" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-[#64748B] mb-1">Ryhmä: Lisäpalvelut</label>
+            <input type="text" value={config.global_settings.group_label_lisapalvelut || ''} onChange={e => updateGlobal('group_label_lisapalvelut', e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Lisäpalvelut" />
           </div>
           <div className="md:col-span-2">
             <label className="block text-xs font-medium text-[#64748B] mb-1">Vastuuvapauslauseke</label>
@@ -311,8 +343,7 @@ const CalculatorAdmin = ({ token }) => {
                 <div className="flex border-b bg-[#F8FAFC]">
                   {[
                     { id: 'base', label: 'Perustiedot' },
-                    { id: 'addons', label: `Lisäpalvelut (${(service.addons || []).length})` },
-                    { id: 'packages', label: `Paketit (${(service.packages || []).length})` }
+                    { id: 'addons', label: `Lisäpalvelut (${(service.addons || []).length})` }
                   ].map(t => (
                     <button key={t.id} onClick={() => setTab(service.id, t.id)}
                       className={`px-4 py-2.5 text-xs font-medium transition-colors ${
@@ -341,49 +372,82 @@ const CalculatorAdmin = ({ token }) => {
                           </label>
                         </div>
                       </div>
-                      {/* Step multipliers */}
-                      {service.steps.filter(s => s.type === 'cards' || s.type === 'size_cards').map(step => (
+                      {/* Step multipliers & slider helper texts */}
+                      {service.steps.filter(s => s.type === 'cards' || s.type === 'size_cards' || s.type === 'slider').map(step => (
                         <div key={step.id}>
-                          <h4 className="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1">{step.title}</h4>
-                          <div className="flex items-center gap-2 mb-2">
-                            <label className="text-[10px] text-[#94A3B8]">Otsikko:</label>
-                            <input type="text" value={step.title} onChange={e => {
-                              setConfig(prev => ({
-                                ...prev,
-                                services: prev.services.map(s => s.id !== service.id ? s : {
-                                  ...s, steps: s.steps.map(st => st.id !== step.id ? st : { ...st, title: e.target.value })
-                                })
-                              }));
-                            }} className="flex-1 border rounded px-2 py-1 text-xs" />
-                          </div>
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                            {step.options.map(opt => (
-                              <div key={opt.id} className="bg-[#F8FAFC] p-2 rounded space-y-1">
-                                <div className="flex items-center gap-1">
-                                  <input type="text" value={opt.label} onChange={e => updateStepOption(service.id, step.id, opt.id, 'label', e.target.value)}
-                                    className="flex-1 border rounded px-1.5 py-0.5 text-xs min-w-0" title="Nimi" />
-                                </div>
-                                {opt.area_multiplier !== undefined && (
-                                  <div className="flex items-center gap-1">
-                                    <span className="text-[9px] text-[#94A3B8] whitespace-nowrap">×m²</span>
-                                    <input type="number" step="0.1" value={opt.area_multiplier} onChange={e => updateStepOption(service.id, step.id, opt.id, 'area_multiplier', parseFloat(e.target.value) || 0)}
-                                      className="w-14 border rounded px-1.5 py-0.5 text-xs text-center" title="Pinta-alakerroin" />
-                                  </div>
-                                )}
-                                {opt.multiplier !== undefined && (
-                                  <div className="flex items-center gap-1">
-                                    <span className="text-[9px] text-[#94A3B8] whitespace-nowrap">×hinta</span>
-                                    <input type="number" step="0.01" value={opt.multiplier} onChange={e => updateStepOption(service.id, step.id, opt.id, 'multiplier', parseFloat(e.target.value) || 0)}
-                                      className="w-14 border rounded px-1.5 py-0.5 text-xs text-center" title="Hintakerroin" />
-                                  </div>
-                                )}
-                                {opt.description !== undefined && (
-                                  <input type="text" value={opt.description || ''} onChange={e => updateStepOption(service.id, step.id, opt.id, 'description', e.target.value)}
-                                    className="w-full border rounded px-1.5 py-0.5 text-[10px] text-[#64748B]" placeholder="Kuvaus" title="Kuvaus" />
-                                )}
+                          {(step.type === 'cards' || step.type === 'size_cards') && (
+                            <>
+                              <h4 className="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1">{step.title}</h4>
+                              <div className="flex items-center gap-2 mb-2">
+                                <label className="text-[10px] text-[#94A3B8]">Otsikko:</label>
+                                <input type="text" value={step.title} onChange={e => {
+                                  setConfig(prev => ({
+                                    ...prev,
+                                    services: prev.services.map(s => s.id !== service.id ? s : {
+                                      ...s, steps: s.steps.map(st => st.id !== step.id ? st : { ...st, title: e.target.value })
+                                    })
+                                  }));
+                                }} className="flex-1 border rounded px-2 py-1 text-xs" />
                               </div>
-                            ))}
-                          </div>
+                              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                {step.options.map(opt => (
+                                  <div key={opt.id} className="bg-[#F8FAFC] p-2 rounded space-y-1">
+                                    <div className="flex items-center gap-1">
+                                      <input type="text" value={opt.label} onChange={e => updateStepOption(service.id, step.id, opt.id, 'label', e.target.value)}
+                                        className="flex-1 border rounded px-1.5 py-0.5 text-xs min-w-0" title="Nimi" />
+                                    </div>
+                                    {opt.area_multiplier !== undefined && (
+                                      <div className="flex items-center gap-1">
+                                        <span className="text-[9px] text-[#94A3B8] whitespace-nowrap">×m²</span>
+                                        <input type="number" step="0.1" value={opt.area_multiplier} onChange={e => updateStepOption(service.id, step.id, opt.id, 'area_multiplier', parseFloat(e.target.value) || 0)}
+                                          className="w-14 border rounded px-1.5 py-0.5 text-xs text-center" title="Pinta-alakerroin" />
+                                      </div>
+                                    )}
+                                    {opt.multiplier !== undefined && (
+                                      <div className="flex items-center gap-1">
+                                        <span className="text-[9px] text-[#94A3B8] whitespace-nowrap">×hinta</span>
+                                        <input type="number" step="0.01" value={opt.multiplier} onChange={e => updateStepOption(service.id, step.id, opt.id, 'multiplier', parseFloat(e.target.value) || 0)}
+                                          className="w-14 border rounded px-1.5 py-0.5 text-xs text-center" title="Hintakerroin" />
+                                      </div>
+                                    )}
+                                    {opt.description !== undefined && (
+                                      <input type="text" value={opt.description || ''} onChange={e => updateStepOption(service.id, step.id, opt.id, 'description', e.target.value)}
+                                        className="w-full border rounded px-1.5 py-0.5 text-[10px] text-[#64748B]" placeholder="Kuvaus" title="Kuvaus" />
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
+                          {step.type === 'slider' && (
+                            <>
+                              <h4 className="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1">{step.title} (liukusäädin)</h4>
+                              <div className="grid grid-cols-2 gap-2 mb-2">
+                                <div className="flex items-center gap-2">
+                                  <label className="text-[10px] text-[#94A3B8]">Otsikko:</label>
+                                  <input type="text" value={step.title} onChange={e => {
+                                    setConfig(prev => ({
+                                      ...prev,
+                                      services: prev.services.map(s => s.id !== service.id ? s : {
+                                        ...s, steps: s.steps.map(st => st.id !== step.id ? st : { ...st, title: e.target.value })
+                                      })
+                                    }));
+                                  }} className="flex-1 border rounded px-2 py-1 text-xs" />
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <label className="text-[10px] text-[#94A3B8]">Aputeksti:</label>
+                                  <input type="text" value={step.helper_text || ''} onChange={e => {
+                                    setConfig(prev => ({
+                                      ...prev,
+                                      services: prev.services.map(s => s.id !== service.id ? s : {
+                                        ...s, steps: s.steps.map(st => st.id !== step.id ? st : { ...st, helper_text: e.target.value })
+                                      })
+                                    }));
+                                  }} className="flex-1 border rounded px-2 py-1 text-xs" placeholder="Syötä huoneiston pohjapinta-ala..." />
+                                </div>
+                              </div>
+                            </>
+                          )}
                         </div>
                       ))}
                     </>

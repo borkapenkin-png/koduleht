@@ -601,8 +601,8 @@ const PriceCalculatorPage = () => {
                     {currentStep === 0 && !showResult && (
                       <motion.div key="svc" custom={direction} variants={stepVariants}
                         initial="enter" animate="center" exit="exit" transition={{ duration: 0.25 }}>
-                        <h2 className="text-lg md:text-xl font-bold text-[#0F172A] mb-1">Valitse palvelu</h2>
-                        <p className="text-sm text-[#94A3B8] mb-6">Minkä tyyppistä työtä tarvitset?</p>
+                        <h2 className="text-lg md:text-xl font-bold text-[#0F172A] mb-1">{config?.global_settings?.service_step_title || 'Valitse palvelu'}</h2>
+                        <p className="text-sm text-[#94A3B8] mb-6">{config?.global_settings?.service_step_subtitle || 'Minkä tyyppistä työtä tarvitset?'}</p>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4" data-testid="service-selection">
                           {enabledServices.map((s) => {
                             const Icon = iconMap[s.icon] || Paintbrush;
@@ -797,7 +797,8 @@ const PriceCalculatorPage = () => {
                           {['esityot', 'tarvittaessa', 'lisapalvelut'].map(groupId => {
                             const groupAddons = (service.addons || []).filter(a => a.enabled && a.group === groupId);
                             if (groupAddons.length === 0) return null;
-                            const groupLabel = groupId === 'esityot' ? 'Esityöt' : groupId === 'tarvittaessa' ? 'Tarvittaessa' : 'Lisäpalvelut';
+                            const g = config?.global_settings || {};
+                            const groupLabel = groupId === 'esityot' ? (g.group_label_esityot || 'Esityöt') : groupId === 'tarvittaessa' ? (g.group_label_tarvittaessa || 'Tarvittaessa') : (g.group_label_lisapalvelut || 'Lisäpalvelut');
                             return (
                               <div key={groupId}>
                                 <p className="text-[11px] uppercase tracking-wider font-semibold text-[#94A3B8] mb-2">
@@ -897,7 +898,7 @@ const PriceCalculatorPage = () => {
 
                         {/* Price heading */}
                         <div className="text-center mb-8">
-                          <p className="text-xs text-[#94A3B8] uppercase tracking-wider font-semibold mb-2">Arvioitu hinta</p>
+                          <p className="text-xs text-[#94A3B8] uppercase tracking-wider font-semibold mb-2">{config?.global_settings?.result_title || 'Arvioitu hinta'}</p>
                           <motion.h2 initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
                             transition={{ delay: 0.1, type: 'spring', stiffness: 200 }}
                             className="text-4xl md:text-5xl font-bold text-[#0F172A]" data-testid="final-price">
@@ -921,7 +922,7 @@ const PriceCalculatorPage = () => {
                         <div className="bg-[#F8FAFC] rounded-2xl p-5 md:p-6 mb-6">
                           <h3 className="text-sm font-semibold text-[#0F172A] mb-3 flex items-center gap-2">
                             <Info size={15} className="text-[#94A3B8]" />
-                            Mihin arvio perustuu
+                            {config?.global_settings?.summary_title || 'Mihin arvio perustuu'}
                           </h3>
                           <div className="space-y-2">
                             <div className="flex justify-between text-sm">
@@ -948,7 +949,7 @@ const PriceCalculatorPage = () => {
                           onClick={() => setShowBreakdown(!showBreakdown)}
                           className="w-full flex items-center justify-between p-4 rounded-xl border border-[#E2E8F0] text-sm text-[#64748B] hover:bg-[#F8FAFC] transition-colors mb-6"
                           data-testid="breakdown-toggle">
-                          <span className="font-medium">Miten hinta muodostuu</span>
+                          <span className="font-medium">{config?.global_settings?.breakdown_title || 'Miten hinta muodostuu'}</span>
                           <motion.div animate={{ rotate: showBreakdown ? 180 : 0 }} transition={{ duration: 0.2 }}>
                             <ChevronDown size={16} />
                           </motion.div>
