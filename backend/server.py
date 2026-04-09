@@ -1636,8 +1636,8 @@ def get_default_calculator_config():
                     {"id": "wall_leveling", "label": "Seinien tasoitus", "hint": "Tasoitetaan epätasaiset pinnat ennen maalausta", "price_per_m2": 23, "enabled": True, "group": "tarvittaessa", "badge": "Suositeltu", "warning": "Ilman tasoitusta lopputulos ei ole tasainen", "auto_trigger": {"step": "condition", "values": ["leveling"]}},
                     {"id": "ceiling", "label": "Katon maalaus", "hint": "Usein tehdään samalla — säästää kokonaiskustannuksia", "price_per_m2": 22, "enabled": True, "group": "lisapalvelut", "badge": "Usein valitaan"},
                     {"id": "listojen_maalaus", "label": "Listojen maalaus", "hint": "Jalka- ja kattolistan maalaus viimeistelee kokonaisuuden", "price_per_m2": 5, "enabled": True, "group": "lisapalvelut", "badge": "Usein valitaan"},
-                    {"id": "ovien_maalaus", "label": "Ovien ja karmien maalaus", "hint": "Ovet ja karmit maalataan samalla kertaa", "fixed_price": 120, "price_label": "120 € / ovipaketti", "enabled": True, "group": "lisapalvelut"},
-                    {"id": "extra_color", "label": "Lisäsävy (+1 väri)", "hint": "Yksi lisävärisävy koko kohteeseen, esim. korosteseinä", "fixed_price": 100, "price_label": "100 € / kohde", "enabled": True, "group": "lisapalvelut"}
+                    {"id": "ovien_maalaus", "label": "Ovien ja karmien maalaus", "hint": "Ovet ja karmit maalataan samalla kertaa", "fixed_price": 120, "price_label": "120 € / ovipaketti", "enabled": True, "group": "lisapalvelut", "allow_quantity": True},
+                    {"id": "extra_color", "label": "Lisäsävy (+1 väri)", "hint": "Yksi lisävärisävy koko kohteeseen, esim. korosteseinä", "fixed_price": 100, "price_label": "100 € / kohde", "enabled": True, "group": "lisapalvelut", "allow_quantity": True}
                 ],
                 "packages": [
                     {"id": "perus", "label": "Perus", "description": "Perustason maalaustyö", "addon_ids": []},

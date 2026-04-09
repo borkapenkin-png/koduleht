@@ -516,8 +516,12 @@ const CalculatorAdmin = ({ token }) => {
                                     {BADGES.map(b => <option key={b} value={b}>{b || '— Ei badge —'}</option>)}
                                   </select>
                                 </div>
-                                {/* Row 4: Warning + Price Label */}
-                                <div className="flex gap-2">
+                                {/* Row 4: Quantity + Warning + Price Label */}
+                                <div className="flex gap-2 items-center">
+                                  <label className="flex items-center gap-1 whitespace-nowrap">
+                                    <input type="checkbox" checked={addon.allow_quantity || false} onChange={e => updateAddon(service.id, addon.id, 'allow_quantity', e.target.checked)} className="rounded" />
+                                    <span className="text-xs text-[#64748B]">kpl-valinta</span>
+                                  </label>
                                   <input type="text" value={addon.warning || ''} onChange={e => updateAddon(service.id, addon.id, 'warning', e.target.value)}
                                     className="flex-1 border rounded px-2 py-1.5 text-xs" placeholder="Varoitus (kun poistetaan valinta)" />
                                   <input type="text" value={addon.price_label || ''} onChange={e => updateAddon(service.id, addon.id, 'price_label', e.target.value)}

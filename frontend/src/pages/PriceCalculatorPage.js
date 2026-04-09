@@ -5,7 +5,7 @@ import {
   Paintbrush, Layers, Gem, Home, Triangle, Building2,
   ChevronRight, ChevronLeft, Check, ArrowRight,
   Phone, Mail, User, Send, RotateCcw, CheckCircle, Clock, Award, Shield, Star,
-  HelpCircle, ChevronDown, Camera, Info
+  HelpCircle, ChevronDown, Camera, Info, Minus, Plus
 } from 'lucide-react';
 import { Navbar, Footer } from '../App';
 import {
@@ -320,8 +320,9 @@ const PriceCalculatorPage = () => {
     let addonsTotal = 0;
     for (const addon of (service.addons || [])) {
       if (activeAddons[addon.id]) {
+        const qty = typeof activeAddons[addon.id] === 'number' ? activeAddons[addon.id] : 1;
         if (addon.price_per_m2) addonsTotal += effectiveArea * addon.price_per_m2;
-        if (addon.fixed_price) addonsTotal += addon.fixed_price;
+        if (addon.fixed_price) addonsTotal += addon.fixed_price * qty;
       }
     }
 
@@ -449,9 +450,21 @@ const PriceCalculatorPage = () => {
   // Reset trigger tracking when service changes
   useEffect(() => { setAutoTriggersApplied(false); }, [selectedService]);
 
-  const toggleAddon = (addonId) => {
-    setActiveAddons(prev => ({ ...prev, [addonId]: !prev[addonId] }));
-    if (activeAddons[addonId]) setDismissedWarnings(prev => ({ ...prev, [addonId]: false }));
+  const toggleAddon = (addonId, addon) => {
+    if (activeAddons[addonId]) {
+      setActiveAddons(prev => ({ ...prev, [addonId]: false }));
+      setDismissedWarnings(prev => ({ ...prev, [addonId]: false }));
+    } else {
+      setActiveAddons(prev => ({ ...prev, [addonId]: addon?.allow_quantity ? 1 : true }));
+    }
+  };
+
+  const changeAddonQty = (addonId, delta) => {
+    setActiveAddons(prev => {
+      const current = typeof prev[addonId] === 'number' ? prev[addonId] : 1;
+      const next = Math.max(1, current + delta);
+      return { ...prev, [addonId]: next };
+    });
   };
 
   const canProceed = () => {
@@ -808,7 +821,7 @@ const PriceCalculatorPage = () => {
                                     return (
                                       <div key={addon.id}>
                                         <motion.button whileTap={{ scale: 0.98 }}
-                                          onClick={() => toggleAddon(addon.id)}
+                                          onClick={() => toggleAddon(addon.id, addon)}
                                           className={`w-full p-4 rounded-xl border text-left transition-all duration-200 ${
                                             active
                                               ? 'border-[#0F172A] bg-[#0F172A]/[0.03] shadow-sm'
@@ -826,8 +839,25 @@ const PriceCalculatorPage = () => {
                                               </div>
                                               <p className="text-xs text-[#94A3B8] mt-0.5 leading-relaxed">{addon.hint}</p>
                                               <p className="text-xs font-semibold text-[#0F172A] mt-1.5">
-                                                {addon.price_label ? addon.price_label : addon.price_per_m2 ? `+${addon.price_per_m2} €/m²` : addon.fixed_price > 0 ? `+${addon.fixed_price} €` : ''}
+                                                {addon.price_label ? addon.price_label : addon.price_per_m2 ? `+${addon.price_per_m2} €/m²` : addon.fixed_price > 0 ? `+${addon.fixed_price} €/kpl` : ''}
                                               </p>
+                                              {/* Quantity selector for allow_quantity addons */}
+                                              {active && addon.allow_quantity && (
+                                                <div className="flex items-center gap-2 mt-2" onClick={e => e.stopPropagation()}>
+                                                  <button type="button" onClick={(e) => { e.stopPropagation(); changeAddonQty(addon.id, -1); }}
+                                                    className="w-7 h-7 rounded-lg border border-[#CBD5E1] flex items-center justify-center text-[#0F172A] hover:bg-[#F1F5F9] transition-colors" data-testid={`addon-qty-minus-${addon.id}`}>
+                                                    <Minus size={14} />
+                                                  </button>
+                                                  <span className="text-sm font-bold text-[#0F172A] min-w-[24px] text-center" data-testid={`addon-qty-${addon.id}`}>
+                                                    {typeof activeAddons[addon.id] === 'number' ? activeAddons[addon.id] : 1}
+                                                  </span>
+                                                  <button type="button" onClick={(e) => { e.stopPropagation(); changeAddonQty(addon.id, 1); }}
+                                                    className="w-7 h-7 rounded-lg border border-[#CBD5E1] flex items-center justify-center text-[#0F172A] hover:bg-[#F1F5F9] transition-colors" data-testid={`addon-qty-plus-${addon.id}`}>
+                                                    <Plus size={14} />
+                                                  </button>
+                                                  <span className="text-xs text-[#94A3B8]">kpl</span>
+                                                </div>
+                                              )}
                                             </div>
                                             <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all ${
                                               active ? 'bg-[#0F172A] border-[#0F172A]' : 'border-[#CBD5E1]'
@@ -861,7 +891,7 @@ const PriceCalculatorPage = () => {
                                 const active = activeAddons[addon.id];
                                 return (
                                   <motion.button key={addon.id} whileTap={{ scale: 0.98 }}
-                                    onClick={() => toggleAddon(addon.id)}
+                                    onClick={() => toggleAddon(addon.id, addon)}
                                     className={`p-4 rounded-xl border text-left transition-all duration-200 ${
                                       active ? 'border-[#0F172A] bg-[#0F172A]/[0.03] shadow-sm' : 'border-[#E2E8F0] hover:border-[#CBD5E1]'
                                     }`} data-testid={`addon-${addon.id}`}>
@@ -870,8 +900,24 @@ const PriceCalculatorPage = () => {
                                         <h3 className="font-semibold text-[#0F172A] text-sm">{addon.label}</h3>
                                         {addon.hint && <p className="text-xs text-[#94A3B8] mt-0.5">{addon.hint}</p>}
                                         <p className="text-xs font-semibold text-[#0F172A] mt-1.5">
-                                          {addon.price_label ? addon.price_label : addon.price_per_m2 ? `+${addon.price_per_m2} €/m²` : addon.fixed_price > 0 ? `+${addon.fixed_price} €` : ''}
+                                          {addon.price_label ? addon.price_label : addon.price_per_m2 ? `+${addon.price_per_m2} €/m²` : addon.fixed_price > 0 ? `+${addon.fixed_price} €/kpl` : ''}
                                         </p>
+                                        {active && addon.allow_quantity && (
+                                          <div className="flex items-center gap-2 mt-2" onClick={e => e.stopPropagation()}>
+                                            <button type="button" onClick={(e) => { e.stopPropagation(); changeAddonQty(addon.id, -1); }}
+                                              className="w-7 h-7 rounded-lg border border-[#CBD5E1] flex items-center justify-center text-[#0F172A] hover:bg-[#F1F5F9] transition-colors">
+                                              <Minus size={14} />
+                                            </button>
+                                            <span className="text-sm font-bold text-[#0F172A] min-w-[24px] text-center">
+                                              {typeof activeAddons[addon.id] === 'number' ? activeAddons[addon.id] : 1}
+                                            </span>
+                                            <button type="button" onClick={(e) => { e.stopPropagation(); changeAddonQty(addon.id, 1); }}
+                                              className="w-7 h-7 rounded-lg border border-[#CBD5E1] flex items-center justify-center text-[#0F172A] hover:bg-[#F1F5F9] transition-colors">
+                                              <Plus size={14} />
+                                            </button>
+                                            <span className="text-xs text-[#94A3B8]">kpl</span>
+                                          </div>
+                                        )}
                                       </div>
                                       <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all ${
                                         active ? 'bg-[#0F172A] border-[#0F172A]' : 'border-[#CBD5E1]'
