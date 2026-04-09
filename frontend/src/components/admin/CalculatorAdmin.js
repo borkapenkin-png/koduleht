@@ -89,6 +89,21 @@ const CalculatorAdmin = ({ token }) => {
     }));
   };
 
+  const updateConditionalOption = (serviceId, stepId, condKey, optionId, key, value) => {
+    setConfig(prev => ({
+      ...prev,
+      services: prev.services.map(s => {
+        if (s.id !== serviceId) return s;
+        return { ...s, steps: s.steps.map(step => {
+          if (step.id !== stepId) return step;
+          const updatedCond = { ...step.conditional_options };
+          updatedCond[condKey] = updatedCond[condKey].map(opt => opt.id === optionId ? { ...opt, [key]: value } : opt);
+          return { ...step, conditional_options: updatedCond };
+        })};
+      })
+    }));
+  };
+
   const updateAddon = (serviceId, addonId, key, value) => {
     setConfig(prev => ({
       ...prev,
@@ -389,6 +404,37 @@ const CalculatorAdmin = ({ token }) => {
                                   }));
                                 }} className="flex-1 border rounded px-2 py-1 text-xs" />
                               </div>
+                              {step.conditional_options ? (
+                                Object.entries(step.conditional_options).map(([condKey, condOpts]) => {
+                                  const parentStep = service.steps.find(s => s.id === step.conditional_on);
+                                  const parentOpt = parentStep?.options?.find(o => o.id === condKey);
+                                  const groupLabel = parentOpt?.label || condKey;
+                                  return (
+                                    <div key={condKey} className="mb-3">
+                                      <p className="text-[10px] font-semibold text-[#0D9488] uppercase mb-1">{groupLabel}</p>
+                                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                        {condOpts.map(opt => (
+                                          <div key={opt.id} className="bg-[#F8FAFC] p-2 rounded space-y-1 border-l-2 border-[#0D9488]/30">
+                                            <input type="text" value={opt.label} onChange={e => updateConditionalOption(service.id, step.id, condKey, opt.id, 'label', e.target.value)}
+                                              className="flex-1 border rounded px-1.5 py-0.5 text-xs min-w-0 w-full" title="Nimi" />
+                                            {opt.multiplier !== undefined && (
+                                              <div className="flex items-center gap-1">
+                                                <span className="text-[9px] text-[#94A3B8] whitespace-nowrap">×hinta</span>
+                                                <input type="number" step="0.01" value={opt.multiplier} onChange={e => updateConditionalOption(service.id, step.id, condKey, opt.id, 'multiplier', parseFloat(e.target.value) || 0)}
+                                                  className="w-14 border rounded px-1.5 py-0.5 text-xs text-center" title="Hintakerroin" />
+                                              </div>
+                                            )}
+                                            {opt.description !== undefined && (
+                                              <input type="text" value={opt.description || ''} onChange={e => updateConditionalOption(service.id, step.id, condKey, opt.id, 'description', e.target.value)}
+                                                className="w-full border rounded px-1.5 py-0.5 text-[10px] text-[#64748B]" placeholder="Kuvaus" title="Kuvaus" />
+                                            )}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  );
+                                })
+                              ) : step.options ? (
                               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                                 {step.options.map(opt => (
                                   <div key={opt.id} className="bg-[#F8FAFC] p-2 rounded space-y-1">
@@ -417,6 +463,7 @@ const CalculatorAdmin = ({ token }) => {
                                   </div>
                                 ))}
                               </div>
+                              ) : null}
                             </>
                           )}
                           {step.type === 'slider' && (
