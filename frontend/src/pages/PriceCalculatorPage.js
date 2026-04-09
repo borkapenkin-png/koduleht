@@ -1103,6 +1103,13 @@ const PriceCalculatorPage = () => {
       {/* DYNAMIC SERVICE PAGE SECTIONS */}
       {pageData && (
         <>
+          {/* SEO description text */}
+          {pageData.description_text && (
+            <section className="py-12 md:py-16 bg-[#F8FAFC]">
+              <div className="max-w-3xl mx-auto px-4 sm:px-6 prose prose-sm prose-slate" data-testid="calc-seo-text"
+                dangerouslySetInnerHTML={{ __html: pageData.description_text }} />
+            </section>
+          )}
           {pageData.use_global_process !== false && <ProcessSection page={pageData} settings={settings} />}
           <ServiceFAQSection faqs={serviceFaqs} settings={settings} serviceName="Hintalaskuri" />
           <ContactFormSection page={pageData} settings={settings} />
