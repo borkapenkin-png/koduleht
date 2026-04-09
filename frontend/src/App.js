@@ -989,27 +989,17 @@ const Footer = ({ logoUrl, settings, servicePages = [] }) => {
 
       {/* Main footer grid */}
       <div className="container-custom py-12 md:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-8">
 
           {/* Col 1 — Brand */}
-          <div className="sm:col-span-2 lg:col-span-1">
+          <div>
             <img src={logo} alt={companyName} className="h-9 w-auto max-w-[160px] object-contain mb-5 brightness-0 invert opacity-90" />
             <p className="text-white/50 text-[13px] leading-relaxed max-w-[260px]">
               {footerDescription}
             </p>
           </div>
 
-          {/* Col 2 — Services */}
-          <div>
-            <h4 className="text-xs font-semibold tracking-[0.15em] uppercase text-white/40 mb-5">{servicesTitle}</h4>
-            <ul className="space-y-2.5">
-              {serviceLinks.map((link, idx) => (
-                <li key={idx}>{renderLink(link, idx)}</li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Col 3 — Navigation */}
+          {/* Col 2 — Navigation */}
           <div>
             <h4 className="text-xs font-semibold tracking-[0.15em] uppercase text-white/40 mb-5">{navTitle}</h4>
             <ul className="space-y-2.5">
@@ -1019,7 +1009,7 @@ const Footer = ({ logoUrl, settings, servicePages = [] }) => {
             </ul>
           </div>
 
-          {/* Col 4 — Contact */}
+          {/* Col 3 — Contact */}
           <div>
             <h4 className="text-xs font-semibold tracking-[0.15em] uppercase text-white/40 mb-5">{contactTitle}</h4>
             <div className="space-y-3.5">
@@ -1993,31 +1983,9 @@ const AdminPanel = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div><label className="block text-sm font-medium mb-1">Palvelut-otsikko</label><input value={settings.footer_services_title || ''} onChange={(e) => setSettings({...settings, footer_services_title: e.target.value})} className="form-input text-sm" placeholder="Palvelumme" /></div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div><label className="block text-sm font-medium mb-1">Sivusto-otsikko</label><input value={settings.footer_nav_title || ''} onChange={(e) => setSettings({...settings, footer_nav_title: e.target.value})} className="form-input text-sm" placeholder="Sivusto" /></div>
                     <div><label className="block text-sm font-medium mb-1">Yhteystiedot-otsikko</label><input value={settings.footer_contact_title || ''} onChange={(e) => setSettings({...settings, footer_contact_title: e.target.value})} className="form-input text-sm" placeholder="Yhteystiedot" /></div>
-                  </div>
-
-                  {/* Dynamic Service Links */}
-                  <div className="border-t pt-3 mt-2">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-sm font-medium text-[#0F172A]">Palvelut-linkit</p>
-                      <button type="button" onClick={() => setSettings({...settings, footer_service_links: [...(settings.footer_service_links || []), {label: '', url: ''}]})} className="text-xs bg-[#0F172A] text-white px-3 py-1 rounded hover:bg-[#1E293B]">+ Lisää</button>
-                    </div>
-                    {(settings.footer_service_links && settings.footer_service_links.length > 0) ? (
-                      <div className="space-y-2">
-                        {settings.footer_service_links.map((link, idx) => (
-                          <div key={idx} className="flex items-center gap-2">
-                            <input value={link.label || ''} onChange={(e) => { const links = [...settings.footer_service_links]; links[idx] = {...links[idx], label: e.target.value}; setSettings({...settings, footer_service_links: links}); }} className="form-input text-sm flex-1" placeholder="Teksti" />
-                            <input value={link.url || ''} onChange={(e) => { const links = [...settings.footer_service_links]; links[idx] = {...links[idx], url: e.target.value}; setSettings({...settings, footer_service_links: links}); }} className="form-input text-sm flex-1" placeholder="/linkki" />
-                            <button type="button" onClick={() => { const links = settings.footer_service_links.filter((_, i) => i !== idx); setSettings({...settings, footer_service_links: links}); }} className="text-red-500 hover:text-red-700 text-lg px-1">×</button>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-[#94A3B8]">Tyhjä = käytetään Palvelusivut-välilehden sivuja automaattisesti</p>
-                    )}
                   </div>
 
                   {/* Dynamic Nav Links */}
