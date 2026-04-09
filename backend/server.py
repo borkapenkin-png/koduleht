@@ -1014,6 +1014,16 @@ async def get_service_pages():
             p['updated_at'] = datetime.fromisoformat(p['updated_at'])
     return pages
 
+@api_router.get("/service-pages-nav")
+async def get_service_pages_nav():
+    """Lightweight endpoint: only slug + page_name for navigation."""
+    pages = await db.service_pages.find(
+        {"is_published": True},
+        {"_id": 0, "slug": 1, "page_name": 1, "hero_title": 1}
+    ).to_list(100)
+    return pages
+
+
 @api_router.get("/service-pages/{slug}", response_model=ServicePage)
 async def get_service_page_by_slug(slug: str):
     """Get a single service page by its slug."""

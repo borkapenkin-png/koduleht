@@ -200,29 +200,23 @@ const PriceCalculatorPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Load config + settings
+  // Load calculator data — optimized: 4 parallel calls instead of 7
   useEffect(() => {
     Promise.all([
       fetch(`${API}/api/calculator-config`).then(r => r.json()),
       fetch(`${API}/api/settings`).then(r => r.json()).catch(() => ({})),
-      fetch(`${API}/api/service-pages`).then(r => r.json()).catch(() => []),
       fetch(`${API}/api/service-pages/hintalaskuri`).then(r => r.ok ? r.json() : null).catch(() => null),
-      fetch(`${API}/api/services`).then(r => r.json()).catch(() => []),
-      fetch(`${API}/api/faqs?service_id=hintalaskuri`).then(r => r.ok ? r.json() : []).catch(() => []),
-      fetch(`${API}/api/references`).then(r => r.json()).catch(() => [])
-    ]).then(([calcData, settingsData, spData, hintaPage, servicesData, faqsData, refsData]) => {
+      fetch(`${API}/api/service-pages-nav`).then(r => r.json()).catch(() => [])
+    ]).then(([calcData, settingsData, hintaPage, spData]) => {
       setConfig(calcData);
       setSettings(settingsData);
       setServicePages(spData);
       setPageData(hintaPage);
-      setServices(servicesData);
-      setServiceFaqs(faqsData);
-      setReferences(refsData);
+      setServices(calcData?.services?.filter(s => s.enabled !== false)?.sort((a, b) => (a.order || 0) - (b.order || 0)) || []);
       if (settingsData.theme_color) {
         document.documentElement.style.setProperty('--color-primary', settingsData.theme_color);
       }
       setLoading(false);
-      // Restore state from localStorage
       try {
         const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
         if (saved && saved.selectedService) {
@@ -234,6 +228,9 @@ const PriceCalculatorPage = () => {
         }
       } catch {}
     }).catch(() => setLoading(false));
+    // Lazy load non-critical data
+    fetch(`${API}/api/faqs?service_id=hintalaskuri`).then(r => r.ok ? r.json() : []).then(d => setServiceFaqs(d)).catch(() => {});
+    fetch(`${API}/api/references`).then(r => r.json()).then(d => setReferences(d)).catch(() => {});
   }, []);
 
   // Save to localStorage
