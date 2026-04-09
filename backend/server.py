@@ -1219,6 +1219,11 @@ async def ssr_page(path: str):
     
     try:
         css_files, js_files = get_react_assets()
+        
+        # If no CSS/JS found, reject SSR so server.js falls back to CRA index.html
+        if not css_files or not js_files:
+            return HTMLResponse(content="SSR unavailable: build assets missing", status_code=503)
+        
         html = None
         
         if path in ("", "home", "index"):

@@ -592,6 +592,11 @@ async def main():
     css_files, js_files = get_react_assets()
     print(f"Found {len(css_files)} CSS files, {len(js_files)} JS files")
     
+    if not css_files or not js_files:
+        print("WARNING: No CSS or JS files found! Skipping SSG to avoid broken HTML.")
+        client.close()
+        return 0
+    
     # Get all service pages from DB
     service_pages_cursor = db.service_pages.find({})
     service_pages = await service_pages_cursor.to_list(100)
