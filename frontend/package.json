@@ -63,7 +63,7 @@
     "dev": "craco start",
     "start": "node server.js",
     "prebuild": "echo 'Starting build...'",
-    "build": "craco build",
+    "build": "craco build && node fix-assets.js",
     "postbuild": "cd /app/backend && python generate_static_direct.py || echo 'SEO generation skipped'",
     "generate-seo": "cd /app/backend && python generate_static_direct.py",
     "test": "craco test"
