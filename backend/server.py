@@ -2514,6 +2514,13 @@ async def migrate_calculator_surface_step():
                 if step["id"] == "area" and "helper_text" not in step:
                     step["helper_text"] = "Syötä huoneiston pohjapinta-ala — laskuri muuntaa sen tasoitettavaksi pinta-alaksi."
                     updated = True
+    # Migrate: add allow_quantity to addons that should support it
+    for service in config.get("services", []):
+        for addon in service.get("addons", []):
+            if addon["id"] in ("ovien_maalaus", "extra_color", "ikkunoiden_maalaus", "kourujen_puhdistus") and not addon.get("allow_quantity"):
+                addon["allow_quantity"] = True
+                updated = True
+                logging.info(f"Migrated: {addon['id']} → allow_quantity=True")
     if updated:
         await db.calculator_config.replace_one({"id": "calculator_config"}, config)
 

@@ -5,6 +5,12 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga. Hintalaskuri
 
 ## Latest Update: April 9, 2026
 
+### Session 10: Add-on Quantity (kpl) Selection - COMPLETED
+- Add-ons with `allow_quantity: True` show +/- buttons when activated
+- Quantity multiplies `fixed_price` in calculator (e.g., 3 doors × 120€ = 360€ added)
+- Admin panel: `kpl-valinta` checkbox per add-on in Laskuri tab
+- DB migration auto-sets `allow_quantity: True` for ovien_maalaus, extra_color, ikkunoiden_maalaus, kourujen_puhdistus
+
 ### Session 9b: Tasoitustyöt area_multiplier Migration - COMPLETED
 - Converted Tasoitustyöt target_type from price `multiplier` (1.0/1.3/1.2) to `area_multiplier` (2.0/1.0/3.0) — same logic as Sisämaalaus
 - Added descriptions to Tasoitustyöt surface options (Seinäpintojen tasoitus, etc.)
