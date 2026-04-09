@@ -5,6 +5,13 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga. Hintalaskuri
 
 ## Latest Update: April 9, 2026
 
+### Session 10b: Production CSS Bug Fix - COMPLETED (April 9, 2026)
+- **Root cause**: SSG HTML files referenced old CSS hash (`main.37180c2f.css`) that didn't exist after new build
+- **Fix**: Created `fix-assets.js` post-build script that reads `asset-manifest.json` and fixes ALL 86 HTML files in `build/`
+- Added to package.json: `"build": "craco build && node fix-assets.js"`
+- Also improved: `get_react_assets()` reads from manifest, `server.js` v2 with runtime asset fixing
+- Production confirmed working
+
 ### Session 10: Add-on Quantity (kpl) Selection - COMPLETED
 - Add-ons with `allow_quantity: True` show +/- buttons when activated
 - Quantity multiplies `fixed_price` in calculator (e.g., 3 doors × 120€ = 360€ added)
