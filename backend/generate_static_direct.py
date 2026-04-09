@@ -39,20 +39,34 @@ jinja_env = Environment(
 
 
 def get_react_assets():
-    """Get CSS and JS files from React build."""
+    """Get CSS and JS files from React build using asset-manifest.json for reliability."""
     css_files = []
     js_files = []
     
     if not BUILD_DIR.exists():
         return css_files, js_files
     
-    static_dir = BUILD_DIR / "static"
+    # Primary: read from asset-manifest.json (always correct after build)
+    manifest_path = BUILD_DIR / "asset-manifest.json"
+    if manifest_path.exists():
+        try:
+            manifest = json.loads(manifest_path.read_text())
+            files = manifest.get("files", {})
+            if "main.css" in files:
+                css_files.append(files["main.css"])
+            if "main.js" in files:
+                js_files.append(files["main.js"])
+            if css_files or js_files:
+                return css_files, js_files
+        except Exception as e:
+            logging.warning(f"Failed to read asset-manifest.json: {e}")
     
+    # Fallback: scan directories
+    static_dir = BUILD_DIR / "static"
     css_dir = static_dir / "css"
     if css_dir.exists():
         for css_file in sorted(css_dir.glob("*.css")):
             css_files.append(f"/static/css/{css_file.name}")
-    
     js_dir = static_dir / "js"
     if js_dir.exists():
         for js_file in sorted(js_dir.glob("*.js")):

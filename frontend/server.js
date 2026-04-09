@@ -123,6 +123,10 @@ const server = http.createServer(async (req, res) => {
       serveStaticFile(filePath, res);
       return;
     }
+    // Return 404 for missing static assets - NEVER fall through to SPA
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not found');
+    return;
   }
 
   // Known static files at root
@@ -174,10 +178,9 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-// On startup: wait for backend, then refresh build/ files via SSR
+// On startup: wait for backend, then refresh SSG pages (NOT index.html — CRA fallback must stay intact)
 function refreshBuildFiles() {
   const pages = [
-    { path: '/', file: 'index.html' },
     { path: '/referenssit', file: 'referenssit/index.html' },
     { path: '/ukk', file: 'ukk/index.html' },
   ];
