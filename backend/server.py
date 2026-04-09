@@ -1653,14 +1653,15 @@ def get_default_calculator_config():
                         "title": "Mitä tasoitetaan?",
                         "type": "cards",
                         "options": [
-                            {"id": "walls", "label": "Seinät", "multiplier": 1.0},
-                            {"id": "ceiling", "label": "Katto", "multiplier": 1.3},
-                            {"id": "both", "label": "Seinät + katto", "multiplier": 1.2}
+                            {"id": "walls", "label": "Seinät", "description": "Seinäpintojen tasoitus", "area_multiplier": 2.0},
+                            {"id": "ceiling", "label": "Katto", "description": "Kattopintojen tasoitus", "area_multiplier": 1.0},
+                            {"id": "both", "label": "Seinät + katto", "description": "Seinä- ja kattopintojen tasoitus", "area_multiplier": 3.0}
                         ]
                     },
                     {
                         "id": "area",
                         "title": "Kuinka suuri pinta-ala on?",
+                        "helper_text": "Syötä huoneiston pohjapinta-ala — laskuri muuntaa sen tasoitettavaksi pinta-alaksi.",
                         "type": "slider",
                         "min": 10,
                         "max": 200,
@@ -2458,7 +2459,7 @@ async def seed_hintalaskuri_page():
         logging.info("Seeded hintalaskuri service page")
 
 async def migrate_calculator_surface_step():
-    """Add surface step to sisämaalaus if missing in existing DB config"""
+    """Add surface step to sisämaalaus if missing, convert tasoitustyöt to area_multiplier"""
     config = await db.calculator_config.find_one({"id": "calculator_config"})
     if not config:
         return
@@ -2486,7 +2487,23 @@ async def migrate_calculator_surface_step():
                 if step["id"] == "area" and "helper_text" not in step:
                     step["helper_text"] = "Syötä huoneiston pohjapinta-ala — laskuri muuntaa sen maalattavaksi pinta-alaksi."
                     updated = True
-                    logging.info("Migrated: Added helper_text to sisämaalaus area step")
+        if service["id"] == "tasoitustyot":
+            # Convert target_type from multiplier to area_multiplier
+            for step in service.get("steps", []):
+                if step["id"] == "target_type":
+                    area_mult_map = {"walls": 2.0, "ceiling": 1.0, "both": 3.0}
+                    desc_map = {"walls": "Seinäpintojen tasoitus", "ceiling": "Kattopintojen tasoitus", "both": "Seinä- ja kattopintojen tasoitus"}
+                    for opt in step.get("options", []):
+                        if opt["id"] in area_mult_map and "area_multiplier" not in opt:
+                            opt["area_multiplier"] = area_mult_map[opt["id"]]
+                            opt.pop("multiplier", None)
+                            if "description" not in opt or not opt["description"]:
+                                opt["description"] = desc_map.get(opt["id"], "")
+                            updated = True
+                            logging.info(f"Migrated: tasoitustyöt {opt['id']} → area_multiplier={opt['area_multiplier']}")
+                if step["id"] == "area" and "helper_text" not in step:
+                    step["helper_text"] = "Syötä huoneiston pohjapinta-ala — laskuri muuntaa sen tasoitettavaksi pinta-alaksi."
+                    updated = True
     if updated:
         await db.calculator_config.replace_one({"id": "calculator_config"}, config)
 
