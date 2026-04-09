@@ -2004,12 +2004,17 @@ def get_default_calculator_config():
 @api_router.get("/calculator-config")
 async def get_calculator_config():
     """Public endpoint - returns calculator configuration."""
+    from fastapi.responses import JSONResponse
     config = await db.calculator_config.find_one({"id": "calculator_config"}, {"_id": 0})
     if not config:
         config = get_default_calculator_config()
         await db.calculator_config.insert_one(config)
         config.pop("_id", None)
-    return config
+    return JSONResponse(content=config, headers={
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0"
+    })
 
 @api_router.get("/admin/calculator-config")
 async def admin_get_calculator_config(username: str = Depends(get_current_admin)):
