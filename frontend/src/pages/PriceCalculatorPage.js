@@ -22,16 +22,16 @@ const iconMap = { Paintbrush, Layers, Gem, Home, Triangle, Building2 };
 const fmt = (n) => Math.round(n).toLocaleString('fi-FI');
 const STORAGE_KEY = 'jb_calculator_state';
 
-// SEO Head
-const CalculatorSEO = () => {
+// SEO Head - dynamic from pageData
+const CalculatorSEO = ({ pageData }) => {
   useEffect(() => {
-    document.title = "Hintalaskuri – Laske maalaus- ja tasoitustöiden hinta | J&B Tasoitus ja Maalaus";
+    document.title = pageData?.seo_title || "Hintalaskuri – Laske maalaus- ja tasoitustöiden hinta | J&B Tasoitus ja Maalaus";
     document.getElementById('root')?.classList.add('app-ready');
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
-      metaDesc.setAttribute('content', 'Laske maalaus- ja tasoitustöiden hinta-arvio hetkessä. Sisämaalaus, ulkomaalaus, tasoitustyöt, mikrosementti, kattomaalaus ja julkisivurappaus. Kotitalousvähennys lasketaan automaattisesti.');
+      metaDesc.setAttribute('content', pageData?.seo_description || 'Laske maalaus- ja tasoitustöiden hinta-arvio hetkessä. Sisämaalaus, ulkomaalaus, tasoitustyöt, mikrosementti, kattomaalaus ja julkisivurappaus. Kotitalousvähennys lasketaan automaattisesti.');
     }
-  }, []);
+  }, [pageData]);
   return null;
 };
 
@@ -503,7 +503,7 @@ const PriceCalculatorPage = () => {
   return (
     <>
       <Navbar isScrolled={isScrolled} logoUrl={settings?.logo_url} />
-      <CalculatorSEO />
+      <CalculatorSEO pageData={pageData} />
       {config && <CalculatorSchema config={config} />}
 
       {/* HERO - matching site design */}
