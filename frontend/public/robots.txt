@@ -12,5 +12,5 @@ Disallow: /login
 Disallow: /preview
 Disallow: /dashboard
 
-# Sitemap location
-Sitemap: https://www.jbtasoitusmaalaus.fi/sitemap.xml
+# Sitemap location (dynamic API endpoint - always up to date)
+Sitemap: https://www.jbtasoitusmaalaus.fi/api/sitemap.xml
