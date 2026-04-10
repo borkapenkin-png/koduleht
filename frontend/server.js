@@ -188,8 +188,50 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // Sitemap: always proxy to backend API for fresh data
+  if (reqPath === '/sitemap.xml') {
+    try {
+      const proxyReq = http.get(`${BACKEND_URL}/api/sitemap.xml`, { timeout: 10000 }, (proxyRes) => {
+        let data = '';
+        proxyRes.on('data', chunk => data += chunk);
+        proxyRes.on('end', () => {
+          if (proxyRes.statusCode === 200) {
+            res.writeHead(200, {
+              'Content-Type': 'application/xml; charset=utf-8',
+              'Cache-Control': 'no-cache, must-revalidate',
+            });
+            res.end(data);
+          } else {
+            // Fallback to static file if API fails
+            const filePath = path.join(BUILD_DIR, 'sitemap.xml');
+            if (fs.existsSync(filePath)) {
+              serveStaticFile(filePath, res);
+            } else {
+              res.writeHead(500, { 'Content-Type': 'text/plain' });
+              res.end('Sitemap unavailable');
+            }
+          }
+        });
+      });
+      proxyReq.on('error', () => {
+        const filePath = path.join(BUILD_DIR, 'sitemap.xml');
+        if (fs.existsSync(filePath)) {
+          serveStaticFile(filePath, res);
+        } else {
+          res.writeHead(500, { 'Content-Type': 'text/plain' });
+          res.end('Sitemap unavailable');
+        }
+      });
+      proxyReq.on('timeout', () => { proxyReq.destroy(); });
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'text/plain' });
+      res.end('Sitemap error');
+    }
+    return;
+  }
+
   // Known static files at root
-  const rootStatics = ['/manifest.json', '/favicon.ico', '/robots.txt', '/sitemap.xml', '/logo192.png', '/logo512.png'];
+  const rootStatics = ['/manifest.json', '/favicon.ico', '/robots.txt', '/logo192.png', '/logo512.png'];
   if (rootStatics.includes(reqPath) || reqPath.endsWith('.map')) {
     const filePath = path.join(BUILD_DIR, reqPath);
     if (fs.existsSync(filePath)) {
