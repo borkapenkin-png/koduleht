@@ -849,13 +849,17 @@ async def get_sitemap():
 {chr(10).join(entries)}
 </urlset>'''
     
-    # Also write to build directory for static serving
+    # Also write to build directory and nginx root for static serving
     try:
         from generate_static_direct import BUILD_DIR, PUBLIC_DIR
+        from pathlib import Path
         sitemap_path = BUILD_DIR / "sitemap.xml"
         sitemap_path.write_text(xml, encoding="utf-8")
         public_path = PUBLIC_DIR / "sitemap.xml"
         public_path.write_text(xml, encoding="utf-8")
+        nginx_root = Path("/usr/share/nginx/html/sitemap.xml")
+        if nginx_root.parent.exists():
+            nginx_root.write_text(xml, encoding="utf-8")
     except Exception as e:
         logging.warning(f"Failed to write sitemap files: {e}")
     
@@ -2578,6 +2582,68 @@ async def startup_event():
         logging.info(f"Startup SSG complete: {count} pages generated")
     except Exception as e:
         logging.error(f"Startup SSG failed: {e}")
+    # Also explicitly write sitemap to all possible locations
+    try:
+        await write_sitemap_everywhere()
+    except Exception as e:
+        logging.error(f"Startup sitemap write failed: {e}")
+
+
+async def write_sitemap_everywhere():
+    """Generate sitemap from DB and write to all possible static file locations."""
+    from pathlib import Path
+    base_url = "https://www.jbtasoitusmaalaus.fi"
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    
+    areas = await db.areas.find({}, {"_id": 0}).sort("order", 1).to_list(100)
+    default_area = next((a for a in areas if a.get("is_default")), areas[0] if areas else None)
+    non_default_areas = [a for a in areas if not a.get("is_default")]
+    service_pages = await db.service_pages.find({}, {"_id": 0, "slug": 1}).to_list(100)
+    
+    urls = []
+    urls.append(("", "weekly", "1.0"))
+    urls.append(("referenssit", "monthly", "0.7"))
+    urls.append(("ukk", "monthly", "0.7"))
+    
+    for sp in service_pages:
+        slug = sp.get("slug", "")
+        if not slug:
+            continue
+        base_slug = slug
+        if default_area and slug.endswith(f"-{default_area['slug']}"):
+            base_slug = slug[:-len(f"-{default_area['slug']}")]
+        urls.append((slug, "monthly", "0.9"))
+        for area in non_default_areas:
+            variant_slug = f"{base_slug}-{area['slug']}"
+            if variant_slug != slug:
+                urls.append((variant_slug, "monthly", "0.8"))
+        if default_area and not slug.endswith(f"-{default_area['slug']}"):
+            default_variant = f"{base_slug}-{default_area['slug']}"
+            urls.append((default_variant, "monthly", "0.8"))
+    
+    entries = []
+    for path_val, freq, prio in urls:
+        loc = f"{base_url}/{path_val}" if path_val else base_url
+        entries.append(f'  <url>\n    <loc>{loc}</loc>\n    <lastmod>{today}</lastmod>\n    <changefreq>{freq}</changefreq>\n    <priority>{prio}</priority>\n  </url>')
+    
+    xml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{chr(10).join(entries)}
+</urlset>'''
+    
+    # Write to every possible location
+    paths_to_write = [
+        Path("/app/frontend/build/sitemap.xml"),
+        Path("/app/frontend/public/sitemap.xml"),
+        Path("/usr/share/nginx/html/sitemap.xml"),
+    ]
+    for p in paths_to_write:
+        try:
+            if p.parent.exists():
+                p.write_text(xml, encoding="utf-8")
+                logging.info(f"Sitemap written to {p} ({len(urls)} URLs)")
+        except Exception as e:
+            logging.warning(f"Failed to write sitemap to {p}: {e}")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():

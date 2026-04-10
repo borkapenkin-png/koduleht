@@ -877,30 +877,48 @@ async def run_ssg_with_db(db):
         
         logging.info(f"SSG in-process complete: {success_count}/{len(pages_to_generate)} pages")
         
-        # Generate sitemap.xml from all generated pages
+        # Generate sitemap.xml with proper priority values (same logic as API endpoint)
         try:
-            all_slugs = set()
-            for name, path_str, filename, generator_fn in pages_to_generate:
-                if path_str != "/" and path_str.startswith("/"):
-                    all_slugs.add(path_str.lstrip("/"))
-            
             today = datetime.now().strftime('%Y-%m-%d')
-            sitemap_urls = [SITE_URL]
-            for slug in sorted(all_slugs):
-                sitemap_urls.append(f"{SITE_URL}/{slug}")
+            urls = []
+            urls.append(("", "weekly", "1.0"))
+            urls.append(("referenssit", "monthly", "0.7"))
+            urls.append(("ukk", "monthly", "0.7"))
             
-            sitemap_entries = []
-            for url in sitemap_urls:
-                sitemap_entries.append(f'  <url>\n    <loc>{url}</loc>\n    <lastmod>{today}</lastmod>\n    <changefreq>monthly</changefreq>\n  </url>')
+            service_pages_list = await db.service_pages.find({}, {"_id": 0, "slug": 1}).to_list(100)
+            for sp in service_pages_list:
+                slug = sp.get("slug", "")
+                if not slug:
+                    continue
+                base_slug = slug
+                if default_area and slug.endswith(f"-{default_area['slug']}"):
+                    base_slug = slug[:-len(f"-{default_area['slug']}")]
+                urls.append((slug, "monthly", "0.9"))
+                for area in non_default_areas:
+                    variant_slug = f"{base_slug}-{area['slug']}"
+                    if variant_slug != slug:
+                        urls.append((variant_slug, "monthly", "0.8"))
+                if default_area and not slug.endswith(f"-{default_area['slug']}"):
+                    default_variant = f"{base_slug}-{default_area['slug']}"
+                    urls.append((default_variant, "monthly", "0.8"))
+            
+            entries = []
+            for path_val, freq, prio in urls:
+                loc = f"{SITE_URL}/{path_val}" if path_val else SITE_URL
+                entries.append(f'  <url>\n    <loc>{loc}</loc>\n    <lastmod>{today}</lastmod>\n    <changefreq>{freq}</changefreq>\n    <priority>{prio}</priority>\n  </url>')
             
             sitemap_xml = f'''<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-{chr(10).join(sitemap_entries)}
+{chr(10).join(entries)}
 </urlset>'''
             (BUILD_DIR / "sitemap.xml").write_text(sitemap_xml, encoding="utf-8")
             if PUBLIC_DIR.exists():
                 (PUBLIC_DIR / "sitemap.xml").write_text(sitemap_xml, encoding="utf-8")
-            logging.info(f"Sitemap updated: {len(sitemap_urls)} URLs")
+            # Also write to nginx production root if it exists
+            nginx_root = Path("/usr/share/nginx/html")
+            if nginx_root.exists():
+                (nginx_root / "sitemap.xml").write_text(sitemap_xml, encoding="utf-8")
+            logging.info(f"Sitemap updated: {len(urls)} URLs with priorities")
         except Exception as e:
             logging.error(f"Sitemap generation error: {e}")
         
