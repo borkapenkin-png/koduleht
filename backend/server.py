@@ -851,6 +851,7 @@ async def get_sitemap():
     
     # Also write to build directory for static serving
     try:
+        from generate_static_direct import BUILD_DIR, PUBLIC_DIR
         sitemap_path = BUILD_DIR / "sitemap.xml"
         sitemap_path.write_text(xml, encoding="utf-8")
         public_path = PUBLIC_DIR / "sitemap.xml"
