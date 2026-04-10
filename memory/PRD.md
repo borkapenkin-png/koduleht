@@ -5,6 +5,12 @@ Moderniseerida jbtasoitusmaalaus.fi veebisait koos admin paneeliga. Hintalaskuri
 
 ## Latest Update: April 9, 2026
 
+### Session 10c: Sitemap, Cache-Control, Admin Conditional Options (April 9, 2026)
+- **Sitemap fix**: Dynamic `/api/sitemap.xml` endpoint generates sitemap from DB (all areas + city variants). `robots.txt` updated to point to API endpoint with `Allow: /api/sitemap.xml` before `Disallow: /api/`. SSG now regenerates sitemap on every run. Area create/delete now triggers SSG.
+- **Calculator API Cache-Control**: Added `no-store, no-cache` headers to `/api/calculator-config` so admin price changes reflect immediately in browser
+- **Kattomaalaus admin**: Added `conditional_options` support in CalculatorAdmin.js — Peltikatto and Tiilikatto condition options now editable separately
+- **Production CSS fix**: `fix-assets.js` post-build script reads `asset-manifest.json` and fixes all HTML files
+
 ### Session 10b: Production CSS Bug Fix - COMPLETED (April 9, 2026)
 - **Root cause**: SSG HTML files referenced old CSS hash (`main.37180c2f.css`) that didn't exist after new build
 - **Fix**: Created `fix-assets.js` post-build script that reads `asset-manifest.json` and fixes ALL 86 HTML files in `build/`

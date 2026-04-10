@@ -7,10 +7,13 @@ Allow: /
 # Block internal and admin routes
 Disallow: /admin
 Disallow: /admin/
-Disallow: /api/
 Disallow: /login
 Disallow: /preview
 Disallow: /dashboard
+
+# Allow sitemap API endpoint (must be before Disallow /api/)
+Allow: /api/sitemap.xml
+Disallow: /api/
 
 # Sitemap location (dynamic API endpoint - always up to date)
 Sitemap: https://www.jbtasoitusmaalaus.fi/api/sitemap.xml
