@@ -11,9 +11,10 @@ Disallow: /login
 Disallow: /preview
 Disallow: /dashboard
 
-# Allow sitemap API endpoint before blocking other API routes
+# Allow sitemap before blocking API
+Allow: /sitemap.xml
 Allow: /api/sitemap.xml
 Disallow: /api/
 
-# Sitemap location (served dynamically from backend API)
-Sitemap: https://www.jbtasoitusmaalaus.fi/api/sitemap.xml
+# Sitemap location (nginx proxies /sitemap.xml to backend API)
+Sitemap: https://www.jbtasoitusmaalaus.fi/sitemap.xml
