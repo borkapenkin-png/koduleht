@@ -2160,6 +2160,8 @@ async def export_all_data(username: str = Depends(get_current_admin)):
             "faqs": await db.faqs.find({}, {"_id": 0}).to_list(1000),
             "service_pages": await db.service_pages.find({}, {"_id": 0}).to_list(1000),
             "areas": await db.areas.find({}, {"_id": 0}).to_list(1000),
+            "images": await db.images.find({}, {"_id": 0}).to_list(10000),
+            "calculator_config": await db.calculator_config.find({}, {"_id": 0}).to_list(1000),
         }
         return data
     except Exception as e:
