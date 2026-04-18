@@ -165,18 +165,11 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Fallback: check build directory for static HTML
-  const staticHtml = path.join(BUILD_DIR, reqPath, 'index.html');
-  const altHtml = path.join(BUILD_DIR, reqPath + '.html');
-
-  if (fs.existsSync(staticHtml)) {
-    serveStaticFile(staticHtml, res);
-  } else if (fs.existsSync(altHtml)) {
-    serveStaticFile(altHtml, res);
-  } else {
-    // Final fallback: SPA shell
-    sendSPAFallback(res);
-  }
+  // SPA runtime: always serve the React shell for app routes.
+  // Old prerendered HTML files may exist in build/ for legacy SEO export paths,
+  // but serving them causes stale markup and broken asset URLs on routes like
+  // /hintalaskuri. Static assets are already handled above.
+  sendSPAFallback(res);
 });
 
 // Optional startup refresh from backend SSR for environments that still rely on it.
