@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/site/RouterLink";
 import {
   ArrowRight,
   Calculator,
@@ -243,8 +243,8 @@ export default function HomePageLiveContent({ settings, services, servicePages }
               </p>
             </div>
 
-            <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-              <div className="space-y-4">
+            <div className="space-y-8">
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5">
                   <div className="flex items-start gap-3">
                     <MapPin size={18} className="mt-1 text-primary" />
@@ -327,3 +327,4 @@ export default function HomePageLiveContent({ settings, services, servicePages }
     </div>
   );
 }
+

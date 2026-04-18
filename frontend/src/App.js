@@ -18,6 +18,7 @@ import QuoteRequestForm from "./components/QuoteRequestFormClean";
 import { 
   Phone, Mail, MapPin, Menu, X, ChevronDown, Paintbrush, Building2, Layers,
   CheckCircle, ArrowRight, Send, Settings, LogOut, Plus, Trash2, Edit2, Save, Download,
+  ArrowLeft,
   MessageSquare, Briefcase, Upload, Award, Image as ImageIcon, Home, FileText, Users, Lock, Shield, Palette, Globe, Calendar, HelpCircle, RefreshCw,
   // Additional service icons
   Hammer, Wrench, PaintBucket, Brush, Ruler, HardHat, Construction, Warehouse,
@@ -381,7 +382,7 @@ const Navbar = ({ isScrolled, activeSection, logoUrl }) => {
   const navLinks = [
     { href: "#palvelut", label: "Palvelut" },
     { href: "#meista", label: "Meistä" },
-    { href: "#referenssit", label: "Referenssit" },
+    { href: "/referenssit", label: "Referenssit", isPage: true },
     { href: "/ukk", label: "UKK", isPage: true },
     { href: "/hintalaskuri", label: "Hintalaskuri", isPage: true },
     { href: "#yhteystiedot", label: "Yhteystiedot" },
@@ -906,7 +907,7 @@ const ContactSection = ({ settings }) => {
           
           {/* Tarjouspyyntö form - full width */}
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
-            <div className="bg-[#FAFAFA] p-6 md:p-10 border border-[#E2E8F0] rounded-lg max-w-4xl mx-auto">
+            <div className="bg-[#FAFAFA] p-6 md:p-10 border border-[#E2E8F0] rounded-lg w-full">
               <h3 className="text-xl md:text-2xl font-bold text-[#0F172A] mb-6 md:mb-8 text-center">Lähetä tarjouspyyntö</h3>
               <QuoteRequestForm />
             </div>
@@ -1121,7 +1122,11 @@ const ReferencesPage = () => {
     <PublicPageLayout settings={settings} servicePages={servicePages}>
       <section className="relative overflow-hidden bg-[#F8FAFC] py-16 md:py-24">
         <div className="container-custom relative z-10">
-          <div className="max-w-3xl">
+          <div className="max-w-[860px]">
+            <Link to="/" className="mb-6 inline-flex items-center gap-2 text-sm text-[#64748B] transition-colors hover:text-primary">
+              <ArrowLeft size={16} />
+              Takaisin etusivulle
+            </Link>
             <Subtitle settings={settings} className="mb-3">REFERENSSIT</Subtitle>
             <h1 className="text-4xl font-bold tracking-tight text-[#0F172A] md:text-5xl">
               Tutustu toteuttamiimme kohteisiin

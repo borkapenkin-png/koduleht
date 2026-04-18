@@ -1,8 +1,15 @@
-import Link from "next/link";
+import Link from "@/components/site/RouterLink";
 import { ArrowLeft } from "lucide-react";
 import { withApiUrl } from "@/lib/site-api";
 
-export default function PublicPageHero({ title, description, imageUrl, backHref = "/", backLabel = "Takaisin etusivulle" }) {
+export default function PublicPageHero({
+  title,
+  description,
+  imageUrl,
+  backHref = "/",
+  backLabel = "Takaisin etusivulle",
+  contentClassName = "max-w-4xl",
+}) {
   return (
     <section className="relative flex min-h-[38vh] items-end pt-24 md:min-h-[42vh] md:pt-32">
       <div className="absolute inset-0">
@@ -19,9 +26,12 @@ export default function PublicPageHero({ title, description, imageUrl, backHref 
           <ArrowLeft size={16} />
           {backLabel}
         </Link>
-        <h1 className="max-w-4xl text-4xl font-bold leading-tight text-[#0F172A] md:text-5xl">{title}</h1>
-        {description ? <p className="mt-4 max-w-3xl text-base leading-7 text-[#64748B] md:text-lg">{description}</p> : null}
+        <div className={contentClassName}>
+          <h1 className="text-4xl font-bold leading-tight text-[#0F172A] md:text-5xl">{title}</h1>
+          {description ? <p className="mt-4 max-w-3xl text-base leading-7 text-[#64748B] md:text-lg">{description}</p> : null}
+        </div>
       </div>
     </section>
   );
 }
+

@@ -18,6 +18,9 @@ export default function ReferencesPageContent({ settings, servicePages, referenc
           title="Referenssit"
           description="Tutustu J&B Tasoitus ja Maalaus Oy:n toteuttamiin kohteisiin. Laadukkaita maalaus- ja tasoitustöitä Helsingissä ja Uudellamaalla."
           imageUrl={settings.hero_image_url}
+          backHref="/"
+          backLabel="Takaisin etusivulle"
+          contentClassName="max-w-[860px]"
         />
 
         <section className="section-padding bg-white">
@@ -88,3 +91,4 @@ export default function ReferencesPageContent({ settings, servicePages, referenc
     </div>
   );
 }
+

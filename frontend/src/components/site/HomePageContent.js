@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/site/RouterLink";
 import {
   ArrowRight,
   CheckCircle,
@@ -368,7 +368,7 @@ export default function HomePageContent({ settings, services, references, partne
               </div>
 
               <div>
-                <div className="mx-auto max-w-4xl rounded-lg border border-[#E2E8F0] bg-[#FAFAFA] p-6 md:p-10">
+                <div className="w-full rounded-lg border border-[#E2E8F0] bg-[#FAFAFA] p-6 md:p-10">
                   <h3 className="mb-6 text-center text-xl font-bold text-[#0F172A] md:mb-8 md:text-2xl">Lähetä tarjouspyyntö</h3>
                   <QuoteRequestForm />
                 </div>
@@ -382,3 +382,4 @@ export default function HomePageContent({ settings, services, references, partne
     </div>
   );
 }
+
