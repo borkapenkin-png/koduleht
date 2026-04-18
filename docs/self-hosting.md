@@ -145,3 +145,23 @@ Parast funktsionaalse deploy kinnitamist:
 3. importida backup MongoDB-sse
 4. kontrollida public route'id ja admin login
 5. alles siis siduda domeen ja TLS
+
+## Automaatne deploy GitHub Actions kaudu
+
+Kui tahad, et iga `main` branchi push uuendaks VPS-i automaatselt:
+
+1. Ava repo `Settings > Secrets and variables > Actions > Secrets`.
+2. Lisa väärtused:
+   - `VPS_HOST` (näiteks `84.247.191.77`)
+   - `VPS_USER` (VPS ssh kasutajanimi, näiteks `root`)
+   - `VPS_SSH_KEY` (privaatvõti, mida VPS `authorized_keys` aktsepteerib)
+   - `VPS_PROJECT_PATH` (VPS-is repo kataloog, näiteks `/opt/jb-koduleht`)
+   - `VPS_SSH_PORT` (soovituslikult `22`, kui pole muudetud)
+3. Võid lisada deploy triggeri:
+   - push main branchile (automaatne)
+   - või `workflow_dispatch` (käsitsi käivitamine GitHubis)
+4. GitHubi job töötab:
+   - `git fetch`
+   - `git checkout main`
+   - `git pull --ff-only origin main`
+   - `bash deploy/vps_rollout.sh`
