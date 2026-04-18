@@ -21,7 +21,7 @@ async def main():
     if not backup_path.exists():
       raise FileNotFoundError(f"Backup file not found: {backup_path}")
 
-    data = json.loads(backup_path.read_text(encoding="utf-8"))
+    data = json.loads(backup_path.read_text(encoding="utf-8-sig"))
     client = AsyncIOMotorClient(mongo_url)
     db = client[db_name]
 
