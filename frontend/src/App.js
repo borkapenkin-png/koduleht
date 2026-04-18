@@ -457,20 +457,20 @@ const HeroSection = ({ settings }) => {
       </div>
       <div className="container-custom relative z-10 py-12 md:py-20">
         <div className="max-w-2xl">
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className={`uppercase text-primary mb-3 md:mb-4 ${subtitleClasses}`} style={{ fontFamily: `"${subtitleFont}", sans-serif` }}>{s.hero_slogan}</motion.p>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-[#0F172A] mb-4 md:mb-6 leading-tight">
+          <p className={`uppercase text-primary mb-3 md:mb-4 ${subtitleClasses}`} style={{ fontFamily: `"${subtitleFont}", sans-serif` }}>{s.hero_slogan}</p>
+          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-[#0F172A] mb-4 md:mb-6 leading-tight">
             {s.hero_title_1}<br /><span className="text-primary">{s.hero_title_2}</span> {s.hero_title_3}
-          </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-base md:text-lg text-[#64748B] mb-6 md:mb-8 max-w-xl leading-relaxed">{s.hero_description}</motion.p>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-col sm:flex-row gap-3 md:gap-4">
+          </h1>
+          <p className="text-base md:text-lg text-[#64748B] mb-6 md:mb-8 max-w-xl leading-relaxed">{s.hero_description}</p>
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
             <a href="#yhteystiedot" className="btn-primary inline-flex items-center justify-center gap-2 text-sm md:text-base">Pyydä ilmainen arvio<ArrowRight size={18} /></a>
             <Link to="/hintalaskuri" className="btn-secondary inline-flex items-center justify-center gap-2 text-sm md:text-base" data-testid="hero-calculator-btn"><Calculator size={18} />Hintalaskuri</Link>
             <a href="#palvelut" className="btn-secondary inline-flex items-center justify-center gap-2 text-sm md:text-base">Tutustu palveluihin<ChevronDown size={18} /></a>
-          </motion.div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-8 md:mt-12 flex flex-wrap items-center gap-4 md:gap-8">
+          </div>
+          <div className="mt-8 md:mt-12 flex flex-wrap items-center gap-4 md:gap-8">
             <div className="flex items-center gap-2 text-sm md:text-base text-[#64748B]"><CheckCircle size={21} className="text-primary" /><span>{s.hero_badge_1}</span></div>
             <div className="flex items-center gap-2 text-sm md:text-base text-[#64748B]"><CheckCircle size={21} className="text-primary" /><span>{s.hero_badge_2}</span></div>
-          </motion.div>
+          </div>
         </div>
       </div>
       <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute bottom-6 left-1/2 -translate-x-1/2 hidden md:block">
@@ -976,6 +976,193 @@ const Footer = ({ logoUrl, settings, servicePages = [] }) => {
         </div>
       </div>
     </footer>
+  );
+};
+
+const PublicPageLayout = ({ settings, servicePages, activeSection = "", children }) => (
+  <>
+    <Navbar isScrolled={true} activeSection={activeSection} logoUrl={settings?.logo_url} />
+    <main className="pt-16 md:pt-20">{children}</main>
+    <Footer logoUrl={settings?.logo_url} settings={settings || defaultSettings} servicePages={servicePages} />
+  </>
+);
+
+const FaqPage = () => {
+  const [settings, setSettings] = useState(defaultSettings);
+  const [servicePages, setServicePages] = useState([]);
+  const [services, setServices] = useState([]);
+  const [faqs, setFaqs] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [settingsRes, servicePagesRes, servicesRes, faqsRes] = await Promise.all([
+          axios.get(`${API}/settings`),
+          axios.get(`${API}/service-pages`).catch(() => ({ data: [] })),
+          axios.get(`${API}/services`).catch(() => ({ data: [] })),
+          axios.get(`${API}/faqs`).catch(() => ({ data: [] })),
+        ]);
+
+        const mergedSettings = { ...defaultSettings, ...settingsRes.data };
+        setSettings(mergedSettings);
+        setServicePages(Array.isArray(servicePagesRes.data) ? servicePagesRes.data : []);
+        setServices(Array.isArray(servicesRes.data) ? servicesRes.data : []);
+        setFaqs(Array.isArray(faqsRes.data) ? faqsRes.data.filter((faq) => faq.is_published !== false) : []);
+        applyTheme(mergedSettings);
+      } catch {
+        setSettings(defaultSettings);
+        setServicePages([]);
+        setServices([]);
+        setFaqs([]);
+        applyTheme(defaultSettings);
+      }
+
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    document.title = "Usein kysytyt kysymykset | J&B Tasoitus ja Maalaus Oy";
+  }, []);
+
+  const generalFaqs = faqs.filter((faq) => !faq.service_id);
+  const serviceFaqs = services
+    .map((service) => ({
+      service,
+      faqs: faqs.filter((faq) => faq.service_id === service.id),
+    }))
+    .filter((group) => group.faqs.length > 0);
+
+  return (
+    <PublicPageLayout settings={settings} servicePages={servicePages}>
+      <section className="relative overflow-hidden bg-[#F8FAFC] py-16 md:py-24">
+        <div className="container-custom relative z-10">
+          <div className="max-w-3xl">
+            <Subtitle settings={settings} className="mb-3">UKK</Subtitle>
+            <h1 className="text-4xl font-bold tracking-tight text-[#0F172A] md:text-5xl">
+              Usein kysytyt kysymykset
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-8 text-[#64748B] md:text-lg">
+              Vastauksia yleisimpiin kysymyksiin maalaus- ja tasoituspalveluistamme, hinnoittelusta,
+              kotitalousvähennyksestä ja työn toteutuksesta.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <FAQSection faqs={generalFaqs} title="Yleiset kysymykset" subtitle="UKK" />
+
+      {serviceFaqs.map(({ service, faqs: serviceItems }) => (
+        <FAQSection
+          key={service.id}
+          faqs={serviceItems}
+          title={`${service.title} – usein kysytyt kysymykset`}
+          subtitle="Palvelukohtainen UKK"
+        />
+      ))}
+
+      <section className="section-padding bg-[#F8FAFC]">
+        <div className="container-custom">
+          <div className="rounded-[28px] border border-[#E2E8F0] bg-white p-8 text-center md:p-12">
+            <h2 className="text-3xl font-bold text-[#0F172A]">Etkö löytänyt vastausta?</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-[#64748B] md:text-base">
+              Ota yhteyttä, niin käymme tilanteesi läpi nopeasti ja ehdotamme sopivan toteutustavan.
+            </p>
+            <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+              <a href="/#yhteystiedot" className="btn-primary">Ota yhteyttä</a>
+              <a href={`tel:${(settings.contact_phone_1 || "").replace(/\s/g, "")}`} className="btn-secondary">
+                Soita nyt
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </PublicPageLayout>
+  );
+};
+
+const ReferencesPage = () => {
+  const [settings, setSettings] = useState(defaultSettings);
+  const [servicePages, setServicePages] = useState([]);
+  const [references, setReferences] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [settingsRes, servicePagesRes, referencesRes] = await Promise.all([
+          axios.get(`${API}/settings`),
+          axios.get(`${API}/service-pages`).catch(() => ({ data: [] })),
+          axios.get(`${API}/references`).catch(() => ({ data: [] })),
+        ]);
+
+        const mergedSettings = { ...defaultSettings, ...settingsRes.data };
+        setSettings(mergedSettings);
+        setServicePages(Array.isArray(servicePagesRes.data) ? servicePagesRes.data : []);
+        setReferences(Array.isArray(referencesRes.data) ? referencesRes.data : []);
+        applyTheme(mergedSettings);
+      } catch {
+        setSettings(defaultSettings);
+        setServicePages([]);
+        setReferences([]);
+        applyTheme(defaultSettings);
+      }
+
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    document.title = "Referenssit | J&B Tasoitus ja Maalaus Oy";
+  }, []);
+
+  return (
+    <PublicPageLayout settings={settings} servicePages={servicePages}>
+      <section className="relative overflow-hidden bg-[#F8FAFC] py-16 md:py-24">
+        <div className="container-custom relative z-10">
+          <div className="max-w-3xl">
+            <Subtitle settings={settings} className="mb-3">REFERENSSIT</Subtitle>
+            <h1 className="text-4xl font-bold tracking-tight text-[#0F172A] md:text-5xl">
+              Tutustu toteuttamiimme kohteisiin
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-8 text-[#64748B] md:text-lg">
+              Laadukkaita maalaus-, tasoitus- ja pintakäsittelytöitä Helsingissä ja Uudellamaalla.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-padding bg-white">
+        <div className="container-custom">
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {references.map((reference) => (
+              <article key={reference.id} className="overflow-hidden rounded-[24px] border border-[#E2E8F0] bg-[#FAFBFC]">
+                <div className="aspect-[16/10] overflow-hidden">
+                  <img
+                    src={getImageUrl(reference.cover_image_url) || "https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&w=800"}
+                    alt={reference.cover_image_alt || reference.name}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="p-5 md:p-6">
+                  <h2 className="text-xl font-semibold text-[#0F172A]">{reference.name}</h2>
+                  {reference.type ? <p className="mt-2 text-sm font-medium text-primary">{reference.type}</p> : null}
+                  {reference.description ? <p className="mt-3 text-sm leading-7 text-[#64748B]">{reference.description}</p> : null}
+                  {(reference.main_contractor || reference.location || reference.year) ? (
+                    <div className="mt-5 space-y-2 border-t border-[#E2E8F0] pt-4 text-sm text-[#64748B]">
+                      {reference.main_contractor ? <p>Pääurakoitsija: {reference.main_contractor}</p> : null}
+                      {reference.location ? <p>Sijainti: {reference.location}</p> : null}
+                      {reference.year ? <p>Vuosi: {reference.year}</p> : null}
+                    </div>
+                  ) : null}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    </PublicPageLayout>
   );
 };
 
@@ -2410,12 +2597,11 @@ const FaqForm = ({ faq, onChange, onSave, onCancel, services = [] }) => (
 const HomePage = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
-  const [settings, setSettings] = useState(null);
+  const [settings, setSettings] = useState(defaultSettings);
   const [services, setServices] = useState([]);
   const [references, setReferences] = useState([]);
   const [partners, setPartners] = useState([]);
   const [servicePages, setServicePages] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -2488,14 +2674,12 @@ const HomePage = () => {
     };
 
     // Run on initial load
-    if (!isLoading) {
-      scrollToHash();
-    }
+    scrollToHash();
 
     // Listen for hash changes
     window.addEventListener('hashchange', scrollToHash);
     return () => window.removeEventListener('hashchange', scrollToHash);
-  }, [isLoading]);
+  }, []);
 
   // Set homepage SEO from settings + reveal page (FOUC prevention)
   useEffect(() => {
@@ -2510,18 +2694,6 @@ const HomePage = () => {
       if (ogDesc) ogDesc.setAttribute('content', settings.home_seo_description || settings.hero_description || '');
     }
   }, [settings]);
-
-  // Show loading state until data is fetched
-  if (isLoading || !settings) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-center">
-          <img src={LOGO_URL} alt="J&B" className="h-16 mx-auto mb-4 animate-pulse" />
-          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -2561,6 +2733,8 @@ function App() {
           <Route path="/admin" element={<AdminPanel />} />
           {/* Price Calculator */}
           <Route path="/hintalaskuri" element={<PriceCalculatorPage />} />
+          <Route path="/referenssit" element={<ReferencesPage />} />
+          <Route path="/ukk" element={<FaqPage />} />
           {/* Legacy route for old service URLs */}
           <Route path="/palvelut/:slug" element={<DynamicServicePage />} />
           {/* New SEO-friendly Finnish URLs - catch-all for service pages */}

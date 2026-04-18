@@ -1,11 +1,11 @@
-ï»¿import Link from "next/link";
+import Link from "@/components/site/RouterLink";
 import { withApiUrl } from "@/lib/public-env";
 
 export default function SiteFooterLegacy({ settings = {}, servicePages = [] }) {
   const footerServices = servicePages.filter((page) => page.is_published);
   const companyName = settings.company_name || "J&B Tasoitus ja Maalaus Oy";
-  const footerDescription = settings.footer_description || "Tasoitus- ja maalaustyÃ¶t HelsingissÃ¤ ja Uudellamaalla.";
-  const footerServiceArea = settings.footer_service_area || "Palvelemme asiakkaita HelsingissÃƒÂ¤ ja koko Uudenmaan alueella.";
+  const footerDescription = settings.footer_description || "Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla.";
+  const footerServiceArea = settings.footer_service_area || "Palvelemme asiakkaita HelsingissÃ¤ ja koko Uudenmaan alueella.";
   const city = settings.company_city || "Helsinki";
   const logo = withApiUrl(settings.logo_url);
 
@@ -41,7 +41,7 @@ export default function SiteFooterLegacy({ settings = {}, servicePages = [] }) {
             <p className="mb-3 text-sm font-medium text-white/80">Sivusto</p>
             <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-white/60 md:text-sm">
               <a href="/#palvelut" className="transition-colors hover:text-white">Palvelut</a>
-              <a href="/#meista" className="transition-colors hover:text-white">MeistÃ¤</a>
+              <a href="/#meista" className="transition-colors hover:text-white">Meistä</a>
               <Link href="/referenssit" className="transition-colors hover:text-white">Referenssit</Link>
               <Link href="/ukk" className="transition-colors hover:text-white">UKK</Link>
               <Link href="/hintalaskuri" className="transition-colors hover:text-white">Hintalaskuri</Link>
@@ -51,9 +51,10 @@ export default function SiteFooterLegacy({ settings = {}, servicePages = [] }) {
         </div>
 
         <div className="mt-8 border-t border-white/10 pt-6 text-center text-xs text-white/40 md:mt-10 md:pt-8">
-          <p>Â© {new Date().getFullYear()} {companyName} Â· {city}, Finland</p>
+          <p>© {new Date().getFullYear()} {companyName} · {city}, Finland</p>
         </div>
       </div>
     </footer>
   );
 }
+

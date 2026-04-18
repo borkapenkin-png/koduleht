@@ -1,15 +1,16 @@
 ﻿"use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from "@/components/site/RouterLink";
+import { useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { withApiUrl } from "@/lib/public-env";
 
 export default function SiteHeaderLegacy({ settings = {}, isHome = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const pathname = usePathname();
+  const location = useLocation();
+  const pathname = location.pathname;
   const isHomePage = pathname === "/";
   const logo = withApiUrl(settings.logo_url);
 
