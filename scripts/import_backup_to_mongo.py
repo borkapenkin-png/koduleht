@@ -8,6 +8,46 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_BACKUP_PATH = ROOT / "production_data_export.json"
+SUSPICIOUS_TEXT_MARKERS = (
+    "Ã¤", "Ã„", "Ã¶", "Ã–", "Ã¥", "Ã…", "Ã©",
+    "Â", "â€“", "â€”", "â€™", "â€œ", "â€", "â€¢", "â‚¬", "â„¢", "â€¦",
+)
+
+
+def mojibake_score(value: str) -> int:
+    return sum(value.count(marker) for marker in SUSPICIOUS_TEXT_MARKERS)
+
+
+def repair_text(value: str) -> str:
+    original_score = mojibake_score(value)
+    if original_score == 0:
+        return value
+
+    best_value = value
+    best_score = original_score
+
+    for encoding in ("cp1252", "latin-1"):
+        try:
+            candidate = value.encode(encoding).decode("utf-8")
+        except (UnicodeEncodeError, UnicodeDecodeError):
+            continue
+
+        candidate_score = mojibake_score(candidate)
+        if candidate_score < best_score:
+            best_value = candidate
+            best_score = candidate_score
+
+    return best_value
+
+
+def normalize_text_payload(value):
+    if isinstance(value, str):
+        return repair_text(value)
+    if isinstance(value, list):
+        return [normalize_text_payload(item) for item in value]
+    if isinstance(value, dict):
+        return {key: normalize_text_payload(item) for key, item in value.items()}
+    return value
 
 
 async def main():
@@ -21,7 +61,7 @@ async def main():
     if not backup_path.exists():
       raise FileNotFoundError(f"Backup file not found: {backup_path}")
 
-    data = json.loads(backup_path.read_text(encoding="utf-8-sig"))
+    data = normalize_text_payload(json.loads(backup_path.read_text(encoding="utf-8-sig")))
     client = AsyncIOMotorClient(mongo_url)
     db = client[db_name]
 
