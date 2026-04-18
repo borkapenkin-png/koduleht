@@ -5,17 +5,16 @@ import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-do
 import { HelmetProvider } from "react-helmet-async";
 import { SEOHead, COMPANY } from "./seo/SEOHead";
 import { serviceSlugMap } from "./seo/serviceContent";
-import DynamicServicePage, { ServiceAreasSection } from "./pages/DynamicServicePage";
-import ReferencesPage from "./pages/ReferencesPage";
-import FaqHubPage from "./pages/FaqHubPage";
-import PriceCalculatorPage from "./pages/PriceCalculatorPage";
+import { getApiBaseUrl, withApiUrl } from "./lib/public-env";
+import DynamicServicePage, { ServiceAreasSection } from "./components/service-page/DynamicServicePage";
+import PriceCalculatorPage from "./components/calculator/PriceCalculatorPage";
 import ServicePagesAdmin from "./components/admin/ServicePagesAdmin";
 import GlobalSettingsAdmin from "./components/admin/GlobalSettingsAdmin";
 import AreasAdmin from "./components/admin/AreasAdmin";
 import CalculatorAdmin from "./components/admin/CalculatorAdmin";
 import StructuredData from "./components/StructuredData";
 import FAQSection from "./components/FAQSection";
-import QuoteRequestForm from "./components/QuoteRequestForm";
+import QuoteRequestForm from "./components/QuoteRequestFormClean";
 import { 
   Phone, Mail, MapPin, Menu, X, ChevronDown, Paintbrush, Building2, Layers,
   CheckCircle, ArrowRight, Send, Settings, LogOut, Plus, Trash2, Edit2, Save, Download,
@@ -41,7 +40,7 @@ const useGA4PageTracking = () => {
   }, [location]);
 };
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = getApiBaseUrl();
 const API = `${BACKEND_URL}/api`;
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png";
 
@@ -49,12 +48,7 @@ const LOGO_URL = "https://customer-assets.emergentagent.com/job_modern-jbta/arti
 // Use this everywhere images are displayed
 const getImageUrl = (url) => {
   if (!url) return null;
-  // If already absolute URL, return as-is
-  if (url.startsWith('http://') || url.startsWith('https://')) return url;
-  // If relative URL (starts with /), prepend backend URL
-  if (url.startsWith('/')) return `${BACKEND_URL}${url}`;
-  // Otherwise return as-is
-  return url;
+  return withApiUrl(url);
 };
 
 // Extended icon map with more service icons
@@ -88,9 +82,6 @@ const defaultSettings = {
   about_year: "2018",
   about_info_title: "Muista kotitalousvähennys!",
   about_info_text: "Maalaus luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen.",
-  kotitalous_description: "Maalaus- ja tasoitustyöt luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen.",
-  kotitalous_highlight: "Jopa 40% vähennys",
-  kotitalous_details: "Työn osuudesta, max 2 250 €/vuosi",
   company_stats: [
     { value: "300+", label: "Toteutettua kohdetta" },
     { value: "3,7M€", label: "Liikevaihto" },
@@ -182,6 +173,19 @@ const lightenColor = (hex, percent) => {
   return `#${(0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1)}`;
 };
 
+const ensureArray = (value) => {
+  if (Array.isArray(value)) return value;
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+};
+
 // Helper to get subtitle classes from settings
 const getSubtitleClasses = (settings) => {
   const sizeClass = {
@@ -263,8 +267,7 @@ const ImageUpload = ({ currentImage, onImageChange, token }) => {
   // Helper to get display URL (adds BACKEND_URL if relative path)
   const getDisplayUrl = (url) => {
     if (!url) return "";
-    if (url.startsWith('http://') || url.startsWith('https://')) return url;
-    return `${BACKEND_URL}${url}`;
+    return withApiUrl(url) || "";
   };
 
   const handleFileSelect = async (e) => {
@@ -323,8 +326,7 @@ const ImageUploadWithAlt = ({ currentImage, currentAlt, onImageChange, onAltChan
 
   const getDisplayUrl = (url) => {
     if (!url) return "";
-    if (url.startsWith('http://') || url.startsWith('https://')) return url;
-    return `${BACKEND_URL}${url}`;
+    return withApiUrl(url) || "";
   };
 
   const handleFileSelect = async (e) => {
@@ -492,7 +494,10 @@ const getServiceAltText = (title) => {
   return altMap[title] || `${title} Helsinki - J&B Tasoitus ja Maalaus`;
 };
 
-const ServicesSection = ({ services_data, settings }) => (
+const ServicesSection = ({ services_data = [], settings }) => {
+  const servicesList = Array.isArray(services_data) ? services_data : [];
+
+  return (
   <section id="palvelut" data-testid="services-section" className="section-padding section-bg-alt" aria-labelledby="services-heading">
     <div className="container-custom">
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10 md:mb-16">
@@ -500,7 +505,7 @@ const ServicesSection = ({ services_data, settings }) => (
         <h2 id="services-heading" className="section-title">Palvelumme</h2>
       </motion.div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
-        {services_data.map((service, index) => {
+        {servicesList.map((service, index) => {
           const Icon = iconMap[service.icon] || Building2;
           // Use link_url from service if available, otherwise fall back to static map
           const serviceSlug = service.link_url || serviceSlugMap[service.title];
@@ -547,14 +552,15 @@ const ServicesSection = ({ services_data, settings }) => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 // ========== ABOUT ==========
 const AboutSection = ({ settings }) => {
   const s = { ...defaultSettings, ...settings };
   const aboutImage = s.about_image_url || defaultSettings.about_image_url;
-  const stats = s.company_stats || [];
-  const trustBadges = s.trust_badges || [];
+  const stats = ensureArray(s.company_stats);
+  const trustBadges = ensureArray(s.trust_badges);
   // Fallback to old footer_trust_badge fields if trust_badges array is empty
   const legacyBadges = [];
   if (trustBadges.length === 0) {
@@ -638,6 +644,7 @@ const AboutSection = ({ settings }) => {
 
 // ========== REFERENCES - Image + Text cards with "Näytä lisää" ==========
 const ReferencesSection = ({ settings, references }) => {
+  const referencesList = ensureArray(references);
   // State for showing more references
   const [showAll, setShowAll] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -664,8 +671,8 @@ const ReferencesSection = ({ settings, references }) => {
   
   // Calculate how many to show
   const initialCount = isMobile ? refSettings.initialCountMobile : refSettings.initialCountDesktop;
-  const visibleRefs = showAll ? references : references.slice(0, initialCount);
-  const hasMore = references.length > initialCount;
+  const visibleRefs = showAll ? referencesList : referencesList.slice(0, initialCount);
+  const hasMore = referencesList.length > initialCount;
   
   // Default placeholder image
   const placeholderImage = "https://images.pexels.com/photos/5691544/pexels-photo-5691544.jpeg?auto=compress&cs=tinysrgb&w=600";
@@ -686,7 +693,7 @@ const ReferencesSection = ({ settings, references }) => {
               className="btn-secondary inline-flex items-center gap-2 px-6 py-3"
               data-testid="references-view-all-btn"
             >
-              Katso kaikki referenssit ({references.length})
+              Katso kaikki referenssit ({referencesList.length})
               <ArrowRight size={18} />
             </Link>
           </div>
@@ -913,134 +920,59 @@ const ContactSection = ({ settings }) => {
 
 // ========== FOOTER ==========
 const Footer = ({ logoUrl, settings, servicePages = [] }) => {
-  const s = settings || {};
-  const logo = logoUrl || s.logo_url || LOGO_URL;
-  const companyName = s.company_name || 'J&B Tasoitus ja Maalaus Oy';
-  const footerDescription = s.footer_description || 'Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla.';
-  const footerServiceArea = s.footer_service_area || 'Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella.';
-  const city = s.company_city || 'Helsinki';
-  const servicesTitle = s.footer_services_title || 'Palvelumme';
-  const navTitle = s.footer_nav_title || 'Sivusto';
-  const contactTitle = s.footer_contact_title || 'Yhteystiedot';
-  const phone = s.contact_phone_1 || '+358 40 054 7270';
-  const email = s.contact_email || 'info@jbtasoitusmaalaus.fi';
-  const address = s.contact_address || 'Sienitie 52, 00760 Helsinki';
-  const ctaHeading = s.footer_cta_heading || '';
-  const ctaText = s.footer_cta_text || '';
-  const ctaButtonLabel = s.footer_cta_button_label || 'Pyydä tarjous';
-  const ctaButtonLink = s.footer_cta_button_link || '#yhteystiedot';
-  const cta2Label = s.footer_cta2_button_label || 'Hintalaskuri';
-  const cta2Link = s.footer_cta2_button_link || '/hintalaskuri';
-  const privacyLink = s.footer_privacy_link || '';
-  const cookieLink = s.footer_cookie_link || '';
-  const copyrightText = s.footer_copyright || '';
-
-  const bgColor = s.footer_bg_color || '#0B1120';
-  const navLinks = (s.footer_nav_links && s.footer_nav_links.length > 0) ? s.footer_nav_links : [
-    { label: 'Palvelut', url: '#palvelut' },
-    { label: 'Meistä', url: '#meista' },
-    { label: 'Referenssit', url: '/referenssit' },
-    { label: 'UKK', url: '/ukk' },
-    { label: 'Hintalaskuri', url: '/hintalaskuri' },
-    { label: 'Yhteystiedot', url: '#yhteystiedot' },
-  ];
-  const serviceLinks = (s.footer_service_links && s.footer_service_links.length > 0)
-    ? s.footer_service_links
-    : servicePages.map(sp => ({ label: sp.hero_title || sp.title || sp.slug, url: `/${sp.slug}` }));
-
-  const renderLink = (link, idx) => {
-    const isInternal = link.url.startsWith('/');
-    const cls = "text-[13px] text-white/60 hover:text-white transition-colors duration-200";
-    return isInternal
-      ? <Link key={idx} to={link.url} className={cls}>{link.label}</Link>
-      : <a key={idx} href={link.url} className={cls}>{link.label}</a>;
-  };
-
+  const footerPages = Array.isArray(servicePages) ? servicePages : [];
+  const logo = logoUrl || settings?.logo_url || LOGO_URL;
+  const companyName = settings?.company_name || 'J&B Tasoitus ja Maalaus Oy';
+  const footerDescription = settings?.footer_description || 'Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla.';
+  const footerServiceArea = settings?.footer_service_area || 'Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella.';
+  const city = settings?.company_city || 'Helsinki';
+  
   return (
-    <footer data-testid="footer" style={{ backgroundColor: bgColor }}  className="text-white">
-      {/* Optional CTA band */}
-      {ctaHeading && (
-        <div className="border-b border-white/[0.06]">
-          <div className="container-custom py-10 md:py-14 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="text-center md:text-left">
-              <h3 className="text-lg md:text-xl font-bold text-white mb-1">{ctaHeading}</h3>
-              {ctaText && <p className="text-white/50 text-sm max-w-md">{ctaText}</p>}
-            </div>
-            <div className="flex flex-col sm:flex-row items-center gap-3">
-              <a
-                href={ctaButtonLink}
-                data-testid="footer-cta-btn"
-                className="btn-primary inline-flex items-center gap-2 text-sm px-7 py-3 whitespace-nowrap"
-              >
-                {ctaButtonLabel}
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-              </a>
-              <a
-                href={cta2Link}
-                data-testid="footer-cta2-btn"
-                className="inline-flex items-center gap-2 border border-white/20 text-white font-semibold text-sm px-7 py-3 rounded-lg hover:bg-white/10 transition-colors whitespace-nowrap"
-              >
-                {cta2Label}
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Main footer grid */}
-      <div className="container-custom py-12 md:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-8">
-
-          {/* Col 1 — Brand */}
+    <footer data-testid="footer" className="footer-bg text-white py-10 md:py-14">
+      <div className="container-custom">
+        {/* Main footer content */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+          
+          {/* Company info + SEO description */}
           <div>
-            <img src={logo} alt={companyName} className="h-9 w-auto max-w-[160px] object-contain mb-5 brightness-0 invert opacity-90" />
-            <p className="text-white/50 text-[13px] leading-relaxed max-w-[260px]">
+            <img src={logo} alt={companyName} className="h-10 md:h-12 w-auto max-w-[180px] object-contain mb-4" />
+            <p className="text-white/80 text-sm font-medium mb-2">{companyName}</p>
+            <p className="text-white/60 text-xs md:text-sm leading-relaxed">
               {footerDescription}
             </p>
+            <p className="text-white/50 text-xs mt-4 leading-relaxed">
+              {footerServiceArea}
+            </p>
           </div>
-
-          {/* Col 2 — Navigation */}
+          
+          {/* Services list - dynamic from service pages */}
           <div>
-            <h4 className="text-xs font-semibold tracking-[0.15em] uppercase text-white/40 mb-5">{navTitle}</h4>
-            <ul className="space-y-2.5">
-              {navLinks.map((link, idx) => (
-                <li key={idx}>{renderLink(link, idx)}</li>
+            <p className="text-white/80 text-sm font-medium mb-3">Palvelumme:</p>
+            <ul className="grid grid-cols-1 gap-y-2 text-xs md:text-sm text-white/60">
+              {footerPages.map((sp) => (
+                <li key={sp.slug}><Link to={`/${sp.slug}`} className="hover:text-white transition-colors">{sp.hero_title || sp.title || sp.slug}</Link></li>
               ))}
             </ul>
           </div>
-
-          {/* Col 3 — Contact */}
+          
+          {/* Navigation links */}
           <div>
-            <h4 className="text-xs font-semibold tracking-[0.15em] uppercase text-white/40 mb-5">{contactTitle}</h4>
-            <div className="space-y-3.5">
-              <a href={`tel:${phone.replace(/\s/g, '')}`} className="flex items-start gap-2.5 text-[13px] text-white/60 hover:text-white transition-colors group">
-                <svg className="w-4 h-4 mt-0.5 shrink-0 text-white/30 group-hover:text-white/60 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" /></svg>
-                <span>{phone}</span>
-              </a>
-              <a href={`mailto:${email}`} className="flex items-start gap-2.5 text-[13px] text-white/60 hover:text-white transition-colors group">
-                <svg className="w-4 h-4 mt-0.5 shrink-0 text-white/30 group-hover:text-white/60 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
-                <span>{email}</span>
-              </a>
-              <div className="flex items-start gap-2.5 text-[13px] text-white/40">
-                <svg className="w-4 h-4 mt-0.5 shrink-0 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
-                <span>{address}</span>
-              </div>
+            <p className="text-white/80 text-sm font-medium mb-3">Sivusto</p>
+            <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs md:text-sm text-white/60">
+              <a href="#palvelut" className="hover:text-white transition-colors">Palvelut</a>
+              <a href="#meista" className="hover:text-white transition-colors">Meistä</a>
+              <Link to="/referenssit" className="hover:text-white transition-colors">Referenssit</Link>
+              <Link to="/ukk" className="hover:text-white transition-colors">UKK</Link>
+              <Link to="/hintalaskuri" className="hover:text-white transition-colors">Hintalaskuri</Link>
+              <a href="#yhteystiedot" className="hover:text-white transition-colors">Yhteystiedot</a>
             </div>
           </div>
-
+          
         </div>
-      </div>
-
-      {/* Bottom bar */}
-      <div className="border-t border-white/[0.06]">
-        <div className="container-custom py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-white/30">
-          <p>{copyrightText || `© ${new Date().getFullYear()} ${companyName}`} · {city}</p>
-          {(privacyLink || cookieLink) && (
-            <div className="flex items-center gap-4">
-              {privacyLink && <a href={privacyLink} className="hover:text-white/60 transition-colors">Tietosuojaseloste</a>}
-              {cookieLink && <a href={cookieLink} className="hover:text-white/60 transition-colors">Evästekäytäntö</a>}
-            </div>
-          )}
+        
+        {/* Copyright */}
+        <div className="border-t border-white/10 mt-8 md:mt-10 pt-6 md:pt-8 text-center text-xs text-white/40">
+          <p>© {new Date().getFullYear()} {companyName} · {city}, Finland</p>
         </div>
       </div>
     </footer>
@@ -1058,10 +990,6 @@ const AdminPanel = () => {
   const [services, setServices] = useState([]);
   const [references, setReferences] = useState([]);
 
-  // Reveal page immediately for admin panel (FOUC prevention)
-  useEffect(() => {
-    document.getElementById('root')?.classList.add('app-ready');
-  }, []);
   const [partners, setPartners] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [faqs, setFaqs] = useState([]);
@@ -1971,73 +1899,9 @@ const AdminPanel = () => {
                 {/* Footer */}
                 <div className="bg-white border p-4 md:p-6 space-y-4">
                   <h3 className="font-bold text-[#0F172A] border-b pb-2">Alatunniste (Footer)</h3>
-                  
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1"><label className="block text-sm font-medium mb-1">Yrityksen kuvaus</label><input value={settings.footer_description || ''} onChange={(e) => setSettings({...settings, footer_description: e.target.value})} className="form-input text-sm" placeholder="Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla." /></div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Taustaväri</label>
-                      <div className="flex items-center gap-2">
-                        <input type="color" value={settings.footer_bg_color || '#0B1120'} onChange={(e) => setSettings({...settings, footer_bg_color: e.target.value})} className="w-10 h-10 rounded cursor-pointer border" />
-                        <input type="text" value={settings.footer_bg_color || '#0B1120'} onChange={(e) => setSettings({...settings, footer_bg_color: e.target.value})} className="form-input text-sm w-28" placeholder="#0B1120" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><label className="block text-sm font-medium mb-1">Sivusto-otsikko</label><input value={settings.footer_nav_title || ''} onChange={(e) => setSettings({...settings, footer_nav_title: e.target.value})} className="form-input text-sm" placeholder="Sivusto" /></div>
-                    <div><label className="block text-sm font-medium mb-1">Yhteystiedot-otsikko</label><input value={settings.footer_contact_title || ''} onChange={(e) => setSettings({...settings, footer_contact_title: e.target.value})} className="form-input text-sm" placeholder="Yhteystiedot" /></div>
-                  </div>
-
-                  {/* Dynamic Nav Links */}
-                  <div className="border-t pt-3 mt-2">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-sm font-medium text-[#0F172A]">Sivusto-linkit</p>
-                      <button type="button" onClick={() => setSettings({...settings, footer_nav_links: [...(settings.footer_nav_links || []), {label: '', url: ''}]})} className="text-xs bg-[#0F172A] text-white px-3 py-1 rounded hover:bg-[#1E293B]">+ Lisää</button>
-                    </div>
-                    {(settings.footer_nav_links && settings.footer_nav_links.length > 0) ? (
-                      <div className="space-y-2">
-                        {settings.footer_nav_links.map((link, idx) => (
-                          <div key={idx} className="flex items-center gap-2">
-                            <input value={link.label || ''} onChange={(e) => { const links = [...settings.footer_nav_links]; links[idx] = {...links[idx], label: e.target.value}; setSettings({...settings, footer_nav_links: links}); }} className="form-input text-sm flex-1" placeholder="Teksti" />
-                            <input value={link.url || ''} onChange={(e) => { const links = [...settings.footer_nav_links]; links[idx] = {...links[idx], url: e.target.value}; setSettings({...settings, footer_nav_links: links}); }} className="form-input text-sm flex-1" placeholder="/linkki" />
-                            <button type="button" onClick={() => { const links = settings.footer_nav_links.filter((_, i) => i !== idx); setSettings({...settings, footer_nav_links: links}); }} className="text-red-500 hover:text-red-700 text-lg px-1">×</button>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-[#94A3B8]">Tyhjä = oletuslinkit (Palvelut, Meistä, Referenssit, UKK, Hintalaskuri, Yhteystiedot)</p>
-                    )}
-                  </div>
-
-                  <div className="border-t pt-3 mt-2">
-                    <p className="text-sm font-medium text-[#0F172A] mb-2">CTA-palkki (valikuline)</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div><label className="block text-sm font-medium mb-1">CTA otsikko</label><input value={settings.footer_cta_heading || ''} onChange={(e) => setSettings({...settings, footer_cta_heading: e.target.value})} className="form-input text-sm" placeholder="Pyydä ilmainen arvio" /></div>
-                      <div><label className="block text-sm font-medium mb-1">CTA teksti</label><input value={settings.footer_cta_text || ''} onChange={(e) => setSettings({...settings, footer_cta_text: e.target.value})} className="form-input text-sm" placeholder="Saat tarjouksen 24h sisällä." /></div>
-                    </div>
-                    <p className="text-xs font-medium text-[#64748B] mt-3 mb-2">Ensimmäinen painike</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div><label className="block text-sm font-medium mb-1">Painike 1 teksti</label><input value={settings.footer_cta_button_label || ''} onChange={(e) => setSettings({...settings, footer_cta_button_label: e.target.value})} className="form-input text-sm" placeholder="Pyydä tarjous" /></div>
-                      <div><label className="block text-sm font-medium mb-1">Painike 1 linkki</label><input value={settings.footer_cta_button_link || ''} onChange={(e) => setSettings({...settings, footer_cta_button_link: e.target.value})} className="form-input text-sm" placeholder="#yhteystiedot" /></div>
-                    </div>
-                    <p className="text-xs font-medium text-[#64748B] mt-3 mb-2">Toinen painike</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div><label className="block text-sm font-medium mb-1">Painike 2 teksti</label><input value={settings.footer_cta2_button_label || ''} onChange={(e) => setSettings({...settings, footer_cta2_button_label: e.target.value})} className="form-input text-sm" placeholder="Hintalaskuri" /></div>
-                      <div><label className="block text-sm font-medium mb-1">Painike 2 linkki</label><input value={settings.footer_cta2_button_link || ''} onChange={(e) => setSettings({...settings, footer_cta2_button_link: e.target.value})} className="form-input text-sm" placeholder="/hintalaskuri" /></div>
-                    </div>
-                    <p className="text-xs text-[#94A3B8] mt-1">Jätä CTA otsikko tyhjäksi, jos et halua CTA-palkkia.</p>
-                  </div>
-
-                  <div className="border-t pt-3 mt-2">
-                    <p className="text-sm font-medium text-[#0F172A] mb-2">Alarivi</p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div><label className="block text-sm font-medium mb-1">Copyright-teksti</label><input value={settings.footer_copyright || ''} onChange={(e) => setSettings({...settings, footer_copyright: e.target.value})} className="form-input text-sm" placeholder="Tyhjä = automaattinen" /></div>
-                      <div><label className="block text-sm font-medium mb-1">Tietosuoja-linkki</label><input value={settings.footer_privacy_link || ''} onChange={(e) => setSettings({...settings, footer_privacy_link: e.target.value})} className="form-input text-sm" placeholder="/tietosuoja" /></div>
-                      <div><label className="block text-sm font-medium mb-1">Eväste-linkki</label><input value={settings.footer_cookie_link || ''} onChange={(e) => setSettings({...settings, footer_cookie_link: e.target.value})} className="form-input text-sm" placeholder="/evasteet" /></div>
-                    </div>
-                  </div>
-                  
-                  <p className="text-xs text-[#94A3B8]">Yhteystiedot tulevat Yhteystiedot-osiosta.</p>
+                  <div><label className="block text-sm font-medium mb-1">Yrityksen kuvaus</label><input value={settings.footer_description || ''} onChange={(e) => setSettings({...settings, footer_description: e.target.value})} className="form-input text-sm" placeholder="Tasoitus- ja maalaustyöt Helsingissä ja Uudellamaalla." /></div>
+                  <div><label className="block text-sm font-medium mb-1">Palvelualue teksti</label><input value={settings.footer_service_area || ''} onChange={(e) => setSettings({...settings, footer_service_area: e.target.value})} className="form-input text-sm" placeholder="Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella." /></div>
+                  <p className="text-xs text-[#94A3B8]">Palvelut-linkit tulevat automaattisesti Palvelusivut-välilehdestä.</p>
                 </div>
               </div>
             )}
@@ -2563,12 +2427,17 @@ const HomePage = () => {
           axios.get(`${API}/partners`),
           axios.get(`${API}/service-pages`)
         ]);
-        const mergedSettings = { ...defaultSettings, ...settingsRes.data };
+        const mergedSettings = {
+          ...defaultSettings,
+          ...settingsRes.data,
+          company_stats: ensureArray(settingsRes.data?.company_stats ?? defaultSettings.company_stats),
+          trust_badges: ensureArray(settingsRes.data?.trust_badges ?? defaultSettings.trust_badges),
+        };
         setSettings(mergedSettings);
-        setServices(servicesRes.data);
-        setReferences(refsRes.data);
-        setPartners(partnersRes.data);
-        setServicePages(servicePagesRes.data || []);
+        setServices(Array.isArray(servicesRes.data) ? servicesRes.data : []);
+        setReferences(Array.isArray(refsRes.data) ? refsRes.data : []);
+        setPartners(Array.isArray(partnersRes.data) ? partnersRes.data : []);
+        setServicePages(Array.isArray(servicePagesRes.data) ? servicePagesRes.data : []);
         // Apply theme
         applyTheme(mergedSettings);
       } catch {
@@ -2640,10 +2509,6 @@ const HomePage = () => {
       const ogDesc = document.querySelector('meta[property="og:description"]');
       if (ogDesc) ogDesc.setAttribute('content', settings.home_seo_description || settings.hero_description || '');
     }
-    // Reveal page after SEO is set — prevents FOUC
-    if (settings) {
-      document.getElementById('root')?.classList.add('app-ready');
-    }
   }, [settings]);
 
   // Show loading state until data is fetched
@@ -2694,10 +2559,6 @@ function App() {
           <Route path="/" element={<HomePage />} />
           {/* Admin panel - MUST be before catch-all route */}
           <Route path="/admin" element={<AdminPanel />} />
-          {/* FAQ hub page */}
-          <Route path="/ukk" element={<FaqHubPage />} />
-          {/* References page - SEO dedicated page */}
-          <Route path="/referenssit" element={<ReferencesPage />} />
           {/* Price Calculator */}
           <Route path="/hintalaskuri" element={<PriceCalculatorPage />} />
           {/* Legacy route for old service URLs */}

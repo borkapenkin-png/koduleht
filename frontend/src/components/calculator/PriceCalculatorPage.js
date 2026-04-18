@@ -1,37 +1,45 @@
+"use client";
+
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import Link from '@/components/site/RouterLink';
 import {
   Paintbrush, Layers, Gem, Home, Triangle, Building2,
   ChevronRight, ChevronLeft, Check, ArrowRight,
   Phone, Mail, User, Send, RotateCcw, CheckCircle, Clock, Award, Shield, Star,
-  HelpCircle, ChevronDown, Camera, Info, Minus, Plus
+  HelpCircle, ChevronDown, Camera, Info
 } from 'lucide-react';
-import { Navbar, Footer } from '../App';
+import SiteHeader from '@/components/site/SiteHeaderLegacy';
+import SiteFooter from '@/components/site/SiteFooterLegacy';
+import { getApiBaseUrl } from '@/lib/public-env';
 import {
+  TrustBadges,
+  DescriptionSection,
+  FeaturesSection,
+  WhyChooseSection,
   ProcessSection,
+  ServiceAreasSection,
   ServiceFAQSection,
   ContactFormSection,
   StrongCTA,
   Subtitle,
   getImageUrl
-} from './DynamicServicePage';
+} from '@/components/service-page/DynamicServicePage';
 
-const API = process.env.REACT_APP_BACKEND_URL || '';
+const API = getApiBaseUrl();
 const iconMap = { Paintbrush, Layers, Gem, Home, Triangle, Building2 };
 const fmt = (n) => Math.round(n).toLocaleString('fi-FI');
 const STORAGE_KEY = 'jb_calculator_state';
 
-// SEO Head - dynamic from pageData
-const CalculatorSEO = ({ pageData }) => {
+// SEO Head
+const CalculatorSEO = () => {
   useEffect(() => {
-    document.title = pageData?.seo_title || "Hintalaskuri – Laske maalaus- ja tasoitustöiden hinta | J&B Tasoitus ja Maalaus";
-    document.getElementById('root')?.classList.add('app-ready');
+    document.title = "Hintalaskuri – Laske maalaus- ja tasoitustöiden hinta | J&B Tasoitus ja Maalaus";
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
-      metaDesc.setAttribute('content', pageData?.seo_description || 'Laske maalaus- ja tasoitustöiden hinta-arvio hetkessä. Sisämaalaus, ulkomaalaus, tasoitustyöt, mikrosementti, kattomaalaus ja julkisivurappaus. Kotitalousvähennys lasketaan automaattisesti.');
+      metaDesc.setAttribute('content', 'Laske maalaus- ja tasoitustöiden hinta-arvio hetkessä. Sisämaalaus, ulkomaalaus, tasoitustyöt, mikrosementti, kattomaalaus ja julkisivurappaus. Kotitalousvähennys lasketaan automaattisesti.');
     }
-  }, [pageData]);
+  }, []);
   return null;
 };
 
@@ -63,21 +71,17 @@ const CalculatorSchema = ({ config }) => {
 // Progress bar stages
 const STAGES = ['Palvelu', 'Kohde', 'Tarkennukset', 'Lisävalinnat', 'Hinta-arvio'];
 
-const ProgressBar = ({ activeStage, onStageClick }) => (
+const ProgressBar = ({ activeStage }) => (
   <div className="flex items-center w-full mb-8 md:mb-10" data-testid="progress-bar">
     {STAGES.map((name, i) => {
       const done = i < activeStage;
       const active = i === activeStage;
-      const canClick = done;
       return (
         <React.Fragment key={name}>
           {i > 0 && (
             <div className={`flex-1 h-[2px] mx-1 transition-colors duration-500 ${done ? 'bg-[#0F172A]' : 'bg-[#E2E8F0]'}`} />
           )}
-          <div
-            className={`flex flex-col items-center gap-1 min-w-0 ${canClick ? 'cursor-pointer' : ''}`}
-            onClick={() => canClick && onStageClick && onStageClick(i)}
-          >
+          <div className="flex flex-col items-center gap-1 min-w-0">
             <div className={`w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-400 ${
               done ? 'bg-[#0F172A] text-white' : active ? 'bg-[#0F172A] text-white ring-4 ring-[#0F172A]/10' : 'bg-[#F1F5F9] text-[#94A3B8]'
             }`}>
@@ -187,6 +191,7 @@ const PriceCalculatorPage = () => {
   const [activeAddons, setActiveAddons] = useState({});
   const [showResult, setShowResult] = useState(false);
   const [dontKnowMode, setDontKnowMode] = useState({});
+  const [selectedPackage, setSelectedPackage] = useState(null);
   const [dismissedWarnings, setDismissedWarnings] = useState({});
   const [showContactForm, setShowContactForm] = useState(false);
   const [contactForm, setContactForm] = useState({ name: '', phone: '', email: '' });
@@ -200,23 +205,29 @@ const PriceCalculatorPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Load calculator data — optimized: 4 parallel calls instead of 7
+  // Load config + settings
   useEffect(() => {
     Promise.all([
       fetch(`${API}/api/calculator-config`).then(r => r.json()),
       fetch(`${API}/api/settings`).then(r => r.json()).catch(() => ({})),
+      fetch(`${API}/api/service-pages`).then(r => r.json()).catch(() => []),
       fetch(`${API}/api/service-pages/hintalaskuri`).then(r => r.ok ? r.json() : null).catch(() => null),
-      fetch(`${API}/api/service-pages-nav`).then(r => r.json()).catch(() => [])
-    ]).then(([calcData, settingsData, hintaPage, spData]) => {
+      fetch(`${API}/api/services`).then(r => r.json()).catch(() => []),
+      fetch(`${API}/api/faqs?service_id=hintalaskuri`).then(r => r.ok ? r.json() : []).catch(() => []),
+      fetch(`${API}/api/references`).then(r => r.json()).catch(() => [])
+    ]).then(([calcData, settingsData, spData, hintaPage, servicesData, faqsData, refsData]) => {
       setConfig(calcData);
       setSettings(settingsData);
       setServicePages(spData);
       setPageData(hintaPage);
-      setServices(calcData?.services?.filter(s => s.enabled !== false)?.sort((a, b) => (a.order || 0) - (b.order || 0)) || []);
+      setServices(servicesData);
+      setServiceFaqs(faqsData);
+      setReferences(refsData);
       if (settingsData.theme_color) {
         document.documentElement.style.setProperty('--color-primary', settingsData.theme_color);
       }
       setLoading(false);
+      // Restore state from localStorage
       try {
         const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
         if (saved && saved.selectedService) {
@@ -228,9 +239,6 @@ const PriceCalculatorPage = () => {
         }
       } catch {}
     }).catch(() => setLoading(false));
-    // Lazy load non-critical data
-    fetch(`${API}/api/faqs?service_id=hintalaskuri`).then(r => r.ok ? r.json() : []).then(d => setServiceFaqs(d)).catch(() => {});
-    fetch(`${API}/api/references`).then(r => r.json()).then(d => setReferences(d)).catch(() => {});
   }, []);
 
   // Save to localStorage
@@ -238,7 +246,7 @@ const PriceCalculatorPage = () => {
     if (!config) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        selectedService, selections, activeAddons, currentStep, dontKnowMode
+        selectedService, selections, activeAddons, currentStep, dontKnowMode, selectedPackage
       }));
     } catch {}
   }, [selectedService, selections, activeAddons, currentStep, dontKnowMode, config]);
@@ -277,16 +285,15 @@ const PriceCalculatorPage = () => {
     return 2; // everything else = Tarkennukset
   }, [currentStep, showResult, service]);
 
-  // Kotitalousvähennys helper — separate calculation per price
-  const calcKoti = useCallback((priceWithAlv, g, personsCount = 1) => {
+  // Kotitalousvähennys helper
+  const calcKoti = useCallback((totalWithAlv, g) => {
     if (!g) return 0;
     const laborPct = g.labor_percentage || 70;
     const kotiRate = g.kotitalousvahennys_rate || 35;
-    const kotiMaxPerPerson = g.kotitalousvahennys_max_per_person || 1600;
-    const kotiMaxTotal = kotiMaxPerPerson * Math.max(1, personsCount);
-    const tyonOsuus = priceWithAlv * (laborPct / 100);
+    const kotiMax = g.kotitalousvahennys_max_per_person || 1600;
+    const tyonOsuus = totalWithAlv * (laborPct / 100);
     const raw = tyonOsuus * (kotiRate / 100) - 150;
-    return Math.max(0, Math.min(raw, kotiMaxTotal));
+    return Math.max(0, Math.min(raw, kotiMax));
   }, []);
 
   // Price calculation with RANGES
@@ -295,7 +302,6 @@ const PriceCalculatorPage = () => {
     const g = config.global_settings;
     let area = 0;
     let multiplier = 1;
-    let areaMultiplier = 1;
 
     for (const step of service.steps) {
       if (step.type === 'slider') {
@@ -308,21 +314,16 @@ const PriceCalculatorPage = () => {
         const selected = selections[step.id];
         const opts = getStepOptions(step);
         const opt = opts.find(o => o.id === selected);
-        if (opt) {
-          if (opt.area_multiplier !== undefined) areaMultiplier *= opt.area_multiplier;
-          if (opt.multiplier !== undefined) multiplier *= opt.multiplier;
-        }
+        if (opt) multiplier *= opt.multiplier;
       }
     }
 
-    const effectiveArea = area * areaMultiplier;
-    const basePrice = effectiveArea * service.base_price_per_m2 * multiplier;
+    const basePrice = area * service.base_price_per_m2 * multiplier;
     let addonsTotal = 0;
     for (const addon of (service.addons || [])) {
       if (activeAddons[addon.id]) {
-        const qty = typeof activeAddons[addon.id] === 'number' ? activeAddons[addon.id] : 1;
-        if (addon.price_per_m2) addonsTotal += effectiveArea * addon.price_per_m2;
-        if (addon.fixed_price) addonsTotal += addon.fixed_price * qty;
+        if (addon.price_per_m2) addonsTotal += area * addon.price_per_m2;
+        if (addon.fixed_price) addonsTotal += addon.fixed_price;
       }
     }
 
@@ -331,12 +332,11 @@ const PriceCalculatorPage = () => {
     const totalWithAlv = total * (1 + alvRate / 100);
     const totalMin = Math.round(totalWithAlv * 0.9);
     const totalMax = Math.round(totalWithAlv * 1.15);
-    const personsCount = selections.persons_count || 1;
-    const kotiMin = calcKoti(totalMin, g, personsCount);
-    const kotiMax = calcKoti(totalMax, g, personsCount);
-    const kotitalousvahennys = Math.round((kotiMin + kotiMax) / 2);
-    const finalMin = Math.max(0, Math.round(totalMin - kotiMin));
-    const finalMax = Math.max(0, Math.round(totalMax - kotiMax));
+    const kotitalousvahennys = calcKoti(totalWithAlv, g);
+    const kotiMin = calcKoti(totalMin, g);
+    const kotiMax = calcKoti(totalMax, g);
+    const finalMin = Math.round(totalMin - kotiMin);
+    const finalMax = Math.round(totalMax - kotiMax);
 
     // Summary labels for result page
     const selectedLabels = [];
@@ -356,7 +356,7 @@ const PriceCalculatorPage = () => {
     const activeAddonLabels = (service.addons || []).filter(a => a.enabled && activeAddons[a.id]).map(a => a.label);
 
     return {
-      area, effectiveArea, basePrice, addonsTotal, total, totalWithAlv, alvRate,
+      area, basePrice, addonsTotal, total, totalWithAlv, alvRate,
       totalMin, totalMax,
       kotitalousvahennys, kotiMin, kotiMax,
       finalMin, finalMax,
@@ -370,6 +370,7 @@ const PriceCalculatorPage = () => {
     setSelections({});
     setActiveAddons({});
     setDontKnowMode({});
+    setSelectedPackage(null);
     setDismissedWarnings({});
     setShowResult(false);
     setShowContactForm(false);
@@ -394,33 +395,12 @@ const PriceCalculatorPage = () => {
     if (currentStep > 0) setCurrentStep(s => s - 1);
   };
 
-  // Navigate to a specific stage via progress bar click (backward only)
-  const handleStageClick = (stageIdx) => {
-    if (stageIdx >= activeStage) return; // only backward
-    setDirection(-1);
-    if (stageIdx === 0) {
-      // Back to service selection
-      setCurrentStep(0);
-      setShowResult(false);
-    } else if (stageIdx === 1) {
-      setCurrentStep(1);
-      setShowResult(false);
-    } else if (stageIdx === 2) {
-      // Tarkennukset — step after Kohde
-      setCurrentStep(2);
-      setShowResult(false);
-    } else if (stageIdx === 3) {
-      // Lisävalinnat — last step before result
-      if (service) setCurrentStep(service.steps.length);
-      setShowResult(false);
-    }
-  };
-
   const resetCalculator = () => {
     setSelectedService(null);
     setSelections({});
     setActiveAddons({});
     setDontKnowMode({});
+    setSelectedPackage(null);
     setDismissedWarnings({});
     setShowResult(false);
     setShowContactForm(false);
@@ -430,7 +410,7 @@ const PriceCalculatorPage = () => {
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
   };
 
-  // Apply auto-triggers when entering addons step
+  // Apply auto-triggers + default package when entering addons step
   const addonsStepIdx = service ? service.steps.length + 1 : -1;
   const [autoTriggersApplied, setAutoTriggersApplied] = useState(false);
   useEffect(() => {
@@ -443,6 +423,13 @@ const PriceCalculatorPage = () => {
         for (const addonId of trigger.enable_addons) newAddons[addonId] = true;
       }
     }
+    // Apply default package (suositeltu)
+    const defaultPkg = (service.packages || []).find(p => p.default);
+    if (defaultPkg) {
+      for (const addonId of defaultPkg.addon_ids) newAddons[addonId] = true;
+      setSelectedPackage(defaultPkg.id);
+    }
+    // Merge: auto-triggers ON TOP of default package
     setActiveAddons(prev => ({ ...prev, ...newAddons }));
     setAutoTriggersApplied(true);
   }, [currentStep, addonsStepIdx, service, selections, autoTriggersApplied]);
@@ -450,21 +437,28 @@ const PriceCalculatorPage = () => {
   // Reset trigger tracking when service changes
   useEffect(() => { setAutoTriggersApplied(false); }, [selectedService]);
 
-  const toggleAddon = (addonId, addon) => {
-    if (activeAddons[addonId]) {
-      setActiveAddons(prev => ({ ...prev, [addonId]: false }));
-      setDismissedWarnings(prev => ({ ...prev, [addonId]: false }));
-    } else {
-      setActiveAddons(prev => ({ ...prev, [addonId]: addon?.allow_quantity ? 1 : true }));
+  const applyPackage = (pkgId) => {
+    if (!service) return;
+    setSelectedPackage(pkgId);
+    setDismissedWarnings({});
+    const pkg = (service.packages || []).find(p => p.id === pkgId);
+    if (!pkg) return;
+    const newAddons = {};
+    for (const addonId of pkg.addon_ids) newAddons[addonId] = true;
+    // Also keep auto-triggered addons
+    for (const trigger of (service.auto_triggers || [])) {
+      const selected = selections[trigger.if_step];
+      if (selected && trigger.if_values.includes(selected)) {
+        for (const addonId of trigger.enable_addons) newAddons[addonId] = true;
+      }
     }
+    setActiveAddons(newAddons);
   };
 
-  const changeAddonQty = (addonId, delta) => {
-    setActiveAddons(prev => {
-      const current = typeof prev[addonId] === 'number' ? prev[addonId] : 1;
-      const next = Math.max(1, current + delta);
-      return { ...prev, [addonId]: next };
-    });
+  const toggleAddon = (addonId) => {
+    setSelectedPackage('custom');
+    setActiveAddons(prev => ({ ...prev, [addonId]: !prev[addonId] }));
+    if (activeAddons[addonId]) setDismissedWarnings(prev => ({ ...prev, [addonId]: false }));
   };
 
   const canProceed = () => {
@@ -513,13 +507,13 @@ const PriceCalculatorPage = () => {
   return (
     <>
       <Navbar isScrolled={isScrolled} logoUrl={settings?.logo_url} />
-      <CalculatorSEO pageData={pageData} />
+      <CalculatorSEO />
       {config && <CalculatorSchema config={config} />}
 
       {/* HERO - matching site design */}
       <section className="relative min-h-[45vh] md:min-h-[50vh] flex items-center pt-16" data-testid="price-calculator-page">
         <div className="absolute inset-0">
-          <img src={pageData?.hero_image_url || settings?.hero_image_url || 'https://images.pexels.com/photos/5493669/pexels-photo-5493669.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'}
+          <img src={settings?.hero_image_url || 'https://images.pexels.com/photos/5493669/pexels-photo-5493669.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'}
             alt="Hintalaskuri - maalaus ja tasoitustyöt" className="w-full h-full object-cover" loading="eager" />
           <div className="hero-overlay absolute inset-0"></div>
         </div>
@@ -537,11 +531,11 @@ const PriceCalculatorPage = () => {
             </motion.p>
             <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
               className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0F172A] mb-4 leading-tight" data-testid="calculator-title">
-              {pageData?.hero_title || 'Laske hinta-arvio hetkessä'}
+              Laske hinta-arvio hetkessä
             </motion.h1>
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
               className="text-base md:text-lg text-[#64748B] mb-6 leading-relaxed">
-              {pageData?.hero_subtitle || 'Saat suuntaa-antavan hinnan heti \u2013 ilman rekisteröitymistä tai yhteystietoja.'}
+              Saat suuntaa-antavan hinnan heti &ndash; ilman rekisteröitymistä tai yhteystietoja.
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
               className="flex flex-col sm:flex-row gap-3">
@@ -597,7 +591,7 @@ const PriceCalculatorPage = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
 
           {/* Progress bar */}
-          {selectedService && <ProgressBar activeStage={activeStage} onStageClick={handleStageClick} />}
+          {selectedService && <ProgressBar activeStage={activeStage} />}
 
           {/* Main layout: question + sticky price */}
           <div className="flex gap-8 items-start">
@@ -611,8 +605,8 @@ const PriceCalculatorPage = () => {
                     {currentStep === 0 && !showResult && (
                       <motion.div key="svc" custom={direction} variants={stepVariants}
                         initial="enter" animate="center" exit="exit" transition={{ duration: 0.25 }}>
-                        <h2 className="text-lg md:text-xl font-bold text-[#0F172A] mb-1">{config?.global_settings?.service_step_title || 'Valitse palvelu'}</h2>
-                        <p className="text-sm text-[#94A3B8] mb-6">{config?.global_settings?.service_step_subtitle || 'Minkä tyyppistä työtä tarvitset?'}</p>
+                        <h2 className="text-lg md:text-xl font-bold text-[#0F172A] mb-1">Valitse palvelu</h2>
+                        <p className="text-sm text-[#94A3B8] mb-6">Minkä tyyppistä työtä tarvitset?</p>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4" data-testid="service-selection">
                           {enabledServices.map((s) => {
                             const Icon = iconMap[s.icon] || Paintbrush;
@@ -634,6 +628,7 @@ const PriceCalculatorPage = () => {
                                 <Icon size={22} className={sel ? 'text-[#0F172A]' : 'text-[#94A3B8]'} strokeWidth={1.5} />
                                 <h3 className="font-semibold text-[#0F172A] mt-3 text-sm">{s.name}</h3>
                                 <p className="text-xs text-[#94A3B8] mt-1 hidden md:block leading-relaxed">{s.description}</p>
+                                <p className="text-xs font-semibold text-[#0F172A] mt-2">alk. {s.base_price_per_m2} &euro;/m&sup2;</p>
                               </motion.button>
                             );
                           })}
@@ -729,9 +724,6 @@ const PriceCalculatorPage = () => {
                               {/* SLIDER type with "En tiedä" option */}
                               {step.type === 'slider' && (
                                 <div className="max-w-md" data-testid={`step-${step.id}`}>
-                                  {step.helper_text && (
-                                    <p className="text-xs text-[#64748B] mb-4 text-center">{step.helper_text}</p>
-                                  )}
                                   {!dontKnowMode[step.id] ? (
                                     <>
                                       <div className="text-center mb-8">
@@ -799,16 +791,44 @@ const PriceCalculatorPage = () => {
                     {service && currentStep === service.steps.length + 1 && !showResult && (
                       <motion.div key="addons" custom={direction} variants={stepVariants}
                         initial="enter" animate="center" exit="exit" transition={{ duration: 0.25 }}>
-                        <h2 className="text-lg md:text-xl font-bold text-[#0F172A] mb-1">{config?.global_settings?.addons_step_title || 'Lisävalinnat'}</h2>
-                        <p className="text-sm text-[#94A3B8] mb-5">{config?.global_settings?.addons_step_subtitle || 'Valitse tarvitsemasi lisäpalvelut'}</p>
+                        <h2 className="text-lg md:text-xl font-bold text-[#0F172A] mb-1">Lisävalinnat</h2>
+                        <p className="text-sm text-[#94A3B8] mb-5">Valitse paketti tai räätälöi itse</p>
+
+                        {/* Package selector */}
+                        {(service.packages || []).length > 0 && (
+                          <div className="grid grid-cols-3 gap-2 md:gap-3 mb-6" data-testid="package-selector">
+                            {service.packages.map((pkg, i) => {
+                              const isActive = selectedPackage === pkg.id;
+                              const isDefault = pkg.default;
+                              return (
+                                <motion.button key={pkg.id} whileTap={{ scale: 0.97 }}
+                                  onClick={() => applyPackage(pkg.id)}
+                                  className={`relative p-3 md:p-4 rounded-xl border text-left transition-all duration-200 ${
+                                    isActive
+                                      ? i === 2 ? 'border-[#7C3AED] bg-[#7C3AED]/[0.04] shadow-md' : i === 1 ? 'border-[#0F172A] bg-[#0F172A]/[0.03] shadow-md' : 'border-[#10B981] bg-[#10B981]/[0.04] shadow-md'
+                                      : 'border-[#E2E8F0] hover:border-[#CBD5E1]'
+                                  }`} data-testid={`package-${pkg.id}`}>
+                                  {isDefault && (
+                                    <span className="absolute -top-2.5 left-3 bg-[#0F172A] text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                      Eniten valittu
+                                    </span>
+                                  )}
+                                  <h4 className={`font-bold text-sm ${i === 2 ? 'text-[#7C3AED]' : i === 1 ? 'text-[#0F172A]' : 'text-[#10B981]'}`}>
+                                    {pkg.label}
+                                  </h4>
+                                  <p className="text-[11px] text-[#94A3B8] mt-0.5 leading-snug hidden sm:block">{pkg.description}</p>
+                                </motion.button>
+                              );
+                            })}
+                          </div>
+                        )}
 
                         {/* Grouped addon cards */}
                         <div className="space-y-5" data-testid="addons-step">
                           {['esityot', 'tarvittaessa', 'lisapalvelut'].map(groupId => {
                             const groupAddons = (service.addons || []).filter(a => a.enabled && a.group === groupId);
                             if (groupAddons.length === 0) return null;
-                            const g = config?.global_settings || {};
-                            const groupLabel = groupId === 'esityot' ? (g.group_label_esityot || 'Esityöt') : groupId === 'tarvittaessa' ? (g.group_label_tarvittaessa || 'Tarvittaessa') : (g.group_label_lisapalvelut || 'Lisäpalvelut');
+                            const groupLabel = groupId === 'esityot' ? 'Esityöt' : groupId === 'tarvittaessa' ? 'Tarvittaessa' : 'Lisäpalvelut';
                             return (
                               <div key={groupId}>
                                 <p className="text-[11px] uppercase tracking-wider font-semibold text-[#94A3B8] mb-2">
@@ -821,7 +841,7 @@ const PriceCalculatorPage = () => {
                                     return (
                                       <div key={addon.id}>
                                         <motion.button whileTap={{ scale: 0.98 }}
-                                          onClick={() => toggleAddon(addon.id, addon)}
+                                          onClick={() => toggleAddon(addon.id)}
                                           className={`w-full p-4 rounded-xl border text-left transition-all duration-200 ${
                                             active
                                               ? 'border-[#0F172A] bg-[#0F172A]/[0.03] shadow-sm'
@@ -839,25 +859,8 @@ const PriceCalculatorPage = () => {
                                               </div>
                                               <p className="text-xs text-[#94A3B8] mt-0.5 leading-relaxed">{addon.hint}</p>
                                               <p className="text-xs font-semibold text-[#0F172A] mt-1.5">
-                                                {addon.price_label ? addon.price_label : addon.price_per_m2 ? `+${addon.price_per_m2} €/m²` : addon.fixed_price > 0 ? `+${addon.fixed_price} €/kpl` : ''}
+                                                {addon.price_label ? addon.price_label : addon.price_per_m2 ? `+${addon.price_per_m2} €/m²` : addon.fixed_price > 0 ? `+${addon.fixed_price} €` : ''}
                                               </p>
-                                              {/* Quantity selector for allow_quantity addons */}
-                                              {active && addon.allow_quantity && (
-                                                <div className="flex items-center gap-2 mt-2" onClick={e => e.stopPropagation()}>
-                                                  <button type="button" onClick={(e) => { e.stopPropagation(); changeAddonQty(addon.id, -1); }}
-                                                    className="w-7 h-7 rounded-lg border border-[#CBD5E1] flex items-center justify-center text-[#0F172A] hover:bg-[#F1F5F9] transition-colors" data-testid={`addon-qty-minus-${addon.id}`}>
-                                                    <Minus size={14} />
-                                                  </button>
-                                                  <span className="text-sm font-bold text-[#0F172A] min-w-[24px] text-center" data-testid={`addon-qty-${addon.id}`}>
-                                                    {typeof activeAddons[addon.id] === 'number' ? activeAddons[addon.id] : 1}
-                                                  </span>
-                                                  <button type="button" onClick={(e) => { e.stopPropagation(); changeAddonQty(addon.id, 1); }}
-                                                    className="w-7 h-7 rounded-lg border border-[#CBD5E1] flex items-center justify-center text-[#0F172A] hover:bg-[#F1F5F9] transition-colors" data-testid={`addon-qty-plus-${addon.id}`}>
-                                                    <Plus size={14} />
-                                                  </button>
-                                                  <span className="text-xs text-[#94A3B8]">kpl</span>
-                                                </div>
-                                              )}
                                             </div>
                                             <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all ${
                                               active ? 'bg-[#0F172A] border-[#0F172A]' : 'border-[#CBD5E1]'
@@ -891,7 +894,7 @@ const PriceCalculatorPage = () => {
                                 const active = activeAddons[addon.id];
                                 return (
                                   <motion.button key={addon.id} whileTap={{ scale: 0.98 }}
-                                    onClick={() => toggleAddon(addon.id, addon)}
+                                    onClick={() => toggleAddon(addon.id)}
                                     className={`p-4 rounded-xl border text-left transition-all duration-200 ${
                                       active ? 'border-[#0F172A] bg-[#0F172A]/[0.03] shadow-sm' : 'border-[#E2E8F0] hover:border-[#CBD5E1]'
                                     }`} data-testid={`addon-${addon.id}`}>
@@ -900,24 +903,8 @@ const PriceCalculatorPage = () => {
                                         <h3 className="font-semibold text-[#0F172A] text-sm">{addon.label}</h3>
                                         {addon.hint && <p className="text-xs text-[#94A3B8] mt-0.5">{addon.hint}</p>}
                                         <p className="text-xs font-semibold text-[#0F172A] mt-1.5">
-                                          {addon.price_label ? addon.price_label : addon.price_per_m2 ? `+${addon.price_per_m2} €/m²` : addon.fixed_price > 0 ? `+${addon.fixed_price} €/kpl` : ''}
+                                          {addon.price_label ? addon.price_label : addon.price_per_m2 ? `+${addon.price_per_m2} €/m²` : addon.fixed_price > 0 ? `+${addon.fixed_price} €` : ''}
                                         </p>
-                                        {active && addon.allow_quantity && (
-                                          <div className="flex items-center gap-2 mt-2" onClick={e => e.stopPropagation()}>
-                                            <button type="button" onClick={(e) => { e.stopPropagation(); changeAddonQty(addon.id, -1); }}
-                                              className="w-7 h-7 rounded-lg border border-[#CBD5E1] flex items-center justify-center text-[#0F172A] hover:bg-[#F1F5F9] transition-colors">
-                                              <Minus size={14} />
-                                            </button>
-                                            <span className="text-sm font-bold text-[#0F172A] min-w-[24px] text-center">
-                                              {typeof activeAddons[addon.id] === 'number' ? activeAddons[addon.id] : 1}
-                                            </span>
-                                            <button type="button" onClick={(e) => { e.stopPropagation(); changeAddonQty(addon.id, 1); }}
-                                              className="w-7 h-7 rounded-lg border border-[#CBD5E1] flex items-center justify-center text-[#0F172A] hover:bg-[#F1F5F9] transition-colors">
-                                              <Plus size={14} />
-                                            </button>
-                                            <span className="text-xs text-[#94A3B8]">kpl</span>
-                                          </div>
-                                        )}
                                       </div>
                                       <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all ${
                                         active ? 'bg-[#0F172A] border-[#0F172A]' : 'border-[#CBD5E1]'
@@ -941,7 +928,7 @@ const PriceCalculatorPage = () => {
 
                         {/* Price heading */}
                         <div className="text-center mb-8">
-                          <p className="text-xs text-[#94A3B8] uppercase tracking-wider font-semibold mb-2">{config?.global_settings?.result_title || 'Arvioitu hinta'}</p>
+                          <p className="text-xs text-[#94A3B8] uppercase tracking-wider font-semibold mb-2">Arvioitu hinta</p>
                           <motion.h2 initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
                             transition={{ delay: 0.1, type: 'spring', stiffness: 200 }}
                             className="text-4xl md:text-5xl font-bold text-[#0F172A]" data-testid="final-price">
@@ -965,7 +952,7 @@ const PriceCalculatorPage = () => {
                         <div className="bg-[#F8FAFC] rounded-2xl p-5 md:p-6 mb-6">
                           <h3 className="text-sm font-semibold text-[#0F172A] mb-3 flex items-center gap-2">
                             <Info size={15} className="text-[#94A3B8]" />
-                            {config?.global_settings?.summary_title || 'Mihin arvio perustuu'}
+                            Mihin arvio perustuu
                           </h3>
                           <div className="space-y-2">
                             <div className="flex justify-between text-sm">
@@ -992,7 +979,7 @@ const PriceCalculatorPage = () => {
                           onClick={() => setShowBreakdown(!showBreakdown)}
                           className="w-full flex items-center justify-between p-4 rounded-xl border border-[#E2E8F0] text-sm text-[#64748B] hover:bg-[#F8FAFC] transition-colors mb-6"
                           data-testid="breakdown-toggle">
-                          <span className="font-medium">{config?.global_settings?.breakdown_title || 'Miten hinta muodostuu'}</span>
+                          <span className="font-medium">Miten hinta muodostuu</span>
                           <motion.div animate={{ rotate: showBreakdown ? 180 : 0 }} transition={{ duration: 0.2 }}>
                             <ChevronDown size={16} />
                           </motion.div>
@@ -1004,7 +991,7 @@ const PriceCalculatorPage = () => {
                               className="overflow-hidden mb-6">
                               <div className="bg-[#0F172A] rounded-2xl p-5 text-white text-sm space-y-2.5">
                                 <div className="flex justify-between">
-                                  <span className="text-white/60">Perustyö ({service.base_price_per_m2} &euro;/m&sup2; &times; {priceData.effectiveArea || priceData.area} m&sup2;)</span>
+                                  <span className="text-white/60">Perustyö ({service.base_price_per_m2} &euro;/m&sup2; &times; {priceData.area} m&sup2;)</span>
                                   <span>{fmt(priceData.basePrice)} &euro;</span>
                                 </div>
                                 {priceData.addonsTotal > 0 && (
@@ -1146,17 +1133,15 @@ const PriceCalculatorPage = () => {
       {/* DYNAMIC SERVICE PAGE SECTIONS */}
       {pageData && (
         <>
-          {/* SEO description text */}
-          {pageData.description_text && (
-            <section className="py-12 md:py-16 bg-[#F8FAFC]">
-              <div className="max-w-3xl mx-auto px-4 sm:px-6 prose prose-sm prose-slate" data-testid="calc-seo-text"
-                dangerouslySetInnerHTML={{ __html: pageData.description_text }} />
-            </section>
-          )}
+          <TrustBadges settings={settings} />
+          <DescriptionSection page={pageData} settings={settings} services={services} />
+          <FeaturesSection page={pageData} settings={settings} />
+          <WhyChooseSection page={pageData} settings={settings} />
           {pageData.use_global_process !== false && <ProcessSection page={pageData} settings={settings} />}
+          <ServiceAreasSection page={pageData} settings={settings} />
           <ServiceFAQSection faqs={serviceFaqs} settings={settings} serviceName="Hintalaskuri" />
           <ContactFormSection page={pageData} settings={settings} />
-          {/* References section */}
+          {/* References section instead of Related Services */}
           {references.length > 0 && (
             <section className="service-section-grey" data-testid="references-section">
               <div className="container-custom">
@@ -1231,7 +1216,7 @@ const PriceCalculatorPage = () => {
         </>
       )}
 
-      <Footer logoUrl={settings?.logo_url} settings={settings} servicePages={servicePages} />
+      <SiteFooter settings={settings} servicePages={servicePages} />
     </>
   );
 };

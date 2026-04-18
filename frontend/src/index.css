@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Barlow+Condensed:wght@700;800;900&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Lato:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -21,8 +23,6 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Barlow+Condensed:wght@700;800;900&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Lato:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@400;500;600;700&display=swap');
 
 :root {
   /* Primary theme color - controlled by admin panel */
@@ -688,12 +688,12 @@ html {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.5rem;
+  padding: 0.9rem 1.6rem;
   background-color: var(--color-primary);
   color: white;
   font-weight: 600;
   font-size: calc(0.875rem * var(--size-multiplier));
-  border-radius: 0.5rem;
+  border-radius: 0.625rem;
   border: none;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
@@ -728,13 +728,13 @@ html {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.5rem;
+  padding: 0.9rem 1.6rem;
   background-color: white;
   color: var(--color-primary);
   font-weight: 600;
   font-size: calc(0.875rem * var(--size-multiplier));
   border: 2px solid var(--color-primary);
-  border-radius: 0.5rem;
+  border-radius: 0.625rem;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
@@ -803,7 +803,7 @@ html {
 
 /* Hero overlay */
 .hero-overlay {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.4) 100%);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.88) 42%, rgba(255, 255, 255, 0.62) 68%, rgba(255, 255, 255, 0.18) 100%);
 }
 
 /* CTA Section */

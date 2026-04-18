@@ -2,25 +2,25 @@
 // Visual balance improvements with consistent spacing
 
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import Link from '@/components/site/RouterLink';
+import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Phone, Mail, MapPin, Menu, X, ChevronRight, ArrowRight, Send,
   CheckCircle, Clock, Shield, Award, Star, ChevronDown, HelpCircle,
   Paintbrush, Building2, Layers, Wrench, Droplets, Square, Sparkles, Frame, Calculator
 } from 'lucide-react';
-import QuoteRequestForm from '../components/QuoteRequestForm';
-import { Footer } from '../App';
+import QuoteRequestForm from '@/components/QuoteRequestFormClean';
+import SiteFooter from '@/components/site/SiteFooterLegacy';
+import { getApiBaseUrl, withApiUrl } from '@/lib/public-env';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+const API_URL = getApiBaseUrl();
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_modern-jbta/artifacts/g1de58um_jb2-logo.png";
 
 // Helper to get full image URL
 const getImageUrl = (url) => {
   if (!url) return null;
-  if (url.startsWith('http://') || url.startsWith('https://')) return url;
-  if (url.startsWith('/')) return `${API_URL}${url}`;
-  return url;
+  return withApiUrl(url);
 };
 
 // Dynamic SEO for Service Pages using useEffect
@@ -35,9 +35,6 @@ const useServicePageSEO = (page, settings, faqs) => {
     
     // Set page title
     document.title = `${page.seo_title} | ${companyName}`;
-    
-    // Reveal page — prevents FOUC
-    document.getElementById('root')?.classList.add('app-ready');
     
     // Update meta description
     let metaDesc = document.querySelector('meta[name="description"]');
@@ -456,20 +453,30 @@ const ProcessSection = ({ page, settings }) => {
 
 // ========== SERVICE AREAS - Centered, themed background with impact ==========
 const ServiceAreasSection = ({ page, settings, areas: areasProp, currentSlug }) => {
-  const [areas, setAreas] = useState(areasProp || []);
+  const [areas, setAreas] = useState(Array.isArray(areasProp) ? areasProp : []);
   const phone = settings?.company_phone_primary || settings?.contact_phone_1 || '+358 40 054 7270';
   const serviceTitle = page?.hero_title || 'Palvelumme';
   
   useEffect(() => {
-    if (!areasProp || areasProp.length === 0) {
-      fetch(`${API_URL}/api/areas`).then(r => r.json()).then(setAreas).catch(() => {});
+    if (!Array.isArray(areasProp) || areasProp.length === 0) {
+      fetch(`${API_URL}/api/areas`)
+        .then(async (r) => {
+          if (!r.ok) return [];
+          const data = await r.json();
+          return Array.isArray(data) ? data : [];
+        })
+        .then(setAreas)
+        .catch(() => setAreas([]));
+    } else {
+      setAreas(areasProp);
     }
   }, [areasProp]);
 
   // Determine base slug for linking (e.g., "maalaustyot" from "maalaustyot-helsinki")
   const baseSlug = (currentSlug || page?.slug || '').replace(/-helsinki$|-espoo$|-vantaa$|-kauniainen$/, '');
 
-  if (!areas || areas.length === 0) return null;
+  const areaList = Array.isArray(areas) ? areas : [];
+  if (areaList.length === 0) return null;
 
   return (
     <section className="service-area-themed" data-testid="service-areas-section">
@@ -484,7 +491,7 @@ const ServiceAreasSection = ({ page, settings, areas: areasProp, currentSlug }) 
           
           {/* Area badges as links */}
           <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-10">
-            {areas.map((area, index) => {
+            {areaList.map((area, index) => {
               const areaSlug = area.slug || area.name?.toLowerCase();
               const linkTarget = baseSlug ? `/${baseSlug}-${areaSlug}` : `/#palvelut`;
               return (
@@ -982,7 +989,7 @@ const DynamicServicePage = () => {
         <CalculatorCTA />
         <RelatedServices allPages={allPages} currentSlug={slug} settings={settings} services={services} />
         <StrongCTA settings={settings} />
-        <Footer logoUrl={settings?.logo_url} settings={settings} servicePages={servicePages} />
+        <SiteFooter settings={settings} servicePages={servicePages} />
       </div>
     );
   }
@@ -1024,7 +1031,7 @@ const DynamicServicePage = () => {
       <CalculatorCTA />
       <RelatedServices allPages={allPages} currentSlug={slug} settings={settings} services={services} />
       <StrongCTA settings={settings} />
-      <Footer logoUrl={settings?.logo_url} settings={settings} servicePages={servicePages} />
+      <SiteFooter settings={settings} servicePages={servicePages} />
     </div>
   );
 };

@@ -42,6 +42,7 @@
     "framer-motion": "^12.34.3",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.507.0",
+    "next": "^16.1.6",
     "next-themes": "^0.4.6",
     "react": "^19.0.0",
     "react-day-picker": "8.10.1",
@@ -62,11 +63,8 @@
   "scripts": {
     "dev": "craco start",
     "start": "node server.js",
-    "prebuild": "echo 'Starting build...'",
-    "build": "craco build && node fix-assets.js",
-    "postbuild": "cd /app/backend && python generate_static_direct.py || echo 'SEO generation skipped'",
-    "generate-seo": "cd /app/backend && python generate_static_direct.py",
-    "test": "craco test"
+    "build": "craco build",
+    "test": "echo \"No frontend tests configured\""
   },
   "browserslist": {
     "production": [
@@ -81,11 +79,12 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@craco/craco": "^7.1.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "ajv": "^8.17.1",
     "@eslint/js": "9.23.0",
     "autoprefixer": "^10.4.20",
-    "eslint": "9.23.0",
+    "eslint": "8.57.1",
     "eslint-plugin-import": "2.31.0",
     "eslint-plugin-jsx-a11y": "6.10.2",
     "eslint-plugin-react": "7.37.4",

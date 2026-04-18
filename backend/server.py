@@ -328,25 +328,6 @@ class SiteSettings(BaseModel):
     footer_service_area: str = "Palvelemme asiakkaita Helsingissä ja koko Uudenmaan alueella."
     footer_trust_badge_1: str = ""
     footer_trust_badge_2: str = ""
-    footer_services_title: str = "Palvelumme"
-    footer_nav_title: str = "Sivusto"
-    footer_contact_title: str = "Yhteystiedot"
-    footer_cta_heading: str = ""
-    footer_cta_text: str = ""
-    footer_cta_button_label: str = "Pyydä tarjous"
-    footer_cta_button_link: str = "#yhteystiedot"
-    footer_cta2_button_label: str = "Hintalaskuri"
-    footer_cta2_button_link: str = "/hintalaskuri"
-    footer_privacy_link: str = ""
-    footer_cookie_link: str = ""
-    footer_bg_color: str = "#0B1120"
-    footer_nav_links: list = []
-    footer_service_links: list = []
-    
-    # ========== KOTITALOUSVÄHENNYS ==========
-    kotitalous_description: str = "Maalaus- ja tasoitustyöt luokitellaan kunnossapitotyöhön, joka oikeuttaa kotitalousvähennykseen."
-    kotitalous_highlight: str = "Jopa 40% vähennys"
-    kotitalous_details: str = "Työn osuudesta, max 2 250 €/vuosi"
     
     # ========== REFERENCES SECTION SETTINGS ==========
     references_subtitle: str = "TYÖNÄYTTEITÄ"
@@ -453,24 +434,6 @@ class SiteSettingsUpdate(BaseModel):
     footer_service_area: Optional[str] = None
     footer_trust_badge_1: Optional[str] = None
     footer_trust_badge_2: Optional[str] = None
-    footer_services_title: Optional[str] = None
-    footer_nav_title: Optional[str] = None
-    footer_contact_title: Optional[str] = None
-    footer_cta_heading: Optional[str] = None
-    footer_cta_text: Optional[str] = None
-    footer_cta_button_label: Optional[str] = None
-    footer_cta_button_link: Optional[str] = None
-    footer_cta2_button_label: Optional[str] = None
-    footer_cta2_button_link: Optional[str] = None
-    footer_privacy_link: Optional[str] = None
-    footer_cookie_link: Optional[str] = None
-    footer_bg_color: Optional[str] = None
-    footer_nav_links: Optional[list] = None
-    footer_service_links: Optional[list] = None
-    # Kotitalousvähennys
-    kotitalous_description: Optional[str] = None
-    kotitalous_highlight: Optional[str] = None
-    kotitalous_details: Optional[str] = None
     # References Section Settings
     references_subtitle: Optional[str] = None
     references_title: Optional[str] = None
@@ -794,78 +757,50 @@ async def root():
 async def get_sitemap():
     from fastapi.responses import Response
     
-    base_url = "https://www.jbtasoitusmaalaus.fi"
+    base_url = "https://jbtasoitusmaalaus.fi"
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     
-    # Get all areas and service pages from DB
-    areas = await db.areas.find({}, {"_id": 0}).sort("order", 1).to_list(100)
-    default_area = next((a for a in areas if a.get("is_default")), areas[0] if areas else None)
-    non_default_areas = [a for a in areas if not a.get("is_default")]
-    
-    service_pages = await db.service_pages.find({}, {"_id": 0, "slug": 1}).to_list(100)
-    
-    urls = []
+    # Start XML
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     
     # Homepage
-    urls.append(("", "weekly", "1.0"))
+    xml += f'''  <url>
+    <loc>{base_url}/</loc>
+    <lastmod>{today}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>\n'''
     
-    # Static pages
-    urls.append(("referenssit", "monthly", "0.7"))
-    urls.append(("ukk", "monthly", "0.7"))
+    # Service pages from database
+    service_pages = await db.service_pages.find({}, {"_id": 0, "slug": 1}).to_list(100)
+    for page in service_pages:
+        xml += f'''  <url>
+    <loc>{base_url}/{page["slug"]}/index.html</loc>
+    <lastmod>{today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>\n'''
     
-    # Service pages + city variants
-    for sp in service_pages:
-        slug = sp.get("slug", "")
-        if not slug:
-            continue
-        
-        # Compute base slug
-        base_slug = slug
-        if default_area and slug.endswith(f"-{default_area['slug']}"):
-            base_slug = slug[:-len(f"-{default_area['slug']}")]
-        
-        # Original page (e.g., /maalaustyot-helsinki)
-        urls.append((slug, "monthly", "0.9"))
-        
-        # City variants for non-default areas
-        for area in non_default_areas:
-            variant_slug = f"{base_slug}-{area['slug']}"
-            if variant_slug != slug:
-                urls.append((variant_slug, "monthly", "0.8"))
-        
-        # Default city variant if slug doesn't end with default area
-        if default_area and not slug.endswith(f"-{default_area['slug']}"):
-            default_variant = f"{base_slug}-{default_area['slug']}"
-            urls.append((default_variant, "monthly", "0.8"))
+    # References page
+    xml += f'''  <url>
+    <loc>{base_url}/referenssit/index.html</loc>
+    <lastmod>{today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>\n'''
     
-    # Build XML
-    entries = []
-    for path, freq, prio in urls:
-        loc = f"{base_url}/{path}" if path else base_url
-        entries.append(f'  <url>\n    <loc>{loc}</loc>\n    <lastmod>{today}</lastmod>\n    <changefreq>{freq}</changefreq>\n    <priority>{prio}</priority>\n  </url>')
+    # FAQ page
+    xml += f'''  <url>
+    <loc>{base_url}/ukk/index.html</loc>
+    <lastmod>{today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>\n'''
     
-    xml = f'''<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-{chr(10).join(entries)}
-</urlset>'''
+    xml += '</urlset>'
     
-    # Also write to build directory and nginx root for static serving
-    try:
-        from generate_static_direct import BUILD_DIR, PUBLIC_DIR
-        from pathlib import Path
-        sitemap_path = BUILD_DIR / "sitemap.xml"
-        sitemap_path.write_text(xml, encoding="utf-8")
-        public_path = PUBLIC_DIR / "sitemap.xml"
-        public_path.write_text(xml, encoding="utf-8")
-        nginx_root = Path("/usr/share/nginx/html/sitemap.xml")
-        if nginx_root.parent.exists():
-            nginx_root.write_text(xml, encoding="utf-8")
-    except Exception as e:
-        logging.warning(f"Failed to write sitemap files: {e}")
-    
-    return Response(content=xml, media_type="application/xml", headers={
-        "Cache-Control": "no-cache, no-store, must-revalidate"
-    })
+    return Response(content=xml, media_type="application/xml")
 
 # Site Settings - Public
 @api_router.get("/settings", response_model=SiteSettings)
@@ -1041,16 +976,6 @@ async def get_service_pages():
         if isinstance(p.get('updated_at'), str):
             p['updated_at'] = datetime.fromisoformat(p['updated_at'])
     return pages
-
-@api_router.get("/service-pages-nav")
-async def get_service_pages_nav():
-    """Lightweight endpoint: only slug + page_name for navigation."""
-    pages = await db.service_pages.find(
-        {"is_published": True},
-        {"_id": 0, "slug": 1, "page_name": 1, "hero_title": 1}
-    ).to_list(100)
-    return pages
-
 
 @api_router.get("/service-pages/{slug}", response_model=ServicePage)
 async def get_service_page_by_slug(slug: str):
@@ -1247,11 +1172,6 @@ async def ssr_page(path: str):
     
     try:
         css_files, js_files = get_react_assets()
-        
-        # If no CSS/JS found, reject SSR so server.js falls back to CRA index.html
-        if not css_files or not js_files:
-            return HTMLResponse(content="SSR unavailable: build assets missing", status_code=503)
-        
         html = None
         
         if path in ("", "home", "index"):
@@ -1571,10 +1491,6 @@ async def admin_create_area(area: AreaCreate, username: str = Depends(get_curren
         await db.areas.update_many({}, {"$set": {"is_default": False}})
     doc = Area(**area.model_dump()).model_dump()
     await db.areas.insert_one(doc)
-    
-    # Regenerate static pages in background (new area = new city variant pages + sitemap)
-    trigger_ssg_background()
-    
     return {k: v for k, v in doc.items() if k != "_id"}
 
 @api_router.put("/admin/areas/{area_id}", response_model=Area)
@@ -1610,10 +1526,6 @@ async def admin_delete_area(area_id: str, username: str = Depends(get_current_ad
     if area.get("is_default"):
         raise HTTPException(status_code=400, detail="Cannot delete the default area")
     await db.areas.delete_one({"id": area_id})
-    
-    # Regenerate static pages in background (removed area = update city variant pages + sitemap)
-    trigger_ssg_background()
-    
     return {"message": "Deleted"}
 
 
@@ -1677,8 +1589,8 @@ def get_default_calculator_config():
                     {"id": "wall_leveling", "label": "Seinien tasoitus", "hint": "Tasoitetaan epätasaiset pinnat ennen maalausta", "price_per_m2": 23, "enabled": True, "group": "tarvittaessa", "badge": "Suositeltu", "warning": "Ilman tasoitusta lopputulos ei ole tasainen", "auto_trigger": {"step": "condition", "values": ["leveling"]}},
                     {"id": "ceiling", "label": "Katon maalaus", "hint": "Usein tehdään samalla — säästää kokonaiskustannuksia", "price_per_m2": 22, "enabled": True, "group": "lisapalvelut", "badge": "Usein valitaan"},
                     {"id": "listojen_maalaus", "label": "Listojen maalaus", "hint": "Jalka- ja kattolistan maalaus viimeistelee kokonaisuuden", "price_per_m2": 5, "enabled": True, "group": "lisapalvelut", "badge": "Usein valitaan"},
-                    {"id": "ovien_maalaus", "label": "Ovien ja karmien maalaus", "hint": "Ovet ja karmit maalataan samalla kertaa", "fixed_price": 120, "price_label": "120 € / ovipaketti", "enabled": True, "group": "lisapalvelut", "allow_quantity": True},
-                    {"id": "extra_color", "label": "Lisäsävy (+1 väri)", "hint": "Yksi lisävärisävy koko kohteeseen, esim. korosteseinä", "fixed_price": 100, "price_label": "100 € / kohde", "enabled": True, "group": "lisapalvelut", "allow_quantity": True}
+                    {"id": "ovien_maalaus", "label": "Ovien ja karmien maalaus", "hint": "Ovet ja karmit maalataan samalla kertaa", "fixed_price": 120, "price_label": "120 € / ovipaketti", "enabled": True, "group": "lisapalvelut"},
+                    {"id": "extra_color", "label": "Lisäsävy (+1 väri)", "hint": "Yksi lisävärisävy koko kohteeseen, esim. korosteseinä", "fixed_price": 100, "price_label": "100 € / kohde", "enabled": True, "group": "lisapalvelut"}
                 ],
                 "packages": [
                     {"id": "perus", "label": "Perus", "description": "Perustason maalaustyö", "addon_ids": []},
@@ -1704,15 +1616,14 @@ def get_default_calculator_config():
                         "title": "Mitä tasoitetaan?",
                         "type": "cards",
                         "options": [
-                            {"id": "walls", "label": "Seinät", "description": "Seinäpintojen tasoitus", "area_multiplier": 2.0},
-                            {"id": "ceiling", "label": "Katto", "description": "Kattopintojen tasoitus", "area_multiplier": 1.0},
-                            {"id": "both", "label": "Seinät + katto", "description": "Seinä- ja kattopintojen tasoitus", "area_multiplier": 3.0}
+                            {"id": "walls", "label": "Seinät", "multiplier": 1.0},
+                            {"id": "ceiling", "label": "Katto", "multiplier": 1.3},
+                            {"id": "both", "label": "Seinät + katto", "multiplier": 1.2}
                         ]
                     },
                     {
                         "id": "area",
                         "title": "Kuinka suuri pinta-ala on?",
-                        "helper_text": "Syötä huoneiston pohjapinta-ala — laskuri muuntaa sen tasoitettavaksi pinta-alaksi.",
                         "type": "slider",
                         "min": 10,
                         "max": 200,
@@ -2040,17 +1951,12 @@ def get_default_calculator_config():
 @api_router.get("/calculator-config")
 async def get_calculator_config():
     """Public endpoint - returns calculator configuration."""
-    from fastapi.responses import JSONResponse
     config = await db.calculator_config.find_one({"id": "calculator_config"}, {"_id": 0})
     if not config:
         config = get_default_calculator_config()
         await db.calculator_config.insert_one(config)
         config.pop("_id", None)
-    return JSONResponse(content=config, headers={
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0"
-    })
+    return config
 
 @api_router.get("/admin/calculator-config")
 async def admin_get_calculator_config(username: str = Depends(get_current_admin)):
@@ -2160,8 +2066,8 @@ async def export_all_data(username: str = Depends(get_current_admin)):
             "faqs": await db.faqs.find({}, {"_id": 0}).to_list(1000),
             "service_pages": await db.service_pages.find({}, {"_id": 0}).to_list(1000),
             "areas": await db.areas.find({}, {"_id": 0}).to_list(1000),
-            "images": await db.images.find({}, {"_id": 0}).to_list(10000),
-            "calculator_config": await db.calculator_config.find({}, {"_id": 0}).to_list(1000),
+            "images": await db.images.find({}, {"_id": 0}).to_list(5000),
+            "calculator_config": await db.calculator_config.find({}, {"_id": 0}).to_list(100),
         }
         return data
     except Exception as e:
@@ -2227,6 +2133,23 @@ async def import_all_data(request: Request, username: str = Depends(get_current_
             if data["areas"]:
                 await db.areas.insert_many(data["areas"])
             imported.append(f"areas ({len(data['areas'])})")
+
+        # Import images
+        if "images" in data:
+            await db.images.delete_many({})
+            if data["images"]:
+                await db.images.insert_many(data["images"])
+            imported.append(f"images ({len(data.get('images', []))})")
+
+        # Import calculator config
+        if "calculator_config" in data:
+            await db.calculator_config.delete_many({})
+            calculator_items = data["calculator_config"]
+            if not isinstance(calculator_items, list):
+                calculator_items = [calculator_items]
+            if calculator_items:
+                await db.calculator_config.insert_many(calculator_items)
+            imported.append(f"calculator_config ({len(calculator_items)})")
         
         # Trigger SSG regeneration
         trigger_ssg_background()
@@ -2285,12 +2208,15 @@ async def export_public_data():
         data = {
             "exported_at": datetime.now(timezone.utc).isoformat(),
             "sync_key_required": sync_key,
-            "settings": await db.settings.find_one({}, {"_id": 0}) or {},
+            "settings": await db.site_settings.find_one({}, {"_id": 0}) or {},
             "services": await db.services.find({}, {"_id": 0}).to_list(1000),
             "references": await db.references.find({}, {"_id": 0}).to_list(1000),
             "partners": await db.partners.find({}, {"_id": 0}).to_list(1000),
             "faqs": await db.faqs.find({}, {"_id": 0}).to_list(1000),
             "service_pages": await db.service_pages.find({}, {"_id": 0}).to_list(1000),
+            "areas": await db.areas.find({}, {"_id": 0}).to_list(1000),
+            "images": await db.images.find({}, {"_id": 0}).to_list(5000),
+            "calculator_config": await db.calculator_config.find({}, {"_id": 0}).to_list(100),
         }
         return data
     except Exception as e:
@@ -2311,8 +2237,8 @@ async def import_with_sync_key(request: Request):
         imported = []
         
         if "settings" in data and data["settings"]:
-            await db.settings.delete_many({})
-            await db.settings.insert_one(data["settings"])
+            await db.site_settings.delete_many({})
+            await db.site_settings.insert_one(data["settings"])
             imported.append("settings")
         
         if "services" in data:
@@ -2344,6 +2270,27 @@ async def import_with_sync_key(request: Request):
             if data["service_pages"]:
                 await db.service_pages.insert_many(data["service_pages"])
             imported.append(f"service_pages ({len(data.get('service_pages', []))})")
+
+        if "areas" in data:
+            await db.areas.delete_many({})
+            if data["areas"]:
+                await db.areas.insert_many(data["areas"])
+            imported.append(f"areas ({len(data.get('areas', []))})")
+
+        if "images" in data:
+            await db.images.delete_many({})
+            if data["images"]:
+                await db.images.insert_many(data["images"])
+            imported.append(f"images ({len(data.get('images', []))})")
+
+        if "calculator_config" in data:
+            await db.calculator_config.delete_many({})
+            calculator_items = data["calculator_config"]
+            if not isinstance(calculator_items, list):
+                calculator_items = [calculator_items]
+            if calculator_items:
+                await db.calculator_config.insert_many(calculator_items)
+            imported.append(f"calculator_config ({len(calculator_items)})")
         
         return {"success": True, "imported": imported}
     except HTTPException:
@@ -2516,67 +2463,10 @@ async def seed_hintalaskuri_page():
         await db.service_pages.insert_one(page)
         logging.info("Seeded hintalaskuri service page")
 
-async def migrate_calculator_surface_step():
-    """Add surface step to sisämaalaus if missing, convert tasoitustyöt to area_multiplier"""
-    config = await db.calculator_config.find_one({"id": "calculator_config"})
-    if not config:
-        return
-    updated = False
-    for service in config.get("services", []):
-        if service["id"] == "sisamaalaus":
-            has_surface = any(s["id"] == "surface" for s in service.get("steps", []))
-            if not has_surface:
-                surface_step = {
-                    "id": "surface",
-                    "title": "Mitä pintoja maalataan?",
-                    "type": "cards",
-                    "options": [
-                        {"id": "walls", "label": "Seinät", "description": "Seinäpintojen maalaus", "area_multiplier": 2.0},
-                        {"id": "ceiling", "label": "Katot", "description": "Kattopintojen maalaus", "area_multiplier": 1.0},
-                        {"id": "both", "label": "Seinät + katot", "description": "Seinä- ja kattopintojen maalaus", "area_multiplier": 3.0}
-                    ]
-                }
-                target_idx = next((i for i, s in enumerate(service["steps"]) if s["id"] == "target_type"), 0)
-                service["steps"].insert(target_idx + 1, surface_step)
-                updated = True
-                logging.info("Migrated: Added surface step to sisämaalaus")
-            # Add helper_text to area slider if missing
-            for step in service.get("steps", []):
-                if step["id"] == "area" and "helper_text" not in step:
-                    step["helper_text"] = "Syötä huoneiston pohjapinta-ala — laskuri muuntaa sen maalattavaksi pinta-alaksi."
-                    updated = True
-        if service["id"] == "tasoitustyot":
-            # Convert target_type from multiplier to area_multiplier
-            for step in service.get("steps", []):
-                if step["id"] == "target_type":
-                    area_mult_map = {"walls": 2.0, "ceiling": 1.0, "both": 3.0}
-                    desc_map = {"walls": "Seinäpintojen tasoitus", "ceiling": "Kattopintojen tasoitus", "both": "Seinä- ja kattopintojen tasoitus"}
-                    for opt in step.get("options", []):
-                        if opt["id"] in area_mult_map and "area_multiplier" not in opt:
-                            opt["area_multiplier"] = area_mult_map[opt["id"]]
-                            opt.pop("multiplier", None)
-                            if "description" not in opt or not opt["description"]:
-                                opt["description"] = desc_map.get(opt["id"], "")
-                            updated = True
-                            logging.info(f"Migrated: tasoitustyöt {opt['id']} → area_multiplier={opt['area_multiplier']}")
-                if step["id"] == "area" and "helper_text" not in step:
-                    step["helper_text"] = "Syötä huoneiston pohjapinta-ala — laskuri muuntaa sen tasoitettavaksi pinta-alaksi."
-                    updated = True
-    # Migrate: add allow_quantity to addons that should support it
-    for service in config.get("services", []):
-        for addon in service.get("addons", []):
-            if addon["id"] in ("ovien_maalaus", "extra_color", "ikkunoiden_maalaus", "kourujen_puhdistus") and not addon.get("allow_quantity"):
-                addon["allow_quantity"] = True
-                updated = True
-                logging.info(f"Migrated: {addon['id']} → allow_quantity=True")
-    if updated:
-        await db.calculator_config.replace_one({"id": "calculator_config"}, config)
-
 @app.on_event("startup")
 async def startup_event():
     await init_admin_user()
     await seed_hintalaskuri_page()
-    await migrate_calculator_surface_step()
     # Run SSG on startup to ensure static HTML is up-to-date with DB content
     try:
         from generate_static_direct import run_ssg_with_db
@@ -2584,68 +2474,6 @@ async def startup_event():
         logging.info(f"Startup SSG complete: {count} pages generated")
     except Exception as e:
         logging.error(f"Startup SSG failed: {e}")
-    # Also explicitly write sitemap to all possible locations
-    try:
-        await write_sitemap_everywhere()
-    except Exception as e:
-        logging.error(f"Startup sitemap write failed: {e}")
-
-
-async def write_sitemap_everywhere():
-    """Generate sitemap from DB and write to all possible static file locations."""
-    from pathlib import Path
-    base_url = "https://www.jbtasoitusmaalaus.fi"
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    
-    areas = await db.areas.find({}, {"_id": 0}).sort("order", 1).to_list(100)
-    default_area = next((a for a in areas if a.get("is_default")), areas[0] if areas else None)
-    non_default_areas = [a for a in areas if not a.get("is_default")]
-    service_pages = await db.service_pages.find({}, {"_id": 0, "slug": 1}).to_list(100)
-    
-    urls = []
-    urls.append(("", "weekly", "1.0"))
-    urls.append(("referenssit", "monthly", "0.7"))
-    urls.append(("ukk", "monthly", "0.7"))
-    
-    for sp in service_pages:
-        slug = sp.get("slug", "")
-        if not slug:
-            continue
-        base_slug = slug
-        if default_area and slug.endswith(f"-{default_area['slug']}"):
-            base_slug = slug[:-len(f"-{default_area['slug']}")]
-        urls.append((slug, "monthly", "0.9"))
-        for area in non_default_areas:
-            variant_slug = f"{base_slug}-{area['slug']}"
-            if variant_slug != slug:
-                urls.append((variant_slug, "monthly", "0.8"))
-        if default_area and not slug.endswith(f"-{default_area['slug']}"):
-            default_variant = f"{base_slug}-{default_area['slug']}"
-            urls.append((default_variant, "monthly", "0.8"))
-    
-    entries = []
-    for path_val, freq, prio in urls:
-        loc = f"{base_url}/{path_val}" if path_val else base_url
-        entries.append(f'  <url>\n    <loc>{loc}</loc>\n    <lastmod>{today}</lastmod>\n    <changefreq>{freq}</changefreq>\n    <priority>{prio}</priority>\n  </url>')
-    
-    xml = f'''<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-{chr(10).join(entries)}
-</urlset>'''
-    
-    # Write to every possible location
-    paths_to_write = [
-        Path("/app/frontend/build/sitemap.xml"),
-        Path("/app/frontend/public/sitemap.xml"),
-        Path("/usr/share/nginx/html/sitemap.xml"),
-    ]
-    for p in paths_to_write:
-        try:
-            if p.parent.exists():
-                p.write_text(xml, encoding="utf-8")
-                logging.info(f"Sitemap written to {p} ({len(urls)} URLs)")
-        except Exception as e:
-            logging.warning(f"Failed to write sitemap to {p}: {e}")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():

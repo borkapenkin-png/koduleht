@@ -1,9 +1,13 @@
+"use client";
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import { getApiBaseUrl } from '@/lib/public-env';
 
-const API = process.env.REACT_APP_BACKEND_URL + '/api';
+const API_BASE = getApiBaseUrl();
+const API = `${API_BASE.replace(/\/$/, "")}/api`;
 
 // Service options for multi-select
 const SERVICE_OPTIONS = [
