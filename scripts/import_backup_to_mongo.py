@@ -34,6 +34,7 @@ async def main():
       "service_pages": "service_pages",
       "areas": "areas",
       "calculator_config": "calculator_config",
+      "images": "images",
     }
 
     for source_key, collection_name in collection_map.items():
