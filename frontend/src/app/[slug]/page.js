@@ -1,4 +1,4 @@
-﻿import { notFound } from "next/navigation";
+const notFound = () => null;
 import ServicePageContent from "@/components/service-page/ServicePageContent";
 import { getServiceFaqs, getServiceRouteData, getSiteUrl, withApiUrl } from "@/lib/site-api";
 import { resolveServicePage, stripHtml } from "@/lib/site-helpers";
@@ -15,7 +15,7 @@ export async function generateMetadata({ params }) {
 
   if (!resolved) {
     return {
-      title: "Sivua ei löytynyt | J&B Tasoitus ja Maalaus",
+      title: "Sivua ei l�ytynyt | J&B Tasoitus ja Maalaus",
     };
   }
 
@@ -64,3 +64,4 @@ export default async function ServicePage({ params }) {
     />
   );
 }
+

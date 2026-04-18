@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/site/RouterLink";
 import { ArrowRight, Calculator, CheckCircle, Mail, MapPin, Phone } from "lucide-react";
 import QuoteRequestForm from "@/components/QuoteRequestFormClean";
 import SiteHeader from "@/components/site/SiteHeader";
@@ -297,3 +297,4 @@ function slugFromPage(pageSlug = "", currentArea) {
   if (!pageSlug || !currentArea?.slug) return pageSlug;
   return pageSlug.replace(`-${currentArea.slug}`, "");
 }
+

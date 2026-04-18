@@ -506,7 +506,7 @@ const PriceCalculatorPage = () => {
 
   return (
     <>
-      <Navbar isScrolled={isScrolled} logoUrl={settings?.logo_url} />
+      <SiteHeader settings={settings} servicePages={servicePages} />
       <CalculatorSEO />
       {config && <CalculatorSchema config={config} />}
 
