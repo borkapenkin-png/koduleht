@@ -10,6 +10,7 @@ RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r re
 
 COPY backend/ ./
 COPY scripts/ ../scripts/
+COPY imports/ ../imports/
 COPY production_data_export.json ../production_data_export.json
 
 EXPOSE 8001

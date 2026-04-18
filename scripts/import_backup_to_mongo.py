@@ -7,20 +7,21 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 
 ROOT = Path(__file__).resolve().parents[1]
-BACKUP_PATH = ROOT / "production_data_export.json"
+DEFAULT_BACKUP_PATH = ROOT / "production_data_export.json"
 
 
 async def main():
     mongo_url = os.environ.get("MONGO_URL")
     db_name = os.environ.get("DB_NAME")
+    backup_path = Path(os.environ.get("BACKUP_PATH", str(DEFAULT_BACKUP_PATH)))
 
     if not mongo_url or not db_name:
       raise RuntimeError("Set MONGO_URL and DB_NAME before running the import.")
 
-    if not BACKUP_PATH.exists():
-      raise FileNotFoundError(f"Backup file not found: {BACKUP_PATH}")
+    if not backup_path.exists():
+      raise FileNotFoundError(f"Backup file not found: {backup_path}")
 
-    data = json.loads(BACKUP_PATH.read_text(encoding="utf-8"))
+    data = json.loads(backup_path.read_text(encoding="utf-8"))
     client = AsyncIOMotorClient(mongo_url)
     db = client[db_name]
 
