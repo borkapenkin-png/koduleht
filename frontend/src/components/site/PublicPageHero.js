@@ -22,13 +22,13 @@ export default function PublicPageHero({
       </div>
 
       <div className="container-custom relative z-10 pb-10 md:pb-14">
-        <Link href={backHref} className="mb-5 inline-flex items-center gap-2 text-sm text-[#64748B] transition-colors hover:text-primary">
+        <Link href={backHref} className="mb-5 ml-auto inline-flex items-center gap-2 text-sm text-[#64748B] transition-colors hover:text-primary">
           <ArrowLeft size={16} />
           {backLabel}
         </Link>
-        <div className={contentClassName}>
+        <div className={`ml-auto text-right ${contentClassName}`}>
           <h1 className="text-4xl font-bold leading-tight text-[#0F172A] md:text-5xl">{title}</h1>
-          {description ? <p className="mt-4 max-w-3xl text-base leading-7 text-[#64748B] md:text-lg">{description}</p> : null}
+          {description ? <p className="mt-4 ml-auto max-w-3xl text-base leading-7 text-[#64748B] md:text-lg">{description}</p> : null}
         </div>
       </div>
     </section>

@@ -207,7 +207,7 @@ const ServiceHero = ({ page, settings }) => {
       </div>
       <div className="container-custom relative z-10 py-10 md:py-16">
         {/* Breadcrumbs */}
-        <motion.nav initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 text-sm text-[#64748B] mb-4 md:mb-6">
+        <motion.nav initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-4 flex items-center justify-end gap-2 text-sm text-[#64748B] md:mb-6">
           <Link to="/" className="hover:text-primary transition-colors">Etusivu</Link>
           <ChevronRight size={14} />
           <Link to="/#palvelut" className="hover:text-primary transition-colors">Palvelut</Link>
@@ -216,7 +216,7 @@ const ServiceHero = ({ page, settings }) => {
         </motion.nav>
 
         {/* Text content limited to 600px */}
-        <div className="max-w-[600px]">
+        <div className="ml-auto w-full max-w-[720px] text-right">
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className={`uppercase text-primary mb-2 md:mb-3 ${getSubtitleClasses(settings)}`}>
             PALVELUMME
           </motion.p>
@@ -224,11 +224,11 @@ const ServiceHero = ({ page, settings }) => {
             {page.hero_title}
           </motion.h1>
           {page.hero_subtitle && (
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-base md:text-lg text-[#64748B] mb-6 leading-relaxed">
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-6 ml-auto text-base leading-relaxed text-[#64748B] md:text-lg">
               {page.hero_subtitle}
             </motion.p>
           )}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-col sm:flex-row gap-3">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-col gap-3 sm:ml-auto sm:w-fit sm:flex-row">
             <a href="#tarjouspyynto" className="btn-primary inline-flex items-center justify-center gap-2 text-sm">
               Pyydä ilmainen arvio <ArrowRight size={16} />
             </a>
@@ -239,7 +239,7 @@ const ServiceHero = ({ page, settings }) => {
               <Phone size={16} /> Soita nyt
             </a>
           </motion.div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-6 md:mt-8 flex flex-wrap items-center gap-4 md:gap-6">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-6 flex flex-wrap items-center justify-end gap-4 md:mt-8 md:gap-6">
             <div className="flex items-center gap-2 text-sm md:text-base text-[#64748B]">
               <CheckCircle size={21} className="text-primary" />
               <span>{settings?.trust_badge_3_title || 'Kotitalousvähennys'}</span>
@@ -948,7 +948,7 @@ const DynamicServicePage = () => {
   // General page - show area selection
   if (isGeneralPage && baseSlug) {
     return (
-      <div className="App">
+      <div className="App public-site">
         <Navbar isScrolled={isScrolled} settings={settings} />
         <ServiceHero page={page} settings={settings} />
         <TrustBadges settings={settings} />
@@ -995,7 +995,7 @@ const DynamicServicePage = () => {
   }
 
   return (
-    <div className="App">
+    <div className="App public-site">
       <Navbar isScrolled={isScrolled} settings={settings} />
       <ServiceHero page={page} settings={settings} />
       <TrustBadges settings={settings} />

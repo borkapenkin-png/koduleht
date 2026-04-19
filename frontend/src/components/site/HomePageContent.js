@@ -85,7 +85,7 @@ export default function HomePageContent({ settings, services, references, partne
   const stats = settings.company_stats || [];
 
   return (
-    <div style={themeStyle}>
+    <div className="public-site" style={themeStyle}>
       <SiteHeaderLegacy settings={settings} isHome />
       <LocalBusinessSchema settings={settings} siteUrl={siteUrl} />
 
@@ -97,16 +97,16 @@ export default function HomePageContent({ settings, services, references, partne
           </div>
 
           <div className="container-custom relative z-10 py-12 md:py-20">
-            <div className="max-w-2xl">
+            <div className="ml-auto max-w-2xl text-right">
               <p className="font-slogan mb-3 text-sm text-primary md:mb-4">{settings.hero_slogan || "LAATUJOHTAJAT"}</p>
               <h1 className="mb-4 text-3xl font-bold leading-tight text-[#0F172A] sm:text-4xl md:mb-6 md:text-6xl lg:text-7xl">
                 {settings.hero_title_1 || "Ammattitaitoista"}
                 <br />
                 <span className="text-primary">{settings.hero_title_2 || "maalausta"}</span> {settings.hero_title_3 || "ja tasoitusta"}
               </h1>
-              <p className="max-w-xl text-base leading-relaxed text-[#64748B] md:text-lg">{settings.hero_description}</p>
+              <p className="ml-auto max-w-xl text-base leading-relaxed text-[#64748B] md:text-lg">{settings.hero_description}</p>
 
-              <div className="mt-6 flex flex-col gap-3 md:mt-8 md:flex-row md:gap-4">
+              <div className="mt-6 flex flex-col gap-3 md:mt-8 md:ml-auto md:w-fit md:flex-row md:gap-4">
                 <a href="#yhteystiedot" className="btn-primary inline-flex items-center justify-center gap-2 text-sm md:text-base">
                   Pyydä ilmainen arvio <ArrowRight size={18} />
                 </a>
@@ -118,7 +118,7 @@ export default function HomePageContent({ settings, services, references, partne
                 </a>
               </div>
 
-              <div className="mt-8 flex flex-wrap items-center gap-4 text-sm text-[#64748B] md:mt-12 md:gap-8 md:text-base">
+              <div className="mt-8 flex flex-wrap items-center justify-end gap-4 text-sm text-[#64748B] md:mt-12 md:gap-8 md:text-base">
                 {[settings.hero_badge_1, settings.hero_badge_2].filter(Boolean).map((badge) => (
                   <div key={badge} className="flex items-center gap-2">
                     <CheckCircle size={21} className="text-primary" />

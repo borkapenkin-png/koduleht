@@ -1380,6 +1380,74 @@ html {
   border-radius: 0.5rem;
 }
 
+/* ========== PUBLIC SITE SHARP CORNERS ========== */
+:root {
+  --radius-sharp: 0px;
+}
+
+.public-site :is(
+  .btn-primary,
+  .btn-secondary,
+  .service-area-badge,
+  .feature-card,
+  .service-feature-card,
+  .icon-bg-primary,
+  .icon-bg-primary-sm,
+  .why-choose-item,
+  .benefits-box-premium,
+  .benefits-box,
+  .contact-card,
+  .project-card,
+  .reference-card,
+  .reference-card-full,
+  .image-hover-overlay,
+  .faq-item,
+  .selection-card,
+  .badge-theme,
+  .area-tag,
+  .why-item,
+  .form-input,
+  .quote-form-input,
+  .quote-form-select,
+  .quote-form-textarea,
+  .quote-service-checkbox,
+  .quote-checkbox-indicator,
+  .quote-option-button,
+  .quote-form-submit,
+  .quote-form-success,
+  .quote-form-error-box,
+  .process-step-number
+) {
+  border-radius: var(--radius-sharp) !important;
+}
+
+.public-site :is(
+  .reference-card-image,
+  .reference-card-image-container
+) {
+  border-radius: var(--radius-sharp) !important;
+}
+
+.public-site .feature-card::after {
+  border-radius: var(--radius-sharp) !important;
+}
+
+.public-site :is(
+  [class*="rounded"],
+  [class~="rounded"],
+  [class~="rounded-sm"],
+  [class~="rounded-md"],
+  [class~="rounded-lg"],
+  [class~="rounded-xl"],
+  [class~="rounded-2xl"],
+  [class~="rounded-full"],
+  [class*="rounded-["],
+  [class*="rounded-[24px]"],
+  [class*="rounded-[28px]"]
+) {
+  border-radius: var(--radius-sharp) !important;
+}
+
 /* ========== SERVICE DESCRIPTION CONTENT ========== */
 /* Improved typography for long-form service descriptions */
 .service-description-content {

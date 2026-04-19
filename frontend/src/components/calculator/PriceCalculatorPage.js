@@ -526,7 +526,7 @@ const PriceCalculatorPage = () => {
   }
 
   return (
-    <>
+    <div className="public-site">
       <SiteHeader settings={settings} servicePages={servicePages} />
       <CalculatorSEO />
       {config && <CalculatorSchema config={config} />}
@@ -540,12 +540,12 @@ const PriceCalculatorPage = () => {
         </div>
         <div className="container-custom relative z-10 py-10 md:py-16">
           <motion.nav initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-2 text-sm text-[#64748B] mb-4 md:mb-6">
+            className="mb-4 flex items-center justify-end gap-2 text-sm text-[#64748B] md:mb-6">
             <Link to="/" className="hover:text-primary transition-colors">Etusivu</Link>
             <ChevronRight size={14} />
             <span className="text-[#0F172A] font-medium">Hintalaskuri</span>
           </motion.nav>
-          <div className="max-w-[600px]">
+          <div className="ml-auto w-full max-w-[720px] text-right">
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               className="uppercase text-primary mb-2 md:mb-3 text-xs md:text-sm font-semibold tracking-wider">
               HINTALASKURI
@@ -555,11 +555,11 @@ const PriceCalculatorPage = () => {
               Laske hinta-arvio hetkessä
             </motion.h1>
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-              className="text-base md:text-lg text-[#64748B] mb-6 leading-relaxed">
+              className="mb-6 ml-auto text-base leading-relaxed text-[#64748B] md:text-lg">
               Saat suuntaa-antavan hinnan heti &ndash; ilman rekisteröitymistä tai yhteystietoja.
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-              className="flex flex-col sm:flex-row gap-3">
+              className="flex flex-col gap-3 sm:ml-auto sm:w-fit sm:flex-row">
               <a href="#laskuri" className="btn-primary inline-flex items-center justify-center gap-2 text-sm">
                 Aloita laskeminen <ArrowRight size={16} />
               </a>
@@ -568,7 +568,7 @@ const PriceCalculatorPage = () => {
               </a>
             </motion.div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
-              className="mt-6 md:mt-8 flex flex-wrap items-center gap-4 md:gap-6">
+              className="mt-6 flex flex-wrap items-center justify-end gap-4 md:mt-8 md:gap-6">
               <div className="flex items-center gap-2 text-sm md:text-base text-[#64748B]">
                 <CheckCircle size={21} className="text-primary" />
                 <span>Kotitalousvähennys lasketaan</span>
@@ -609,7 +609,7 @@ const PriceCalculatorPage = () => {
 
       {/* Calculator Section */}
       <section id="laskuri" className="section-padding bg-white pb-32 lg:pb-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="container-custom">
 
           {/* Progress bar */}
           {selectedService && <ProgressBar activeStage={activeStage} />}
@@ -1238,7 +1238,7 @@ const PriceCalculatorPage = () => {
       )}
 
       <SiteFooter settings={settings} servicePages={servicePages} />
-    </>
+    </div>
   );
 };
 
