@@ -456,7 +456,8 @@ const HeroSection = ({ settings }) => {
         <div className="hero-overlay absolute inset-0"></div>
       </div>
       <div className="container-custom relative z-10 py-12 md:py-20">
-        <div className="w-full max-w-[720px]">
+        <div className="grid w-full lg:grid-cols-[minmax(0,720px)_1fr]">
+        <div className="min-w-0 text-left">
           <p className={`uppercase text-primary mb-3 md:mb-4 ${subtitleClasses}`} style={{ fontFamily: `"${subtitleFont}", sans-serif` }}>{s.hero_slogan}</p>
           <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-[#0F172A] mb-4 md:mb-6 leading-tight">
             {s.hero_title_1}<br /><span className="text-primary">{s.hero_title_2}</span> {s.hero_title_3}
@@ -471,6 +472,7 @@ const HeroSection = ({ settings }) => {
             <div className="flex items-center gap-2 text-sm md:text-base text-[#64748B]"><CheckCircle size={21} className="text-primary" /><span>{s.hero_badge_1}</span></div>
             <div className="flex items-center gap-2 text-sm md:text-base text-[#64748B]"><CheckCircle size={21} className="text-primary" /><span>{s.hero_badge_2}</span></div>
           </div>
+        </div>
         </div>
       </div>
       <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute bottom-6 left-1/2 -translate-x-1/2 hidden md:block">
