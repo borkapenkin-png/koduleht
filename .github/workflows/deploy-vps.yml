@@ -72,7 +72,7 @@ jobs:
             printf '%s\n' "$VPS_KEY_SECRET" > "$KEY_FILE"
           fi
 
-          chmod 600 "$KEY_FILE"
+          chmod 644 "$KEY_FILE"
           echo "key_path=$KEY_FILE" >> "$GITHUB_OUTPUT"
 
       - name: Deploy to VPS
