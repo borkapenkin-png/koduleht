@@ -1,0 +1,51 @@
+name: Validate Stack
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: Build and Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate deploy scripts
+        run: |
+          bash -n deploy/check_stack.sh
+          bash -n deploy/vps_rollout.sh
+
+      - name: Validate Python scripts
+        run: |
+          python -m py_compile backend/server.py
+          python -m py_compile scripts/runtime_smoke_check.py
+          python -m py_compile scripts/import_backup_to_mongo.py
+          python -m py_compile scripts/rewrite_image_urls.py
+
+      - name: Validate docker compose
+        run: docker compose config -q
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build

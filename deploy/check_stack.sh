@@ -5,6 +5,7 @@ FRONTEND_BASE_URL="${1:-http://127.0.0.1:13000}"
 BACKEND_BASE_URL="${2:-http://127.0.0.1:18001}"
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-20}"
 SLEEP_SECONDS="${SLEEP_SECONDS:-3}"
+PYTHON_BIN="${PYTHON_BIN:-}"
 
 check() {
   local url="$1"
@@ -36,8 +37,26 @@ wait_for() {
 
 wait_for "$BACKEND_BASE_URL/api/settings"
 wait_for "$FRONTEND_BASE_URL/__server-info"
+wait_for "$FRONTEND_BASE_URL/api/settings"
 check "$FRONTEND_BASE_URL/"
 check "$FRONTEND_BASE_URL/referenssit"
 check "$FRONTEND_BASE_URL/ukk"
 check "$FRONTEND_BASE_URL/hintalaskuri"
 check "$FRONTEND_BASE_URL/tasoitustyot-helsinki"
+
+if [ -z "$PYTHON_BIN" ]; then
+  if command -v python3 >/dev/null 2>&1; then
+    PYTHON_BIN="python3"
+  elif command -v python >/dev/null 2>&1; then
+    PYTHON_BIN="python"
+  else
+    echo "Python interpreter not found for runtime smoke checks" >&2
+    exit 1
+  fi
+fi
+
+echo
+echo "==> Running runtime smoke and sync checks"
+"$PYTHON_BIN" "$PWD/scripts/runtime_smoke_check.py" \
+  --frontend-base "$FRONTEND_BASE_URL" \
+  --backend-base "$BACKEND_BASE_URL"
