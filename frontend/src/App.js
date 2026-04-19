@@ -456,18 +456,18 @@ const HeroSection = ({ settings }) => {
         <div className="hero-overlay absolute inset-0"></div>
       </div>
       <div className="container-custom relative z-10 py-12 md:py-20">
-        <div className="max-w-2xl">
+        <div className="ml-auto max-w-2xl text-right">
           <p className={`uppercase text-primary mb-3 md:mb-4 ${subtitleClasses}`} style={{ fontFamily: `"${subtitleFont}", sans-serif` }}>{s.hero_slogan}</p>
           <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-[#0F172A] mb-4 md:mb-6 leading-tight">
             {s.hero_title_1}<br /><span className="text-primary">{s.hero_title_2}</span> {s.hero_title_3}
           </h1>
-          <p className="text-base md:text-lg text-[#64748B] mb-6 md:mb-8 max-w-xl leading-relaxed">{s.hero_description}</p>
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+          <p className="ml-auto text-base md:text-lg text-[#64748B] mb-6 md:mb-8 max-w-xl leading-relaxed">{s.hero_description}</p>
+          <div className="flex flex-col gap-3 md:gap-4 sm:ml-auto sm:w-fit sm:flex-row">
             <a href="#yhteystiedot" className="btn-primary inline-flex items-center justify-center gap-2 text-sm md:text-base">Pyydä ilmainen arvio<ArrowRight size={18} /></a>
             <Link to="/hintalaskuri" className="btn-secondary inline-flex items-center justify-center gap-2 text-sm md:text-base" data-testid="hero-calculator-btn"><Calculator size={18} />Hintalaskuri</Link>
             <a href="#palvelut" className="btn-secondary inline-flex items-center justify-center gap-2 text-sm md:text-base">Tutustu palveluihin<ChevronDown size={18} /></a>
           </div>
-          <div className="mt-8 md:mt-12 flex flex-wrap items-center gap-4 md:gap-8">
+          <div className="mt-8 md:mt-12 flex flex-wrap items-center justify-end gap-4 md:gap-8">
             <div className="flex items-center gap-2 text-sm md:text-base text-[#64748B]"><CheckCircle size={21} className="text-primary" /><span>{s.hero_badge_1}</span></div>
             <div className="flex items-center gap-2 text-sm md:text-base text-[#64748B]"><CheckCircle size={21} className="text-primary" /><span>{s.hero_badge_2}</span></div>
           </div>
@@ -980,11 +980,11 @@ const Footer = ({ logoUrl, settings, servicePages = [] }) => {
 };
 
 const PublicPageLayout = ({ settings, servicePages, activeSection = "", children }) => (
-  <>
+  <div className="public-site">
     <Navbar isScrolled={true} activeSection={activeSection} logoUrl={settings?.logo_url} />
     <main className="pt-16 md:pt-20">{children}</main>
     <Footer logoUrl={settings?.logo_url} settings={settings || defaultSettings} servicePages={servicePages} />
-  </>
+  </div>
 );
 
 const FaqPage = () => {
@@ -1038,12 +1038,12 @@ const FaqPage = () => {
     <PublicPageLayout settings={settings} servicePages={servicePages}>
       <section className="relative overflow-hidden bg-[#F8FAFC] py-16 md:py-24">
         <div className="container-custom relative z-10">
-          <div className="max-w-3xl">
+          <div className="ml-auto w-full max-w-[720px] text-right">
             <Subtitle settings={settings} className="mb-3">UKK</Subtitle>
             <h1 className="text-4xl font-bold tracking-tight text-[#0F172A] md:text-5xl">
               Usein kysytyt kysymykset
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-8 text-[#64748B] md:text-lg">
+            <p className="mt-5 ml-auto max-w-2xl text-base leading-8 text-[#64748B] md:text-lg">
               Vastauksia yleisimpiin kysymyksiin maalaus- ja tasoituspalveluistamme, hinnoittelusta,
               kotitalousvähennyksestä ja työn toteutuksesta.
             </p>
@@ -1121,8 +1121,8 @@ const ReferencesPage = () => {
     <PublicPageLayout settings={settings} servicePages={servicePages}>
       <section className="relative overflow-hidden bg-[#F8FAFC] py-16 md:py-24">
         <div className="container-custom relative z-10">
-          <div className="max-w-[860px]">
-            <Link to="/" className="mb-6 inline-flex items-center gap-2 text-sm text-[#64748B] transition-colors hover:text-primary">
+          <div className="ml-auto w-full max-w-[720px] text-right">
+            <Link to="/" className="mb-6 ml-auto inline-flex items-center gap-2 text-sm text-[#64748B] transition-colors hover:text-primary">
               <ArrowLeft size={16} />
               Takaisin etusivulle
             </Link>
@@ -1130,7 +1130,7 @@ const ReferencesPage = () => {
             <h1 className="text-4xl font-bold tracking-tight text-[#0F172A] md:text-5xl">
               Tutustu toteuttamiimme kohteisiin
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-8 text-[#64748B] md:text-lg">
+            <p className="mt-5 ml-auto max-w-2xl text-base leading-8 text-[#64748B] md:text-lg">
               Laadukkaita maalaus-, tasoitus- ja pintakäsittelytöitä Helsingissä ja Uudellamaalla.
             </p>
           </div>
@@ -2700,7 +2700,7 @@ const HomePage = () => {
   }, [settings]);
 
   return (
-    <>
+    <div className="public-site">
       {/* JSON-LD Structured Data for SEO */}
       <StructuredData settings={settings} />
       
@@ -2715,7 +2715,7 @@ const HomePage = () => {
         <ContactSection settings={settings} />
       </main>
       <Footer logoUrl={settings.logo_url} settings={settings} servicePages={servicePages} />
-    </>
+    </div>
   );
 };
 
