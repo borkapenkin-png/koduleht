@@ -444,7 +444,7 @@ const HeroSection = ({ settings }) => {
   const subtitleClasses = getSubtitleClasses(s);
   const subtitleFont = s.subtitle_font || 'Inter';
   return (
-    <section data-testid="hero-section" className="relative min-h-[90vh] md:min-h-screen pt-16">
+    <section data-testid="hero-section" className="relative min-h-[720px] md:min-h-[860px] pt-16">
       <div className="absolute inset-0">
         <img 
           src={heroImage} 
@@ -456,7 +456,7 @@ const HeroSection = ({ settings }) => {
         <div className="hero-overlay absolute inset-0"></div>
       </div>
       <div className="container-custom relative z-10">
-        <div className="flex min-h-[calc(90vh-4rem)] items-start py-14 md:min-h-[calc(100vh-5rem)] md:py-24 lg:py-28">
+        <div className="pt-10 pb-20 md:pt-16 md:pb-28 lg:pt-20 lg:pb-32">
           <div className="w-full max-w-[680px] text-left">
             <p className={`uppercase text-primary mb-3 md:mb-4 ${subtitleClasses}`} style={{ fontFamily: `"${subtitleFont}", sans-serif` }}>{s.hero_slogan}</p>
             <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-[#0F172A] mb-4 md:mb-6 leading-tight">
