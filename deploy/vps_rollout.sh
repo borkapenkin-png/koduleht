@@ -9,13 +9,20 @@ if [ ! -f backend/.env ]; then
   exit 1
 fi
 
-docker compose build
-docker compose up -d mongodb backend frontend nginx
+FRONTEND_BASE_URL="${FRONTEND_BASE_URL:-http://127.0.0.1:13000}"
+BACKEND_BASE_URL="${BACKEND_BASE_URL:-http://127.0.0.1:18001}"
+IMPORT_BACKUP_ON_DEPLOY="${IMPORT_BACKUP_ON_DEPLOY:-false}"
+REWRITE_IMAGE_URLS_TARGET="${REWRITE_IMAGE_URLS_TARGET:-${1:-}}"
 
-"$ROOT_DIR/deploy/import_backup.sh"
+docker compose build backend frontend
+docker compose up -d mongodb backend frontend
 
-if [ "${1:-}" != "" ]; then
-  "$ROOT_DIR/deploy/rewrite_image_urls.sh" "$1"
+if [ "$IMPORT_BACKUP_ON_DEPLOY" = "true" ]; then
+  "$ROOT_DIR/deploy/import_backup.sh"
 fi
 
-"$ROOT_DIR/deploy/check_stack.sh"
+if [ -n "$REWRITE_IMAGE_URLS_TARGET" ]; then
+  "$ROOT_DIR/deploy/rewrite_image_urls.sh" "$REWRITE_IMAGE_URLS_TARGET"
+fi
+
+"$ROOT_DIR/deploy/check_stack.sh" "$FRONTEND_BASE_URL" "$BACKEND_BASE_URL"

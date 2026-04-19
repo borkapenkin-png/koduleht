@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE_URL="${1:-http://localhost}"
+FRONTEND_BASE_URL="${1:-http://127.0.0.1:13000}"
+BACKEND_BASE_URL="${2:-http://127.0.0.1:18001}"
 
 check() {
   local url="$1"
@@ -10,10 +11,10 @@ check() {
   curl -I --max-time 10 "$url"
 }
 
-check "$BASE_URL/"
-check "$BASE_URL/api/settings"
-check "$BASE_URL/referenssit"
-check "$BASE_URL/ukk"
-check "$BASE_URL/hintalaskuri"
-check "$BASE_URL/tasoitustyot-helsinki"
-check "$BASE_URL/__server-info"
+check "$FRONTEND_BASE_URL/"
+check "$BACKEND_BASE_URL/api/settings"
+check "$FRONTEND_BASE_URL/referenssit"
+check "$FRONTEND_BASE_URL/ukk"
+check "$FRONTEND_BASE_URL/hintalaskuri"
+check "$FRONTEND_BASE_URL/tasoitustyot-helsinki"
+check "$FRONTEND_BASE_URL/__server-info"

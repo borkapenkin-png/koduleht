@@ -25,6 +25,11 @@ jobs:
             set -euo pipefail
             cd '${{ secrets.VPS_PROJECT_PATH }}'
 
+            if ! git diff --quiet || ! git diff --cached --quiet; then
+              echo "Stashing VPS local changes before deploy..."
+              git stash push -u -m "pre-deploy-$(date +%Y%m%d-%H%M%S)"
+            fi
+
             echo "Pulling latest main from origin..."
             git fetch origin
             git checkout main
