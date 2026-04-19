@@ -456,13 +456,13 @@ const HeroSection = ({ settings }) => {
         <div className="hero-overlay absolute inset-0"></div>
       </div>
       <div className="container-custom relative z-10 py-12 md:py-20">
-        <div className="max-w-2xl">
+        <div className="w-full max-w-[720px]">
           <p className={`uppercase text-primary mb-3 md:mb-4 ${subtitleClasses}`} style={{ fontFamily: `"${subtitleFont}", sans-serif` }}>{s.hero_slogan}</p>
           <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-[#0F172A] mb-4 md:mb-6 leading-tight">
             {s.hero_title_1}<br /><span className="text-primary">{s.hero_title_2}</span> {s.hero_title_3}
           </h1>
-          <p className="text-base md:text-lg text-[#64748B] mb-6 md:mb-8 max-w-xl leading-relaxed">{s.hero_description}</p>
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+          <p className="text-base md:text-lg text-[#64748B] mb-6 md:mb-8 max-w-[680px] leading-relaxed">{s.hero_description}</p>
+          <div className="flex flex-col items-start sm:flex-row gap-3 md:gap-4">
             <a href="#yhteystiedot" className="btn-primary inline-flex items-center justify-center gap-2 text-sm md:text-base">Pyydä ilmainen arvio<ArrowRight size={18} /></a>
             <Link to="/hintalaskuri" className="btn-secondary inline-flex items-center justify-center gap-2 text-sm md:text-base" data-testid="hero-calculator-btn"><Calculator size={18} />Hintalaskuri</Link>
             <a href="#palvelut" className="btn-secondary inline-flex items-center justify-center gap-2 text-sm md:text-base">Tutustu palveluihin<ChevronDown size={18} /></a>
