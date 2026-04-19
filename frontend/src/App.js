@@ -457,7 +457,7 @@ const HeroSection = ({ settings }) => {
       </div>
       <div className="container-custom relative z-10">
         <div className="pt-10 pb-20 md:pt-16 md:pb-28 lg:pt-20 lg:pb-32">
-          <div className="w-full max-w-[680px] text-left">
+          <div className="w-full max-w-[680px] text-left lg:-ml-16 xl:-ml-24">
             <p className={`uppercase text-primary mb-3 md:mb-4 ${subtitleClasses}`} style={{ fontFamily: `"${subtitleFont}", sans-serif` }}>{s.hero_slogan}</p>
             <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-[#0F172A] mb-4 md:mb-6 leading-tight">
               {s.hero_title_1}<br /><span className="text-primary">{s.hero_title_2}</span> {s.hero_title_3}
