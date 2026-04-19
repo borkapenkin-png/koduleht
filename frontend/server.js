@@ -8,6 +8,11 @@ const BUILD_DIR = path.join(__dirname, 'build');
 const BACKEND_URL = process.env.BACKEND_URL || process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 const PORT = Number(process.env.PORT || 3000);
 const ENABLE_BACKEND_SSR_REFRESH = process.env.ENABLE_BACKEND_SSR_REFRESH === 'true';
+const SITE_URL_FALLBACK = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://jbtasoitusmaalaus.fi').replace(/\/$/, '');
+const REWRITABLE_SITE_URLS = [
+  'https://www.jbtasoitusmaalaus.fi',
+  'https://jbtasoitusmaalaus.fi',
+];
 
 // MIME types for static files
 const MIME_TYPES = {
@@ -30,6 +35,31 @@ const MIME_TYPES = {
   '.webp': 'image/webp',
   '.map': 'application/json',
 };
+
+function sanitizeHost(value) {
+  return String(value || '')
+    .split(',')[0]
+    .trim()
+    .replace(/[^a-zA-Z0-9.:[\]-]/g, '');
+}
+
+function getRequestOrigin(req) {
+  const forwardedProto = String(req.headers['x-forwarded-proto'] || '')
+    .split(',')[0]
+    .trim()
+    .toLowerCase();
+  const protocol = forwardedProto === 'https' ? 'https' : 'http';
+  const host = sanitizeHost(req.headers['x-forwarded-host'] || req.headers.host);
+
+  return host ? `${protocol}://${host}` : SITE_URL_FALLBACK;
+}
+
+function rewriteHtmlForOrigin(html, origin) {
+  return REWRITABLE_SITE_URLS.reduce(
+    (result, siteUrl) => result.split(siteUrl).join(origin),
+    html
+  );
+}
 
 function fetchSSR(pagePath) {
   return new Promise((resolve, reject) => {
@@ -103,7 +133,7 @@ function serveStaticFile(filePath, res) {
   return true;
 }
 
-function sendSPAFallback(res) {
+function sendSPAFallback(req, res) {
   const indexPath = path.join(BUILD_DIR, 'index.html');
   fs.readFile(indexPath, 'utf-8', (err, data) => {
     if (err) {
@@ -111,11 +141,12 @@ function sendSPAFallback(res) {
       res.end('Server error');
       return;
     }
+    const html = rewriteHtmlForOrigin(data, getRequestOrigin(req));
     res.writeHead(200, {
       'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': 'no-cache, no-store, must-revalidate',
     });
-    res.end(data);
+    res.end(html);
   });
 }
 
@@ -131,6 +162,7 @@ const server = http.createServer(async (req, res) => {
       time: new Date().toISOString(),
       build_exists: fs.existsSync(BUILD_DIR),
       backend_ssr_refresh: ENABLE_BACKEND_SSR_REFRESH,
+      request_origin: getRequestOrigin(req),
     }));
     return;
   }
@@ -161,7 +193,7 @@ const server = http.createServer(async (req, res) => {
 
   // Admin panel & login - always serve SPA
   if (reqPath === '/admin' || reqPath.startsWith('/admin/') || reqPath === '/login') {
-    sendSPAFallback(res);
+    sendSPAFallback(req, res);
     return;
   }
 
@@ -169,7 +201,7 @@ const server = http.createServer(async (req, res) => {
   // Old prerendered HTML files may exist in build/ for legacy SEO export paths,
   // but serving them causes stale markup and broken asset URLs on routes like
   // /hintalaskuri. Static assets are already handled above.
-  sendSPAFallback(res);
+  sendSPAFallback(req, res);
 });
 
 // Optional startup refresh from backend SSR for environments that still rely on it.

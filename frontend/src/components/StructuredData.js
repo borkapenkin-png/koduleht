@@ -1,7 +1,9 @@
 import React from 'react';
+import { getSiteUrl, withSiteUrl } from '@/lib/public-env';
 
 // Structured Data Component for SEO - JSON-LD
 const StructuredData = ({ settings = {} }) => {
+  const siteUrl = getSiteUrl();
   const companyName = settings?.company_name || "J&B Tasoitus ja Maalaus Oy";
   const phone = settings?.company_phone_primary || settings?.contact_phone_1 || "+358 40 054 7270";
   const email = settings?.company_email || settings?.contact_email || "info@jbtasoitusmaalaus.fi";
@@ -12,10 +14,10 @@ const StructuredData = ({ settings = {} }) => {
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "@id": "https://jbtasoitusmaalaus.fi/#localbusiness",
+    "@id": `${siteUrl}/#localbusiness`,
     "name": companyName,
     "description": description,
-    "url": "https://jbtasoitusmaalaus.fi",
+    "url": siteUrl,
     "telephone": phone,
     "email": email,
     "address": {
@@ -47,8 +49,8 @@ const StructuredData = ({ settings = {} }) => {
     "priceRange": "€€",
     "paymentAccepted": ["Cash", "Credit Card", "Invoice"],
     "currenciesAccepted": "EUR",
-    "image": "https://jbtasoitusmaalaus.fi/og-image.jpg",
-    "logo": settings?.logo_url || "https://jbtasoitusmaalaus.fi/logo.png",
+    "image": withSiteUrl('/og-image.jpg'),
+    "logo": settings?.logo_url ? withSiteUrl(settings.logo_url) : withSiteUrl('/logo.png'),
     "sameAs": []
   };
   
@@ -56,10 +58,10 @@ const StructuredData = ({ settings = {} }) => {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "@id": "https://jbtasoitusmaalaus.fi/#organization",
+    "@id": `${siteUrl}/#organization`,
     "name": companyName,
-    "url": "https://jbtasoitusmaalaus.fi",
-    "logo": settings?.logo_url || "https://jbtasoitusmaalaus.fi/logo.png",
+    "url": siteUrl,
+    "logo": settings?.logo_url ? withSiteUrl(settings.logo_url) : withSiteUrl('/logo.png'),
     "contactPoint": {
       "@type": "ContactPoint",
       "telephone": phone,
@@ -75,7 +77,7 @@ const StructuredData = ({ settings = {} }) => {
     "serviceType": "Tasoitus- ja maalauspalvelut",
     "provider": {
       "@type": "LocalBusiness",
-      "@id": "https://jbtasoitusmaalaus.fi/#localbusiness"
+      "@id": `${siteUrl}/#localbusiness`
     },
     "areaServed": {
       "@type": "AdministrativeArea",

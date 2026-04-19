@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import SiteHeader from '@/components/site/SiteHeaderLegacy';
 import SiteFooter from '@/components/site/SiteFooterLegacy';
-import { getApiBaseUrl } from '@/lib/public-env';
+import { getApiBaseUrl, getSiteUrl, withSiteUrl } from '@/lib/public-env';
 import {
   TrustBadges,
   DescriptionSection,
@@ -40,10 +40,29 @@ const CalculatorSEO = () => {
       metaDesc.setAttribute('content', 'Laske maalaus- ja tasoitustöiden hinta-arvio hetkessä. Sisämaalaus, ulkomaalaus, tasoitustyöt, mikrosementti, kattomaalaus ja julkisivurappaus. Kotitalousvähennys lasketaan automaattisesti.');
     }
   }, []);
+  useEffect(() => {
+    const canonicalUrl = withSiteUrl('/hintalaskuri');
+    const description = 'Laske maalaus- ja tasoitust\u00f6iden hinta-arvio hetkess\u00e4. Sis\u00e4maalaus, ulkomaalaus, tasoitusty\u00f6t, mikrosementti, kattomaalaus ja julkisivurappaus. Kotitalousv\u00e4hennys lasketaan automaattisesti.';
+
+    document.title = "Hintalaskuri \u2013 Laske maalaus- ja tasoitust\u00f6iden hinta | J&B Tasoitus ja Maalaus";
+
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', description);
+
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) canonical.setAttribute('href', canonicalUrl);
+
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) ogUrl.setAttribute('content', canonicalUrl);
+
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute('content', description);
+  }, []);
   return null;
 };
 
 const CalculatorSchema = ({ config }) => {
+  const siteUrl = getSiteUrl();
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -65,6 +84,8 @@ const CalculatorSchema = ({ config }) => {
       "areaServed": ["Helsinki", "Espoo", "Vantaa", "Kauniainen"]
     }
   };
+  schema.url = `${siteUrl}/hintalaskuri`;
+  schema.description = "Laske maalaus- ja tasoitust\u00f6iden hinta-arvio hetkess\u00e4. Kotitalousv\u00e4hennys lasketaan automaattisesti.";
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />;
 };
 

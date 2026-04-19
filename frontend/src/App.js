@@ -3,7 +3,6 @@ import "@/App.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { SEOHead, COMPANY } from "./seo/SEOHead";
 import { serviceSlugMap } from "./seo/serviceContent";
 import { getApiBaseUrl, withApiUrl } from "./lib/public-env";
 import DynamicServicePage, { ServiceAreasSection } from "./components/service-page/DynamicServicePage";
