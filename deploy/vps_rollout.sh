@@ -18,11 +18,11 @@ docker compose build backend frontend
 docker compose up -d mongodb backend frontend
 
 if [ "$IMPORT_BACKUP_ON_DEPLOY" = "true" ]; then
-  "$ROOT_DIR/deploy/import_backup.sh"
+  bash "$ROOT_DIR/deploy/import_backup.sh"
 fi
 
 if [ -n "$REWRITE_IMAGE_URLS_TARGET" ]; then
-  "$ROOT_DIR/deploy/rewrite_image_urls.sh" "$REWRITE_IMAGE_URLS_TARGET"
+  bash "$ROOT_DIR/deploy/rewrite_image_urls.sh" "$REWRITE_IMAGE_URLS_TARGET"
 fi
 
-"$ROOT_DIR/deploy/check_stack.sh" "$FRONTEND_BASE_URL" "$BACKEND_BASE_URL"
+bash "$ROOT_DIR/deploy/check_stack.sh" "$FRONTEND_BASE_URL" "$BACKEND_BASE_URL"
